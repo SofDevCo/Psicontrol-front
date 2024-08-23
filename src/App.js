@@ -1,11 +1,16 @@
 import React from 'react';
-import Login from './Login';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import CreateEventForm from './pages/CreateEventForm';
 
 const App = () => {
     return (
-        <div>
-            <Login />
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/create-event-form" element={<CreateEventForm />} />
+            </Routes>
+        </Router>
     );
 };
 
