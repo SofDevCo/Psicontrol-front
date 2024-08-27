@@ -16,7 +16,11 @@ const CreateEventForm = () => {
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
-                setEvents(data);
+
+                // Ordenar os eventos pela data de forma decrescente
+                const sortedEvents = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                setEvents(sortedEvents);
             } else {
                 throw new Error('Resposta não é JSON');
             }
@@ -72,6 +76,9 @@ const CreateEventForm = () => {
                         <div className="form-group">
                             <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
                         </div>
+                        <div className="form-group">
+                            <input type="text" id="status" name="status" placeholder="status" required />
+                        </div>
                         <button type="submit" className="submit-button">Salvar</button>
                     </form>
                 )}
@@ -93,6 +100,7 @@ const CreateEventForm = () => {
                                     <th>Data</th>
                                     <th>Hora de Início</th>
                                     <th>Ações</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,6 +112,7 @@ const CreateEventForm = () => {
                                         <td>
                                             <button onClick={() => handleDelete(event.id)}>Deletar</button>
                                         </td>
+                                        <td>{event.status}</td>
                                     </tr>
                                 ))}
                             </tbody>
