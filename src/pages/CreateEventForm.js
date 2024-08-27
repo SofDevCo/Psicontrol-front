@@ -72,6 +72,9 @@ const CreateEventForm = () => {
                         <div className="form-group">
                             <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
                         </div>
+                        <div className="form-group">
+                            <input type="text" id="status" name="status" placeholder="status" required />
+                        </div>
                         <button type="submit" className="submit-button">Salvar</button>
                     </form>
                 )}
@@ -93,6 +96,7 @@ const CreateEventForm = () => {
                                     <th>Data</th>
                                     <th>Hora de Início</th>
                                     <th>Ações</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,6 +108,7 @@ const CreateEventForm = () => {
                                         <td>
                                             <button onClick={() => handleDelete(event.id)}>Deletar</button>
                                         </td>
+                                        <td>{event.status}</td>
                                     </tr>
                                 ))}
                             </tbody>
