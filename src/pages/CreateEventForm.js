@@ -16,7 +16,11 @@ const CreateEventForm = () => {
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
-                setEvents(data);
+
+                // Ordenar os eventos pela data de forma decrescente
+                const sortedEvents = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                setEvents(sortedEvents);
             } else {
                 throw new Error('Resposta não é JSON');
             }
