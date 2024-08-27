@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/CreateEventForm.css';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState(null);
+    const [showCreateEventForm, setShowCreateEventForm] = useState(false);
 
     useEffect(() => {
         fetchEvents();
@@ -12,8 +13,6 @@ const CreateEventForm = () => {
     const fetchEvents = async () => {
         try {
             const response = await fetch('http://localhost:3000/events/get-events');
-    
-            // Verifique se a resposta é JSON
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
@@ -40,60 +39,78 @@ const CreateEventForm = () => {
     };
 
     return (
-        <div className="create-event-page">
-            <div className="create-event-box">
-                <h2 className="create-event-title">Criar Evento</h2>
-                <form action="http://localhost:3000/events/create-event" method="POST">
-                    <div className="form-group">
-                        <label htmlFor="event_name" className="form-label">Nome do Evento:</label>
-                        <input type="text" id="event_name" name="event_name" className="form-input" required />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="date" className="form-label">Data:</label>
-                        <input type="date" id="date" name="date" className="form-input" required />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="start_time" className="form-label">Hora de Início:</label>
-                        <input type="time" id="start_time" name="start_time" className="form-input" required />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="end_time" className="form-label">Hora de Término:</label>
-                        <input type="time" id="end_time" name="end_time" className="form-input" required />
-                    </div>
-
-                    <button type="submit" className="submit-button">Criar Evento</button>
-                </form>
-
-                <h2 className="event-list-title">Eventos Criados</h2>
-                {error && <p className="error-message">{error}</p>}
-                <table className="event-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Data</th>
-                            <th>Início</th>
-                            <th>Término</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {events.map(event => (
-                            <tr key={event.customers_id}>
-                                <td>{event.event_name}</td>
-                                <td>{event.date}</td>
-                                <td>{event.start_time}</td>
-                                <td>{event.end_time}</td>
-                                <td>
-                                    <button onClick={() => handleDelete(event.customers_id)}>Excluir</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+        <div className="app-layout">
+            <aside className="sidebar">
+                <div className="sidebar-content">
+                    <h1 className="sidebar-title">PsiControl</h1>
+                    <nav>
+                        <ul>
+                            <li><a href="#dashboard">Dashboard</a></li>
+                            <li><a href="#pacientes">Pacientes</a></li>
+                            <li><a href="#despesas">Despesas e receitas</a></li>
+                            <li><a href="#meus-dados">Meus dados</a></li>
+                            <li><a href="#configuracoes">Configurações</a></li>
+                            <li>
+                                <button onClick={() => setShowCreateEventForm(!showCreateEventForm)}>
+                                    {showCreateEventForm ? 'Fechar' : 'Agendamento Rápido'}
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                    {showCreateEventForm && (
+                    <form className="create-event-form" action="http://localhost:3000/events/create-event" method="POST">
+                        <h3>Criar Evento</h3>
+                        <div className="form-group">
+                            <input type="text" id="event_name" name="event_name" placeholder="Nome do Evento" required />
+                        </div>
+                        <div className="form-group">
+                            <input type="date" id="date" name="date" required />
+                        </div>
+                        <div className="form-group">
+                            <input type="time" id="start_time" name="start_time" placeholder="Hora de Início" required />
+                        </div>
+                        <div className="form-group">
+                            <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
+                        </div>
+                        <button type="submit" className="submit-button">Salvar</button>
+                    </form>
+                )}
+                </div>
+                <div className="user-profile">
+                    <img src="/caminho/para/foto-perfil.jpg" alt="Foto do perfil" className="profile-photo" />
+                    <span className="profile-name">Nome do Usuário</span>
+                </div>
+            </aside>
+            <main className="main-content">
+                <div className="content-area">
+                    <section className="events-list-section">
+                        <h2 className="event-list-title">Eventos Criados</h2>
+                        {error && <p className="error-message">{error}</p>}
+                        <table className="event-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome do Evento</th>
+                                    <th>Data</th>
+                                    <th>Hora de Início</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {events.map((event) => (
+                                    <tr key={event.id}>
+                                        <td>{event.event_name}</td>
+                                        <td>{event.date}</td>
+                                        <td>{event.start_time}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(event.id)}>Deletar</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </main>
         </div>
     );
 };
