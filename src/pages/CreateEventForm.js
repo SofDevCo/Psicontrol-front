@@ -30,9 +30,9 @@ const CreateEventForm = () => {
         }
     };
 
-    const handleDelete = async (eventId) => {
+    const handleDelete = async (googleEventId) => {
         try {
-            await fetch(`http://localhost:3000/events/delete-event/${eventId}`, {
+            await fetch(`http://localhost:3000/events/delete-event/${googleEventId}`, {
                 method: 'DELETE',
             });
             // Atualizar a lista de eventos após a exclusão
@@ -40,6 +40,10 @@ const CreateEventForm = () => {
         } catch (error) {
             console.error('Erro ao excluir o evento:', error);
         }
+    };
+
+    const handleRefresh = () => {
+        fetchEvents(); // Atualiza a lista de eventos
     };
 
     return (
@@ -62,26 +66,26 @@ const CreateEventForm = () => {
                         </ul>
                     </nav>
                     {showCreateEventForm && (
-                    <form className="create-event-form" action="http://localhost:3000/events/create-event" method="POST">
-                        <h3>Criar Evento</h3>
-                        <div className="form-group">
-                            <input type="text" id="event_name" name="event_name" placeholder="Nome do Evento" required />
-                        </div>
-                        <div className="form-group">
-                            <input type="date" id="date" name="date" required />
-                        </div>
-                        <div className="form-group">
-                            <input type="time" id="start_time" name="start_time" placeholder="Hora de Início" required />
-                        </div>
-                        <div className="form-group">
-                            <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
-                        </div>
-                        <div className="form-group">
-                            <input type="text" id="status" name="status" placeholder="status" required />
-                        </div>
-                        <button type="submit" className="submit-button">Salvar</button>
-                    </form>
-                )}
+                        <form className="create-event-form" action="http://localhost:3000/events/create-event" method="POST">
+                            <h3>Criar Evento</h3>
+                            <div className="form-group">
+                                <input type="text" id="event_name" name="event_name" placeholder="Nome do Evento" required />
+                            </div>
+                            <div className="form-group">
+                                <input type="date" id="date" name="date" required />
+                            </div>
+                            <div className="form-group">
+                                <input type="time" id="start_time" name="start_time" placeholder="Hora de Início" required />
+                            </div>
+                            <div className="form-group">
+                                <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
+                            </div>
+                            <div className="form-group">
+                                <input type="text" id="status" name="status" placeholder="status" required />
+                            </div>
+                            <button type="submit" className="submit-button">Salvar</button>
+                        </form>
+                    )}
                 </div>
                 <div className="user-profile">
                     <img src="/caminho/para/foto-perfil.jpg" alt="Foto do perfil" className="profile-photo" />
@@ -91,7 +95,10 @@ const CreateEventForm = () => {
             <main className="main-content">
                 <div className="content-area">
                     <section className="events-list-section">
-                        <h2 className="event-list-title">Eventos Criados</h2>
+                        <h2 className="event-list-title">
+                            Eventos Criados
+                            <button onClick={handleRefresh} className="refresh-button">Atualizar</button>
+                        </h2>
                         {error && <p className="error-message">{error}</p>}
                         <table className="event-table">
                             <thead>
@@ -105,12 +112,12 @@ const CreateEventForm = () => {
                             </thead>
                             <tbody>
                                 {events.map((event) => (
-                                    <tr key={event.id}>
+                                    <tr key={event.google_event_id}>
                                         <td>{event.event_name}</td>
                                         <td>{event.date}</td>
                                         <td>{event.start_time}</td>
                                         <td>
-                                            <button onClick={() => handleDelete(event.id)}>Deletar</button>
+                                            <button onClick={() => handleDelete(event.google_event_id)}>Deletar</button>
                                         </td>
                                         <td>{event.status}</td>
                                     </tr>
