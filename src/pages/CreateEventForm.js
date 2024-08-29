@@ -4,6 +4,7 @@ import '../styles/CreateEventForm.css';
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false); // Estado para indicar carregamento
     const [showCreateEventForm, setShowCreateEventForm] = useState(false);
     const [formValues, setFormValues] = useState({
         event_name: '',
@@ -19,14 +20,12 @@ const CreateEventForm = () => {
 
     const fetchEvents = async () => {
         try {
+            setLoading(true); // Inicia o carregamento
             const response = await fetch('http://localhost:3000/events/get-events');
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
-
-                // Ordenar os eventos pela data de forma decrescente
                 const sortedEvents = data.sort((a, b) => new Date(b.date) - new Date(a.date));
-
                 setEvents(sortedEvents);
             } else {
                 throw new Error('Resposta não é JSON');
@@ -34,6 +33,8 @@ const CreateEventForm = () => {
         } catch (error) {
             console.error('Erro ao buscar eventos:', error);
             setError('Não foi possível carregar eventos.');
+        } finally {
+            setLoading(false); // Finaliza o carregamento
         }
     };
 
@@ -42,7 +43,7 @@ const CreateEventForm = () => {
             await fetch(`http://localhost:3000/events/delete-event/${googleEventId}`, {
                 method: 'DELETE',
             });
-            fetchEvents(); // Atualizar a lista de eventos após a exclusão
+            fetchEvents(); 
         } catch (error) {
             console.error('Erro ao excluir o evento:', error);
         }
@@ -81,6 +82,7 @@ const CreateEventForm = () => {
 
     const syncCalendar = async () => {
         try {
+            setLoading(true); // Inicia o carregamento ao sincronizar
             const response = await fetch('http://localhost:3000/events/sync-calendar', {
                 method: 'POST',
             });
@@ -88,12 +90,16 @@ const CreateEventForm = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                fetchEvents(); // Atualiza a lista de eventos após a sincronização
+                await fetchEvents(); // Aguarda a atualização completa dos eventos após a sincronização
             } else {
                 console.error('Erro ao sincronizar calendário.');
+                setError('Erro ao sincronizar calendário.');
             }
         } catch (error) {
             console.error('Erro ao sincronizar calendário:', error);
+            setError('Erro ao sincronizar calendário.');
+        } finally {
+            setLoading(false); // Finaliza o carregamento
         }
     };
 
@@ -185,7 +191,9 @@ const CreateEventForm = () => {
                     <section className="events-list-section">
                         <h2 className="event-list-title">
                             Eventos Criados
-                            <button onClick={syncCalendar} className="refresh-button">Atualizar</button>
+                            <button onClick={syncCalendar} className="refresh-button" disabled={loading}>
+                                {loading ? 'Atualizando...' : 'Atualizar'}
+                            </button>
                         </h2>
                         {error && <p className="error-message">{error}</p>}
                         <table className="event-table">
