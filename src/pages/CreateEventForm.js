@@ -82,7 +82,7 @@ const CreateEventForm = () => {
 
     const syncCalendar = async () => {
         try {
-            setLoading(true); // Inicia o carregamento ao sincronizar
+            setLoading(true);
             const response = await fetch('http://localhost:3000/events/sync-calendar', {
                 method: 'POST',
             });
@@ -90,7 +90,7 @@ const CreateEventForm = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                await fetchEvents(); // Aguarda a atualização completa dos eventos após a sincronização
+                await fetchEvents(); 
             } else {
                 console.error('Erro ao sincronizar calendário.');
                 setError('Erro ao sincronizar calendário.');
@@ -99,7 +99,7 @@ const CreateEventForm = () => {
             console.error('Erro ao sincronizar calendário:', error);
             setError('Erro ao sincronizar calendário.');
         } finally {
-            setLoading(false); // Finaliza o carregamento
+            setLoading(false); 
         }
     };
 
