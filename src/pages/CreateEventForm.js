@@ -5,6 +5,13 @@ const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState(null);
     const [showCreateEventForm, setShowCreateEventForm] = useState(false);
+    const [formValues, setFormValues] = useState({
+        event_name: '',
+        date: '',
+        start_time: '',
+        end_time: '',
+        status: ''
+    });
 
     useEffect(() => {
         fetchEvents();
@@ -35,15 +42,59 @@ const CreateEventForm = () => {
             await fetch(`http://localhost:3000/events/delete-event/${googleEventId}`, {
                 method: 'DELETE',
             });
-            // Atualizar a lista de eventos após a exclusão
-            fetchEvents();
+            fetchEvents(); // Atualizar a lista de eventos após a exclusão
         } catch (error) {
             console.error('Erro ao excluir o evento:', error);
         }
     };
 
-    const handleRefresh = () => {
-        fetchEvents(); // Atualiza a lista de eventos
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues({
+            ...formValues,
+            [name]: value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:3000/events/create-event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formValues),
+            });
+
+            if (response.ok) {
+                fetchEvents(); // Atualiza a lista de eventos após a criação de um novo evento
+                setShowCreateEventForm(false); // Fecha o formulário após criar o evento
+            } else {
+                throw new Error('Erro ao criar o evento');
+            }
+        } catch (error) {
+            console.error('Erro ao criar evento:', error);
+            setError('Não foi possível criar o evento.');
+        }
+    };
+
+    const syncCalendar = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/events/sync-calendar', {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.message);
+                fetchEvents(); // Atualiza a lista de eventos após a sincronização
+            } else {
+                console.error('Erro ao sincronizar calendário.');
+            }
+        } catch (error) {
+            console.error('Erro ao sincronizar calendário:', error);
+        }
     };
 
     return (
@@ -66,22 +117,59 @@ const CreateEventForm = () => {
                         </ul>
                     </nav>
                     {showCreateEventForm && (
-                        <form className="create-event-form" action="http://localhost:3000/events/create-event" method="POST">
+                        <form className="create-event-form" onSubmit={handleSubmit}>
                             <h3>Criar Evento</h3>
                             <div className="form-group">
-                                <input type="text" id="event_name" name="event_name" placeholder="Nome do Evento" required />
+                                <input
+                                    type="text"
+                                    id="event_name"
+                                    name="event_name"
+                                    placeholder="Nome do Evento"
+                                    value={formValues.event_name}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
-                                <input type="date" id="date" name="date" required />
+                                <input
+                                    type="date"
+                                    id="date"
+                                    name="date"
+                                    value={formValues.date}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
-                                <input type="time" id="start_time" name="start_time" placeholder="Hora de Início" required />
+                                <input
+                                    type="time"
+                                    id="start_time"
+                                    name="start_time"
+                                    value={formValues.start_time}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
-                                <input type="time" id="end_time" name="end_time" placeholder="Hora de Fim" required />
+                                <input
+                                    type="time"
+                                    id="end_time"
+                                    name="end_time"
+                                    value={formValues.end_time}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
-                                <input type="text" id="status" name="status" placeholder="status" required />
+                                <input
+                                    type="text"
+                                    id="status"
+                                    name="status"
+                                    placeholder="Status"
+                                    value={formValues.status}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <button type="submit" className="submit-button">Salvar</button>
                         </form>
@@ -97,7 +185,7 @@ const CreateEventForm = () => {
                     <section className="events-list-section">
                         <h2 className="event-list-title">
                             Eventos Criados
-                            <button onClick={handleRefresh} className="refresh-button">Atualizar</button>
+                            <button onClick={syncCalendar} className="refresh-button">Atualizar</button>
                         </h2>
                         {error && <p className="error-message">{error}</p>}
                         <table className="event-table">
