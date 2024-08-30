@@ -3,8 +3,10 @@ import '../styles/CreateEventForm.css';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
+    const [calendars, setCalendars] = useState([]); 
+    const [selectedCalendarId, setSelectedCalendarId] = useState('primary'); 
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false); // Estado para indicar carregamento
+    const [loading, setLoading] = useState(false);
     const [showCreateEventForm, setShowCreateEventForm] = useState(false);
     const [formValues, setFormValues] = useState({
         event_name: '',
@@ -16,12 +18,30 @@ const CreateEventForm = () => {
 
     useEffect(() => {
         fetchEvents();
-    }, []);
+        fetchCalendars(); 
+    }, [selectedCalendarId]); 
+    const fetchCalendars = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:3000/events/list-calendars');
+            if (response.ok) {
+                const data = await response.json();
+                setCalendars(data);
+            } else {
+                throw new Error('Erro ao buscar calendários');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar calendários:', error);
+            setError('Não foi possível carregar os calendários.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchEvents = async () => {
         try {
-            setLoading(true); // Inicia o carregamento
-            const response = await fetch('http://localhost:3000/events/get-events');
+            setLoading(true);
+            const response = await fetch(`http://localhost:3000/events/get-events`);
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
@@ -34,7 +54,7 @@ const CreateEventForm = () => {
             console.error('Erro ao buscar eventos:', error);
             setError('Não foi possível carregar eventos.');
         } finally {
-            setLoading(false); // Finaliza o carregamento
+            setLoading(false);
         }
     };
 
@@ -43,7 +63,7 @@ const CreateEventForm = () => {
             await fetch(`http://localhost:3000/events/delete-event/${googleEventId}`, {
                 method: 'DELETE',
             });
-            fetchEvents(); 
+            fetchEvents();
         } catch (error) {
             console.error('Erro ao excluir o evento:', error);
         }
@@ -69,8 +89,8 @@ const CreateEventForm = () => {
             });
 
             if (response.ok) {
-                fetchEvents(); // Atualiza a lista de eventos após a criação de um novo evento
-                setShowCreateEventForm(false); // Fecha o formulário após criar o evento
+                fetchEvents(); 
+                setShowCreateEventForm(false); 
             } else {
                 throw new Error('Erro ao criar o evento');
             }
@@ -83,7 +103,7 @@ const CreateEventForm = () => {
     const syncCalendar = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/events/sync-calendar', {
+            const response = await fetch(`http://localhost:3000/events/sync-calendar/${selectedCalendarId}`, { 
                 method: 'POST',
             });
 
@@ -99,8 +119,12 @@ const CreateEventForm = () => {
             console.error('Erro ao sincronizar calendário:', error);
             setError('Erro ao sincronizar calendário.');
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
+    };
+
+    const handleCalendarChange = (e) => {
+        setSelectedCalendarId(e.target.value); 
     };
 
     return (
@@ -191,6 +215,13 @@ const CreateEventForm = () => {
                     <section className="events-list-section">
                         <h2 className="event-list-title">
                             Eventos Criados
+                            <select onChange={handleCalendarChange} value={selectedCalendarId} disabled={loading}>
+                                {calendars.map((calendar) => (
+                                    <option key={calendar.id} value={calendar.id}>
+                                        {calendar.summary}
+                                    </option>
+                                ))}
+                            </select>
                             <button onClick={syncCalendar} className="refresh-button" disabled={loading}>
                                 {loading ? 'Atualizando...' : 'Atualizar'}
                             </button>
