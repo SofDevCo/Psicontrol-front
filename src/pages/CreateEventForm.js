@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../styles/CreateEventForm.css';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
     const [calendars, setCalendars] = useState([]); 
-    const [selectedCalendarId, setSelectedCalendarId] = useState('primary'); 
+    const [selectedCalendarId, setSelectedCalendarId] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showCreateEventForm, setShowCreateEventForm] = useState(false);
@@ -16,17 +16,17 @@ const CreateEventForm = () => {
         status: ''
     });
 
-    useEffect(() => {
-        fetchEvents();
-        fetchCalendars(); 
-    }, [selectedCalendarId]); 
-    const fetchCalendars = async () => {
+    const fetchCalendars = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:3000/events/list-calendars');
+            const response = await fetch('http://localhost:3000/events/calendars');
             if (response.ok) {
                 const data = await response.json();
+                console.log('Calendários recebidos:', data);
                 setCalendars(data);
+                if (data.length > 0 && !selectedCalendarId) {
+                    setSelectedCalendarId(data[0].calendar_id); 
+                }
             } else {
                 throw new Error('Erro ao buscar calendários');
             }
@@ -36,17 +36,27 @@ const CreateEventForm = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedCalendarId]);
 
-    const fetchEvents = async () => {
+    const fetchEvents = useCallback(async () => {
+        if (!selectedCalendarId) return; 
+
         try {
+            console.log('Valor de selectedCalendarId no frontend:', selectedCalendarId);
+
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/events/get-events`);
+            const response = await fetch(`http://localhost:3000/events/get-events/${selectedCalendarId}`);
             const contentType = response.headers.get('content-type');
+
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
-                const sortedEvents = data.sort((a, b) => new Date(b.date) - new Date(a.date));
-                setEvents(sortedEvents);
+
+                if (Array.isArray(data)) {
+                    const sortedEvents = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    setEvents(sortedEvents);
+                } else {
+                    throw new Error('Resposta JSON não é um array');
+                }
             } else {
                 throw new Error('Resposta não é JSON');
             }
@@ -56,16 +66,35 @@ const CreateEventForm = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedCalendarId]);
 
-    const handleDelete = async (googleEventId) => {
+    useEffect(() => {
+        fetchCalendars();
+    }, [fetchCalendars]);
+
+    useEffect(() => {
+        fetchEvents();
+    }, [fetchEvents]);
+
+    const handleCancel = async (googleEventId, calendarId) => {
         try {
-            await fetch(`http://localhost:3000/events/delete-event/${googleEventId}`, {
+            if (!googleEventId || !calendarId) {
+                throw new Error('ID do evento ou ID do calendário ausente.');
+            }
+    
+            const response = await fetch(`http://localhost:3000/events/cancel/${googleEventId}/${calendarId}`, {
                 method: 'DELETE',
             });
-            fetchEvents();
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(errorMessage || 'Erro ao cancelar o evento.');
+            }
+    
+            alert('Evento cancelado com sucesso!');
         } catch (error) {
-            console.error('Erro ao excluir o evento:', error);
+            console.error('Erro ao cancelar o evento:', error);
+            alert(`Erro ao cancelar o evento: ${error.message}`);
         }
     };
 
@@ -80,17 +109,22 @@ const CreateEventForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const eventData = {
+                ...formValues,
+                calendarId: selectedCalendarId,  // Incluindo o ID do calendário selecionado
+            };
+    
             const response = await fetch('http://localhost:3000/events/create-event', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formValues),
+                body: JSON.stringify(eventData),
             });
-
+    
             if (response.ok) {
-                fetchEvents(); 
-                setShowCreateEventForm(false); 
+                fetchEvents(); // Atualiza a lista de eventos após a criação de um novo evento
+                setShowCreateEventForm(false); // Fecha o formulário após criar o evento
             } else {
                 throw new Error('Erro ao criar o evento');
             }
@@ -99,21 +133,21 @@ const CreateEventForm = () => {
             setError('Não foi possível criar o evento.');
         }
     };
+    
+    
+    
 
     const syncCalendar = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3000/events/sync-calendar/${selectedCalendarId}`, { 
+            const response = await fetch(`http://localhost:3000/events/sync-calendar/${selectedCalendarId}`, {
                 method: 'POST',
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data.message);
                 await fetchEvents(); 
             } else {
-                console.error('Erro ao sincronizar calendário.');
-                setError('Erro ao sincronizar calendário.');
+                throw new Error('Erro ao sincronizar calendário.');
             }
         } catch (error) {
             console.error('Erro ao sincronizar calendário:', error);
@@ -232,24 +266,31 @@ const CreateEventForm = () => {
                                 <tr>
                                     <th>Nome do Evento</th>
                                     <th>Data</th>
-                                    <th>Hora de Início</th>
+                                    {/* <th>Hora de Início</th> */}
                                     <th>Ações</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {events.map((event) => (
-                                    <tr key={event.google_event_id}>
-                                        <td>{event.event_name}</td>
-                                        <td>{event.date}</td>
-                                        <td>{event.start_time}</td>
-                                        <td>
-                                            <button onClick={() => handleDelete(event.google_event_id)}>Deletar</button>
-                                        </td>
-                                        <td>{event.status}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                                <tbody>
+                                    {events.map((event) => (
+                                        <tr key={event.google_event_id}>
+                                            <td>{event.event_name}</td>
+                                            <td>{(() => {
+                                                const [year, month, day] = event.date.split('-');
+                                                return `${day}/${month}/${year}`;
+                                            })()}</td>
+                                            {/* <td>{event.start_time}</td> */}
+                                            <td>
+                                                {event.status !== 'cancelado' && (
+                                                    <button onClick={() => handleCancel(event.google_event_id, event.calendar_id)}>
+                                                    Cancelar Evento
+                                                </button>
+                                                )}
+                                            </td>
+                                            <td>{event.status}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                         </table>
                     </section>
                 </div>
@@ -259,3 +300,4 @@ const CreateEventForm = () => {
 };
 
 export default CreateEventForm;
+    
