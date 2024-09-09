@@ -67,7 +67,7 @@ body {
     font-size: 18px;
 }
 
-.event-table {
+/* .event-table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -93,4 +93,4 @@ body {
 
 .event-table td button:hover {
     background-color: #d32f2f;
-}
+} */

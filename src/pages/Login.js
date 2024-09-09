@@ -16,7 +16,6 @@ const Login = () => {
     return (
         <div className="login-page">
             <img src={logo} alt="Logo" className="login-logo" />
-            <h1 className="login-title"></h1>
             <div className="login-box">
                 <h1 className="login-subtitle">Clique abaixo para fazer o login com sua conta do Google</h1>
                 <button onClick={handleLogin} className="google-button">
