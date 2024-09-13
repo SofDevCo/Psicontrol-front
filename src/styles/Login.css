@@ -44,7 +44,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
+    background-color: #ffffffb7;
     border: 1px solid #000;
     padding: 20px 158px;
     border-radius: 5px;
@@ -65,6 +65,7 @@ body {
 
 .google-text {
     font-size: 18px;
+    color: #000;
 }
 
 /* .event-table {
