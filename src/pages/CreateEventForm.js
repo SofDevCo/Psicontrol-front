@@ -176,10 +176,10 @@ const CreateEventForm = () => {
                     <nav>
                         <ul>
                             <li><a href="#dashboard">Dashboard</a></li>
-                            <li><a href="#pacientes">Pacientes</a></li>
+                            <li><a href="/customers">Pacientes</a></li>
                             <li><a href="#despesas">Despesas e receitas</a></li>
-                            <li><a href="#meus-dados">Meus dados</a></li>
-                            <li><a href="#configuracoes">Configurações</a></li>
+                            {/* <li><a href="#meus-dados">Meus dados</a></li> */}
+                            <li><a href="#configuracoes">Minhas Configurações</a></li>
                             <li>
                                 <button onClick={() => setShowCreateEventForm(!showCreateEventForm)}>
                                     {showCreateEventForm ? 'Fechar' : 'Agendamento Rápido'}
@@ -270,8 +270,6 @@ const CreateEventForm = () => {
                                     <tr>
                                         <th>Nome do Evento</th>
                                         <th>Data</th>
-                                        {/* <th>Hora de Início</th>
-                                        <th>Hora de Fim</th> */}
                                         <th>Ação</th>
                                         <th>Status</th>
                                     </tr>
