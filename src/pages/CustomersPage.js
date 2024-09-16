@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/CustomersPage.css';
+import '../index.css';
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState([]);
@@ -30,23 +30,23 @@ const CustomersPage = () => {
     }, []);
 
     return (
-        <div className="customers-page-container">
-            <h1 className="customers-page-title">Pacientes</h1>
+        <div class="max-w-[800px] mx-auto p-5 font-sans">
+            <h1 class="text-center text-[#333]">Pacientes</h1>
 
-            {error && <p className="customers-page-error-message">{error}</p>}
+            {error && <p class="text-center mb-[20px] text-[red]">{error}</p>}
             {isLoading ? (
                 <p>Carregando clientes...</p>
             ) : (
-                <ul className="customers-page-list">
+                <ul className="list-none p-0">
                     {customers.map(customer => (
-                        <li key={`customer-${customer.customer_id}`} className="customers-page-list-item">
-                            <span className="customers-page-item-name">{customer.customer_name}</span>
+                        <li key={`customer-${customer.customer_id}`} class="border-b-10border-b border-gray-200 py-2.5">
+                            <span class="text-xl text-[#333]">{customer.customer_name}</span>
                         </li>
                     ))}
                 </ul>
             )}
 
-            <button onClick={() => navigate('/create-customer')} className="customers-page-button">
+            <button onClick={() => navigate('/create-customer')} class="py-2.5 px-4 bg-custom-blue text-white rounded cursor-pointer text-base">
                 Cadastrar novo cliente
             </button>
         </div>

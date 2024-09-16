@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/Psicontrol.png';
-import '../index.css'
+import '../index.css';
 
 const SelectCalendarPage = () => {
     const [calendars, setCalendars] = useState([]);
