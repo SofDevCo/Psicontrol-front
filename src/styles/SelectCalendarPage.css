@@ -1,100 +1,99 @@
-/* SelectCalendarPage.css */
-
 .select-calendar-page {
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px;
   font-family: Arial, sans-serif;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto 32px auto;
+  width: 150px;
 }
 
 .title {
-  color: #333;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  color: #2980b9;
+  margin-bottom: 32px;
+  font-size: 32px;
 }
 
 .loading, .error {
-  text-align: center;
   color: #666;
   font-style: italic;
 }
 
 .calendar-selection {
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; 
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  margin-left: 136px;
+}
+
+.calendar-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: auto;
+  padding: 5px;
+  max-width: 250px;
+}
+
+.calendar-column-title {
+  text-align: center;
+  font-size: 19.2px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 
 .calendar-item {
-  display: flex;
+  display: flex; 
   align-items: center;
-  margin-bottom: 1rem;
-  transition: background-color 0.3s ease;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-.calendar-item:hover {
-  background-color: #e0e0e0;
-}
-
-.calendar-item input[type="checkbox"] {
-  margin-right: 1rem;
-  cursor: pointer;
+  margin-bottom: 8px; 
+  width: 100%;
 }
 
 .calendar-item label {
-  flex-grow: 1;
-  cursor: pointer;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.calendar-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+h2 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 
 .proceed-button {
   display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin-top: 1.5rem;
-  background-color: #4CAF50;
+  width: 200px;
+  padding: 16px;
+  margin: 32px auto 0 auto;
+  background-color: #2980b9;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 25px;
+  font-size: 17.6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .proceed-button:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: #005bb5;
 }
 
 .proceed-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
-}
-
-/* Custom checkbox styles */
-.calendar-item input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #4CAF50;
-  border-radius: 3px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.calendar-item input[type="checkbox"]:checked {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
-}
-
-.calendar-item input[type="checkbox"]:checked::before {
-  content: '\2714';
-  display: block;
-  text-align: center;
-  color: white;
-  font-size: 14px;
-  line-height: 20px;
 }

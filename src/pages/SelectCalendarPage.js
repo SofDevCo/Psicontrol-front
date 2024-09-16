@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/SelectCalendarPage.css';  // Referenciando o arquivo CSS
+import logo from '../images/Psicontrol.png';
+import '../styles/SelectCalendarPage.css';
 
 const SelectCalendarPage = () => {
     const [calendars, setCalendars] = useState([]);
@@ -48,33 +49,53 @@ const SelectCalendarPage = () => {
 
     return (
         <div className="select-calendar-page">
-            <h1 className="title">Selecione os Calendários</h1>
+            <img src={logo} alt="Logo" className="login-logo" />
+            <h1 className="title">Selecione as agendas que gostaria de utilizar</h1>
             {loading ? (
                 <p className="loading">Carregando calendários...</p>
             ) : error ? (
                 <p className="error">{error}</p>
             ) : (
                 <div className="calendar-selection">
-                    {calendars.map((calendar) => (
-                        <div key={calendar.id} className="calendar-item">
-                            <input
-                                type="checkbox"
-                                id={calendar.id}
-                                checked={selectedCalendarIds.has(calendar.id)}
-                                onChange={() => handleCheckboxChange(calendar.id)}
-                            />
-                            <label htmlFor={calendar.id}>{calendar.summary}</label>
-                        </div>
-                    ))}
-                    <button
-                        onClick={handleProceed}
-                        className="proceed-button"
-                        disabled={selectedCalendarIds.size === 0}
-                    >
-                        Prosseguir
-                    </button>
+                    <div className="calendar-column">
+                        <h2 className="calendar-column-title">Minhas Agendas</h2> 
+                        {calendars.slice(0, Math.ceil(calendars.length / 2)).map((calendar) => (
+                            <div key={calendar.id} className="calendar-item">
+                                <input
+                                    type="checkbox"
+                                    name="calendar"
+                                    id={calendar.id}
+                                    checked={selectedCalendarIds.has(calendar.id)}
+                                    onChange={() => handleCheckboxChange(calendar.id)}
+                                />
+                                <label htmlFor={calendar.id}>{calendar.summary}</label>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="calendar-column">
+                        <h2 className="calendar-column-title">Outras Agendas</h2> 
+                        {calendars.slice(Math.ceil(calendars.length / 2)).map((calendar) => (
+                            <div key={calendar.id} className="calendar-item">
+                                <input
+                                    type="checkbox"
+                                    name="calendar"
+                                    id={calendar.id}
+                                    checked={selectedCalendarIds.has(calendar.id)}
+                                    onChange={() => handleCheckboxChange(calendar.id)}
+                                />
+                                <label htmlFor={calendar.id}>{calendar.summary}</label>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
+            <button
+                onClick={handleProceed}
+                className="proceed-button"
+                disabled={!selectedCalendarIds}
+            >
+                Salvar
+            </button>
         </div>
     );
 };
