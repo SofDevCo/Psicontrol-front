@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/Psicontrol.png';
-import '../styles/SelectCalendarPage.css';
+import '../index.css'
 
 const SelectCalendarPage = () => {
     const [calendars, setCalendars] = useState([]);
@@ -48,50 +48,56 @@ const SelectCalendarPage = () => {
     };
 
     return (
-        <div className="select-calendar-page">
-            <img src={logo} alt="Logo" className="login-logo" />
-            <h1 className="title">Selecione as agendas que gostaria de utilizar</h1>
+        <div class="max-w-[900px] mx-auto p-8 font-sans text-center flex flex-col items-center">
+            <img src={logo} alt="Logo" class="block mx-auto mb-8 w-[150px]" />
+            <h1 className="text-custom-blue mb-8 text-[32px]">Selecione as agendas que gostaria de utilizar</h1>
             {loading ? (
-                <p className="loading">Carregando calendários...</p>
+                <p class="text-gray-500 italic">Carregando calendários...</p>
             ) : error ? (
-                <p className="error">{error}</p>
+                <p class="text-gray-500 italic">{error}</p>
             ) : (
-                <div className="calendar-selection">
-                    <div className="calendar-column">
-                        <h2 className="calendar-column-title">Minhas Agendas</h2> 
+                <div class="flex justify-center items-start gap-8 mt-8 flex-wrap ml-[136px]">
+                    <div class="flex flex-col items-start justify-center w-auto p-[5px] max-w-[250px]">
+                        <h2 class="text-center text-[19.2px] font-bold mb-[16px] ">Minhas Agendas</h2> 
                         {calendars.slice(0, Math.ceil(calendars.length / 2)).map((calendar) => (
-                            <div key={calendar.id} className="calendar-item">
-                                <input
-                                    type="checkbox"
-                                    name="calendar"
-                                    id={calendar.id}
-                                    checked={selectedCalendarIds.has(calendar.id)}
-                                    onChange={() => handleCheckboxChange(calendar.id)}
-                                />
-                                <label htmlFor={calendar.id}>{calendar.summary}</label>
-                            </div>
+                            <div key={calendar.id} className="flex items-center mb-2 w-full">
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              name="calendar"
+                              id={calendar.id}
+                              checked={selectedCalendarIds.has(calendar.id)}
+                              onChange={() => handleCheckboxChange(calendar.id)}
+                            />
+                            <label htmlFor={calendar.id} className="font-bold">
+                              {calendar.summary}
+                            </label>
+                          </div>
                         ))}
                     </div>
-                    <div className="calendar-column">
-                        <h2 className="calendar-column-title">Outras Agendas</h2> 
+                    <div class="flex flex-col items-start justify-center w-auto p-[5px] max-w-[250px]">
+                        <h2 class="text-center text-[19.2px] font-bold mb-[16px] ">Outras Agendas</h2> 
                         {calendars.slice(Math.ceil(calendars.length / 2)).map((calendar) => (
-                            <div key={calendar.id} className="calendar-item">
+                            <div key={calendar.id} className="flex items-center mb-2 w-full">
                                 <input
                                     type="checkbox"
+                                    className="mr-2"
                                     name="calendar"
                                     id={calendar.id}
                                     checked={selectedCalendarIds.has(calendar.id)}
                                     onChange={() => handleCheckboxChange(calendar.id)}
-                                />
-                                <label htmlFor={calendar.id}>{calendar.summary}</label>
-                            </div>
+                            />
+                            <label htmlFor={calendar.id} className="font-bold">
+                              {calendar.summary}
+                            </label>
+                          </div>
                         ))}
                     </div>
                 </div>
             )}
             <button
                 onClick={handleProceed}
-                className="proceed-button"
+                class="block w-52 p-4 mt-8 mx-auto bg-custom-blue text-white border-none rounded-custom text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-blue-700"
                 disabled={!selectedCalendarIds}
             >
                 Salvar
