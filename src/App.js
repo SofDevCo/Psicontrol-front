@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import SelectCalendarPage from './pages/SelectCalendarPage';
-import CreateEventForm from './pages/CreateEventForm';
+import Dashboard from './pages/Dashboard';
 import CustomersPage from './pages/CustomersPage'; 
 import CreateCustomerPage from './pages/CreateCustomerForm';
 
@@ -12,7 +12,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/select-calendar" element={<SelectCalendarPage />} />
-                <Route path="/create-event-form" element={<CreateEventForm />} />
+                <Route path="/create-event-form" element={<Dashboard />} />
                 <Route path="/customers" element={<CustomersPage />} /> 
                 <Route path="/create-customer" element={<CreateCustomerPage />} />
             </Routes>

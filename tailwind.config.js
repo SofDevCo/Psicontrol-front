@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'custom-blue': '#2980b9'
+        'custom-blue': '#0082BA',
+        'custom-white': '#DFEAF2'
       },
       borderRadius: {
         'custom': '25px'

@@ -1,54 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../index.css';
+import CreateCustomerForm from './CreateCustomerForm';  // Importe o componente de formulário
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState([]);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        const fetchCustomers = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch('http://localhost:3000/events/customers');
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar os clientes');
-                }
-                const data = await response.json();
-                setCustomers(data);
-            } catch (error) {
-                console.error('Erro ao buscar clientes:', error);
-                setError('Erro ao carregar clientes');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchCustomers();
     }, []);
 
-    return (
-        <div class="max-w-[800px] mx-auto p-5 font-sans">
-            <h1 class="text-center text-[#333]">Pacientes</h1>
+    const fetchCustomers = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://localhost:3000/events/customers');
+            if (!response.ok) {
+                throw new Error('Erro ao carregar os clientes');
+            }
+            const data = await response.json();
+            setCustomers(data);
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
+            setError('Erro ao carregar clientes');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-            {error && <p class="text-center mb-[20px] text-[red]">{error}</p>}
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    return (
+        <div className="max-w-[800px] mx-auto p-5 font-sans">
+            <h1 className="text-center text-[#333]">Pacientes</h1>
+
+            {error && <p className="text-center mb-[20px] text-red-500">{error}</p>}
             {isLoading ? (
                 <p>Carregando clientes...</p>
             ) : (
                 <ul className="list-none p-0">
                     {customers.map(customer => (
-                        <li key={`customer-${customer.customer_id}`} class="border-b-10border-b border-gray-200 py-2.5">
-                            <span class="text-xl text-[#333]">{customer.customer_name}</span>
+                        <li key={`customer-${customer.customer_id}`} className="border-b-10 border-b border-gray-200 py-2.5">
+                            <span className="text-xl text-[#333]">{customer.customer_name}</span>
                         </li>
                     ))}
                 </ul>
             )}
 
-            <button onClick={() => navigate('/create-customer')} class="py-2.5 px-4 bg-custom-blue text-white rounded cursor-pointer text-base">
-                Cadastrar novo cliente
+            <button onClick={handleOpenModal} className="py-2.5 px-4 bg-custom-blue text-white rounded cursor-pointer text-base">
+                 Novo Paciente
             </button>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="relative w-[1110px] h-[717px] bg-white p-8 rounded-[25px] shadow-lg ">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-bold mb-6 text-[#0082BA] ml-[50px]">Dados do Paciente</h2>
+                            <button 
+                                onClick={handleCloseModal} 
+                                className="flex justify-between items-center mb-[15px] bg-white text-[#0082BA] rounded-[5px] hover:bg-custom-blue hover:text-white"
+                            >
+                               Sair 
+                            </button>
+                        </div>
+
+                        <CreateCustomerForm
+                            onClose={handleCloseModal}
+                            onSubmit={fetchCustomers} 
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
