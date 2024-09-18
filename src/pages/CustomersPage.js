@@ -60,9 +60,9 @@ const CustomersPage = () => {
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="relative w-[1110px] h-[717px] bg-white p-8 rounded-[25px] shadow-lg ">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-2xl font-bold mb-6 text-[#0082BA] ml-[50px]">Dados do Paciente</h2>
+                    <div className="relative w-[1110px] h-[717px] bg-white p-8 rounded-[25px] shadow-lg overflow-y-auto">
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-2xl font-bold text-[#0082BA] ml-[20px]">Dados do Paciente</h2>
                             <button 
                                 onClick={handleCloseModal} 
                                 className="flex justify-between items-center mb-[15px] bg-white text-[#0082BA] rounded-[5px] hover:bg-custom-blue hover:text-white"
