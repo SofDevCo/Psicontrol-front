@@ -5,16 +5,19 @@ import SelectCalendarPage from './pages/SelectCalendarPage';
 import Dashboard from './pages/Dashboard';
 import CustomersPage from './pages/CustomersPage'; 
 import CreateCustomerPage from './pages/CreateCustomerForm';
+import Layout from './components/layout';
 
 const App = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Login />} />
+                <Route element={<Layout/>} >
                 <Route path="/select-calendar" element={<SelectCalendarPage />} />
                 <Route path="/create-event-form" element={<Dashboard />} />
                 <Route path="/customers" element={<CustomersPage />} /> 
                 <Route path="/create-customer" element={<CreateCustomerPage />} />
+                </Route>
             </Routes>
         </Router>
     );
