@@ -124,7 +124,6 @@ const CreateEventForm = () => {
 
     return (
         <div className="app-layout">
-            <Sidebar/>
             <main className="main-content">
                 <h2>Eventos</h2>
                 <div className="content-area">
