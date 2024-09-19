@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import '../styles/CreateEventForm.css';
 import { useSearchParams } from 'react-router-dom';
-import Sidebar from '../components/sidebar'
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
