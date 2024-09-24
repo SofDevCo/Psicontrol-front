@@ -50,7 +50,7 @@ const SelectCalendarPage = () => {
     return (
         <div class="max-w-[900px] mx-auto p-8 font-sans text-center flex flex-col items-center">
             <img src={logo} alt="Logo" class="block mx-auto mb-8 w-[150px]" />
-            <h1 className="text-custom-blue mb-8 text-[32px]">Selecione as agendas que gostaria de utilizar</h1>
+            <h1 className="text-primaria mb-8 text-[32px]">Selecione as agendas que gostaria de utilizar</h1>
             {loading ? (
                 <p class="text-gray-500 italic">Carregando calendários...</p>
             ) : error ? (
@@ -97,7 +97,7 @@ const SelectCalendarPage = () => {
             )}
             <button
                 onClick={handleProceed}
-                class="block w-52 p-4 mt-8 mx-auto bg-custom-blue text-white border-none rounded-custom text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-blue-700"
+                class="block w-52 p-4 mt-8 mx-auto bg-primaria text-white border-none rounded-custom text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-blue-700"
                 disabled={!selectedCalendarIds}
             >
                 Salvar
