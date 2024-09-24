@@ -198,7 +198,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   <button
                     type="button"
                     onClick={handleDeleteAlternativeCPF}
-                    className="ml-2 flex items-center justify-center rounded-full p-1 bg-white hover:bg-custom-blue"
+                    className="ml-2 flex items-center justify-center rounded-full p-1 bg-white hover:bg-primaria"
                   >
                     <Trash />
                   </button>
@@ -234,7 +234,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   <button
                     type="button"
                     onClick={() => handleDeleteAlternativeCPF(index)}
-                    className="ml-2 absolute items-center justify-center bg-white rounded-full p-1 text-custom-blue hover:text-white "
+                    className="ml-2 absolute items-center justify-center bg-white rounded-full p-1 text-primaria hover:text-white "
                   >
                     <Trash />
                   </button>
@@ -257,7 +257,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         <button
           type="submit"
           onClick={handleSubmit}
-          className="w-[296px] h-[64px] mt-[50px] mb-[43px] ml-[350px] bg-custom-blue text-white font-normal rounded-[15px] hover:bg-blue-600 transition duration-300"
+          className="w-[296px] h-[64px] mt-[50px] mb-[43px] ml-[350px] bg-primaria text-white font-normal rounded-[15px] hover:bg-blue-600 transition duration-300"
         >
           Salvar
         </button>
