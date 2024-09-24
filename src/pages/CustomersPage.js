@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../index.css";
 import CreateCustomerForm from "./CreateCustomerForm";
-import { SearchIcon, AddIcon } from "../icons/icons";
+import { SearchIcon, AddIcon, ArchiveIcon } from "../icons/icons";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -39,13 +39,13 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="box-border absolute w-[1076px] h-[544px] left-[314px] top-[145px] bg-new-white border-solid border-[3px] border-new-gray rounded-[15px] p-6 overflow-auto">
-      <div className="relative flex items-center w-full p-4">
+    <div className="box-border absolute w-[1076px] h-[544px] left-[314px] top-[145px] bg-bg1 border-solid border-[3px] border-cinza6 rounded-[15px] overflow-auto">
+      <div className="relative flex items-center w-full pl-7 pt-6">
         <div className="relative">
           <input
             type="text"
             placeholder="Pesquisar"
-            className="w-[360px] h-[56px] bg-primaria-clara3 border border-solid border-gray-300 rounded-[28px] pl-10"
+            className="w-[360px] h-[56px] bg-clara3 border border-solid border-gray-300 rounded-[28px] pl-10"
           />
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
             <SearchIcon />
@@ -55,28 +55,36 @@ const CustomersPage = () => {
         <div className="flex justify-center ml-[40px]">
           <button
             onClick={handleOpenModal}
-            className="flex items-center w-[200px] h-[41px] bg-new-white border-solid border-[3px] border-[#0082BA] text-custom-blue font-medium text-sm rounded-lg hover:text-new-white hover:bg-custom-blue"
+            className="flex items-center w-[200px] h-[41px] bg-bg1 border-solid border-[3px] border-[#0082BA] text-primaria font-medium text-sm font-['Ubuntu'] text-center leading-[16px] tracking-[0.1px] rounded-lg hover:text-bg1 hover:bg-primaria shadow-md"
           >
-            <AddIcon/>
-            Novo Paciente
+            <AddIcon />
+            Adicionar Paciente
           </button>
         </div>
 
-        <div className="flex w-[166px] h-[18px] left-[1191px] top-[194px] ml-[225px]">
-          Pacientes Arquivados
+        <button className="flex w-full left-[1191px] top-[194px] ml-[220px] not-italic font-medium text-sm leading-4 tracking-wider whitespace-no-wrap text-primaria underline bg-bg1 hover:bg-bg1">
+           <ArchiveIcon /> 
+          Pacientes arquivados
+        </button>
+      </div>
+
+      <div className="flex w-full h-[21px] top-[275px] font-['Ubuntu'] not-italic font-medium text-lg leading-[21px] tracking-[0.09px] text-primaria border-b-[1px] border-b border-cinza6 pl-8 pt-6 pb-8 ">
+        Paciente
+        <div className="flex w-[52px] h-[21px] left-[1305px] top-[275px] ml-[877.5px] font-['Ubuntu'] not-italic font-medium text-lg leading-[21px] tracking-[0.09px] text-primaria ">
+          Ações
         </div>
       </div>
 
-      <div className="max-w-[800px] mx-auto p-5 font-sans">
+      <div className="w-full mx-auto font-sans">
         {error && <p className="text-center mb-[20px] text-red-500">{error}</p>}
         {isLoading ? (
           <p>Carregando clientes...</p>
         ) : (
-          <ul className="list-none p-0">
+          <ul className="list-none  ">
             {customers.map((customer) => (
               <li
                 key={`customer-${customer.customer_id}`}
-                className="border-b-10 border-b border-gray-200 py-2.5"
+                className="pl-8 pt-5 pb-2 pt-2 border-b-[1] border-b border-cinza6"
               >
                 <span className="text-xl text-[#333]">
                   {customer.customer_name}
@@ -95,7 +103,7 @@ const CustomersPage = () => {
                 </h2>
                 <button
                   onClick={handleCloseModal}
-                  className="flex justify-between items-center mb-[15px] bg-white text-[#0082BA] rounded-[5px] hover:bg-custom-blue hover:text-white"
+                  className="flex justify-between items-center mb-[15px] bg-white text-[#0082BA] rounded-[5px] hover:bg-primaria hover:text-white"
                 >
                   Sair
                 </button>
