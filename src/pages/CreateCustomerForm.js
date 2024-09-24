@@ -5,13 +5,13 @@ import '../index.css';
 const CreateCustomerForm = ({ onClose, onSubmit }) => {
   const [customer, setCustomer] = useState({
     customer_name: '',
-    customer_cpf: '',
+    customer_cpf_cnpj: '',
     customer_phone: '',
     customer_email: '',
     consultation_fee: '',
     patient_status: true,  
     alternative_name: '',
-    alternative_cpf: '',
+    alternative_cpf_cnpj: '',
   });
 
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
@@ -20,7 +20,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
     if (additionalAlternatives.length < 2) {  
       setAdditionalAlternatives((prev) => [
         ...prev,
-        { alternative_name: '', alternative_cpf: '' },
+        { alternative_name: '', alternative_cpf_cnpj: '' },
       ]);
     }
   };
@@ -60,13 +60,13 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         alert('Cliente criado com sucesso!');
         setCustomer({
           customer_name: '',
-          customer_cpf: '',
+          customer_cpf_cnpj: '',
           customer_phone: '',
           customer_email: '',
           consultation_fee: '',
           patient_status: true,
           alternative_name: '',
-          alternative_cpf: '',
+          alternative_cpf_cnpj: '',
         });
         setAdditionalAlternatives([]);
         onSubmit();
@@ -123,13 +123,13 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm font-normal text-gray-700">CPF</label>
+              <label className="block mb-1 text-sm font-normal text-gray-700">CPF/CNPJ</label>
               <input
                 type="text"
-                name="customer_cpf"
-                value={customer.customer_cpf}
+                name="customer_cpf_cnpj"
+                value={customer.customer_cpf_cnpj}
                 onChange={handleChange}
-                placeholder="CPF"
+                placeholder="CPF/CNPJ"
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
@@ -183,14 +183,14 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div className="relative">
-              <label className="block mb-1 text-sm font-medium text-gray-700">CPF</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700">CPF/CNPJ</label>
               <div className="flex">
                 <input
                   type="text"
-                  name="alternative_cpf"
-                  value={customer.alternative_cpf}
+                  name="alternative_cpf_cnpj"
+                  value={customer.alternative_cpf_cnpj} 
                   onChange={handleChange}
-                  placeholder="CPF Alternativo"
+                  placeholder="CPF/CNPJ Alternativo"
                   className="w-[370px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                   disabled={customer.patient_status}
                 />
@@ -198,13 +198,14 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   <button
                     type="button"
                     onClick={handleDeleteAlternativeCPF}
-                    className="ml-2 flex items-center justify-center bg-white rounded-full p-1 text-custom-blue hover:text-white"
+                    className="ml-2 flex items-center justify-center rounded-full p-1 bg-white hover:bg-custom-blue"
                   >
                     <Trash />
                   </button>
                 )}
               </div>
             </div>
+                
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
@@ -224,16 +225,16 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   <input
                     type="text"
                     name="alternative_cpf"
-                    value={alternative.alternative_cpf}
+                    value={alternative.alternative_cpf_cnpj}
                     onChange={(e) => handleAlternativeChange(index, 'alternative_cpf', e.target.value)}
-                    placeholder={`CPF Alternativo ${index + 2}`}
+                    placeholder={`CPF/CNPJ Alternativo ${index + 1}`}
                     className="w-[370px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                     disabled={customer.patient_status}
                   />
                   <button
                     type="button"
                     onClick={() => handleDeleteAlternativeCPF(index)}
-                    className="ml-2 absolute items-center justify-center bg-white rounded-full p-1 text-custom-blue hover:text-white"
+                    className="ml-2 absolute items-center justify-center bg-white rounded-full p-1 text-custom-blue hover:text-white "
                   >
                     <Trash />
                   </button>
@@ -241,7 +242,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
               </div>
             ))}
           </div>
-          {additionalAlternatives.length < 2 && (
+          {additionalAlternatives.length < 1 && (
             <button
               type="button"
               className="mt-4 ml-[150px] inline-flex items-center px-4 py-2 border border-transparent text-black text-[17px] font-semibold font-['Inter'] bg-white rounded-md hover:bg-white hover:text-marinho"
