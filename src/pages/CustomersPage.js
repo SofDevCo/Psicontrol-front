@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../index.css";
 import CreateCustomerForm from "./CreateCustomerForm";
 import {
@@ -6,13 +6,21 @@ import {
   AddIcon,
   ArchiveIcon,
   HamburguerIcon,
+  Trash,
+  UserIconBorder,
+  EditIcon,
 } from "../icons/icons";
+import { useOutsideClick } from "../components/useOutsideClick";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const dropdownRef = useRef();
+
+  useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
   useEffect(() => {
     fetchCustomers();
@@ -41,6 +49,10 @@ const CustomersPage = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const toggleDropdown = (customer_id) => {
+    setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
 
   return (
@@ -94,9 +106,50 @@ const CustomersPage = () => {
                 <span className="text-xl text-texto1">
                   {customer.customer_name}
                 </span>
-                <button className="bg-bg1 hover:bg-bg1 flex items-center justify-end pr-8">
+                <button
+                  onClick={() => toggleDropdown(customer.customer_id)}
+                  className="bg-bg1 hover:bg-bg1 flex items-center justify-end pr-8"
+                >
                   <HamburguerIcon />
                 </button>
+                {activeDropdown === customer.customer_id && (
+                  <nav className="absolute right-0 box-border border-solid border-[1px] border-cinza6 shadow-default bg-bg2"
+                  ref={dropdownRef}>
+                    <ul>
+                      <li>
+                        <button
+                          className="flex item-center bg-bg2 text-texto2 underline font-['Open Sans'] not-italic font-normal text-[15px] leading-5 tracking-normal hover:bg-bg2"
+                          onClick={() =>  
+                            console.log("Conta do paciente clicada")  
+                          }
+                        >
+                          <UserIconBorder/>
+                          Conta do paciente
+                        </button>
+                      </li>
+                      <li>    
+                        <button
+                          className="flex item-center bg-bg2 text-texto2 underline font-['Open Sans'] not-italic font-normal text-[15px] leading-5 tracking-normal hover:bg-bg2"
+                          onClick={() => console.log("Editar paciente clicado")}
+                        >
+                          <EditIcon/>
+                          Editar paciente
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="flex item-center bg-bg2 text-texto2 underline font-['Open Sans'] not-italic font-normal text-[15px] leading-5 tracking-normal hover:bg-bg2"
+                          onClick={() =>
+                            console.log("Excluir paciente clicado")
+                          }
+                        >
+                          <Trash/>
+                          Excluir paciente
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                )}
               </li>
             ))}
           </ul>
