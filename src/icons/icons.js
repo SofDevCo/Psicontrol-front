@@ -170,7 +170,7 @@ const SearchIcon = () => {
       <g clip-path="url(#clip0_1_161)">
         <path
           d="M19.3359 18.2109L14.7344 13.6094C15.875 12.2188 16.5625 10.4375 16.5625 8.49609C16.5625 4.04297 12.9492 0.429688 8.49609 0.429688C4.03906 0.429688 0.429688 4.04297 0.429688 8.49609C0.429688 12.9492 4.03906 16.5625 8.49609 16.5625C10.4375 16.5625 12.2148 15.8789 13.6055 14.7383L18.207 19.3359C18.5195 19.6484 19.0234 19.6484 19.3359 19.3359C19.6484 19.0273 19.6484 18.5195 19.3359 18.2109ZM8.49609 14.957C4.92969 14.957 2.03125 12.0586 2.03125 8.49609C2.03125 4.93359 4.92969 2.03125 8.49609 2.03125C12.0586 2.03125 14.9609 4.93359 14.9609 8.49609C14.9609 12.0586 12.0586 14.957 8.49609 14.957Z"
-          fill="#718EBF"
+          fill="#5C5C5C"
         />
       </g>
       <defs>
@@ -225,4 +225,67 @@ const ArchiveIcon = () => {
     </svg>
   );
 };
-export { Home, RecDesp, User, Config, Trash, SearchIcon, AddIcon, ArchiveIcon};
+
+const HamburguerIcon = () => {
+  return (
+    <svg
+      width="25"
+      height="25"
+      viewBox="0 0 25 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="flex"
+    >
+      <g clip-path="url(#clip0_348_7214)">
+        <g filter="url(#filter0_d_348_7214)">
+          <path
+            d="M4.16667 18.75H20.8333C21.4062 18.75 21.875 18.2812 21.875 17.7083C21.875 17.1354 21.4062 16.6667 20.8333 16.6667H4.16667C3.59375 16.6667 3.125 17.1354 3.125 17.7083C3.125 18.2812 3.59375 18.75 4.16667 18.75ZM4.16667 13.5417H20.8333C21.4062 13.5417 21.875 13.0729 21.875 12.5C21.875 11.9271 21.4062 11.4583 20.8333 11.4583H4.16667C3.59375 11.4583 3.125 11.9271 3.125 12.5C3.125 13.0729 3.59375 13.5417 4.16667 13.5417ZM3.125 7.29167C3.125 7.86458 3.59375 8.33333 4.16667 8.33333H20.8333C21.4062 8.33333 21.875 7.86458 21.875 7.29167C21.875 6.71875 21.4062 6.25 20.8333 6.25H4.16667C3.59375 6.25 3.125 6.71875 3.125 7.29167Z"
+            fill="#0082BA"
+          />
+        </g>
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_348_7214"
+          x="-0.875"
+          y="6.25"
+          width="26.75"
+          height="20.5"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_348_7214"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_348_7214"
+            result="shape"
+          />
+        </filter>
+        <clipPath id="clip0_348_7214">
+          <rect width="25" height="25" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+export { Home, RecDesp, User, Config, Trash, SearchIcon, AddIcon, ArchiveIcon, HamburguerIcon };
