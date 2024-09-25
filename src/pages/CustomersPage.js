@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../index.css";
 import CreateCustomerForm from "./CreateCustomerForm";
-import { SearchIcon, AddIcon, ArchiveIcon } from "../icons/icons";
+import {
+  SearchIcon,
+  AddIcon,
+  ArchiveIcon,
+  HamburguerIcon,
+} from "../icons/icons";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -45,7 +50,7 @@ const CustomersPage = () => {
           <input
             type="text"
             placeholder="Pesquisar"
-            className="w-[360px] h-[56px] bg-clara3 border border-solid border-gray-300 rounded-[28px] pl-10"
+            className="w-[360px] h-[56px] bg-clara3 border border-solid border-gray-300 rounded-[28px] pl-10 text-texto3"
           />
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
             <SearchIcon />
@@ -63,7 +68,7 @@ const CustomersPage = () => {
         </div>
 
         <button className="flex w-full left-[1191px] top-[194px] ml-[220px] not-italic font-medium text-sm leading-4 tracking-wider whitespace-no-wrap text-primaria underline bg-bg1 hover:bg-bg1">
-           <ArchiveIcon /> 
+          <ArchiveIcon />
           Pacientes arquivados
         </button>
       </div>
@@ -80,15 +85,18 @@ const CustomersPage = () => {
         {isLoading ? (
           <p>Carregando clientes...</p>
         ) : (
-          <ul className="list-none  ">
+          <ul className="list-none">
             {customers.map((customer) => (
               <li
                 key={`customer-${customer.customer_id}`}
-                className="pl-8 pt-5 pb-2 pt-2 border-b-[1] border-b border-cinza6"
+                className="pl-8 pt-5 pb-2 border-b-[1px] border-b border-cinza6 flex justify-between items-center"
               >
-                <span className="text-xl text-[#333]">
+                <span className="text-xl text-texto1">
                   {customer.customer_name}
                 </span>
+                <button className="bg-bg1 hover:bg-bg1 flex items-center justify-end pr-8">
+                  <HamburguerIcon />
+                </button>
               </li>
             ))}
           </ul>
