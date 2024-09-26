@@ -5,6 +5,7 @@ import SelectCalendarPage from './pages/SelectCalendarPage';
 import Dashboard from './pages/Dashboard';
 import CustomersPage from './pages/CustomersPage'; 
 import CreateCustomerPage from './pages/CreateCustomerForm';
+import IncomePage from './pages/IncomePage';
 import Layout from './components/layout';
 import IncomePage from './pages/IncomePage';
 
