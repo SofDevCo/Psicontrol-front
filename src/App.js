@@ -18,8 +18,8 @@ const App = () => {
                 <Route path="/create-event-form" element={<Dashboard />} />
                 <Route path="/customers" element={<CustomersPage />} /> 
                 <Route path="/create-customer" element={<CreateCustomerPage />} />
-                </Route>
                 <Route path="/income" element={<IncomePage />} />
+                </Route>
             </Routes>
         </Router>
     );
