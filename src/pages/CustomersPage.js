@@ -11,12 +11,13 @@ import {
   EditIcon,
 } from "../icons/icons";
 import { useOutsideClick } from "../components/useOutsideClick";
+import { useModal } from "../components/useModal";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {isModalOpen, openModal, closeModal } = useModal();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef();
 
@@ -43,14 +44,6 @@ const CustomersPage = () => {
     }
   };
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
@@ -71,7 +64,7 @@ const CustomersPage = () => {
 
         <div className="flex justify-center ml-[40px]">
           <button
-            onClick={handleOpenModal}
+            onClick={openModal}
             className="flex items-center w-[200px] h-[41px] bg-bg1 border-solid border-[3px] border-[#0082BA] text-primaria font-medium text-sm font-['Ubuntu'] text-center leading-[16px] tracking-[0.1px] rounded-lg hover:text-bg1 hover:bg-primaria shadow-md"
           >
             <AddIcon />
@@ -160,10 +153,10 @@ const CustomersPage = () => {
             <div className="relative w-[1110px] h-[717px] bg-white p-8 rounded-[25px] shadow-lg overflow-y-auto">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-[#0082BA] ml-[20px]">
-                  Dados do Paciente
+                  Adicionar Paciente
                 </h2>
                 <button
-                  onClick={handleCloseModal}
+                  onClick={closeModal}
                   className="flex justify-between items-center mb-[15px] bg-white text-[#0082BA] rounded-[5px] hover:bg-primaria hover:text-white"
                 >
                   Sair
@@ -171,7 +164,7 @@ const CustomersPage = () => {
               </div>
 
               <CreateCustomerForm
-                onClose={handleCloseModal}
+                onClose={closeModal}
                 onSubmit={fetchCustomers}
               />
             </div>
