@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
 import { Trash } from '../icons/icon';
 
 // Função para formatar os valores para exibição
@@ -217,7 +216,6 @@ const IncomePage = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar />
       <div className="flex flex-grow justify-center items-center">
         <div className="w-[1110px] h-[635px] bg-white rounded-[25px] p-6 shadow-lg">
           <h1 className="text-xl font-bold mb-4">Receitas e Despesas</h1>

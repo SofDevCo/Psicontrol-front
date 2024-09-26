@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams} from 'react-router-dom';
 import '../styles/CreateEventForm.css';
-import Sidebar from '../components/Sidebar.js';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
@@ -146,7 +145,6 @@ const CreateEventForm = () => {
 
     return (
         <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
-            <Sidebar/>
             <main class="main-content">
                 <h2>Eventos</h2>
                 <div class="content-area">
