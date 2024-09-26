@@ -28,6 +28,25 @@ const IncomePage = () => {
   const [newExpenseName, setNewExpenseName] = useState('');
   const [newRevenueName, setNewRevenueName] = useState('');
 
+  const fetchUserId = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/get-user-id', {
+            credentials: 'include' // Inclui cookies para manter a sessão
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return data.userId; // Retorna o user_id da sessão
+        } else {
+            console.error('Erro ao buscar o User ID da sessão');
+            return null;
+        }
+    } catch (error) {
+        console.error('Erro ao buscar o User ID:', error);
+        return null;
+    }
+};
+
+
   // Adicionar nova despesa
   const addExpense = async () => {
     if (newExpenseName.trim()) {
@@ -38,7 +57,13 @@ const IncomePage = () => {
 
       // Salvar a nova despesa no backend
       try {
-        await fetch('http://localhost:3000/income/expense/', {
+        const user_id = await fetchUserId(); // Buscar o user_id da sessão
+        if (!user_id) {
+            console.error('User ID não encontrado. Usuário não está logado.');
+            return;
+        }
+
+        const response = await fetch('http://localhost:3000/income/expense/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -46,16 +71,22 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newExpense.name,
             value: parseCurrency(newExpense.value), // Desformatação para salvar
-            user_id: 1, // Defina aqui o user_id correto
+            user_id: user_id, // Use o user_id obtido do localStorage
             date: new Date(),
           }),
         });
-        console.log('Nova despesa salva com sucesso!');
+
+        if (response.ok) {
+          console.log('Nova despesa salva com sucesso!');
+        } else {
+          console.error('Erro ao salvar a nova despesa:', response.statusText);
+        }
       } catch (error) {
         console.error('Erro ao salvar a nova despesa:', error);
       }
     }
   };
+
 
   // Adicionar nova receita
   const addRevenue = async () => {
@@ -67,7 +98,13 @@ const IncomePage = () => {
 
       // Salvar a nova receita no backend
       try {
-        const response = await fetch('http://localhost:3000/income/revenue', {
+        const user_id = await fetchUserId(); // Buscar o user_id da sessão
+        if (!user_id) {
+            console.error('User ID não encontrado. Usuário não está logado.');
+            return;
+        }
+
+        const response = await fetch(`http://localhost:3000/income/revenue/${user_id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -75,7 +112,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newRevenue.name,
             value: parseCurrency(newRevenue.value), // Desformatação para salvar
-            user_id: 1, // Defina aqui o user_id correto
+            user_id: user_id,
             date: new Date(),
           }),
         });
@@ -157,8 +194,13 @@ const IncomePage = () => {
   // Carregar dados do backend
   useEffect(() => {
     const loadData = async () => {
+      const user_id = await fetchUserId(); // Buscar o user_id da sessão
+        if (!user_id) {
+            console.error('User ID não encontrado.');
+            return;
+        }
       try {
-        const response = await fetch('http://localhost:3000/income/entries/1');
+        const response = await fetch('http://localhost:3000/income/entries/');
         const data = await response.json();
         const expenseData = data.filter(entry => entry.type === 'expense') || [];
         const revenueData = data.filter(entry => entry.type === 'revenue') || [];

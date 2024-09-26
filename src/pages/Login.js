@@ -1,5 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import logo from '../images/Psicontrol.png';
+
+const fetchUserId = async () => {
+    try {
+        const response = await fetch('http://localhost:3000/get-user-id');
+        if (response.ok) {
+            const data = await response.json();
+        } else {console.error("alguma coisa");}
+    } catch (error) {
+        console.error("error", error);
+    }
+};
 
 const Login = () => {
     const handleLogin = async () => {
@@ -12,40 +23,6 @@ const Login = () => {
             console.error('Erro ao iniciar o login:', error);
         }
     };
-
-    // Verifica se o login foi feito e o código de callback está presente
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            const queryParams = new URLSearchParams(window.location.search);
-            const code = queryParams.get('code');
-
-            if (code) {
-                try {
-                    // Após o login com o Google, obtém o user_id
-                    const response = await fetch(`http://localhost:3000/google/callback?code=${code}`);
-                    const data = await response.json();
-
-                    console.log('Resposta da API após login:', data); // Log para verificar a resposta da API
-
-                    if (data.user_id) {
-                        // Armazena o user_id no localStorage
-                        localStorage.setItem('user_id', data.user_id);
-                        console.log('User ID armazenado no localStorage:', data.user_id); // Log para verificar se foi armazenado
-                        // Redireciona para a página inicial (ou qualquer página desejada)
-                        window.location.href = '/dashboard'; 
-                    } else {
-                        console.log('Nenhum user_id encontrado na resposta.'); // Log caso não encontre o user_id
-                    }
-                } catch (error) {
-                    console.error('Erro ao obter dados do usuário:', error);
-                }
-            } else {
-                console.log('Nenhum código encontrado na URL.'); // Log caso não encontre o código
-            }
-        };
-
-        fetchUserDetails();
-    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-100 p-4">
