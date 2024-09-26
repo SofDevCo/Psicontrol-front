@@ -22,7 +22,7 @@ const CreateEventForm = () => {
                 const data = await response.json();
                 console.log('Calendários recebidos:', data);
                 const filteredCalendars = data.filter(calendar => selectedCalendarIds.includes(calendar.id));
-                setCalendars(filteredCalendars);
+                setCalendars(data);
                 if (filteredCalendars.length > 0 && !selectedCalendarId) {
                     setSelectedCalendarId(filteredCalendars[0].id);
                 }
@@ -88,7 +88,6 @@ const CreateEventForm = () => {
             }
 
             alert('Evento cancelado com sucesso!');
-            // Atualizar a lista de eventos após o cancelamento
             fetchEvents();
         } catch (error) {
             console.error('Erro ao cancelar o evento:', error);
@@ -120,7 +119,7 @@ const CreateEventForm = () => {
     const handleCalendarChange = (e) => {
         setSelectedCalendarId(e.target.value); 
     };
-
+    
     return (
         <div className="app-layout">
             <main className="main-content">
