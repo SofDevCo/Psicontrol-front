@@ -92,7 +92,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="customer_name"
                 value={customer.customer_name}
                 onChange={handleChange}
-                placeholder="Nome"
+                placeholder="Nome do paciente"
                 required
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
@@ -105,7 +105,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="customer_email"
                 value={customer.customer_email}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="e-mail.paciente@gmail.com"
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
@@ -117,7 +117,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="customer_phone"
                 value={customer.customer_phone}
                 onChange={handleChange}
-                placeholder="Telefone"
+                placeholder="(00) 0 0000-0000"
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
@@ -129,7 +129,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="customer_cpf_cnpj"
                 value={customer.customer_cpf_cnpj}
                 onChange={handleChange}
-                placeholder="CPF/CNPJ"
+                placeholder="XX.XXX.XXX/0001-XX."
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
@@ -142,7 +142,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="consultation_fee"
                 value={customer.consultation_fee}
                 onChange={handleChange}
-                placeholder="R$ 0,00"
+                placeholder="R$ 000,00"
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
@@ -150,7 +150,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         </div>
 
         <div>
-          <h3 className="text-lg font-[20px] text-black text-xl font-medium font-['Inter']l mb-4">Dados para recibo / nota fiscal</h3>
+          <h3 className="text-lg font-[20px] text-black text-xl font-medium font-['Inter']l mb-4">Dados para recibo</h3>
 
           <div className="mb-4 flex items-center">
             <div
@@ -176,7 +176,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 name="alternative_name"
                 value={customer.alternative_name}
                 onChange={handleChange}
-                placeholder="Nome Alternativo"
+                placeholder="Nome do Paciente"
                 className="w-[418px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                 disabled={customer.patient_status}
               />
@@ -190,7 +190,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   name="alternative_cpf_cnpj"
                   value={customer.alternative_cpf_cnpj} 
                   onChange={handleChange}
-                  placeholder="CPF/CNPJ Alternativo"
+                  placeholder="XX.XXX.XXX/0001-XX."
                   className="w-[370px] h-[50px] px-4 py-2 text-[#5c5c5c] border border-gray-300 rounded-[15px] shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                   disabled={customer.patient_status}
                 />
