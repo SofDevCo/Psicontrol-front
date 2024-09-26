@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams} from 'react-router-dom';
 import '../styles/CreateEventForm.css';
-import Sidebar from '../components/Sidebar.js';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
@@ -9,11 +8,11 @@ const CreateEventForm = () => {
     const [selectedCalendarId, setSelectedCalendarId] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    
     const [searchParams] = useSearchParams();
     const calendarIdsParam = searchParams.get('calendarIds');
     
 
-    // Usando useMemo para evitar re-renderizações desnecessárias
     const selectedCalendarIds = useMemo(() => calendarIdsParam ? calendarIdsParam.split(',') : [], [calendarIdsParam]);
 
     const fetchCalendars = useCallback(async () => {
@@ -23,10 +22,8 @@ const CreateEventForm = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Calendários recebidos:', data);
-                // Filtrar calendários selecionados
                 const filteredCalendars = data.filter(calendar => selectedCalendarIds.includes(calendar.id));
-                setCalendars(filteredCalendars);
-                // Definir o calendário selecionado se não estiver definido
+                setCalendars(data);
                 if (filteredCalendars.length > 0 && !selectedCalendarId) {
                     setSelectedCalendarId(filteredCalendars[0].id);
                 }
@@ -92,14 +89,12 @@ const CreateEventForm = () => {
             }
 
             alert('Evento cancelado com sucesso!');
-            // Atualizar a lista de eventos após o cancelamento
             fetchEvents();
         } catch (error) {
             console.error('Erro ao cancelar o evento:', error);
             alert(`Erro ao cancelar o evento: ${error.message}`);
         }
     };
-
 
     const syncCalendar = async () => {
         try {
@@ -150,7 +145,6 @@ const CreateEventForm = () => {
 
     return (
         <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
-            <Sidebar/>
             <main class="main-content">
                 <h2>Eventos</h2>
                 <div class="content-area">
