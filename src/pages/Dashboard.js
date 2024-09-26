@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams} from 'react-router-dom';
 import '../styles/CreateEventForm.css';
-import { useSearchParams } from 'react-router-dom';
+import Sidebar from '../components/Sidebar.js';
 
 const CreateEventForm = () => {
     const [events, setEvents] = useState([]);
@@ -8,9 +9,9 @@ const CreateEventForm = () => {
     const [selectedCalendarId, setSelectedCalendarId] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    
     const [searchParams] = useSearchParams();
     const calendarIdsParam = searchParams.get('calendarIds');
+    
 
     const selectedCalendarIds = useMemo(() => calendarIdsParam ? calendarIdsParam.split(',') : [], [calendarIdsParam]);
 
@@ -69,7 +70,7 @@ const CreateEventForm = () => {
     }, [fetchCalendars]);
 
     useEffect(() => {
-        fetchEvents();
+            fetchEvents();  
     }, [fetchEvents, selectedCalendarId]);
 
     const handleCancel = async (googleEventId, calendarId) => {
@@ -95,6 +96,7 @@ const CreateEventForm = () => {
         }
     };
 
+
     const syncCalendar = async () => {
         try {
             setLoading(true);
@@ -119,14 +121,37 @@ const CreateEventForm = () => {
     const handleCalendarChange = (e) => {
         setSelectedCalendarId(e.target.value); 
     };
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/get-user-id', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('User ID recebido da sessão no CreateEventForm:', data.userId);
+                } else {
+                    throw new Error('Erro ao buscar user ID da sessão');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar o user ID da sessão:', error);
+            }
+        };
+        fetchUserId();
+    }, []);
     
+    
+    
+
     return (
-        <div className="app-layout">
-            <main className="main-content">
+        <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
+            <Sidebar/>
+            <main class="main-content">
                 <h2>Eventos</h2>
-                <div className="content-area">
-                    <section className="events-list-section">
-                        <h2 className="event-list-title">
+                <div class="content-area">
+                    <section class="events-list-section">
+                        <h2 class="event-list-title">
                             Eventos Criados:
                             <select onChange={handleCalendarChange} value={selectedCalendarId} disabled={loading}>
                                 {calendars.map((calendar) => (
@@ -135,12 +160,12 @@ const CreateEventForm = () => {
                                     </option>
                                 ))}
                             </select>
-                            <section className="sync-calendar-section">
+                            <section class="sync-calendar-section">
                                 <button onClick={syncCalendar}>Sincronizar Calendários</button>
                             </section>
                         </h2>
-                        {error && <p className="error-message">{error}</p>}
-                            <table className="events-table">
+                        {error && <p class="error-message">{error}</p>}
+                            <table class="events-table">
                                 <thead>
                                     <tr>
                                         <th>Nome do Evento</th>

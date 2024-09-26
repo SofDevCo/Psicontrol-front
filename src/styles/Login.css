@@ -1,4 +1,4 @@
-/* Login.css */
+
 body {
     margin: 0;
     padding: 0;
@@ -6,13 +6,13 @@ body {
     background-color: #f0f0f0;
 }
 
-.login-page {
+/* .login-page {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Alinha ao topo */
+    justify-content: flex-start; 
     align-items: center;
     height: 100vh;
-    padding-top: 220px; /* Ajuste conforme necessário */
+    padding-top: 220px; 
 }
 
 .login-logo {
@@ -66,5 +66,6 @@ body {
 .google-text {
     font-size: 18px;
     color: #000;
-}
+    align-items: first baseline;
+}  */
 

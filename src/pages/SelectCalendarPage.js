@@ -9,6 +9,27 @@ const SelectCalendarPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/get-user-id', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserId(data.userId);
+                    console.log('User ID recebido da sessão:', data.userId);
+                } else {
+                    throw new Error('Erro ao buscar user ID da sessão');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar o user ID da sessão:', error);
+            }
+        };
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchCalendars = async () => {
@@ -44,7 +65,13 @@ const SelectCalendarPage = () => {
 
     const handleProceed = () => {
         const ids = Array.from(selectedCalendarIds).join(',');
-        navigate(`/create-event-form?calendarIds=${ids}`);
+        
+        if (userId) {
+            console.log('User ID da sessão antes de redirecionar:', userId);
+            navigate(`/create-event-form?calendarIds=${ids}&user_id=${userId}`);
+        } else {
+            console.error('User ID não encontrado na sessão.');
+        }
     };
 
     return (

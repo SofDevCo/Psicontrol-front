@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CustomersPage from './pages/CustomersPage'; 
 import CreateCustomerPage from './pages/CreateCustomerForm';
 import Layout from './components/layout';
+import IncomePage from './pages/IncomePage';
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                 <Route path="/customers" element={<CustomersPage />} /> 
                 <Route path="/create-customer" element={<CreateCustomerPage />} />
                 </Route>
+                <Route path="/income" element={<IncomePage />} />
             </Routes>
         </Router>
     );

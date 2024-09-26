@@ -545,6 +545,7 @@ video {
   --tw-contain-style:  ;
 }
 
+<<<<<<< HEAD
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -559,3 +560,14 @@ code {
     monospace;
 }
 
+=======
+.table {
+  display: table;
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+
+>>>>>>> 038e5b0ee9bfdbef6ef08941bb67407b9be576c9
