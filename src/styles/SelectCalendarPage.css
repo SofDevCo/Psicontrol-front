@@ -1,6 +1,6 @@
 /* SelectCalendarPage.css */
 
-.select-calendar-page {
+/* .select-calendar-page {
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
@@ -43,14 +43,14 @@
 .calendar-item input[type="checkbox"] {
   margin-right: 1rem;
   cursor: pointer;
-}
-
+} */
+/* 
 .calendar-item label {
   flex-grow: 1;
   cursor: pointer;
-}
+} */
 
-.proceed-button {
+/* .proceed-button {
   display: block;
   width: 100%;
   padding: 0.75rem;
@@ -62,19 +62,19 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+} */
 
-.proceed-button:hover:not(:disabled) {
+/* .proceed-button:hover:not(:disabled) {
   background-color: #45a049;
 }
 
 .proceed-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
-}
+} */
 
 /* Custom checkbox styles */
-.calendar-item input[type="checkbox"] {
+/* .calendar-item input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
@@ -97,4 +97,4 @@
   color: white;
   font-size: 14px;
   line-height: 20px;
-}
+} */

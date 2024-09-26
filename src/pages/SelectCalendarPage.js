@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/SelectCalendarPage.css';  // Referenciando o arquivo CSS
+import logo from '../images/Psicontrol.png';
+import '../tailwind.css';
 
 const SelectCalendarPage = () => {
     const [calendars, setCalendars] = useState([]);
@@ -8,6 +9,27 @@ const SelectCalendarPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/get-user-id', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserId(data.userId);
+                    console.log('User ID recebido da sessão:', data.userId);
+                } else {
+                    throw new Error('Erro ao buscar user ID da sessão');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar o user ID da sessão:', error);
+            }
+        };
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchCalendars = async () => {
@@ -43,38 +65,70 @@ const SelectCalendarPage = () => {
 
     const handleProceed = () => {
         const ids = Array.from(selectedCalendarIds).join(',');
-        navigate(`/create-event-form?calendarIds=${ids}`);
+        
+        if (userId) {
+            console.log('User ID da sessão antes de redirecionar:', userId);
+            navigate(`/create-event-form?calendarIds=${ids}&user_id=${userId}`);
+        } else {
+            console.error('User ID não encontrado na sessão.');
+        }
     };
 
     return (
-        <div className="select-calendar-page">
-            <h1 className="title">Selecione os Calendários</h1>
+        <div class="max-w-[900px] mx-auto p-8 font-sans text-center flex flex-col items-center">
+            <img src={logo} alt="Logo" class="block mx-auto mb-8 w-[150px]" />
+            <h1 className="text-custom-blue mb-8 text-[32px]">Selecione as agendas que gostaria de utilizar</h1>
             {loading ? (
-                <p className="loading">Carregando calendários...</p>
+                <p class="text-gray-500 italic">Carregando calendários...</p>
             ) : error ? (
-                <p className="error">{error}</p>
+                <p class="text-gray-500 italic">{error}</p>
             ) : (
-                <div className="calendar-selection">
-                    {calendars.map((calendar) => (
-                        <div key={calendar.id} className="calendar-item">
-                            <input
-                                type="checkbox"
-                                id={calendar.id}
-                                checked={selectedCalendarIds.has(calendar.id)}
-                                onChange={() => handleCheckboxChange(calendar.id)}
-                            />
-                            <label htmlFor={calendar.id}>{calendar.summary}</label>
-                        </div>
-                    ))}
-                    <button
-                        onClick={handleProceed}
-                        className="proceed-button"
-                        disabled={selectedCalendarIds.size === 0}
-                    >
-                        Prosseguir
-                    </button>
+                <div class="flex justify-center items-start gap-8 mt-8 flex-wrap ml-[136px]">
+                    <div class="flex flex-col items-start justify-center w-auto p-[5px] max-w-[250px]">
+                        <h2 class="text-center text-[19.2px] font-bold mb-[16px] ">Minhas Agendas</h2> 
+                        {calendars.slice(0, Math.ceil(calendars.length / 2)).map((calendar) => (
+                            <div key={calendar.id} className="flex items-center mb-2 w-full">
+                                <input
+                                    type="checkbox"
+                                    className="mr-2"
+                                    name="calendar"
+                                    id={calendar.id}
+                                    checked={selectedCalendarIds.has(calendar.id)}
+                                    onChange={() => handleCheckboxChange(calendar.id)}
+                                />
+                                <label htmlFor={calendar.id} className="font-bold">
+                                    {calendar.summary}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                    <div class="flex flex-col items-start justify-center w-auto p-[5px] max-w-[250px]">
+                        <h2 class="text-center text-[19.2px] font-bold mb-[16px] ">Outras Agendas</h2> 
+                        {calendars.slice(Math.ceil(calendars.length / 2)).map((calendar) => (
+                            <div key={calendar.id} className="flex items-center mb-2 w-full">
+                                <input
+                                    type="checkbox"
+                                    className="mr-2"
+                                    name="calendar"
+                                    id={calendar.id}
+                                    checked={selectedCalendarIds.has(calendar.id)}
+                                    onChange={() => handleCheckboxChange(calendar.id)}
+                                />
+                                <label htmlFor={calendar.id} className="font-bold">
+                                    {calendar.summary}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
+            <button
+                onClick={handleProceed}
+                class="block w-52 p-4 mt-8 mx-auto bg-custom-blue text-white border-none rounded-custom text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-blue-700"
+                disabled={!selectedCalendarIds.size}
+            >
+                Salvar
+            </button>
         </div>
     );
 };
