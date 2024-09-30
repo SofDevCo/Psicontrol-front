@@ -30,19 +30,28 @@ const CustomersPage = () => {
   const fetchCustomers = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/events/customers");
-      if (!response.ok) {
-        throw new Error("Erro ao carregar os clientes");
-      }
-      const data = await response.json();
-      setCustomers(data);
+        const response = await fetch("http://localhost:3000/events/customers", {
+            method: "GET",
+            headers: {
+                 Authorization: `Bearer ${localStorage.getItem(
+                  "authentication_token"
+                )}`, 
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao carregar os clientes");
+        }
+        const data = await response.json();
+        setCustomers(data);
     } catch (error) {
-      console.error("Erro ao buscar clientes:", error);
-      setError("Erro ao carregar clientes");
+        console.error("Erro ao buscar clientes:", error);
+        setError("Erro ao carregar clientes");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
