@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Trash } from '../icons/icons'; 
 import '../index.css';  
+import '../styles/CreateEventForm.css';
 
 const CreateCustomerForm = ({ onClose, onSubmit }) => {
   const [customer, setCustomer] = useState({
@@ -51,9 +52,13 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
       const response = await fetch('http://localhost:3000/events/create-customer', {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            "authentication_token"
+          )}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...customer, additionalAlternatives }),
+        credentials: 'include',
       });
 
       if (response.ok) {
