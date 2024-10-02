@@ -147,27 +147,6 @@ const CreateEventForm = () => {
     setSelectedCalendarId(e.target.value);
   };
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/get-user-id", {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          console.log(
-            "User ID recebido da sessão no CreateEventForm:",
-            data.userId
-          );
-        } else {
-          throw new Error("Erro ao buscar user ID da sessão");
-        }
-      } catch (error) {
-        console.error("Erro ao buscar o user ID da sessão:", error);
-      }
-    };
-    fetchUserId();
-  }, []);
 
   return (
     <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
