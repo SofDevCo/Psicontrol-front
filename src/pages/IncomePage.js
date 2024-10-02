@@ -30,6 +30,7 @@ const IncomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState("");
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const fetchUserId = async () => {
     try {
@@ -250,6 +251,11 @@ const IncomePage = () => {
   const confirmDelete = () => {
     handleDelete(itemToDelete, itemType);
     closeModal();
+    setIsSuccessModalOpen(true); // Abre o modal de sucesso
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
   };
 
 
@@ -340,6 +346,18 @@ const IncomePage = () => {
               </button>
               <button onClick={confirmDelete} className="bg-red-500 text-white p-2 rounded-md">
                 Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Item excluído com sucesso!</h2>
+            <div className="flex justify-end">
+              <button onClick={closeSuccessModal} className="bg-blue-500 text-white p-2 rounded-md">
+                Fechar
               </button>
             </div>
           </div>
