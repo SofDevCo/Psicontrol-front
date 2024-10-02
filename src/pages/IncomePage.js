@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash } from "../icons/icons";
 
+// Função para formatar os valores para exibição
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
     value = value?.toString() || "0";
@@ -13,6 +14,7 @@ const formatCurrency = (value) => {
   });
 };
 
+// Função para desformatar o valor de volta para número
 const parseCurrency = (value) => {
   return parseFloat(value.replace(/[^0-9.-]+/g, "")) || 0;
 };
@@ -25,6 +27,9 @@ const IncomePage = () => {
   const [newExpenseName, setNewExpenseName] = useState("");
   const [newRevenueName, setNewRevenueName] = useState("");
   const [userId, setUserId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [itemType, setItemType] = useState("");
 
   const fetchUserId = async () => {
     try {
@@ -42,14 +47,14 @@ const IncomePage = () => {
         const data = await response.json();
         setUserId(data.user_id);
         console.log("User ID:", data.user_id);
-        return data.user_id; 
+        return data.user_id; // Retorna o user_id
       } else {
         console.error("Erro na resposta da requisição:", response.status);
-        return null;
+        return null; // Retorna null em caso de erro
       }
     } catch (error) {
       console.error("Erro ao buscar o User ID:", error);
-      return null; 
+      return null; // Retorna null em caso de erro
     }
   };
 
@@ -57,6 +62,7 @@ const IncomePage = () => {
     fetchUserId();
   }, []);
 
+  // Adicionar nova despesa
   const addExpense = async () => {
     if (newExpenseName.trim()) {
       const newExpense = {
@@ -64,12 +70,12 @@ const IncomePage = () => {
         value: newExpenseValue || "0,00",
       };
 
-      setExpenses([...expenses, newExpense]); 
+      // Limpar os campos de entrada
       setNewExpenseName("");
       setNewExpenseValue("");
 
       try {
-        const user_id = await fetchUserId(); 
+        const user_id = await fetchUserId(); // Obtém o user_id
         if (!user_id) {
           console.error("User ID não encontrado. Usuário não está logado.");
           return;
@@ -83,12 +89,14 @@ const IncomePage = () => {
           },
           body: JSON.stringify({
             name: newExpense.name,
-            value: parseCurrency(newExpense.value) / 100, 
+            value: parseCurrency(newExpense.value) / 100, // Corrige a conversão do valor para o banco
             date: new Date(),
           }),
         });
 
         if (response.ok) {
+          const savedExpense = await response.json(); // Assume que o backend retorna a despesa salva com o ID
+          setExpenses((prevExpenses) => [...prevExpenses, savedExpense]); // Atualiza o estado local com a nova despesa
           console.log("Nova despesa salva com sucesso!");
         } else {
           console.error("Erro ao salvar a nova despesa:", response.statusText);
@@ -100,6 +108,10 @@ const IncomePage = () => {
   };
 
 
+
+
+
+  // Adicionar nova receita
   const addRevenue = async () => {
     if (newRevenueName.trim() && newRevenueValue) {
       const newRevenue = {
@@ -107,12 +119,12 @@ const IncomePage = () => {
         value: newRevenueValue,
       };
 
-      setRevenues([...revenues, newRevenue]); 
+      // Limpar os campos de entrada
       setNewRevenueName("");
       setNewRevenueValue("");
 
       try {
-        const user_id = await fetchUserId(); 
+        const user_id = await fetchUserId(); // Obtém o user_id
         if (!user_id) {
           console.error("User ID não encontrado. Usuário não está logado.");
           return;
@@ -126,12 +138,14 @@ const IncomePage = () => {
           },
           body: JSON.stringify({
             name: newRevenue.name,
-            value: parseCurrency(newRevenue.value) / 100,
+            value: parseCurrency(newRevenue.value) / 100, // Corrige a conversão do valor para o banco
             date: new Date(),
           }),
         });
 
         if (response.ok) {
+          const savedRevenue = await response.json(); // Assume que o backend retorna a receita salva com o ID
+          setRevenues((prevRevenues) => [...prevRevenues, savedRevenue]); // Atualiza o estado local com a nova receita
           console.log("Nova receita salva com sucesso!");
         } else {
           console.error("Erro ao salvar a nova receita:", response.statusText);
@@ -147,18 +161,21 @@ const IncomePage = () => {
 
 
 
-  async function deleteRevenue(id) { 
+
+  async function deleteRevenue(id) {
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue/${id}`, { 
+        `http://localhost:3000/income/revenue/${id}`, {
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           "Content-Type": "application/json",
         },
-      }
-      );
+      });
 
       if (response.ok) {
+        // Remover a receita do estado local
+        setRevenues(revenues.filter(revenue => revenue.id !== id));
         const data = await response.json();
         console.log("Receita deletada com sucesso:", data.message);
       } else {
@@ -169,19 +186,21 @@ const IncomePage = () => {
     }
   }
 
-  async function deleteExpense(id) { 
+
+  async function deleteExpense(id) {
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense/${id}`, { 
+        `http://localhost:3000/income/expense/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           "Content-Type": "application/json",
         },
-      }
-      );
+      });
 
       if (response.ok) {
+        // Remover a despesa do estado local
+        setExpenses(expenses.filter(expense => expense.id !== id));
         const data = await response.json();
         console.log("Despesa deletada com sucesso:", data.message);
       } else {
@@ -193,27 +212,44 @@ const IncomePage = () => {
   }
 
 
-  
+  // Atualizar valor da despesa
   const handleExpenseChange = (index, value) => {
     const updatedExpenses = [...expenses];
     updatedExpenses[index].value = value;
     setExpenses(updatedExpenses);
   };
 
-  
+  // Atualizar valor da receita
   const handleRevenueChange = (index, value) => {
     const updatedRevenues = [...revenues];
     updatedRevenues[index].value = value;
     setRevenues(updatedRevenues);
   };
 
-  const handleDelete = (id, type) => { 
+  const handleDelete = (id, type) => { // Altera user_id para id
     console.log("ID:", id, "tipo:", type);
     if (type === "expense") {
-      deleteExpense(id); 
+      deleteExpense(id); // Passa o id da despesa
     } else if (type === "revenue") {
-      deleteRevenue(id); 
+      deleteRevenue(id); // Passa o id da receita
     }
+  };
+
+  const openModal = (id, type) => {
+    setItemToDelete(id);
+    setItemType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setItemToDelete(null);
+    setItemType("");
+  };
+
+  const confirmDelete = () => {
+    handleDelete(itemToDelete, itemType);
+    closeModal();
   };
 
 
@@ -222,6 +258,7 @@ const IncomePage = () => {
     addRevenue();
   };
 
+  // Carregar dados do backend
   useEffect(() => {
     const loadExpenses = async () => {
       console.log("Carregando despesas...");
@@ -283,6 +320,7 @@ const IncomePage = () => {
       }
     };
 
+    // Chamar ambas as funções para carregar dados
     loadExpenses();
     loadRevenues();
   }, []);
@@ -292,6 +330,21 @@ const IncomePage = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Você tem certeza que deseja excluir este item?</h2>
+            <div className="flex justify-end">
+              <button onClick={closeModal} className="mr-2 text-gray-500">
+                Não
+              </button>
+              <button onClick={confirmDelete} className="bg-red-500 text-white p-2 rounded-md">
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex flex-grow justify-center items-center">
         <div className="w-[1110px] h-[635px] bg-white rounded-[25px] p-6 shadow-lg">
           <h1 className="text-xl font-bold mb-4">Receitas e Despesas</h1>
@@ -309,13 +362,13 @@ const IncomePage = () => {
                   />
                   <input
                     type="text"
-                    value={formatCurrency(expense.value)} 
+                    value={formatCurrency(expense.value)} // Formatar para exibição
                     onChange={(e) => handleExpenseChange(index, e.target.value)}
                     className="w-1/3 p-2 border border-gray-300 rounded-md"
                   />
 
                   <button
-                    onClick={() => handleDelete(expense.id, "expense")} 
+                    onClick={() => openModal(expense.id, "expense")} // Passa expense.id e o tipo
                     className="ml-2 text-red-500 hover:text-red-700"
                   >
                     <Trash />
@@ -332,8 +385,8 @@ const IncomePage = () => {
                 />
                 <input
                   type="text"
-                  value={formatCurrency(newExpenseValue)} 
-                  onChange={(e) => setNewExpenseValue(e.target.value)}
+                  value={formatCurrency(newExpenseValue)} // Formata o valor enquanto digita
+                  onChange={(e) => setNewExpenseValue(e.target.value)} // Mantém o valor formatado
                   placeholder="R$"
                   className="w-1/3 p-2 border border-gray-300 rounded-md"
                 />
@@ -359,16 +412,17 @@ const IncomePage = () => {
                   />
                   <input
                     type="text"
-                    value={formatCurrency(revenue.value)} 
+                    value={formatCurrency(revenue.value)} // Formatar para exibição
                     onChange={(e) => handleRevenueChange(index, e.target.value)}
                     className="w-1/3 p-2 border border-gray-300 rounded-md"
                   />
                   <button
-                    onClick={() => handleDelete(revenue.id, "revenue")} 
+                    onClick={() => openModal(revenue.id, "revenue")} // Passa revenue.id e o tipo
                     className="ml-2 text-red-500 hover:text-red-700"
                   >
                     <Trash />
                   </button>
+
                 </div>
               ))}
               <div className="flex items-center mb-2">
@@ -381,8 +435,8 @@ const IncomePage = () => {
                 />
                 <input
                   type="text"
-                  value={formatCurrency(newRevenueValue)} 
-                  onChange={(e) => setNewRevenueValue(e.target.value)} 
+                  value={formatCurrency(newRevenueValue)} // Formata o valor enquanto digita
+                  onChange={(e) => setNewRevenueValue(e.target.value)} // Mantém o valor formatado
                   placeholder="R$"
                   className="w-1/3 p-2 border border-gray-300 rounded-md"
                 />
