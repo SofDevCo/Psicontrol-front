@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Trash } from "../icons/icons";
 
-// Função para formatar os valores para exibição
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
     value = value?.toString() || "0";
   }
   const numericValue = value.replace(/\D/g, "");
-  if (!numericValue) return "0,00";
+  if (!numericValue) return "R$";
   return (parseFloat(numericValue) / 100).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 };
 
-// Função para desformatar o valor de volta para número
 const parseCurrency = (value) => {
   return parseFloat(value.replace(/[^0-9.-]+/g, "")) || 0;
 };
@@ -26,54 +24,66 @@ const IncomePage = () => {
   const [revenues, setRevenues] = useState([]);
   const [newExpenseName, setNewExpenseName] = useState("");
   const [newRevenueName, setNewRevenueName] = useState("");
+  const [userId, setUserId] = useState(null);
 
   const fetchUserId = async () => {
     try {
-      const response = await fetch("http://localhost:3000/get-user-id", {
-        credentials: "include",
+      const user_id = localStorage.getItem("user_id") || "default_user_id";
+
+      const response = await fetch(`http://localhost:3000/income/entries/${user_id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
       });
+
       if (response.ok) {
         const data = await response.json();
-        return data.userId;
+        setUserId(data.user_id);
+        console.log("User ID:", data.user_id);
+        return data.user_id; 
       } else {
-        console.error("Erro ao buscar o User ID da sessão");
+        console.error("Erro na resposta da requisição:", response.status);
         return null;
       }
     } catch (error) {
       console.error("Erro ao buscar o User ID:", error);
-      return null;
+      return null; 
     }
   };
 
-  // Adicionar nova despesa
+  useEffect(() => {
+    fetchUserId();
+  }, []);
+
   const addExpense = async () => {
     if (newExpenseName.trim()) {
       const newExpense = {
         name: newExpenseName,
         value: newExpenseValue || "0,00",
       };
-      setExpenses([...expenses, newExpense]);
+
+      setExpenses([...expenses, newExpense]); 
       setNewExpenseName("");
       setNewExpenseValue("");
 
       try {
-        const user_id = await fetchUserId();
+        const user_id = await fetchUserId(); 
         if (!user_id) {
           console.error("User ID não encontrado. Usuário não está logado.");
           return;
         }
-        const response = await fetch("http://localhost:3000/income/expense/", {
+
+        const response = await fetch(`http://localhost:3000/income/expense/${user_id}`, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
-            )}`,
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: newExpense.name,
-            value: parseCurrency(newExpense.value),
-            user_id: user_id,
+            value: parseCurrency(newExpense.value) / 100, 
             date: new Date(),
           }),
         });
@@ -89,62 +99,63 @@ const IncomePage = () => {
     }
   };
 
-  // Adicionar nova receita
+
   const addRevenue = async () => {
-    if (newRevenueName.trim()) {
+    if (newRevenueName.trim() && newRevenueValue) {
       const newRevenue = {
         name: newRevenueName,
-        value: newRevenueValue || "0,00",
+        value: newRevenueValue,
       };
-      setRevenues([...revenues, newRevenue]);
+
+      setRevenues([...revenues, newRevenue]); 
       setNewRevenueName("");
       setNewRevenueValue("");
 
-      // Salvar a nova receita no backend
       try {
-        const user_id = await fetchUserId(); // Buscar o user_id da sessão
+        const user_id = await fetchUserId(); 
         if (!user_id) {
           console.error("User ID não encontrado. Usuário não está logado.");
           return;
         }
 
-        const response = await fetch(
-          `http://localhost:3000/income/revenue/${user_id}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(
-                "authentication_token"
-              )}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: newRevenue.name,
-              value: parseCurrency(newRevenue.value), // Desformatação para salvar
-              user_id: user_id,
-              date: new Date(),
-            }),
-          }
-        );
+        const response = await fetch(`http://localhost:3000/income/revenue/${user_id}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newRevenue.name,
+            value: parseCurrency(newRevenue.value) / 100,
+            date: new Date(),
+          }),
+        });
+
         if (response.ok) {
-          console.log("deu certo");
+          console.log("Nova receita salva com sucesso!");
         } else {
-          console.error("deu errado");
+          console.error("Erro ao salvar a nova receita:", response.statusText);
         }
       } catch (error) {
         console.error("Erro ao salvar a nova receita:", error);
       }
+    } else {
+      console.error("Por favor, preencha todos os campos.");
     }
   };
 
-  async function deleteRevenue(id) {
+
+
+
+  async function deleteRevenue(id) { 
     try {
-      console.log("alguma mensagem", id);
       const response = await fetch(
-        `http://localhost:3000/income/revenue/${id}`,
-        {
-          method: "DELETE",
-        }
+        `http://localhost:3000/income/revenue/${id}`, { 
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
+      }
       );
 
       if (response.ok) {
@@ -158,13 +169,16 @@ const IncomePage = () => {
     }
   }
 
-  async function deleteExpense(id) {
+  async function deleteExpense(id) { 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense/${id}`,
-        {
-          method: "DELETE",
-        }
+        `http://localhost:3000/income/expense/${id}`, { 
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
+      }
       );
 
       if (response.ok) {
@@ -178,60 +192,103 @@ const IncomePage = () => {
     }
   }
 
-  // Atualizar valor da despesa
+
+  
   const handleExpenseChange = (index, value) => {
     const updatedExpenses = [...expenses];
     updatedExpenses[index].value = value;
     setExpenses(updatedExpenses);
   };
 
-  // Atualizar valor da receita
+  
   const handleRevenueChange = (index, value) => {
     const updatedRevenues = [...revenues];
     updatedRevenues[index].value = value;
     setRevenues(updatedRevenues);
   };
 
-  const handleDelete = (id, type) => {
-    // deleteExpense();
-    // deleteRevenue();
-    console.log("id:", id, "tipo:", type);
+  const handleDelete = (id, type) => { 
+    console.log("ID:", id, "tipo:", type);
     if (type === "expense") {
-      deleteExpense(id);
-    } else if (type === "revenue");
-    deleteRevenue(id);
+      deleteExpense(id); 
+    } else if (type === "revenue") {
+      deleteRevenue(id); 
+    }
   };
+
 
   const handleClick = () => {
     addExpense();
     addRevenue();
   };
 
-  // Carregar dados do backend
   useEffect(() => {
-    const loadData = async () => {
-      const user_id = await fetchUserId(); // Buscar o user_id da sessão
+    const loadExpenses = async () => {
+      console.log("Carregando despesas...");
+      const user_id = await fetchUserId();
+      console.log("User ID:", user_id);
       if (!user_id) {
         console.error("User ID não encontrado.");
         return;
       }
       try {
-        const response = await fetch("http://localhost:3000/income/entries/");
-        const data = await response.json();
-        const expenseData =
-          data.filter((entry) => entry.type === "expense") || [];
-        const revenueData =
-          data.filter((entry) => entry.type === "revenue") || [];
+        const response = await fetch(`http://localhost:3000/income/expense/${user_id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+            "Content-Type": "application/json",
+          },
+        });
 
+        if (!response.ok) {
+          console.error("Erro ao buscar despesas:", response.statusText);
+          return;
+        }
+
+        const expenseData = await response.json();
+        console.log("Dados de despesas:", expenseData);
         setExpenses(expenseData);
-        setRevenues(revenueData);
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.error("Erro ao carregar despesas:", error);
       }
     };
 
-    loadData();
+    const loadRevenues = async () => {
+      console.log("Carregando receitas...");
+      const user_id = await fetchUserId();
+      console.log("User ID:", user_id);
+      if (!user_id) {
+        console.error("User ID não encontrado.");
+        return;
+      }
+      try {
+        const response = await fetch(`http://localhost:3000/income/revenue/${user_id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Erro ao buscar receitas:", response.statusText);
+          return;
+        }
+
+        const revenueData = await response.json();
+        console.log("Dados de receitas:", revenueData);
+        setRevenues(revenueData);
+      } catch (error) {
+        console.error("Erro ao carregar receitas:", error);
+      }
+    };
+
+    loadExpenses();
+    loadRevenues();
   }, []);
+
+
+
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -252,13 +309,13 @@ const IncomePage = () => {
                   />
                   <input
                     type="text"
-                    value={formatCurrency(expense.value)} // Formatar para exibição
+                    value={formatCurrency(expense.value)} 
                     onChange={(e) => handleExpenseChange(index, e.target.value)}
                     className="w-1/3 p-2 border border-gray-300 rounded-md"
                   />
 
                   <button
-                    onClick={() => handleDelete(expense.id, "expense")}
+                    onClick={() => handleDelete(expense.id, "expense")} 
                     className="ml-2 text-red-500 hover:text-red-700"
                   >
                     <Trash />
@@ -275,9 +332,9 @@ const IncomePage = () => {
                 />
                 <input
                   type="text"
-                  value={newExpenseValue}
+                  value={formatCurrency(newExpenseValue)} 
                   onChange={(e) => setNewExpenseValue(e.target.value)}
-                  placeholder="R$ 0,00"
+                  placeholder="R$"
                   className="w-1/3 p-2 border border-gray-300 rounded-md"
                 />
                 <button
@@ -286,6 +343,7 @@ const IncomePage = () => {
                 >
                   + Adicionar Despesa
                 </button>
+
               </div>
             </div>
 
@@ -301,12 +359,12 @@ const IncomePage = () => {
                   />
                   <input
                     type="text"
-                    value={formatCurrency(revenue.value)} // Formatar para exibição
+                    value={formatCurrency(revenue.value)} 
                     onChange={(e) => handleRevenueChange(index, e.target.value)}
                     className="w-1/3 p-2 border border-gray-300 rounded-md"
                   />
                   <button
-                    onClick={() => handleDelete(revenue.id, "revenue")}
+                    onClick={() => handleDelete(revenue.id, "revenue")} 
                     className="ml-2 text-red-500 hover:text-red-700"
                   >
                     <Trash />
@@ -323,9 +381,9 @@ const IncomePage = () => {
                 />
                 <input
                   type="text"
-                  value={newRevenueValue}
-                  onChange={(e) => setNewRevenueValue(e.target.value)}
-                  placeholder="R$ 0,00"
+                  value={formatCurrency(newRevenueValue)} 
+                  onChange={(e) => setNewRevenueValue(e.target.value)} 
+                  placeholder="R$"
                   className="w-1/3 p-2 border border-gray-300 rounded-md"
                 />
                 <button
@@ -334,6 +392,7 @@ const IncomePage = () => {
                 >
                   + Adicionar Receita
                 </button>
+
               </div>
             </div>
           </div>
