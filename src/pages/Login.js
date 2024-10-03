@@ -9,11 +9,9 @@ const Login = () => {
 
       if (data.authUrl) {
         window.location.href = data.authUrl;
-      } else {
-        console.error("URL de autenticação do Google não encontrada.");
       }
     } catch (error) {
-      console.error("Erro ao iniciar o login com o Google:", error);
+      
     }
   };
 

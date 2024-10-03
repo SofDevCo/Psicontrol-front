@@ -28,7 +28,6 @@ const CreateEventForm = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log("Calendários recebidos:", data);
         const filteredCalendars = data.filter((calendar) =>
           selectedCalendarIds.includes(calendar.id)
         );
@@ -36,12 +35,8 @@ const CreateEventForm = () => {
         if (filteredCalendars.length > 0 && !selectedCalendarId) {
           setSelectedCalendarId(filteredCalendars[0].id);
         }
-      } else {
-        throw new Error("Erro ao buscar calendários");
       }
     } catch (error) {
-      console.error("Erro ao buscar calendários:", error);
-      setError("Não foi possível carregar os calendários.");
     } finally {
       setLoading(false);
     }
@@ -71,15 +66,9 @@ const CreateEventForm = () => {
             (a, b) => new Date(b.date) - new Date(a.date)
           );
           setEvents(sortedEvents);
-        } else {
-          throw new Error("Resposta JSON não é um array");
         }
-      } else {
-        throw new Error("Resposta não é JSON");
-      }
+      } 
     } catch (error) {
-      console.error("Erro ao buscar eventos:", error);
-      setError("Não foi possível carregar eventos.");
     } finally {
       setLoading(false);
     }
@@ -95,27 +84,15 @@ const CreateEventForm = () => {
 
   const handleCancel = async (googleEventId, calendarId) => {
     try {
-      if (!googleEventId || !calendarId) {
-        throw new Error("ID do evento ou ID do calendário ausente.");
-      }
-
       const response = await fetch(
         `http://localhost:3000/events/cancel/${googleEventId}/${calendarId}`,
         {
           method: "DELETE",
         }
       );
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage || "Erro ao cancelar o evento.");
-      }
-
-      alert("Evento cancelado com sucesso!");
       fetchEvents();
     } catch (error) {
-      console.error("Erro ao cancelar o evento:", error);
-      alert(`Erro ao cancelar o evento: ${error.message}`);
+
     }
   };
 
@@ -129,15 +106,9 @@ const CreateEventForm = () => {
             method: "POST",
           }
         );
-
-        if (!response.ok) {
-          throw new Error(`Erro ao sincronizar calendário ${calendarId}.`);
-        }
       }
       await fetchEvents();
     } catch (error) {
-      console.error("Erro ao sincronizar calendários:", error);
-      setError("Erro ao sincronizar calendários.");
     } finally {
       setLoading(false);
     }

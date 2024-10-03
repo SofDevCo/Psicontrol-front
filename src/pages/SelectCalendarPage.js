@@ -27,8 +27,6 @@ const SelectCalendarPage = () => {
           const data = await response.json();
           setCalendars(data);
           setLoading(false);
-        } else {
-          console.log("error ao buscar calendarios");
         }
       }
     };

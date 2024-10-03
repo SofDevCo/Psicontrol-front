@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { redirect, useNavigate, useParams } from "react-router-dom";
+import {
+  redirect,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 
 const Token = (props) => {
   const navigate = useNavigate();
 
-  let { token } = useParams();
+  const search = useLocation().search;
+  const token = new URLSearchParams(search).get("token");
   useEffect(() => {
     localStorage.setItem("authentication_token", token);
-    navigate(`/select-calendar`);
+    navigate('/select-calendar');
   }, [token]);
 };
 
 export default Token;
-
