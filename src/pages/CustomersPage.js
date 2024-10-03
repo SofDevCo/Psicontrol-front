@@ -39,15 +39,10 @@ const CustomersPage = () => {
                 "Content-Type": "application/json"
             }
         });
-
-        if (!response.ok) {
-            throw new Error("Erro ao carregar os clientes");
-        }
         const data = await response.json();
         setCustomers(data);
     } catch (error) {
-        console.error("Erro ao buscar clientes:", error);
-        setError("Erro ao carregar clientes");
+       
     } finally {
         setIsLoading(false);
     }

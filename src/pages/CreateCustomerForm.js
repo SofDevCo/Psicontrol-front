@@ -80,7 +80,6 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         alert('Erro ao criar cliente.');
       }
     } catch (error) {
-      console.error('Erro ao enviar dados:', error);
       alert('Erro ao criar cliente.');
     }
   };
