@@ -7,13 +7,13 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <aside className="flex h-screen w-[250px] flex-col bg-white p-5 text-gray-800">
+    <aside className="flex h-screen w-[250px] flex-col bg-bg1 p-5 text-gray-800">
       <div>
         <img src={logo} alt="Logo" className="mb-4 mb-[78px] w-64" />
         <nav className="text-right">
           <ul className="mt-[100px]">
             <li
-              className={`side-menu mb-[40px] ${location.pathname === "/create-event-form" ? "ativo" : ""}`}
+              className={`mb-[40px] ${location.pathname === "/create-event-form" ? "ativo" : ""}`}
             >
               <Link
                 to="/create-event-form"
