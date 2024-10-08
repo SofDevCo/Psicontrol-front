@@ -13,7 +13,7 @@ const Token = (props) => {
   const token = new URLSearchParams(search).get("token");
   useEffect(() => {
     localStorage.setItem("authentication_token", token);
-    navigate('/select-calendar');
+    navigate("/select-calendar");
   }, [token]);
 };
 

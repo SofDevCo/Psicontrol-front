@@ -45,7 +45,7 @@ const IncomePage = () => {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -59,10 +59,8 @@ const IncomePage = () => {
         if (response.ok) {
           const savedExpense = await response.json();
           setExpenses((prevExpenses) => [...prevExpenses, savedExpense]);
-          
-        } 
-      } catch (error) {
-      }
+        }
+      } catch (error) {}
     }
   };
 
@@ -73,7 +71,6 @@ const IncomePage = () => {
         value: newRevenueValue,
       };
 
-      
       setNewRevenueName("");
       setNewRevenueValue("");
 
@@ -82,7 +79,7 @@ const IncomePage = () => {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -98,8 +95,7 @@ const IncomePage = () => {
           setRevenues((prevRevenues) => [...prevRevenues, savedRevenue]);
         } else {
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 
@@ -111,11 +107,11 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -123,9 +119,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) {
- 
-    }
+    } catch (error) {}
   }
 
   async function deleteExpense(id) {
@@ -136,21 +130,19 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.ok) {
-        
         setExpenses(expenses.filter((expense) => expense.id !== id));
         const data = await response.json();
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   // Atualizar valor da despesa
@@ -169,7 +161,7 @@ const IncomePage = () => {
 
   const handleDelete = (id, type) => {
     if (type === "expense") {
-      deleteExpense(id); 
+      deleteExpense(id);
     } else if (type === "revenue") {
       deleteRevenue(id);
     }
@@ -190,7 +182,7 @@ const IncomePage = () => {
   const confirmDelete = () => {
     handleDelete(itemToDelete, itemType);
     closeModal();
-    setIsSuccessModalOpen(true); 
+    setIsSuccessModalOpen(true);
   };
 
   const closeSuccessModal = () => {
@@ -204,13 +196,12 @@ const IncomePage = () => {
 
   useEffect(() => {
     const loadExpenses = async () => {
-
       try {
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -222,19 +213,16 @@ const IncomePage = () => {
 
         const expenseData = await response.json();
         setExpenses(expenseData);
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     };
 
     const loadRevenues = async () => {
-
       try {
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -246,8 +234,7 @@ const IncomePage = () => {
 
         const revenueData = await response.json();
         setRevenues(revenueData);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     loadExpenses();
@@ -258,8 +245,8 @@ const IncomePage = () => {
     <div className="flex h-screen bg-gray-100">
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">
+          <div className="rounded-md bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-lg font-semibold">
               Você tem certeza que deseja excluir este item?
             </h2>
             <div className="flex justify-end">
@@ -268,7 +255,7 @@ const IncomePage = () => {
               </button>
               <button
                 onClick={confirmDelete}
-                className="bg-red-500 text-white p-2 rounded-md"
+                className="rounded-md bg-red-500 p-2 text-white"
               >
                 Sim
               </button>
@@ -278,14 +265,14 @@ const IncomePage = () => {
       )}
       {isSuccessModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">
+          <div className="rounded-md bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-lg font-semibold">
               Item excluído com sucesso!
             </h2>
             <div className="flex justify-end">
               <button
                 onClick={closeSuccessModal}
-                className="bg-blue-500 text-white p-2 rounded-md"
+                className="rounded-md bg-blue-500 p-2 text-white"
               >
                 Fechar
               </button>
@@ -293,26 +280,26 @@ const IncomePage = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-grow justify-center items-center">
-        <div className="w-[1110px] h-[635px] bg-white rounded-[25px] p-6 shadow-lg">
-          <h1 className="text-xl font-bold mb-4">Receitas e Despesas</h1>
+      <div className="flex flex-grow items-center justify-center">
+        <div className="h-[635px] w-[1110px] rounded-[25px] bg-white p-6 shadow-lg">
+          <h1 className="mb-4 text-xl font-bold">Receitas e Despesas</h1>
 
-          <div className="flex justify-between mb-4">
+          <div className="mb-4 flex justify-between">
             <div className="w-1/2">
-              <h2 className="text-lg font-semibold mb-2">Despesas</h2>
+              <h2 className="mb-2 text-lg font-semibold">Despesas</h2>
               {expenses.map((expense, index) => (
-                <div key={index} className="flex items-center mb-2">
+                <div key={index} className="mb-2 flex items-center">
                   <input
                     type="text"
                     value={expense.name}
                     readOnly
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
+                    className="w-1/3 rounded-md border border-gray-300 p-2"
                   />
                   <input
                     type="text"
                     value={formatCurrency(expense.value)} // Formatar para exibição
                     onChange={(e) => handleExpenseChange(index, e.target.value)}
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
+                    className="w-1/3 rounded-md border border-gray-300 p-2"
                   />
 
                   <button
@@ -323,20 +310,20 @@ const IncomePage = () => {
                   </button>
                 </div>
               ))}
-              <div className="flex items-center mb-2">
+              <div className="mb-2 flex items-center">
                 <input
                   type="text"
                   value={newExpenseName}
                   onChange={(e) => setNewExpenseName(e.target.value)}
                   placeholder="Nome da nova despesa"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  className="w-1/3 rounded-md border border-gray-300 p-2"
                 />
                 <input
                   type="text"
                   value={formatCurrency(newExpenseValue)} // Formata o valor enquanto digita
                   onChange={(e) => setNewExpenseValue(e.target.value)} // Mantém o valor formatado
                   placeholder="R$"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  className="w-1/3 rounded-md border border-gray-300 p-2"
                 />
                 <button
                   onClick={addExpense}
@@ -348,20 +335,20 @@ const IncomePage = () => {
             </div>
 
             <div className="w-1/2">
-              <h2 className="text-lg font-semibold mb-2">Outras Receitas</h2>
+              <h2 className="mb-2 text-lg font-semibold">Outras Receitas</h2>
               {revenues.map((revenue, index) => (
-                <div key={index} className="flex items-center mb-2">
+                <div key={index} className="mb-2 flex items-center">
                   <input
                     type="text"
                     value={revenue.name}
                     readOnly
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
+                    className="w-1/3 rounded-md border border-gray-300 p-2"
                   />
                   <input
                     type="text"
                     value={formatCurrency(revenue.value)} // Formatar para exibição
                     onChange={(e) => handleRevenueChange(index, e.target.value)}
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
+                    className="w-1/3 rounded-md border border-gray-300 p-2"
                   />
                   <button
                     onClick={() => openModal(revenue.id, "revenue")} // Passa revenue.id e o tipo
@@ -371,20 +358,20 @@ const IncomePage = () => {
                   </button>
                 </div>
               ))}
-              <div className="flex items-center mb-2">
+              <div className="mb-2 flex items-center">
                 <input
                   type="text"
                   value={newRevenueName}
                   onChange={(e) => setNewRevenueName(e.target.value)}
                   placeholder="Nome da nova receita"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  className="w-1/3 rounded-md border border-gray-300 p-2"
                 />
                 <input
                   type="text"
                   value={formatCurrency(newRevenueValue)} // Formata o valor enquanto digita
                   onChange={(e) => setNewRevenueValue(e.target.value)} // Mantém o valor formatado
                   placeholder="R$"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  className="w-1/3 rounded-md border border-gray-300 p-2"
                 />
                 <button
                   onClick={addRevenue}
@@ -396,12 +383,12 @@ const IncomePage = () => {
             </div>
           </div>
           <div className="flex justify-between">
-            <button className="text-blue-500 hover:text-blue-700 border border-blue-500 p-2 rounded-md">
+            <button className="rounded-md border border-blue-500 p-2 text-blue-500 hover:text-blue-700">
               Repetir Lançamentos mês anterior
             </button>
             <button
               onClick={handleClick}
-              className="bg-blue-500 text-white p-2 rounded-md"
+              className="rounded-md bg-blue-500 p-2 text-white"
             >
               Salvar
             </button>
