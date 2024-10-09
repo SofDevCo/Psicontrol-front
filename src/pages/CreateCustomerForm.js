@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Trash } from '../icons/icons'; 
 import '../index.css';  
-import '../styles/CreateEventForm.css';
 
 const CreateCustomerForm = ({ onClose, onSubmit }) => {
   const [customer, setCustomer] = useState({
