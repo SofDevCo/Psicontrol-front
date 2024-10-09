@@ -120,12 +120,12 @@ const CreateEventForm = () => {
 
 
   return (
-    <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
-      <main class="main-content">
+    <div className="bg-gray-200 m-0 p-0 flex min-h-screen">
+      <main className="main-content">
         <h2>Eventos</h2>
-        <div class="content-area">
-          <section class="events-list-section">
-            <h2 class="event-list-title">
+        <div className="content-area">
+          <section className="events-list-section">
+            <h2 className="event-list-title">
               Eventos Criados:
               <select
                 onChange={handleCalendarChange}
@@ -138,12 +138,12 @@ const CreateEventForm = () => {
                   </option>
                 ))}
               </select>
-              <section class="sync-calendar-section">
+              <section className="sync-calendar-section">
                 <button onClick={syncCalendar}>Sincronizar Calendários</button>
               </section>
             </h2>
-            {error && <p class="error-message">{error}</p>}
-            <table class="events-table">
+            {error && <p className="error-message">{error}</p>}
+            <table className="events-table">
               <thead>
                 <tr>
                   <th>Nome do Evento</th>
