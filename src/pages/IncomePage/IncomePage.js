@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Trash } from "../icons/icons";
+import { Trash } from "../../icons/icons";
+import { Months } from "../../components/months";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
     value = value?.toString() || "0";
   }
   const numericValue = value.replace(/\D/g, "");
-  if (!numericValue) return "R$";
+  if (!numericValue) return "R$ 0,00"; // Ajuste aqui para exibir zero corretamente
   return (parseFloat(numericValue) / 100).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -14,7 +15,9 @@ const formatCurrency = (value) => {
 };
 
 const parseCurrency = (value) => {
-  return parseFloat(value.replace(/[^0-9.-]+/g, "")) || 0;
+  // Remover caracteres não numéricos e converter para centavos
+  const numericValue = value.replace(/[^0-9]/g, "");
+  return parseFloat(numericValue) || 0; // Retornar 0 se não houver valor
 };
 
 const IncomePage = () => {
@@ -28,6 +31,8 @@ const IncomePage = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isAddingRevenue, setIsAddingRevenue] = useState(false);
+  const [isAddingExpense, setIsAddingExpense] = useState(false);
 
   // Adicionar nova despesa
   const addExpense = async () => {
@@ -59,10 +64,8 @@ const IncomePage = () => {
         if (response.ok) {
           const savedExpense = await response.json();
           setExpenses((prevExpenses) => [...prevExpenses, savedExpense]);
-          
-        } 
-      } catch (error) {
-      }
+        }
+      } catch (error) {}
     }
   };
 
@@ -73,7 +76,6 @@ const IncomePage = () => {
         value: newRevenueValue,
       };
 
-      
       setNewRevenueName("");
       setNewRevenueValue("");
 
@@ -98,8 +100,7 @@ const IncomePage = () => {
           setRevenues((prevRevenues) => [...prevRevenues, savedRevenue]);
         } else {
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 
@@ -123,9 +124,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) {
- 
-    }
+    } catch (error) {}
   }
 
   async function deleteExpense(id) {
@@ -144,32 +143,30 @@ const IncomePage = () => {
       );
 
       if (response.ok) {
-        
         setExpenses(expenses.filter((expense) => expense.id !== id));
         const data = await response.json();
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   // Atualizar valor da despesa
-  const handleExpenseChange = (index, value) => {
-    const updatedExpenses = [...expenses];
-    updatedExpenses[index].value = value;
-    setExpenses(updatedExpenses);
-  };
+  // const handleExpenseChange = (index, value) => {
+  //   const updatedExpenses = [...expenses];
+  //   updatedExpenses[index].value = value;
+  //   setExpenses(updatedExpenses);
+  // };
 
   // Atualizar valor da receita
-  const handleRevenueChange = (index, value) => {
-    const updatedRevenues = [...revenues];
-    updatedRevenues[index].value = value;
-    setRevenues(updatedRevenues);
-  };
+  // const handleRevenueChange = (index, value) => {
+  //   const updatedRevenues = [...revenues];
+  //   updatedRevenues[index].value = value;
+  //   setRevenues(updatedRevenues);
+  // };
 
   const handleDelete = (id, type) => {
     if (type === "expense") {
-      deleteExpense(id); 
+      deleteExpense(id);
     } else if (type === "revenue") {
       deleteRevenue(id);
     }
@@ -190,7 +187,7 @@ const IncomePage = () => {
   const confirmDelete = () => {
     handleDelete(itemToDelete, itemType);
     closeModal();
-    setIsSuccessModalOpen(true); 
+    setIsSuccessModalOpen(true);
   };
 
   const closeSuccessModal = () => {
@@ -204,7 +201,6 @@ const IncomePage = () => {
 
   useEffect(() => {
     const loadExpenses = async () => {
-
       try {
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "GET",
@@ -222,13 +218,10 @@ const IncomePage = () => {
 
         const expenseData = await response.json();
         setExpenses(expenseData);
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     };
 
     const loadRevenues = async () => {
-
       try {
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "GET",
@@ -246,38 +239,48 @@ const IncomePage = () => {
 
         const revenueData = await response.json();
         setRevenues(revenueData);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     loadExpenses();
     loadRevenues();
   }, []);
 
+  const toggleAddRevenue = () => {
+    setIsAddingRevenue(!isAddingRevenue);
+  };
+
+  const toggleAddExpense = () => {
+    setIsAddingExpense(!isAddingExpense);
+  };
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="">
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-lg">
             <h2 className="text-lg font-semibold mb-4">
               Você tem certeza que deseja excluir este item?
             </h2>
             <div className="flex justify-end">
-              <button onClick={closeModal} className="mr-2 text-gray-500">
-                Não
+              <button
+                onClick={closeModal}
+                className="mr-4 px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-100"
+              >
+                Cancelar
               </button>
               <button
                 onClick={confirmDelete}
-                className="bg-red-500 text-white p-2 rounded-md"
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
               >
-                Sim
+                Excluir
               </button>
             </div>
           </div>
         </div>
       )}
       {isSuccessModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-lg">
             <h2 className="text-lg font-semibold mb-4">
               Item excluído com sucesso!
@@ -285,7 +288,7 @@ const IncomePage = () => {
             <div className="flex justify-end">
               <button
                 onClick={closeSuccessModal}
-                className="bg-blue-500 text-white p-2 rounded-md"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Fechar
               </button>
@@ -293,123 +296,136 @@ const IncomePage = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-grow justify-center items-center">
-        <div className="w-[1110px] h-[635px] bg-white rounded-[25px] p-6 shadow-lg">
-          <h1 className="text-xl font-bold mb-4">Receitas e Despesas</h1>
-
-          <div className="flex justify-between mb-4">
-            <div className="w-1/2">
-              <h2 className="text-lg font-semibold mb-2">Despesas</h2>
-              {expenses.map((expense, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="text"
-                    value={expense.name}
-                    readOnly
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
-                  />
-                  <input
-                    type="text"
-                    value={formatCurrency(expense.value)} // Formatar para exibição
-                    onChange={(e) => handleExpenseChange(index, e.target.value)}
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
-                  />
-
-                  <button
-                    onClick={() => openModal(expense.id, "expense")} // Passa expense.id e o tipo
-                    className="ml-2 text-red-500 hover:text-red-700"
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              ))}
-              <div className="flex items-center mb-2">
+      <div className="relative w-[1076px] h-auto ml-[200px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
+        <div className="flex justify-between mb-6">
+          <Months className="p-2 border rounded-md border-cinza6" />
+          <button className="w-[200px] h-[57.69px] shadow bg-neutral-100 rounded-[10px] mr-[490px] border-2 border-cinza6 mt-[5px] text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight">
+            Repetir Último <br /> Lançamento
+          </button>
+        </div>
+        <div className="flex mb-4">
+          <div className="w-1/2 pr-4">
+            <h2 className="text-lg font-semibold mb-2">Receitas</h2>
+            {revenues.map((revenue, index) => (
+              <div key={index} className="flex items-center mb-2">
                 <input
                   type="text"
-                  value={newExpenseName}
-                  onChange={(e) => setNewExpenseName(e.target.value)}
-                  placeholder="Nome da nova despesa"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  value={revenue.name}
+                  readOnly // Somente leitura
+                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6  focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
                 />
                 <input
                   type="text"
-                  value={formatCurrency(newExpenseValue)} // Formata o valor enquanto digita
-                  onChange={(e) => setNewExpenseValue(e.target.value)} // Mantém o valor formatado
-                  placeholder="R$"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  value={formatCurrency(revenue.value)} // Formatar para exibição
+                  readOnly // Somente leitura
+                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6  focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
                 <button
-                  onClick={addExpense}
+                  onClick={() => openModal(revenue.id, "revenue")}
                   className="ml-2 text-blue-500 hover:text-blue-700"
                 >
-                  + Adicionar Despesa
+                  <Trash />
                 </button>
               </div>
-            </div>
-
-            <div className="w-1/2">
-              <h2 className="text-lg font-semibold mb-2">Outras Receitas</h2>
-              {revenues.map((revenue, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="text"
-                    value={revenue.name}
-                    readOnly
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
-                  />
-                  <input
-                    type="text"
-                    value={formatCurrency(revenue.value)} // Formatar para exibição
-                    onChange={(e) => handleRevenueChange(index, e.target.value)}
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
-                  />
-                  <button
-                    onClick={() => openModal(revenue.id, "revenue")} // Passa revenue.id e o tipo
-                    className="ml-2 text-red-500 hover:text-red-700"
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              ))}
+            ))}
+  
+            {isAddingRevenue && (
               <div className="flex items-center mb-2">
                 <input
                   type="text"
+                  placeholder="Nome da receita"
                   value={newRevenueName}
-                  onChange={(e) => setNewRevenueName(e.target.value)}
-                  placeholder="Nome da nova receita"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  onChange={(e) => setNewRevenueName(e.target.value)} // Atualizar nome
+                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
                 />
                 <input
                   type="text"
-                  value={formatCurrency(newRevenueValue)} // Formata o valor enquanto digita
-                  onChange={(e) => setNewRevenueValue(e.target.value)} // Mantém o valor formatado
-                  placeholder="R$"
-                  className="w-1/3 p-2 border border-gray-300 rounded-md"
+                  placeholder="Valor da receita"
+                  value={formatCurrency(newRevenueValue)}
+                  onChange={(e) => setNewRevenueValue(e.target.value)} // Atualizar valor
+                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                />
+              </div>
+            )}
+  
+            <button
+              onClick={toggleAddRevenue}
+              className="flex items-center text-blue-500 hover:text-blue-700 mt-2"
+            >
+              <span className="mr-1">+</span> Adicionar item
+            </button>
+          </div>
+  
+          <div className="w-1/2 pl-4">
+            <h2 className="text-lg font-semibold mb-2">Despesas</h2>
+            {expenses.map((expense, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={expense.name}
+                  readOnly // Somente leitura
+                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
+                />
+                <input
+                  type="text"
+                  value={formatCurrency(expense.value)} // Formatar para exibição
+                  readOnly // Somente leitura
+                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
                 <button
-                  onClick={addRevenue}
-                  className="ml-2 text-blue-500 hover:text-blue-700"
+                  onClick={() => openModal(expense.id, "expense")}
+                  className="ml-2 text-red-500 hover:text-red-700"
                 >
-                  + Adicionar Receita
+                  <Trash />
                 </button>
               </div>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <button className="text-blue-500 hover:text-blue-700 border border-blue-500 p-2 rounded-md">
-              Repetir Lançamentos mês anterior
-            </button>
+            ))}
+  
+            {isAddingExpense && (
+              <div className="flex items-center mb-2">
+                <input
+                  type="text"
+                  placeholder="Nome da despesa"
+                  value={newExpenseName}
+                  onChange={(e) => setNewExpenseName(e.target.value)} // Atualizar nome
+                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Valor da despesa"
+                  value={formatCurrency(newExpenseValue)}
+                  onChange={(e) => setNewExpenseValue(e.target.value)} // Atualizar valor
+                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                />
+              </div>
+            )}
+  
             <button
-              onClick={handleClick}
-              className="bg-blue-500 text-white p-2 rounded-md"
+              onClick={toggleAddExpense}
+              className="flex items-center text-blue-500 hover:text-blue-700 mt-2"
             >
-              Salvar
+              <span className="mr-1">+</span> Adicionar item
             </button>
           </div>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md mr-2 hover:bg-blue-100"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleClick}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default IncomePage;
