@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
-  redirect,
   useLocation,
   useNavigate,
-  useSearchParams,
 } from "react-router-dom";
 
 const Token = (props) => {

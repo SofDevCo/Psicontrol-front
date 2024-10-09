@@ -1,35 +1,36 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import "../index.css";
+import "../../index.css";
 
 const CreateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const calendarIdsParam = searchParams.get("calendarIds");
 
   const selectedCalendarIds = useMemo(
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
-    [calendarIdsParam]
+    [calendarIdsParam],
   );
 
+  //trocar o useCallback por useEffect;
   const fetchCalendars = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch("http://localhost:3000/events/calendars", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
+            "authentication_token",
           )}`,
         },
       });
       if (response.ok) {
         const data = await response.json();
         const filteredCalendars = data.filter((calendar) =>
-          selectedCalendarIds.includes(calendar.id)
+          selectedCalendarIds.includes(calendar.id),
         );
         setCalendars(data);
         if (filteredCalendars.length > 0 && !selectedCalendarId) {
@@ -42,6 +43,7 @@ const CreateEventForm = () => {
     }
   }, [selectedCalendarIds, selectedCalendarId]);
 
+  //trocar o useCallback por useEffect
   const fetchEvents = useCallback(async () => {
     if (selectedCalendarId === "") return;
 
@@ -52,10 +54,10 @@ const CreateEventForm = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
           },
-        }
+        },
       );
       const contentType = response.headers.get("content-type");
 
@@ -63,17 +65,18 @@ const CreateEventForm = () => {
         const data = await response.json();
         if (Array.isArray(data)) {
           const sortedEvents = data.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
+            (a, b) => new Date(b.date) - new Date(a.date),
           );
           setEvents(sortedEvents);
         }
-      } 
+      }
     } catch (error) {
     } finally {
       setLoading(false);
     }
   }, [selectedCalendarId]);
 
+  //botar as funçõs dentro do usereffect, remover esses useEffects
   useEffect(() => {
     fetchCalendars();
   }, [fetchCalendars]);
@@ -88,12 +91,10 @@ const CreateEventForm = () => {
         `http://localhost:3000/events/cancel/${googleEventId}/${calendarId}`,
         {
           method: "DELETE",
-        }
+        },
       );
       fetchEvents();
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const syncCalendar = async () => {
@@ -104,7 +105,7 @@ const CreateEventForm = () => {
           `http://localhost:3000/events/sync-calendar/${calendarId}`,
           {
             method: "POST",
-          }
+          },
         );
       }
       await fetchEvents();
@@ -118,14 +119,13 @@ const CreateEventForm = () => {
     setSelectedCalendarId(e.target.value);
   };
 
-
   return (
-    <div class="bg-gray-200 m-0 p-0 flex min-h-screen">
-      <main class="main-content">
+    <div className="m-0 flex bg-gray-200 p-0">
+      <main className="flex-grow-0 p-5">
         <h2>Eventos</h2>
-        <div class="content-area">
-          <section class="events-list-section">
-            <h2 class="event-list-title">
+        <div className="bg-white rounded-lg p-5 shadow-default">
+          <section className="events-list-section">
+            <h2 className="event-list-title">
               Eventos Criados:
               <select
                 onChange={handleCalendarChange}
@@ -138,12 +138,12 @@ const CreateEventForm = () => {
                   </option>
                 ))}
               </select>
-              <section class="sync-calendar-section">
+              <section className="sync-calendar-section">
                 <button onClick={syncCalendar}>Sincronizar Calendários</button>
               </section>
             </h2>
-            {error && <p class="error-message">{error}</p>}
-            <table class="events-table">
+            {error && <p className="error-message">{error}</p>}
+            <table className="events-table">
               <thead>
                 <tr>
                   <th>Nome do Evento</th>
@@ -169,7 +169,7 @@ const CreateEventForm = () => {
                           onClick={() =>
                             handleCancel(
                               event.google_event_id,
-                              event.calendar_id
+                              event.calendar_id,
                             )
                           }
                         >

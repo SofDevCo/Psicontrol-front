@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import "../index.css";
-import CreateCustomerForm from "./CreateCustomerForm";
+import "../../index.css";
+import CreateCustomerForm from "./components/CreateCustomerForm";
 import {
   SearchIcon,
   AddIcon,
   ArchiveIcon,
   HamburguerIcon,
-  Trash,
-  UserIconBorder,
-  EditIcon,
-} from "../icons/icons";
-import { useOutsideClick } from "../components/useOutsideClick";
-import { useModal, useSuccessModal } from "../components/useModal";
+} from "../../icons/icons";
+import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
+import { useModal } from "../../utils/Modal/useModal";
+import DropDonw from "./components/dropdownCustomerPage";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -23,10 +21,6 @@ const CustomersPage = () => {
   const dropdownRef = useRef();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
-
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
 
   const fetchCustomers = async () => {
     setIsLoading(true);
@@ -48,7 +42,9 @@ const CustomersPage = () => {
     }
   };
 
-
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
@@ -84,7 +80,7 @@ const CustomersPage = () => {
         </button>
       </div>
 
-      <div className="top-[275px] flex h-[21px] w-full border-b border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
         <div className="left-[1305px] top-[275px] ml-[877.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
@@ -100,7 +96,7 @@ const CustomersPage = () => {
             {customers.map((customer) => (
               <li
                 key={`customer-${customer.customer_id}`}
-                className="flex items-center justify-between border-b border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
+                className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
               >
                 <span className="text-xl text-texto1">
                   {customer.customer_name}
@@ -112,44 +108,7 @@ const CustomersPage = () => {
                   <HamburguerIcon />
                 </button>
                 {activeDropdown === customer.customer_id && (
-                  <nav
-                    className="absolute right-0 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
-                    ref={dropdownRef}
-                  >
-                    <ul>
-                      <li>
-                        <button
-                          className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
-                          onClick={() =>
-                            console.log("Conta do paciente clicada")
-                          }
-                        >
-                          <UserIconBorder />
-                          Conta do paciente
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
-                          onClick={() => console.log("Editar paciente clicado")}
-                        >
-                          <EditIcon />
-                          Editar paciente
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
-                          onClick={() =>
-                            console.log("Excluir paciente clicado")
-                          }
-                        >
-                          <Trash />
-                          Excluir paciente
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
+                  <DropDonw dropdownRef={dropdownRef} />
                 )}
               </li>
             ))}

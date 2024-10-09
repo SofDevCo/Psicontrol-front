@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../images/Psicontrol.png";
-import { HomeIcon, RecDespIcon, UserIcon, ConfigIcon } from "../icons/icons";
+import logo from "../../../images/Psicontrol.png";
+import { HomeIcon, RecDespIcon, UserIcon, ConfigIcon } from "../../../icons/icons";
 
 const Sidebar = () => {
   const location = useLocation();

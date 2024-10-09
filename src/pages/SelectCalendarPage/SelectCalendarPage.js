@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../images/Psicontrol.png";
-import "../index.css";
-import { CalendarIcon } from "../icons/icons";
+import logo from "../../images/Psicontrol.png";
+import "../../index.css";
+import { CalendarIcon } from "../../icons/icons";
 
 const SelectCalendarPage = () => {
   const [calendars, setCalendars] = useState([]);
@@ -27,6 +27,8 @@ const SelectCalendarPage = () => {
         if (response.ok) {
           const data = await response.json();
           setCalendars(data);
+          setLoading(false);
+        } else {
           setLoading(false);
         }
       }
@@ -73,8 +75,11 @@ const SelectCalendarPage = () => {
               <CalendarIcon />
               <span>Minhas Agendas</span>
             </h2>
-            {calendars.map((calendar) => (
-              <div key={calendar.id} className="mb-2 flex w-full text-texto2">
+            {calendars.map((calendar, index) => (
+              <div
+                key={calendar.id + index}
+                className="mb-2 flex w-full text-texto2"
+              >
                 <input
                   type="checkbox"
                   className="mr-2"

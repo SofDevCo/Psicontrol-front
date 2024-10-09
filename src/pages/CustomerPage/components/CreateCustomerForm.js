@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Trash } from "../icons/icons";
-import "../index.css";
-import "../styles/CreateEventForm.css";
-// import { useModal, useSuccessModal } from "../components/useModal";
+import { Trash } from "../../../icons/icons";
+import "../../../index.css"
+import "../../../styles/CreateEventForm.css";
 
 const CreateCustomerForm = ({ onClose, onSubmit }) => {
   const [customer, setCustomer] = useState({
@@ -17,8 +16,6 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
   });
 
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
-  // const { isSuccessModalOpen, openSuccessModal, closeSuccessModal } =  useSuccessModal();
-
 
   const handleAddAlternativeFields = () => {
     if (additionalAlternatives.length < 2) {
@@ -100,7 +97,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         <div>
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-[15px] font-normal text-gray-700">
+              <label className="mb-1 block text-[15px] font-normal text-[#232323]">
                 Nome
               </label>
               <input
@@ -115,7 +112,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="mb-1 block text-[15px] font-normal text-gray-700">
+              <label className="mb-1 block text-[15px] font-normal text-[#232323]">
                 Email
               </label>
               <input
@@ -129,7 +126,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="mb-1 block text-[15px] font-normal text-gray-700">
+              <label className="mb-1 block text-[15px] font-normal text-[#232323]">
                 Telefone
               </label>
               <input
@@ -143,7 +140,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-normal text-gray-700">
+              <label className="mb-1 block text-sm font-normal text-[#232323]">
                 CPF/CNPJ
               </label>
               <input
@@ -157,7 +154,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-normal text-[#5c5c5c] text-gray-700">
+              <label className="mb-1 block text-sm font-normal text-[#232323]">
                 Valor da consulta
               </label>
               <input
@@ -174,7 +171,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
         </div>
 
         <div>
-          <h3 className="font-['Inter']l mb-4 text-lg text-xl font-[20px] font-medium text-black">
+          <h3 className="font-['Inter']l mb-4  text-xl font-[20px]  text-black">
             Dados para recibo
           </h3>
 
@@ -203,14 +200,14 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 style={{ top: "2px" }}
               ></div>
             </div>
-            <label className="ml-2 text-sm font-medium text-gray-700">
+            <label className="ml-2 text-sm font-medium text-texto3">
               Utilizar dados do paciente
             </label>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-[15px] font-normal text-gray-700">
+              <label className="mb-1 block text-[15px] font-normal text-[#232323]">
                 Nome
               </label>
               <input
@@ -225,7 +222,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
             </div>
 
             <div className="relative">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-[#232323]">
                 CPF/CNPJ
               </label>
               <div className="flex">
@@ -252,7 +249,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
-                <label className="mb-1.5 mt-1.5 flex text-[15px] font-normal text-gray-700">
+                <label className="mb-1.5 mt-1.5 flex text-[15px] font-normal text-[#232323]">
                   Nome Alternativo {index + 2}
                 </label>
                 <input

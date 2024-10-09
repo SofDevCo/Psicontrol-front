@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Login } from "./pages/Login";
-import Token from "./components/token";
-import SelectCalendarPage from "./pages/SelectCalendarPage";
-import Dashboard from "./pages/Dashboard";
-import CustomersPage from "./pages/CustomersPage";
-import CreateCustomerPage from "./pages/CreateCustomerForm";
+import { Login } from "./pages/Login/Login";
+import Token from "./utils/token/token";
+import SelectCalendarPage from "./pages/SelectCalendarPage/SelectCalendarPage";
+import Dashboard from "./pages/DashboardPage/Dashboard";
+import CustomersPage from "./pages/CustomerPage/CustomersPage";
+import CreateCustomerPage from "./pages/CustomerPage/components/CreateCustomerForm";
 import IncomePage from "./pages/IncomePage";
-import Layout from "./components/layout";
+import Layout from "./utils/Layout/layout";
 
 const App = () => {
   return (
