@@ -16,7 +16,6 @@ const CustomersPage = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isModalOpen, openModal, closeModal } = useModal();
-  // const { isSuccessModalOpen, openSuccessModal, closeSuccessModal } = useSuccessModal();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef();
 
@@ -117,17 +116,19 @@ const CustomersPage = () => {
 
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative h-[717px] w-[1110px] overflow-y-auto rounded-[25px] bg-white p-8 shadow-lg">
-              <div className="flex items-center justify-between">
-                <h2 className="ml-[20px] text-2xl font-bold text-[#0082BA]">
+            <div className="relative w-[1076px] h-[633px] overflow-y-auto rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg">
+              <div className="flex items-center mt-[50px]">
+                <h2 className="ml-[20px]  text-[25px] font-medium font-['Ubuntu'] text-primaria">
                   Adicionar Paciente
                 </h2>
-                <button
-                  onClick={closeModal}
-                  className="mb-[15px] flex items-center justify-between rounded-[5px] bg-white text-[#0082BA] hover:bg-primaria hover:text-white"
-                >
-                  Sair
-                </button>
+                <h3 className=" text-primaria text-[25px] font-medium font-['Ubuntu'] ml-[285px]">
+                  Dados para recibo
+                </h3>
+                <div className="ml-[20px] border-2 border-cinza6 rounded-[10px]">
+                  <button className="w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight">
+                    Usar dados do paciente
+                  </button>
+                </div>
               </div>
 
               <CreateCustomerForm
