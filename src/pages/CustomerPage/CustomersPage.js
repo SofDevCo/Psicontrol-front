@@ -115,18 +115,20 @@ const CustomersPage = () => {
         )}
 
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative w-[1076px] h-[633px] overflow-y-auto rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg">
-              <div className="flex items-center mt-[50px]">
-                <h2 className="ml-[20px]  text-[25px] font-medium font-['Ubuntu'] text-primaria">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg overflow-y-auto">
+              <div className="flex flex-wrap items-center mt-[20px] gap-4">
+                <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                   Adicionar Paciente
                 </h2>
-                <h3 className=" text-primaria text-[25px] font-medium font-['Ubuntu'] ml-[285px]">
+                <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
                   Dados para recibo
                 </h3>
-                <div className="ml-[20px] border-2 border-cinza6 rounded-[10px]">
-                  <button className="w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight">
-                    Usar dados do paciente
+                <div className="ml-[20px] border-2 border-cinza6 rounded-[10px] w-full md:w-auto">
+                  <button
+                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight"
+                  >
+                    Usar dados do <br></br>paciente
                   </button>
                 </div>
               </div>
