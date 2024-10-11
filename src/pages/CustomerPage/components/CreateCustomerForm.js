@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
-import "../../../styles/CreateEventForm.css";
 import {
   showSuccessToast,
   showErrorToast,

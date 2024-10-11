@@ -6,7 +6,7 @@ import SelectCalendarPage from "./pages/SelectCalendarPage/SelectCalendarPage";
 import Dashboard from "./pages/DashboardPage/Dashboard";
 import CustomersPage from "./pages/CustomerPage/CustomersPage";
 import CreateCustomerPage from "./pages/CustomerPage/components/CreateCustomerForm";
-import IncomePage from "./pages/IncomePage";
+import IncomePage from "./pages/IncomePage/IncomePage";
 import Layout from "./utils/Layout/layout";
 
 const App = () => {
