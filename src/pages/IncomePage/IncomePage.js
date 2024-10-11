@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Trash } from "../../icons/icons";
-import { Months } from "../../components/months";
+import { Months } from "../../utils/Months/months";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -50,7 +50,7 @@ const IncomePage = () => {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -84,7 +84,7 @@ const IncomePage = () => {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -112,11 +112,11 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -135,11 +135,11 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -149,20 +149,6 @@ const IncomePage = () => {
       }
     } catch (error) {}
   }
-
-  // Atualizar valor da despesa
-  // const handleExpenseChange = (index, value) => {
-  //   const updatedExpenses = [...expenses];
-  //   updatedExpenses[index].value = value;
-  //   setExpenses(updatedExpenses);
-  // };
-
-  // Atualizar valor da receita
-  // const handleRevenueChange = (index, value) => {
-  //   const updatedRevenues = [...revenues];
-  //   updatedRevenues[index].value = value;
-  //   setRevenues(updatedRevenues);
-  // };
 
   const handleDelete = (id, type) => {
     if (type === "expense") {
@@ -206,7 +192,7 @@ const IncomePage = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },
@@ -227,7 +213,7 @@ const IncomePage = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
+              "authentication_token",
             )}`,
             "Content-Type": "application/json",
           },

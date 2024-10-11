@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import "../index.css";
+import "../../index.css";
 
 const CreateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const calendarIdsParam = searchParams.get("calendarIds");
 
@@ -16,33 +16,36 @@ const CreateEventForm = () => {
     [calendarIdsParam]
   );
 
-  const fetchCalendars = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("http://localhost:3000/events/calendars", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
-          )}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        const filteredCalendars = data.filter((calendar) =>
-          selectedCalendarIds.includes(calendar.id)
-        );
-        setCalendars(data);
-        if (filteredCalendars.length > 0 && !selectedCalendarId) {
-          setSelectedCalendarId(filteredCalendars[0].id);
+  useEffect(() => {
+    const fetchCalendars = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("http://localhost:3000/events/calendars", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const filteredCalendars = data.filter((calendar) =>
+            selectedCalendarIds.includes(calendar.id)
+          );
+          setCalendars(data);
+          if (filteredCalendars.length > 0 && !selectedCalendarId) {
+            setSelectedCalendarId(filteredCalendars[0].id);
+          }
         }
+      } catch (error) {
+        setError("Erro ao buscar calendários");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchCalendars();
   }, [selectedCalendarIds, selectedCalendarId]);
 
-  const fetchEvents = useCallback(async () => {
+  const fetchEvents = async () => {
     if (selectedCalendarId === "") return;
 
     try {
@@ -51,9 +54,7 @@ const CreateEventForm = () => {
         `http://localhost:3000/events/get-events/${selectedCalendarId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
-            )}`,
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           },
         }
       );
@@ -67,20 +68,17 @@ const CreateEventForm = () => {
           );
           setEvents(sortedEvents);
         }
-      } 
+      }
     } catch (error) {
+      setError("Erro ao buscar eventos");
     } finally {
       setLoading(false);
     }
-  }, [selectedCalendarId]);
-
-  useEffect(() => {
-    fetchCalendars();
-  }, [fetchCalendars]);
+  };
 
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents, selectedCalendarId]);
+  }, [selectedCalendarId]);
 
   const handleCancel = async (googleEventId, calendarId) => {
     try {
@@ -90,9 +88,11 @@ const CreateEventForm = () => {
           method: "DELETE",
         }
       );
-      fetchEvents();
+      if (response.ok) {
+        await fetchEvents();
+      }
     } catch (error) {
-
+      setError("Erro ao cancelar o evento");
     }
   };
 
@@ -106,9 +106,13 @@ const CreateEventForm = () => {
             method: "POST",
           }
         );
+        if (!response.ok) {
+          throw new Error("Erro ao sincronizar calendário");
+        }
       }
-      await fetchEvents();
+      await fetchEvents(); // Atualiza os eventos após sincronização
     } catch (error) {
+      setError("Erro ao sincronizar calendário");
     } finally {
       setLoading(false);
     }
@@ -118,12 +122,11 @@ const CreateEventForm = () => {
     setSelectedCalendarId(e.target.value);
   };
 
-
   return (
-    <div className="bg-gray-200 m-0 p-0 flex min-h-screen">
-      <main className="main-content">
+    <div className="m-0 flex bg-gray-200 p-0">
+      <main className="flex-grow-0 p-5">
         <h2>Eventos</h2>
-        <div className="content-area">
+        <div className="bg-white rounded-lg p-5 shadow-default">
           <section className="events-list-section">
             <h2 className="event-list-title">
               Eventos Criados:
@@ -162,7 +165,6 @@ const CreateEventForm = () => {
                         return `${day}/${month}/${year}`;
                       })()}
                     </td>
-                    {/* <td>{event.start_time}</td> */}
                     <td>
                       {event.status !== "cancelado" && (
                         <button
