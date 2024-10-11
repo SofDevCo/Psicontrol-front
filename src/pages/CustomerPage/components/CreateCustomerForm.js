@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
 import {
@@ -8,19 +8,26 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CreateCustomerForm = ({ onClose, onSubmit }) => {
-  const [customer, setCustomer] = useState({
-    customer_name: "",
-    customer_cpf_cnpj: "",
-    customer_phone: "",
-    customer_email: "",
-    consultation_fee: "",
-    patient_status: true,
-    alternative_name: "",
-    alternative_cpf_cnpj: "",
-  });
-
+const CreateCustomerForm = ({
+  onClose,
+  onSubmit,
+  selectedPatient,
+  customer,
+  setCustomer,
+}) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
+
+  useEffect(() => {
+    if (selectedPatient) {
+      setCustomer((prev) => ({
+        ...prev,
+        customer_name: selectedPatient.customer_name || "",
+        customer_cpf_cnpj: selectedPatient.customer_cpf_cnpj || "",
+        customer_phone: selectedPatient.customer_phone || "",
+        customer_email: selectedPatient.customer_email || "",
+      }));
+    }
+  }, [selectedPatient, setCustomer]);
 
   const handleAddAlternativeFields = () => {
     if (additionalAlternatives.length < 2) {
@@ -108,7 +115,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
               <input
                 type="text"
                 name="customer_name"
-                value={customer.customer_name}
+                value={customer.customer_name  || ""}
                 onChange={handleChange}
                 placeholder="Nome do paciente"
                 required
@@ -123,7 +130,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
               <input
                 type="email"
                 name="customer_email"
-                value={customer.customer_email}
+                value={customer.customer_email || ""}
                 onChange={handleChange}
                 placeholder="e-mail.paciente@gmail.com"
                 className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -138,7 +145,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 <input
                   type="text"
                   name="customer_phone"
-                  value={customer.customer_phone}
+                  value={customer.customer_phone || ""}
                   onChange={handleChange}
                   placeholder="(00) 0 0000-0000"
                   className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -152,7 +159,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 <input
                   type="text"
                   name="customer_cpf_cnpj"
-                  value={customer.customer_cpf_cnpj}
+                  value={customer.customer_cpf_cnpj || ""}
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
                   className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -168,7 +175,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 type="number"
                 step="0.01"
                 name="consultation_fee"
-                value={customer.consultation_fee}
+                value={customer.consultation_fee || ""}
                 onChange={handleChange}
                 placeholder="R$ 000,00"
                 className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -186,7 +193,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
               <input
                 type="text"
                 name="alternative_name"
-                value={customer.alternative_name}
+                value={customer.alternative_name || ""}
                 onChange={handleChange}
                 placeholder="Nome do Paciente"
                 className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -202,7 +209,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 <input
                   type="text"
                   name="alternative_cpf_cnpj"
-                  value={customer.alternative_cpf_cnpj}
+                  value={customer.alternative_cpf_cnpj || ""}
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
                   className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
@@ -227,7 +234,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                 <input
                   type="text"
                   name="alternative_name"
-                  value={alternative.alternative_name}
+                  value={alternative.alternative_name || ""}
                   onChange={(e) =>
                     handleAlternativeChange(
                       index,
@@ -247,7 +254,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
                   <input
                     type="text"
                     name="alternative_cpf"
-                    value={alternative.alternative_cpf_cnpj}
+                    value={alternative.alternative_cpf_cnpj || ""}
                     onChange={(e) =>
                       handleAlternativeChange(
                         index,
@@ -270,7 +277,7 @@ const CreateCustomerForm = ({ onClose, onSubmit }) => {
               </div>
             ))}
           </div>
-          {additionalAlternatives.length < 1 && (
+          {additionalAlternatives.length < 2 && (
             <button
               type="button"
               className="grouph-4 justify-center items-start gap-2 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"

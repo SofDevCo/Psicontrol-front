@@ -17,6 +17,13 @@ const CustomersPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isModalOpen, openModal, closeModal } = useModal();
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [customer, setCustomer] = useState({
+    customer_name: "",
+    customer_cpf_cnpj: "",
+    // Adicione outros campos conforme necessário
+  });
+  
   const dropdownRef = useRef();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
@@ -36,6 +43,7 @@ const CustomersPage = () => {
       const data = await response.json();
       setCustomers(data);
     } catch (error) {
+      setError("Erro ao buscar clientes."); // Trate o erro
     } finally {
       setIsLoading(false);
     }
@@ -48,6 +56,14 @@ const CustomersPage = () => {
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
+
+const handleUsePatientData = () => {
+  setCustomer((prev) => ({
+    ...prev,
+    alternative_name: prev.customer_name, 
+    alternative_cpf_cnpj: prev.customer_cpf_cnpj, 
+  }));
+};
 
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
@@ -107,7 +123,9 @@ const CustomersPage = () => {
                   <HamburguerIcon />
                 </button>
                 {activeDropdown === customer.customer_id && (
-                  <DropDonw dropdownRef={dropdownRef} />
+                  <DropDonw
+                    dropdownRef={dropdownRef}
+                  />
                 )}
               </li>
             ))}
@@ -126,9 +144,10 @@ const CustomersPage = () => {
                 </h3>
                 <div className="ml-[20px] border-2 border-cinza6 rounded-[10px] w-full md:w-auto">
                   <button
+                    onClick={handleUsePatientData}
                     className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight"
                   >
-                    Usar dados do <br></br>paciente
+                    Usar dados do <br /> paciente
                   </button>
                 </div>
               </div>
@@ -136,6 +155,9 @@ const CustomersPage = () => {
               <CreateCustomerForm
                 onClose={closeModal}
                 onSubmit={fetchCustomers}
+                selectedPatient={selectedPatient} 
+                customer={customer} 
+                setCustomer={setCustomer} 
               />
             </div>
           </div>
