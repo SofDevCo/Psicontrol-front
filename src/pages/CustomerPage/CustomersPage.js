@@ -10,6 +10,7 @@ import {
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
+import { showErrorToast } from "../../utils/notification/toastify";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -21,7 +22,6 @@ const CustomersPage = () => {
   const [customer, setCustomer] = useState({
     customer_name: "",
     customer_cpf_cnpj: "",
-    // Adicione outros campos conforme necessário
   });
   
   const dropdownRef = useRef();
@@ -43,7 +43,7 @@ const CustomersPage = () => {
       const data = await response.json();
       setCustomers(data);
     } catch (error) {
-      setError("Erro ao buscar clientes."); // Trate o erro
+      setError("Erro ao buscar clientes."); 
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +63,22 @@ const handleUsePatientData = () => {
     alternative_name: prev.customer_name, 
     alternative_cpf_cnpj: prev.customer_cpf_cnpj, 
   }));
+};
+
+const handleDeleteCustomer = async (customerId) => {
+  const response = await fetch(`http://localhost:3000/events/customers/${customerId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if(response.ok){
+    fetchCustomers();
+  }else{
+    showErrorToast("Erro ao excluir cliente!")
+  }
 };
 
   return (
@@ -125,6 +141,8 @@ const handleUsePatientData = () => {
                 {activeDropdown === customer.customer_id && (
                   <DropDonw
                     dropdownRef={dropdownRef}
+                    customerId={customer.customer_id}
+                    onDelete={handleDeleteCustomer}
                   />
                 )}
               </li>

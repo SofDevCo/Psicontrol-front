@@ -4,7 +4,7 @@ import {
     EditIcon,
   } from "../../../icons/icons";
 
-const DropDonw = ({dropdownRef}) => {
+const DropDonw = ({dropdownRef, customerId, onDelete}) => {
   return (
     <nav
       className="absolute right-0 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
@@ -32,7 +32,7 @@ const DropDonw = ({dropdownRef}) => {
         <li>
           <button
             className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
-            onClick={() => <label>Excluir paciente clicado </label>}
+            onClick={() => onDelete(customerId)}
           >
             <Trash />
             Excluir paciente
