@@ -21,10 +21,7 @@ const CreateCustomerForm = ({
     if (selectedPatient) {
       setCustomer((prev) => ({
         ...prev,
-        customer_name: selectedPatient.customer_name || "",
-        customer_cpf_cnpj: selectedPatient.customer_cpf_cnpj || "",
-        customer_phone: selectedPatient.customer_phone || "",
-        customer_email: selectedPatient.customer_email || "",
+        ...selectedPatient, 
       }));
     }
   }, [selectedPatient, setCustomer]);
@@ -62,41 +59,42 @@ const CreateCustomerForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const url = customer.customer_id
+      ? `http://localhost:3000/events/customers/${customer.customer_id}`  
+      : `http://localhost:3000/events/create-customer`;  
+  
+    const method = customer.customer_id ? 'PUT' : 'POST'; 
+  
     try {
-      const response = await fetch(
-        "http://localhost:3000/events/create-customer",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
-            )}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...customer, additionalAlternatives }),
-          credentials: "include",
-        }
-      );
-
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authentication_token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...customer, additionalAlternatives }),
+      });
+  
       if (response.ok) {
         setCustomer({
-          customer_name: "",
-          customer_cpf_cnpj: "",
-          customer_phone: "",
-          customer_email: "",
-          consultation_fee: "",
+          customer_name: '',
+          customer_cpf_cnpj: '',
+          customer_phone: '',
+          customer_email: '',
+          consultation_fee: '',
           patient_status: true,
-          alternative_name: "",
-          alternative_cpf_cnpj: "",
+          alternative_name: '',
+          alternative_cpf_cnpj: '',
         });
         setAdditionalAlternatives([]);
-        onSubmit();
-        onClose();
+        onSubmit(); 
+        onClose();  
       } else {
-        showErrorToast("Erro ao criar cliente!");
+        showErrorToast('Erro ao processar a solicitação!');
       }
     } catch (error) {
-      showErrorToast("Erro ao criar cliente!");
+      showErrorToast('Erro ao processar a solicitação!');
     }
   };
 
@@ -299,7 +297,6 @@ const CreateCustomerForm = ({
 
             <button
               type="submit"
-              onClick={handleSubmit}
               className="h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
             >
               Salvar

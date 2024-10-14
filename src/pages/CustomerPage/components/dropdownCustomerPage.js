@@ -1,10 +1,13 @@
-import {
-    Trash,
-    UserIconBorder,
-    EditIcon,
-  } from "../../../icons/icons";
+import { Trash, UserIconBorder, EditIcon } from "../../../icons/icons";
 
-const DropDonw = ({dropdownRef, customerId, onDelete}) => {
+const DropDonw = ({
+  dropdownRef,
+  customerId,
+  onDelete,
+  setSelectedPatient,
+  openModal,
+  customers,
+}) => {
   return (
     <nav
       className="absolute right-0 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
@@ -23,7 +26,15 @@ const DropDonw = ({dropdownRef, customerId, onDelete}) => {
         <li>
           <button
             className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
-            onClick={() => <label>Editar paciente clicado" </label>}
+            onClick={() => {
+              const patient = customers.find(
+                (c) => c.customer_id === customerId
+              );
+              if (patient) {
+                setSelectedPatient(patient); 
+              }
+              openModal();
+            }}
           >
             <EditIcon />
             Editar paciente

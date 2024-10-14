@@ -82,7 +82,7 @@ const handleDeleteCustomer = async (customerId) => {
 };
 
   return (
-    <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
+    <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -143,6 +143,9 @@ const handleDeleteCustomer = async (customerId) => {
                     dropdownRef={dropdownRef}
                     customerId={customer.customer_id}
                     onDelete={handleDeleteCustomer}
+                    setSelectedPatient={setSelectedPatient} 
+                    openModal={openModal}                  
+                    customers={customers}     
                   />
                 )}
               </li>
