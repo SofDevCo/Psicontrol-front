@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Trash } from "../../icons/icons";
+import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
 
 const formatCurrency = (value) => {
@@ -21,36 +21,29 @@ const parseCurrency = (value) => {
 };
 
 const IncomePage = () => {
-  const [newExpenseValue, setNewExpenseValue] = useState("");
-  const [newRevenueValue, setNewRevenueValue] = useState("");
   const [expenses, setExpenses] = useState([]);
   const [revenues, setRevenues] = useState([]);
-  const [newExpenseName, setNewExpenseName] = useState("");
-  const [newRevenueName, setNewRevenueName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [isAddingRevenue, setIsAddingRevenue] = useState(false);
-  const [isAddingExpense, setIsAddingExpense] = useState(false);
+  const [isAddingRevenue, setIsAddingRevenue] = useState([]);
+  const [isAddingExpense, setIsAddingExpense] = useState([]);
 
   // Adicionar nova despesa
-  const addExpense = async () => {
-    if (newExpenseName.trim()) {
+  const addExpense = async (name, value) => {
+    if (name.trim()) {
       const newExpense = {
-        name: newExpenseName,
-        value: newExpenseValue || "0,00",
+        name: name,
+        value: value || "0,00",
       };
-
-      setNewExpenseName("");
-      setNewExpenseValue("");
 
       try {
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
@@ -69,22 +62,19 @@ const IncomePage = () => {
     }
   };
 
-  const addRevenue = async () => {
-    if (newRevenueName.trim() && newRevenueValue) {
+  const addRevenue = async (name, value) => {
+    if (name.trim() && value) {
       const newRevenue = {
-        name: newRevenueName,
-        value: newRevenueValue,
+        name: name,
+        value: value,
       };
-
-      setNewRevenueName("");
-      setNewRevenueValue("");
 
       try {
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
@@ -98,12 +88,10 @@ const IncomePage = () => {
         if (response.ok) {
           const savedRevenue = await response.json();
           setRevenues((prevRevenues) => [...prevRevenues, savedRevenue]);
-        } else {
         }
       } catch (error) {}
     }
   };
-
   async function deleteRevenue(id) {
     try {
       const response = await fetch(
@@ -112,11 +100,11 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       if (response.ok) {
@@ -135,11 +123,11 @@ const IncomePage = () => {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       if (response.ok) {
@@ -180,9 +168,23 @@ const IncomePage = () => {
     setIsSuccessModalOpen(false);
   };
 
-  const handleClick = () => {
-    addExpense();
-    addRevenue();
+  const handleClick = async () => {
+    const expensePromises = isAddingExpense.map(async (expense) => {
+      // Remover o setNewExpenseName e setNewExpenseValue aqui
+      await addExpense(expense.name, expense.value);
+    });
+
+    const revenuePromises = isAddingRevenue.map(async (revenue) => {
+      // Remover o setNewRevenueName e setNewRevenueValue aqui
+      await addRevenue(revenue.name, revenue.value);
+    });
+
+    // Aguarda todas as promessas de despesas e receitas serem resolvidas
+    await Promise.all([...expensePromises, ...revenuePromises]);
+
+    // Limpar inputs após adicionar
+    setIsAddingExpense([]);
+    setIsAddingRevenue([]);
   };
 
   useEffect(() => {
@@ -192,7 +194,7 @@ const IncomePage = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
@@ -213,7 +215,7 @@ const IncomePage = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token",
+              "authentication_token"
             )}`,
             "Content-Type": "application/json",
           },
@@ -232,19 +234,41 @@ const IncomePage = () => {
     loadRevenues();
   }, []);
 
+  const handleCancel = () => {
+    setIsAddingRevenue([]); // Reseta as receitas que estão sendo adicionadas
+    setIsAddingExpense([]); // Reseta as despesas que estão sendo adicionadas
+    closeModal(); // Fecha o modal
+  };
+
   const toggleAddRevenue = () => {
-    setIsAddingRevenue(!isAddingRevenue);
+    setIsAddingRevenue((prev) => [...prev, { name: "", value: "" }]);
   };
 
   const toggleAddExpense = () => {
-    setIsAddingExpense(!isAddingExpense);
+    setIsAddingExpense((prev) => [...prev, { name: "", value: "" }]);
+  };
+
+  const updateAddingRevenue = (index, field, value) => {
+    setIsAddingRevenue((prev) => {
+      const newRevenues = [...prev];
+      newRevenues[index][field] = value;
+      return newRevenues;
+    });
+  };
+
+  const updateAddingExpense = (index, field, value) => {
+    setIsAddingExpense((prev) => {
+      const newExpenses = [...prev];
+      newExpenses[index][field] = value;
+      return newExpenses;
+    });
   };
 
   return (
     <div className="">
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-lg">
+          <div className="w-[335px] h-[202px] bg-neutral-100 rounded-lg border border-[#81a0ae] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">
               Você tem certeza que deseja excluir este item?
             </h2>
@@ -267,7 +291,7 @@ const IncomePage = () => {
       )}
       {isSuccessModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-lg">
+          <div className="w-[360px] h-[207px] bg-neutral-100 rounded-lg shadow border border-[#81a0ae] p-6">
             <h2 className="text-lg font-semibold mb-4">
               Item excluído com sucesso!
             </h2>
@@ -282,128 +306,140 @@ const IncomePage = () => {
           </div>
         </div>
       )}
-      <div className="relative w-[1076px] h-auto ml-[200px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
+      <div className="relative w-[727px] mx-auto h-auto bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex justify-between mb-6">
-          <Months className="p-2 border rounded-md border-cinza6" />
-          <button className="w-[200px] h-[57.69px] shadow bg-neutral-100 rounded-[10px] mr-[490px] border-2 border-cinza6 mt-[5px] text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight">
+          <Months className="p-2 mt-4 border rounded-md border-cinza6" />
+          <button className="w-[200px] h-[57.69px] shadow bg-neutral-100 rounded-[10px] mr-[220px] border-2 border-cinza6 mt-[5px] text-cinza6 text-sm">
             Repetir Último <br /> Lançamento
           </button>
         </div>
-        <div className="flex mb-4">
-          <div className="w-1/2 pr-4">
-            <h2 className="text-lg font-semibold mb-2">Receitas</h2>
+        <div className="flex flex-wrap gap-6">
+          <div className="flex-1">
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">
+              Receitas
+            </h2>
             {revenues.map((revenue, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  value={revenue.name}
-                  readOnly // Somente leitura
-                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6  focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
-                />
-                <input
-                  type="text"
-                  value={formatCurrency(revenue.value)} // Formatar para exibição
-                  readOnly // Somente leitura
-                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6  focus:border-cinza6 focus:outline focus:ring rounded-md"
-                />
-                <button
-                  onClick={() => openModal(revenue.id, "revenue")}
-                  className="ml-2 text-blue-500 hover:text-blue-700"
-                >
-                  <Trash />
-                </button>
+              <div
+                key={index}
+                className="flex items-center justify-between mb-2"
+              >
+                <div className="flex-1">
+                  <div className="text-gray-700 pl-4 cursor-default">
+                    {revenue.name}
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-3 rounded-[15px] cursor-default flex items-center justify-center">
+                    {formatCurrency(revenue.value)}
+                  </div>
+                  <button
+                    onClick={() => openModal(revenue.id, "revenue")}
+                    className="mr-20 text-blue-500 hover:text-blue-700"
+                  >
+                    <Trash />
+                  </button>
+                </div>
               </div>
             ))}
-  
-            {isAddingRevenue && (
-              <div className="flex items-center mb-2">
+
+            {isAddingRevenue.map((revenue, index) => (
+              <div className="flex flex-wrap mb-2" key={index}>
                 <input
                   type="text"
                   placeholder="Nome da receita"
-                  value={newRevenueName}
-                  onChange={(e) => setNewRevenueName(e.target.value)} // Atualizar nome
-                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
+                  value={revenue.name}
+                  onChange={(e) =>
+                    updateAddingRevenue(index, "name", e.target.value)
+                  }
+                  className="flex-1 min-w-[130px] max-w-[200px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
                 <input
                   type="text"
                   placeholder="Valor da receita"
-                  value={formatCurrency(newRevenueValue)}
-                  onChange={(e) => setNewRevenueValue(e.target.value)} // Atualizar valor
-                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                  value={formatCurrency(revenue.value)}
+                  onChange={(e) =>
+                    updateAddingRevenue(index, "value", e.target.value)
+                  }
+                  className="flex-1 min-w-[116px] max-w-[200px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
-              </div>
-            )}
-  
-            <button
-              onClick={toggleAddRevenue}
-              className="flex items-center text-blue-500 hover:text-blue-700 mt-2"
-            >
-              <span className="mr-1">+</span> Adicionar item
-            </button>
-          </div>
-  
-          <div className="w-1/2 pl-4">
-            <h2 className="text-lg font-semibold mb-2">Despesas</h2>
-            {expenses.map((expense, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  value={expense.name}
-                  readOnly // Somente leitura
-                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
-                />
-                <input
-                  type="text"
-                  value={formatCurrency(expense.value)} // Formatar para exibição
-                  readOnly // Somente leitura
-                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
-                />
-                <button
-                  onClick={() => openModal(expense.id, "expense")}
-                  className="ml-2 text-red-500 hover:text-red-700"
-                >
-                  <Trash />
-                </button>
               </div>
             ))}
-  
-            {isAddingExpense && (
-              <div className="flex items-center mb-2">
+            <button
+              onClick={toggleAddRevenue}
+              className="flex ml-4 items-center text-blue-500 hover:text-blue-700 mt-4"
+            >
+              <AddIcon />
+              <span className="text-[#0082ba] ml-[8px]">Adicionar item</span>
+            </button>
+          </div>
+
+          <div className="flex-1">
+            <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
+            {expenses.map((expense, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between mb-2"
+              >
+                <div className="flex-1">
+                  <div className="text-gray-700 cursor-default">
+                    {expense.name}
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
+                    {formatCurrency(expense.value)}
+                  </div>
+                  <button
+                    onClick={() => openModal(expense.id, "expense")}
+                    className="mr-10 text-red-500 hover:text-red-700"
+                  >
+                    <Trash />
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {isAddingExpense.map((expense, index) => (
+              <div className="flex flex-wrap mb-2" key={index}>
                 <input
                   type="text"
                   placeholder="Nome da despesa"
-                  value={newExpenseName}
-                  onChange={(e) => setNewExpenseName(e.target.value)} // Atualizar nome
-                  className="w-[180px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-2"
+                  value={expense.name}
+                  onChange={(e) =>
+                    updateAddingExpense(index, "name", e.target.value)
+                  }
+                  className="flex-1 min-w-[130px] max-w-[200px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
                 <input
                   type="text"
                   placeholder="Valor da despesa"
-                  value={formatCurrency(newExpenseValue)}
-                  onChange={(e) => setNewExpenseValue(e.target.value)} // Atualizar valor
-                  className="w-[120px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                  value={formatCurrency(expense.value)}
+                  onChange={(e) =>
+                    updateAddingExpense(index, "value", e.target.value)
+                  }
+                  className="flex-1 min-w-[116px] max-w-[200px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
-            )}
-  
+            ))}
             <button
               onClick={toggleAddExpense}
-              className="flex items-center text-blue-500 hover:text-blue-700 mt-2"
+              className="flex items-center text-blue-500 hover:text-blue-700 mt-4"
             >
-              <span className="mr-1">+</span> Adicionar item
+              <AddIcon />
+              <span className="text-[#0082ba] ml-[8px]">Adicionar item</span>
             </button>
           </div>
         </div>
-        <div className="flex justify-end mt-4">
+        <div className="flex mr-10 justify-end mt-4">
           <button
-            onClick={closeModal}
-            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md mr-2 hover:bg-blue-100"
+            onClick={handleCancel}
+            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-[100px] mr-2 hover:bg-blue-100"
           >
             Cancelar
           </button>
           <button
             onClick={handleClick}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            className="px-4 py-2 bg-primaria text-white rounded-[100px] hover:bg-blue-600"
           >
             Salvar
           </button>
@@ -411,7 +447,6 @@ const IncomePage = () => {
       </div>
     </div>
   );
-  
 };
 
 export default IncomePage;
