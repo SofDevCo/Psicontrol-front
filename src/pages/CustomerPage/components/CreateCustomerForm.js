@@ -1,12 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
+import { registerLocale } from "react-datepicker";
+import {
+  formatDateBrazilian,
+  parseISODate,
+  formatDateIso,
+} from "../../../utils/DateOfBirth/dateOfBirth";
+import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
 import {
   showSuccessToast,
   showErrorToast,
 } from "../../../utils/notification/toastify";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+registerLocale(ptBR);
 
 const CreateCustomerForm = ({
   onClose,
@@ -16,15 +24,53 @@ const CreateCustomerForm = ({
   setCustomer,
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
+  const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
-    if (selectedPatient) {
+    if (selectedPatient && selectedPatient.customer_dob) {
+      const parsedDate = parseISODate(selectedPatient.customer_dob);
+      setStartDate(parsedDate);
       setCustomer((prev) => ({
         ...prev,
-        ...selectedPatient, 
+        ...selectedPatient,
+        customer_dob: formatDateBrazilian(parsedDate),
       }));
     }
   }, [selectedPatient, setCustomer]);
+
+
+  const handleManualDateChange = (value) => {
+    let formattedValue = value.replace(/\D/g, "");
+  
+    if (formattedValue.length >= 2) {
+      formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2)}`;
+    }
+    if (formattedValue.length >= 5) {
+      formattedValue = `${formattedValue.slice(0, 5)}/${formattedValue.slice(5, 9)}`;
+    }
+  
+    setCustomer((prevState) => ({
+      ...prevState,
+      customer_dob: formattedValue,
+    }));
+  
+    if (formattedValue.length === 10) {
+      const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+  
+      if (regex.test(formattedValue)) {
+        const [day, month, year] = formattedValue.split("/").map(Number);
+        const date = new Date(year, month - 1, day);
+  
+        if (date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
+          setStartDate(date); 
+        } else {
+          showErrorToast("Data inválida! Verifique se a data existe.");
+        }
+      } else {
+        showErrorToast("Data inválida! Use o formato DD/MM/AAAA.");
+      }
+    }
+  };
 
   const handleAddAlternativeFields = () => {
     if (additionalAlternatives.length < 2) {
@@ -59,42 +105,50 @@ const CreateCustomerForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    const formattedCustomer = {
+      ...customer,
+      customer_dob: startDate ? formatDateIso(startDate) : "", 
+    };
+
     const url = customer.customer_id
-      ? `http://localhost:3000/events/customers/${customer.customer_id}`  
-      : `http://localhost:3000/events/create-customer`;  
-  
-    const method = customer.customer_id ? 'PUT' : 'POST'; 
-  
+      ? `http://localhost:3000/events/customers/${customer.customer_id}`
+      : `http://localhost:3000/events/create-customer`;
+
+    const method = customer.customer_id ? "PUT" : "POST";
+
     try {
       const response = await fetch(url, {
         method: method,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authentication_token')}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...customer, additionalAlternatives }),
       });
-  
+      const data = await response.json();
+
       if (response.ok) {
         setCustomer({
-          customer_name: '',
-          customer_cpf_cnpj: '',
-          customer_phone: '',
-          customer_email: '',
-          consultation_fee: '',
+          customer_name: "",
+          customer_cpf_cnpj: "",
+          customer_phone: "",
+          customer_email: "",
+          consultation_fee: "",
           patient_status: true,
-          alternative_name: '',
-          alternative_cpf_cnpj: '',
+          alternative_name: "",
+          alternative_cpf_cnpj: "",
+          customer_dob: "",
         });
         setAdditionalAlternatives([]);
-        onSubmit(); 
-        onClose();  
+        onSubmit();
+        onClose();
+        showSuccessToast();
       } else {
-        showErrorToast('Erro ao processar a solicitação!');
+        showErrorToast(data.message || "Erro ao processar a solicitação!");
       }
     } catch (error) {
-      showErrorToast('Erro ao processar a solicitação!');
+      showErrorToast("Erro ao processar a solicitação!");
     }
   };
 
@@ -106,19 +160,34 @@ const CreateCustomerForm = ({
       >
         <div>
           <div className="space-y-4">
-            <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                Nome
-              </label>
-              <input
-                type="text"
-                name="customer_name"
-                value={customer.customer_name  || ""}
-                onChange={handleChange}
-                placeholder="Nome do paciente"
-                required
-                className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-              />
+            <div className="flex gap-4">
+              <div>
+                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  name="customer_name"
+                  value={customer.customer_name || ""}
+                  onChange={handleChange}
+                  placeholder="Nome do paciente"
+                  required
+                  className="w-[262px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Nascimento
+                </label>
+                <input
+                  type="text"
+                  value={customer.customer_dob || ""}
+                  onChange={(e) => handleManualDateChange(e.target.value)}
+                  placeholder="DD/MM/AAAA"
+                  className="w-[131px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                />
+              </div>
             </div>
 
             <div>
@@ -159,7 +228,7 @@ const CreateCustomerForm = ({
                   name="customer_cpf_cnpj"
                   value={customer.customer_cpf_cnpj || ""}
                   onChange={handleChange}
-                  placeholder="XX.XXX.XXX/0001-XX."
+                  placeholder="XX.XXX.XXX/0001-XX"
                   className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
@@ -304,7 +373,6 @@ const CreateCustomerForm = ({
           </div>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };
