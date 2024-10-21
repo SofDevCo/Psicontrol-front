@@ -22,12 +22,13 @@ const CreateCustomerForm = ({
   selectedPatient,
   customer,
   setCustomer,
+  isEditing
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
   const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
-    if (selectedPatient && selectedPatient.customer_dob) {
+    if (isEditing && selectedPatient && selectedPatient.customer_dob) {
       const parsedDate = parseISODate(selectedPatient.customer_dob);
       setStartDate(parsedDate);
       setCustomer((prev) => ({
@@ -36,7 +37,7 @@ const CreateCustomerForm = ({
         customer_dob: formatDateBrazilian(parsedDate),
       }));
     }
-  }, [selectedPatient, setCustomer]);
+  }, [isEditing, selectedPatient, setCustomer]);
 
 
   const handleManualDateChange = (value) => {
@@ -144,6 +145,7 @@ const CreateCustomerForm = ({
         onSubmit();
         onClose();
         showSuccessToast();
+        setStartDate(null);
       } else {
         showErrorToast(data.message || "Erro ao processar a solicitação!");
       }
@@ -296,7 +298,7 @@ const CreateCustomerForm = ({
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
                 <label className="mb-1.5 mt-1.5 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Nome Alternativo {index + 2}
+                  Nome Alternativo {index + 1}
                 </label>
                 <input
                   type="text"
@@ -315,7 +317,7 @@ const CreateCustomerForm = ({
                 />
 
                 <label className="mb-1.5 mt-4 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  CPF Alternativo {index + 2}
+                  CPF Alternativo {index + 1}
                 </label>
                 <div className="relative">
                   <input
@@ -344,7 +346,7 @@ const CreateCustomerForm = ({
               </div>
             ))}
           </div>
-          {additionalAlternatives.length < 2 && (
+          {additionalAlternatives.length < 1 && (
             <button
               type="button"
               className="grouph-4 justify-center items-start gap-2 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"

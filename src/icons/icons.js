@@ -338,6 +338,54 @@ const SuccessIcon = () => {
   );
 };
 
+const ArrowLeftIcon = () => {
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_1270_63)">
+        <path
+          d="M19.825 25L25.425 30.6L24 32L16 24L24 16L25.425 17.4L19.825 23H32V25H19.825Z"
+          fill="#5C5C5C"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1270_63">
+          <rect x="4" y="4" width="40" height="40" rx="20" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+const CloseIcon = () => {
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_1270_72)">
+        <path
+          d="M18.4 31L17 29.6L22.6 24L17 18.4L18.4 17L24 22.6L29.6 17L31 18.4L25.4 24L31 29.6L29.6 31L24 25.4L18.4 31Z"
+          fill="#5C5C5C"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1270_72">
+          <rect x="4" y="4" width="40" height="40" rx="20" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
 export {
   HomeIcon,
   RecDespIcon,
@@ -353,4 +401,6 @@ export {
   CalendarIcon,
   VerifyIcon,
   SuccessIcon,
+  ArrowLeftIcon,
+  CloseIcon,
 };

@@ -15,3 +15,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.Toastify__toast {
+  @apply w-[360px] h-[207px] bg-primaria rounded-lg shadow border border-cinza6;
+}
+
+
+/* .toast-error {
+  @apply bg-red-500 text-white font-semibold p-4 rounded-lg shadow-md;
+} */
+
+.toast-container {
+  @apply space-y-2 fixed top-5 right-5;
+}

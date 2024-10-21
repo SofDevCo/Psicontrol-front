@@ -6,6 +6,8 @@ import {
   AddIcon,
   ArchiveIcon,
   HamburguerIcon,
+  ArrowLeftIcon,
+  CloseIcon,
 } from "../../icons/icons";
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
@@ -19,11 +21,14 @@ const CustomersPage = () => {
   const { isModalOpen, openModal, closeModal } = useModal();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const [customer, setCustomer] = useState({
     customer_name: "",
     customer_cpf_cnpj: "",
   });
-  
+
   const dropdownRef = useRef();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
@@ -43,7 +48,7 @@ const CustomersPage = () => {
       const data = await response.json();
       setCustomers(data);
     } catch (error) {
-      setError("Erro ao buscar clientes."); 
+      setError("Erro ao buscar clientes.");
     } finally {
       setIsLoading(false);
     }
@@ -53,33 +58,72 @@ const CustomersPage = () => {
     fetchCustomers();
   }, []);
 
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredCustomers([]);
+    } else {
+      setFilteredCustomers(
+        customers.filter((customer) =>
+          customer.customer_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+  }, [searchTerm, customers]);
+
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
 
-const handleUsePatientData = () => {
-  setCustomer((prev) => ({
-    ...prev,
-    alternative_name: prev.customer_name, 
-    alternative_cpf_cnpj: prev.customer_cpf_cnpj, 
-  }));
-};
+  const handleUsePatientData = () => {
+    setCustomer((prev) => ({
+      ...prev,
+      alternative_name: prev.customer_name,
+      alternative_cpf_cnpj: prev.customer_cpf_cnpj,
+    }));
+  };
 
-const handleDeleteCustomer = async (customerId) => {
-  const response = await fetch(`http://localhost:3000/events/customers/${customerId}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-      "Content-Type": "application/json",
-    },
-  });
+  const handleDeleteCustomer = async (customerId) => {
+    const response = await fetch(
+      `http://localhost:3000/events/customers/${customerId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  if(response.ok){
-    fetchCustomers();
-  }else{
-    showErrorToast("Erro ao excluir cliente!")
-  }
-};
+    if (response.ok) {
+      fetchCustomers();
+    } else {
+      showErrorToast("Erro ao excluir cliente!");
+    }
+  };
+
+  const handleAddPatient = () => {
+    setCustomer({
+      customer_name: "",
+      customer_cpf_cnpj: "",
+      customer_phone: "",
+      customer_email: "",
+      consultation_fee: "",
+      customer_dob: "",
+      alternative_name: "",
+      alternative_cpf_cnpj: "",
+    });
+    setIsEditing(false);
+    openModal();
+  };
+
+  const handleEditPatient = (patient) => {
+    setSelectedPatient(patient);
+    setCustomer(patient);
+    setIsEditing(true); 
+    openModal(); 
+  };
 
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
@@ -87,17 +131,60 @@ const handleDeleteCustomer = async (customerId) => {
         <div className="relative">
           <input
             type="text"
-            placeholder="Pesquisar"
-            className="h-[56px] w-[360px] rounded-[28px] border border-solid border-gray-300 bg-clara3 pl-10 text-texto3"
+            placeholder={searchTerm ? "" : "Pesquisar"}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`h-[56px] w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
           />
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 transform">
-            <SearchIcon />
+          <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
+            {searchTerm.length > 0 ? (
+              <div
+                onClick={() => {
+                  setSearchTerm(""); 
+                }}
+                className="cursor-pointer"
+              >
+                <ArrowLeftIcon/>
+              </div>
+            ) : (
+              <SearchIcon />
+            )}
           </div>
+          
+          {searchTerm.length > 0 && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
+              <div
+                onClick={() => {
+                  setSearchTerm(""); 
+                  setFilteredCustomers([]);
+                }}
+                className="cursor-pointer"
+              >
+                <CloseIcon/>
+              </div>
+            </div>
+          )}
+          {searchTerm && filteredCustomers.length > 0 && (
+            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
+              {filteredCustomers.map((customer) => (
+                <li
+                  key={customer.customer_id}
+                  className="px-4 py-2 hover:bg-d_medio3 cursor-pointer"
+                  onClick={() => {
+                    setSearchTerm(customer.customer_name);
+                    setFilteredCustomers([]);
+                  }}
+                >
+                  {customer.customer_name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="ml-[40px] flex justify-center">
           <button
-            onClick={openModal}
+            onClick={handleAddPatient}
             className="flex h-[41px] w-[200px] items-center rounded-lg border-[3px] border-solid border-[#0082BA] bg-bg1 text-center font-['Ubuntu'] text-sm font-medium leading-[16px] tracking-[0.1px] text-primaria shadow-md hover:bg-primaria hover:text-bg1"
           >
             <AddIcon />
@@ -143,9 +230,9 @@ const handleDeleteCustomer = async (customerId) => {
                     dropdownRef={dropdownRef}
                     customerId={customer.customer_id}
                     onDelete={handleDeleteCustomer}
-                    setSelectedPatient={setSelectedPatient} 
-                    openModal={openModal}                  
-                    customers={customers}     
+                    setSelectedPatient={setSelectedPatient}
+                    openModal={() => handleEditPatient(customer)}
+                    customers={customers}
                   />
                 )}
               </li>
@@ -176,9 +263,10 @@ const handleDeleteCustomer = async (customerId) => {
               <CreateCustomerForm
                 onClose={closeModal}
                 onSubmit={fetchCustomers}
-                selectedPatient={selectedPatient} 
-                customer={customer} 
-                setCustomer={setCustomer} 
+                selectedPatient={selectedPatient}
+                customer={customer}
+                setCustomer={setCustomer}
+                isEditing={isEditing}
               />
             </div>
           </div>
