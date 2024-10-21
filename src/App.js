@@ -8,10 +8,13 @@ import CustomersPage from "./pages/CustomerPage/CustomersPage";
 import CreateCustomerPage from "./pages/CustomerPage/components/CreateCustomerForm";
 import IncomePage from "./pages/IncomePage/IncomePage";
 import Layout from "./utils/Layout/layout";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer/>
       <Routes>
         <Route path="/" element={<Login />} />
           <Route path="/token" element={<Token />} />
