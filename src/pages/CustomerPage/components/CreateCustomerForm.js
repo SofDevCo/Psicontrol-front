@@ -4,6 +4,7 @@ import {
   formatDateBrazilian,
   parseISODate,
   formatDateIso,
+  isValidDate
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
@@ -62,7 +63,12 @@ const CreateCustomerForm = ({
         const [day, month, year] = formattedValue.split("/").map(Number);
         const date = new Date(year, month - 1, day);
   
-        if (date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
+        if (year < 1900 || year > new Date().getFullYear()) {
+          showErrorToast("Data inválida");
+          return;
+        }
+  
+        if (isValidDate(date) && date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
           setStartDate(date); 
         } else {
           showErrorToast("Data inválida! Verifique se a data existe.");
@@ -107,6 +113,11 @@ const CreateCustomerForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!startDate || startDate.getFullYear() < 1900 || startDate.getFullYear() > new Date().getFullYear()) {
+      showErrorToast("Data de nascimento válida");
+      return;
+    }
+  
     const formattedCustomer = {
       ...customer,
       customer_dob: startDate ? formatDateIso(startDate) : "", 
