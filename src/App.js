@@ -10,6 +10,7 @@ import IncomePage from "./pages/IncomePage/IncomePage";
 import Layout from "./utils/Layout/layout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ArchivedPage from "./pages/ArchivedPage/ArchivedPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/create-customer" element={<CreateCustomerPage />} />
           <Route path="/income" element={<IncomePage />} />
+          <Route path="/archived" element={<ArchivedPage/>} />
         </Route>
       </Routes>
     </Router>
