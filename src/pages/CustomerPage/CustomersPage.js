@@ -13,6 +13,7 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
 import { showErrorToast } from "../../utils/notification/toastify";
+import {Link } from "react-router-dom"
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -103,6 +104,25 @@ const CustomersPage = () => {
     }
   };
 
+  const handleArchiveCustomer = async (customerId) => {
+    const response = await fetch(
+      `http://localhost:3000/events/customers/${customerId}/archive`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.ok) {
+      fetchCustomers();
+    } else {
+      showErrorToast("Erro ao excluir cliente!");
+    }
+  }
+
   const handleAddPatient = () => {
     setCustomer({
       customer_name: "",
@@ -124,6 +144,7 @@ const CustomersPage = () => {
     setIsEditing(true); 
     openModal(); 
   };
+
 
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
@@ -194,7 +215,11 @@ const CustomersPage = () => {
 
         <button className="whitespace-no-wrap left-[1191px] top-[194px] ml-[220px] flex w-full bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
           <ArchiveIcon />
+          <Link
+           to="/archived"
+          >
           Pacientes arquivados
+          </Link>
         </button>
       </div>
 
@@ -233,6 +258,7 @@ const CustomersPage = () => {
                     setSelectedPatient={setSelectedPatient}
                     openModal={() => handleEditPatient(customer)}
                     customers={customers}
+                    onArchive={handleArchiveCustomer}
                   />
                 )}
               </li>
