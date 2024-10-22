@@ -411,6 +411,7 @@ const CloseIcon = () => {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="absolute ml-[171px]"
     >
       <g clip-path="url(#clip0_1270_72)">
         <path
