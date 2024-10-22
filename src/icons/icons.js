@@ -139,7 +139,7 @@ const AddIcon = () => {
       viewBox="0 0 15 15"
       fillRule="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-[15px] h-[15px] relative"
+      className="w-[15px] h-[15px] "
     >
       <path
         fillRule="evenodd"
@@ -347,9 +347,10 @@ const SetaIcon = () => {
     <svg
       width="18 "
       height="18"
-      viewBox="5 6 12 12"
+      viewBox="5 5 14 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="absolute ml-[171px]"
     >
       <path d="M7 10L17 10L12 15L7 10Z" fill="#F5F5F5" />
     </svg>
