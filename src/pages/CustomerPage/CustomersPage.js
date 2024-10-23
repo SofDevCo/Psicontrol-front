@@ -13,7 +13,8 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
 import { showErrorToast } from "../../utils/notification/toastify";
-import {Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { deleteCustomer } from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -86,21 +87,16 @@ const CustomersPage = () => {
   };
 
   const handleDeleteCustomer = async (customerId) => {
-    const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+      const response = await deleteCustomer(customerId);
 
-    if (response.ok) {
-      fetchCustomers();
-    } else {
-      showErrorToast("Erro ao excluir cliente!");
+      if (response.ok) {
+        fetchCustomers();
+      } else {
+        showErrorToast("Erro ao excluir cliente!");
+      }
+    } catch (error) {
+      showErrorToast(error.message);
     }
   };
 
@@ -113,6 +109,7 @@ const CustomersPage = () => {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ archived: true }),
       }
     );
 
@@ -121,7 +118,7 @@ const CustomersPage = () => {
     } else {
       showErrorToast("Erro ao excluir cliente!");
     }
-  }
+  };
 
   const handleAddPatient = () => {
     setCustomer({
@@ -141,10 +138,9 @@ const CustomersPage = () => {
   const handleEditPatient = (patient) => {
     setSelectedPatient(patient);
     setCustomer(patient);
-    setIsEditing(true); 
-    openModal(); 
+    setIsEditing(true);
+    openModal();
   };
-
 
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
@@ -161,30 +157,36 @@ const CustomersPage = () => {
             {searchTerm.length > 0 ? (
               <div
                 onClick={() => {
-                  setSearchTerm(""); 
+                  setSearchTerm("");
                 }}
                 className="cursor-pointer"
               >
-                <ArrowLeftIcon/>
+                <ArrowLeftIcon />
               </div>
             ) : (
               <SearchIcon />
             )}
           </div>
-          
+
           {searchTerm.length > 0 && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
               <div
                 onClick={() => {
-                  setSearchTerm(""); 
+                  setSearchTerm("");
                   setFilteredCustomers([]);
                 }}
                 className="cursor-pointer"
               >
-                <CloseIcon/>
+                <CloseIcon />
               </div>
             </div>
           )}
+          {searchTerm && filteredCustomers.length === 0 && (
+            <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+              Paciente não encontrado
+            </p>
+          )}
+
           {searchTerm && filteredCustomers.length > 0 && (
             <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
               {filteredCustomers.map((customer) => (
@@ -206,20 +208,16 @@ const CustomersPage = () => {
         <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-[200px] items-center rounded-lg border-[3px] border-solid border-[#0082BA] bg-bg1 text-center font-['Ubuntu'] text-sm font-medium leading-[16px] tracking-[0.1px] text-primaria shadow-md hover:bg-primaria hover:text-bg1"
+            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1 shadow-default text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md hover:bg-primaria hover:text-bg1 space-x-2 px-4"
           >
             <AddIcon />
-            Adicionar Paciente
+            <span>Adicionar paciente</span>
           </button>
         </div>
 
-        <button className="whitespace-no-wrap left-[1191px] top-[194px] ml-[220px] flex w-full bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
+        <button className="whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
           <ArchiveIcon />
-          <Link
-           to="/archived"
-          >
-          Pacientes arquivados
-          </Link>
+          <Link to="/archived">Pacientes arquivados</Link>
         </button>
       </div>
 
