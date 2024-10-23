@@ -223,7 +223,7 @@ const CustomersPage = () => {
 
       <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="left-[1305px] top-[275px] ml-[877.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="left-[1305px] top-[275px] ml-[893.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -274,10 +274,10 @@ const CustomersPage = () => {
                 <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
                   Dados para recibo
                 </h3>
-                <div className="ml-[20px] border-2 border-cinza6 rounded-[10px] w-full md:w-auto">
+                <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
                   <button
                     onClick={handleUsePatientData}
-                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight"
+                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
                   >
                     Usar dados do <br /> paciente
                   </button>
