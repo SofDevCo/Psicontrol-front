@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
+import { showSaveToast, showErrorToast, showDeleteToast } from "../../utils/notification/toastify";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -32,7 +33,7 @@ const IncomePage = () => {
   const [selectedYear, setSelectedYear] = useState(
     String(new Date().getFullYear())
   );
-  // const [isRevenueButtonClicked, setIsRevenueButtonClicked] = useState(false);
+  
   const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
 
   const addExpense = async (name, value) => {
@@ -43,15 +44,8 @@ const IncomePage = () => {
       };
 
       try {
-        // Formata a data no formato ISO "YYYY-MM-DD"
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        // Verifica o que está sendo enviado
-        console.log({
-          name: newExpense.name,
-          value: parseCurrency(newExpense.value) / 100,
-          date: formattedDate,
-        });
 
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "POST",
@@ -62,7 +56,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newExpense.name,
             value: parseCurrency(newExpense.value) / 100,
-            date: formattedDate, // Usando o formato ISO
+            date: formattedDate, 
           }),
         });
 
@@ -70,7 +64,7 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar despesa:", responseData);
         } else {
-          // Se tudo ocorrer bem, adiciona a nova despesa à lista
+          
           setExpenses((prevExpenses) => [...prevExpenses, responseData]);
         }
       } catch (error) {
@@ -87,15 +81,9 @@ const IncomePage = () => {
       };
 
       try {
-        // Formata a data no formato ISO "YYYY-MM-DD"
+        
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        // Verifica o que está sendo enviado
-        console.log({
-          name: newRevenue.name,
-          value: parseCurrency(newRevenue.value) / 100,
-          date: formattedDate,
-        });
 
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "POST",
@@ -106,7 +94,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newRevenue.name,
             value: parseCurrency(newRevenue.value) / 100,
-            date: formattedDate, // Usando o formato ISO
+            date: formattedDate, 
           }),
         });
 
@@ -114,7 +102,7 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar receita:", responseData);
         } else {
-          // Se tudo ocorrer bem, adiciona a nova receita à lista
+          
           setRevenues((prevRevenues) => [...prevRevenues, responseData]);
         }
       } catch (error) {
@@ -147,7 +135,7 @@ const IncomePage = () => {
         alert("Entradas do mês passado duplicadas com sucesso!");
       } else if (response.status === 400) {
         const errorData = await response.json();
-        alert(errorData.message); // Mostra a mensagem de erro ao usuário
+        alert(errorData.message);
       } else {
         console.error("Erro ao duplicar entradas:", response.statusText);
       }
@@ -225,12 +213,10 @@ const IncomePage = () => {
   const confirmDelete = () => {
     handleDelete(itemToDelete, itemType);
     closeModal();
+    showDeleteToast();
     setIsSuccessModalOpen(true);
   };
 
-  const closeSuccessModal = () => {
-    setIsSuccessModalOpen(false);
-  };
 
   const handleClick = async () => {
     const expensePromises = isAddingExpense.map(async (expense) => {
@@ -241,21 +227,22 @@ const IncomePage = () => {
       await addRevenue(revenue.name, revenue.value);
     });
 
-    // Aguarda todas as promessas de despesas e receitas serem resolvidas
     await Promise.all([...expensePromises, ...revenuePromises]);
 
-    // Limpar inputs após adicionar
+    showSaveToast();
+
     setIsAddingExpense([]);
     setIsAddingRevenue([]);
+
   };
 
   const loadExpenses = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; // Formato MM/yy para enviar ao back-end
+    const monthYear = `${month}/${year.slice(-2)}`; 
     console.log(`Chamando API: /income/expense?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense?monthYear=${monthYear}`, // Ajuste aqui para usar monthYear
+        `http://localhost:3000/income/expense?monthYear=${monthYear}`, 
         {
           method: "GET",
           headers: {
@@ -267,7 +254,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const expenseData = await response.json();
-        setExpenses(expenseData); // O back-end já retorna os dados filtrados
+        setExpenses(expenseData); 
         console.log("Despesas carregadas:", expenseData);
       }
     } catch (error) {
@@ -276,12 +263,12 @@ const IncomePage = () => {
   };
 
   const loadRevenues = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; // Formato MM/yy para enviar ao back-end
+    const monthYear = `${month}/${year.slice(-2)}`; 
     console.log(`Chamando API: /income/revenue?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue?monthYear=${monthYear}`, // Ajuste aqui para usar monthYear
+        `http://localhost:3000/income/revenue?monthYear=${monthYear}`, 
         {
           method: "GET",
           headers: {
@@ -293,7 +280,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const revenueData = await response.json();
-        setRevenues(revenueData); // O back-end já retorna os dados filtrados
+        setRevenues(revenueData); 
         console.log("Receitas carregadas:", revenueData);
       }
     } catch (error) {
@@ -315,36 +302,35 @@ const IncomePage = () => {
 
   const handleMonthChange = (month) => {
     const formattedMonth = String(month).padStart(2, "0");
-    console.log("Mês selecionado:", formattedMonth); // Log do mês
+    console.log("Mês selecionado:", formattedMonth); 
     setSelectedMonth(formattedMonth);
   };
 
   const handleYearChange = (year) => {
     const formattedYear = String(year);
-    console.log("Ano selecionado:", formattedYear); // Log do ano
+    console.log("Ano selecionado:", formattedYear); 
     setSelectedYear(formattedYear);
   };
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
-      setExpenses([]); // Limpa o estado anterior
-      setRevenues([]); // Limpa o estado anterior
+      setExpenses([]); 
+      setRevenues([]); 
 
-      // Carrega as despesas e receitas atualizadas
       loadExpenses(selectedMonth, selectedYear);
       loadRevenues(selectedMonth, selectedYear);
     }
   }, [selectedMonth, selectedYear]);
 
   const handleCancel = () => {
-    setIsAddingRevenue([]); // Reseta as receitas que estão sendo adicionadas
-    setIsAddingExpense([]); // Reseta as despesas que estão sendo adicionadas
-    closeModal(); // Fecha o modal
+    setIsAddingRevenue([]); 
+    setIsAddingExpense([]); 
+    closeModal(); 
   };
 
   const toggleAddRevenue = () => {
     setIsAddingRevenue((prev) => [...prev, { name: "", value: "" }]);
-   // setIsRevenueButtonClicked((prev) => !prev);
+   
   };
 
   const toggleAddExpense = () => {
@@ -388,23 +374,6 @@ const IncomePage = () => {
                 className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
               >
                 Excluir
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {isSuccessModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-[360px] h-[207px] bg-neutral-100 rounded-lg shadow border border-[#81a0ae] p-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Item excluído com sucesso!
-            </h2>
-            <div className="flex justify-end">
-              <button
-                onClick={closeSuccessModal}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Fechar
               </button>
             </div>
           </div>
@@ -478,7 +447,7 @@ const IncomePage = () => {
             ))}
             <button
               onClick={toggleAddRevenue}
-              className="flex ml-4 z-[-1] items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
+              className="flex ml-4 z-[-1]  items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px]">Adicionar item</span>
