@@ -7,6 +7,8 @@ import {
 } from "../../icons/icons";
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import DropDown from "../ArchivedPage/components/DropDownArchive";
+import { deleteCustomer } from "../../service/pagesService/pagesService";
+import { showErrorToast } from "../../utils/notification/toastify";
 
 const ArchivedPage = () => {
   const [archivedCustomers, setArchivedCustomers] = useState([]);
@@ -80,6 +82,20 @@ const ArchivedPage = () => {
       );
     }
   }, [searchTerm, archivedCustomers]);
+
+  const handleDeleteCustomer = async (customerId) => {
+    try {
+      const response = await deleteCustomer(customerId);
+  
+      if (response.ok) {
+        fetchArchivedCustomers();
+      } else {
+        showErrorToast("Erro ao excluir cliente!");
+      }
+    } catch (error) {
+      showErrorToast(error.message);
+    }
+  };
 
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
@@ -169,7 +185,7 @@ const ArchivedPage = () => {
                   <DropDown
                     dropdownRef={dropdownRef}
                     customerId={customer.customer_id}
-                    // onDelete={handleDeleteCustomer}
+                    onDelete={handleDeleteCustomer}
                     // setSelectedPatient={setSelectedPatient}
                     customers={customers}
                     onUnarchive={handleUnarchiveCustomer}
