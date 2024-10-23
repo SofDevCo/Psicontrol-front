@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
-import { showSaveToast, showErrorToast, showDeleteToast } from "../../utils/notification/toastify";
+import {
+  showSaveToast,
+  showErrorToast,
+  showDeleteToast,
+} from "../../utils/notification/toastify";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -33,7 +37,7 @@ const IncomePage = () => {
   const [selectedYear, setSelectedYear] = useState(
     String(new Date().getFullYear())
   );
-  
+
   const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
 
   const addExpense = async (name, value) => {
@@ -46,7 +50,6 @@ const IncomePage = () => {
       try {
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "POST",
           headers: {
@@ -56,7 +59,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newExpense.name,
             value: parseCurrency(newExpense.value) / 100,
-            date: formattedDate, 
+            date: formattedDate,
           }),
         });
 
@@ -64,7 +67,6 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar despesa:", responseData);
         } else {
-          
           setExpenses((prevExpenses) => [...prevExpenses, responseData]);
         }
       } catch (error) {
@@ -81,9 +83,7 @@ const IncomePage = () => {
       };
 
       try {
-        
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
-
 
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "POST",
@@ -94,7 +94,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newRevenue.name,
             value: parseCurrency(newRevenue.value) / 100,
-            date: formattedDate, 
+            date: formattedDate,
           }),
         });
 
@@ -102,7 +102,6 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar receita:", responseData);
         } else {
-          
           setRevenues((prevRevenues) => [...prevRevenues, responseData]);
         }
       } catch (error) {
@@ -217,7 +216,6 @@ const IncomePage = () => {
     setIsSuccessModalOpen(true);
   };
 
-
   const handleClick = async () => {
     const expensePromises = isAddingExpense.map(async (expense) => {
       await addExpense(expense.name, expense.value);
@@ -233,16 +231,15 @@ const IncomePage = () => {
 
     setIsAddingExpense([]);
     setIsAddingRevenue([]);
-
   };
 
   const loadExpenses = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; 
+    const monthYear = `${month}/${year.slice(-2)}`;
     console.log(`Chamando API: /income/expense?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense?monthYear=${monthYear}`, 
+        `http://localhost:3000/income/expense?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
@@ -254,7 +251,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const expenseData = await response.json();
-        setExpenses(expenseData); 
+        setExpenses(expenseData);
         console.log("Despesas carregadas:", expenseData);
       }
     } catch (error) {
@@ -263,12 +260,12 @@ const IncomePage = () => {
   };
 
   const loadRevenues = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; 
+    const monthYear = `${month}/${year.slice(-2)}`;
     console.log(`Chamando API: /income/revenue?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue?monthYear=${monthYear}`, 
+        `http://localhost:3000/income/revenue?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
@@ -280,7 +277,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const revenueData = await response.json();
-        setRevenues(revenueData); 
+        setRevenues(revenueData);
         console.log("Receitas carregadas:", revenueData);
       }
     } catch (error) {
@@ -302,20 +299,20 @@ const IncomePage = () => {
 
   const handleMonthChange = (month) => {
     const formattedMonth = String(month).padStart(2, "0");
-    console.log("Mês selecionado:", formattedMonth); 
+    console.log("Mês selecionado:", formattedMonth);
     setSelectedMonth(formattedMonth);
   };
 
   const handleYearChange = (year) => {
     const formattedYear = String(year);
-    console.log("Ano selecionado:", formattedYear); 
+    console.log("Ano selecionado:", formattedYear);
     setSelectedYear(formattedYear);
   };
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
-      setExpenses([]); 
-      setRevenues([]); 
+      setExpenses([]);
+      setRevenues([]);
 
       loadExpenses(selectedMonth, selectedYear);
       loadRevenues(selectedMonth, selectedYear);
@@ -323,14 +320,13 @@ const IncomePage = () => {
   }, [selectedMonth, selectedYear]);
 
   const handleCancel = () => {
-    setIsAddingRevenue([]); 
-    setIsAddingExpense([]); 
-    closeModal(); 
+    setIsAddingRevenue([]);
+    setIsAddingExpense([]);
+    closeModal();
   };
 
   const toggleAddRevenue = () => {
     setIsAddingRevenue((prev) => [...prev, { name: "", value: "" }]);
-   
   };
 
   const toggleAddExpense = () => {
@@ -358,27 +354,34 @@ const IncomePage = () => {
     <div className="">
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-[335px] h-[202px] bg-neutral-100 rounded-lg border border-[#81a0ae] p-6 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">
-              Você tem certeza que deseja excluir este item?
-            </h2>
-            <div className="flex justify-end">
+          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+            <div className="w-full text-center mx-auto mb-6">
+              <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                Você tem certeza que <br />
+                deseja
+                <span className="text-[#0082ba]"> excluir </span>
+                este <br /> ítem?
+              </span>
+            </div>
+
+            <div className="flex justify-around">
               <button
                 onClick={closeModal}
-                className="mr-4 px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-100"
+                className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
               >
-                Cancelar
+                Não
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
               >
-                Excluir
+                Sim
               </button>
             </div>
           </div>
         </div>
       )}
+
       <div className="relative w-[727px] mx-auto h-auto bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex justify-between mb-6">
           <Months
