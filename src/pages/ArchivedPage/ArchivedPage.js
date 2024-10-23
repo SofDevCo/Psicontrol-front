@@ -127,6 +127,12 @@ const ArchivedPage = () => {
             )}
           </div>
 
+          {searchTerm && filteredCustomers.length === 0 && (
+            <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+              Paciente não encontrado
+            </p>
+          )}
+
           {searchTerm.length > 0 && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
               <div
