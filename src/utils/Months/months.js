@@ -53,7 +53,7 @@ export const Months = ({ onMonthChange, onYearChange }) => {
   };
 
   return (
-    <div className="drop-shadow-monthsShadow ml-3 relative top-3">
+    <div className="drop-shadow-monthsShadow active:drop-shadow-lg active:opacity-50 ml-3 relative top-3">
       <button
         onClick={toggleModal}
         className="w-[213px] h-[46px] px-3 py-2 bg-[#0082ba] rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
