@@ -208,7 +208,7 @@ const CustomersPage = () => {
         <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1 shadow-default text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md hover:bg-primaria hover:text-bg1 space-x-2 px-4"
+            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md hover:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
             <span>Adicionar paciente</span>
