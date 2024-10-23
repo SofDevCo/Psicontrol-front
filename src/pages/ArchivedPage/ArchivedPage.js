@@ -24,7 +24,7 @@ const ArchivedPage = () => {
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
   const fetchArchivedCustomers = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     const response = await fetch(
       "http://localhost:3000/events/customers/archived",
       {
@@ -86,7 +86,7 @@ const ArchivedPage = () => {
   const handleDeleteCustomer = async (customerId) => {
     try {
       const response = await deleteCustomer(customerId);
-  
+
       if (response.ok) {
         fetchArchivedCustomers();
       } else {
@@ -103,8 +103,6 @@ const ArchivedPage = () => {
 
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
-      <h1 className="text-2xl font-bold">Pacientes Arquivados</h1>
-
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -158,6 +156,13 @@ const ArchivedPage = () => {
               ))}
             </ul>
           )}
+        </div>
+      </div>
+
+      <div className="flex justify-between mt-9 items-center h-[21px] w-full border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <span>Pacientes Arquivados</span>
+        <div className="flex mr-4 items-center h-[21px] w-[52px]">
+          <span>Ações</span>
         </div>
       </div>
 
