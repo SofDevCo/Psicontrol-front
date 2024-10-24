@@ -13,6 +13,8 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
 import { showErrorToast } from "../../utils/notification/toastify";
+import { Link } from "react-router-dom";
+import { deleteCustomer } from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -85,14 +87,29 @@ const CustomersPage = () => {
   };
 
   const handleDeleteCustomer = async (customerId) => {
+    try {
+      const response = await deleteCustomer(customerId);
+
+      if (response.ok) {
+        fetchCustomers();
+      } else {
+        showErrorToast("Erro ao excluir cliente!");
+      }
+    } catch (error) {
+      showErrorToast(error.message);
+    }
+  };
+
+  const handleArchiveCustomer = async (customerId) => {
     const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}`,
+      `http://localhost:3000/events/customers/${customerId}/archive`,
       {
-        method: "DELETE",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ archived: true }),
       }
     );
 
@@ -121,8 +138,8 @@ const CustomersPage = () => {
   const handleEditPatient = (patient) => {
     setSelectedPatient(patient);
     setCustomer(patient);
-    setIsEditing(true); 
-    openModal(); 
+    setIsEditing(true);
+    openModal();
   };
 
   return (
@@ -140,30 +157,36 @@ const CustomersPage = () => {
             {searchTerm.length > 0 ? (
               <div
                 onClick={() => {
-                  setSearchTerm(""); 
+                  setSearchTerm("");
                 }}
                 className="cursor-pointer"
               >
-                <ArrowLeftIcon/>
+                <ArrowLeftIcon />
               </div>
             ) : (
               <SearchIcon />
             )}
           </div>
-          
+
           {searchTerm.length > 0 && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
               <div
                 onClick={() => {
-                  setSearchTerm(""); 
+                  setSearchTerm("");
                   setFilteredCustomers([]);
                 }}
                 className="cursor-pointer"
               >
-                <CloseIcon/>
+                <CloseIcon />
               </div>
             </div>
           )}
+          {searchTerm && filteredCustomers.length === 0 && (
+            <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+              Paciente não encontrado
+            </p>
+          )}
+
           {searchTerm && filteredCustomers.length > 0 && (
             <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
               {filteredCustomers.map((customer) => (
@@ -185,22 +208,22 @@ const CustomersPage = () => {
         <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-[200px] items-center rounded-lg border-[3px] border-solid border-[#0082BA] bg-bg1 text-center font-['Ubuntu'] text-sm font-medium leading-[16px] tracking-[0.1px] text-primaria shadow-md hover:bg-primaria hover:text-bg1"
+            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md hover:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
-            Adicionar Paciente
+            <span>Adicionar paciente</span>
           </button>
         </div>
 
-        <button className="whitespace-no-wrap left-[1191px] top-[194px] ml-[220px] flex w-full bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
+        <button className="whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
           <ArchiveIcon />
-          Pacientes arquivados
+          <Link to="/archived">Pacientes arquivados</Link>
         </button>
       </div>
 
       <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="left-[1305px] top-[275px] ml-[877.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="left-[1305px] top-[275px] ml-[893.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -233,6 +256,7 @@ const CustomersPage = () => {
                     setSelectedPatient={setSelectedPatient}
                     openModal={() => handleEditPatient(customer)}
                     customers={customers}
+                    onArchive={handleArchiveCustomer}
                   />
                 )}
               </li>
@@ -250,10 +274,10 @@ const CustomersPage = () => {
                 <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
                   Dados para recibo
                 </h3>
-                <div className="ml-[20px] border-2 border-cinza6 rounded-[10px] w-full md:w-auto">
+                <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
                   <button
                     onClick={handleUsePatientData}
-                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-cinza6 text-sm font-medium font-['Ubuntu'] tracking-tight"
+                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
                   >
                     Usar dados do <br /> paciente
                   </button>
