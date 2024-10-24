@@ -14,7 +14,7 @@ import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
 import { showErrorToast } from "../../utils/notification/toastify";
 import { Link } from "react-router-dom";
-import { deleteCustomer } from "../../service/pagesService/pagesService";
+import { ArchiveCustomer, deleteCustomer } from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -101,17 +101,7 @@ const CustomersPage = () => {
   };
 
   const handleArchiveCustomer = async (customerId) => {
-    const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}/archive`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ archived: true }),
-      }
-    );
+    const response = await ArchiveCustomer(customerId);
 
     if (response.ok) {
       fetchCustomers();
