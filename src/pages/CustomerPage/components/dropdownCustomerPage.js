@@ -1,4 +1,9 @@
-import { Trash, UserIconBorder, EditIcon } from "../../../icons/icons";
+import {
+  Trash,
+  UserIconBorder,
+  EditIcon,
+  ArchiveIcon,
+} from "../../../icons/icons";
 
 const DropDonw = ({
   dropdownRef,
@@ -7,6 +12,7 @@ const DropDonw = ({
   setSelectedPatient,
   openModal,
   customers,
+  onArchive,
 }) => {
   return (
     <nav
@@ -31,7 +37,7 @@ const DropDonw = ({
                 (c) => c.customer_id === customerId
               );
               if (patient) {
-                setSelectedPatient(patient); 
+                setSelectedPatient(patient);
               }
               openModal();
             }}
@@ -47,6 +53,15 @@ const DropDonw = ({
           >
             <Trash />
             Excluir paciente
+          </button>
+        </li>
+        <li>
+          <button
+            className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
+            onClick={() => onArchive(customerId)}
+          >
+            <ArchiveIcon />
+            ArquivarPaciente
           </button>
         </li>
       </ul>
