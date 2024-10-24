@@ -3,7 +3,6 @@ import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
 import {
   showSaveToast,
-  showErrorToast,
   showDeleteToast,
 } from "../../utils/notification/toastify";
 
@@ -475,7 +474,6 @@ const IncomePage = () => {
                   </div>
                   <button
                     onClick={() => openModal(expense.id, "expense")}
-                    className="mr-10 text-red-500 hover:text-red-700"
                   >
                     <Trash />
                   </button>
@@ -507,7 +505,7 @@ const IncomePage = () => {
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex drop-shadow-addShadow ml-4 active:drop-shadow-lg active:opacity-50 items-center mt-4 transition-shadow"
+              className="flex   active:drop-shadow-lg active:opacity-50 items-center mt-4 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px]">Adicionar item</span>
