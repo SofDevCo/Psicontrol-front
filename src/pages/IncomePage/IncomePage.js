@@ -4,6 +4,7 @@ import { Months } from "../../utils/Months/months";
 import {
   showSaveToast,
   showDeleteToast,
+  showLastMonthToast
 } from "../../utils/notification/toastify";
 
 const formatCurrency = (value) => {
@@ -32,12 +33,13 @@ const IncomePage = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isAddingRevenue, setIsAddingRevenue] = useState([]);
   const [isAddingExpense, setIsAddingExpense] = useState([]);
+  const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState(
     String(new Date().getFullYear())
   );
 
-  const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
+  
 
   const addExpense = async (name, value) => {
     if (name.trim() && selectedMonth && selectedYear) {
@@ -125,15 +127,15 @@ const IncomePage = () => {
           }),
         }
       );
-
+  
       if (response.ok) {
         const result = await response.json();
         setRevenues((prevRevenues) => [...prevRevenues, ...result.newRevenues]);
         setExpenses((prevExpenses) => [...prevExpenses, ...result.newExpenses]);
-        alert("Entradas do mês passado duplicadas com sucesso!");
+        
       } else if (response.status === 400) {
-        const errorData = await response.json();
-        alert(errorData.message);
+        // Exibe a notificação de erro com Toastify quando o mês já tem lançamentos
+       showLastMonthToast(); // Exibe a notificação de sucesso
       } else {
         console.error("Erro ao duplicar entradas:", response.statusText);
       }
@@ -141,6 +143,7 @@ const IncomePage = () => {
       console.error("Erro ao duplicar entradas:", error);
     }
   };
+  
 
   async function deleteRevenue(id) {
     try {
@@ -231,6 +234,24 @@ const IncomePage = () => {
     setIsAddingExpense([]);
     setIsAddingRevenue([]);
   };
+
+  const handleEnterPress = async () => {
+    const revenuePromises = isAddingRevenue.map(async (revenue) => {
+      if (revenue.name.trim() && revenue.value) { 
+        await addRevenue(revenue.name, revenue.value);
+      }
+    });
+
+    const expensePromises = isAddingExpense.map(async (expense) => {
+      if (expense.name.trim() && expense.value) { 
+        await addExpense(expense.name, expense.value);
+      }
+    });
+  
+    await Promise.all([...revenuePromises, ...expensePromises]); 
+    setIsAddingRevenue([{ name: "", value: "" }]);
+  };
+  
 
   const loadExpenses = async (month, year) => {
     const monthYear = `${month}/${year.slice(-2)}`;
@@ -389,7 +410,7 @@ const IncomePage = () => {
             className="p-2 mt-4 border rounded-md border-cinza6"
           />
           <button
-            className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:drop-shadow-lg active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
+            className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
             onClick={repeatLastMonthEntries}
           >
             REPETIR LANÇAMENTO DO
@@ -443,6 +464,11 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingRevenue(index, "value", e.target.value)
                   }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleEnterPress();
+                    }
+                  }}
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
@@ -499,6 +525,11 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingExpense(index, "value", e.target.value)
                   }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleEnterPress();
+                    }
+                  }}
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
