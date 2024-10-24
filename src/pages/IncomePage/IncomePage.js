@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
 import {
   showSaveToast,
   showDeleteToast,
-  showLastMonthToast
+  showLastMonthToast,
 } from "../../utils/notification/toastify";
 
 const formatCurrency = (value) => {
@@ -35,11 +35,13 @@ const IncomePage = () => {
   const [isAddingExpense, setIsAddingExpense] = useState([]);
   const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const revenueNameInputRef = useRef(null); // Ref para o input de nome da próxima receita
+  const revenueValueInputRef = useRef(null); // Ref para o input de valor da receita atual
+  const expenseNameInputRef = useRef(null); // Ref para o input de nome da próxima despesa
+  const expenseValueInputRef = useRef(null);
   const [selectedYear, setSelectedYear] = useState(
     String(new Date().getFullYear())
   );
-
-  
 
   const addExpense = async (name, value) => {
     if (name.trim() && selectedMonth && selectedYear) {
@@ -127,15 +129,14 @@ const IncomePage = () => {
           }),
         }
       );
-  
+
       if (response.ok) {
         const result = await response.json();
         setRevenues((prevRevenues) => [...prevRevenues, ...result.newRevenues]);
         setExpenses((prevExpenses) => [...prevExpenses, ...result.newExpenses]);
-        
       } else if (response.status === 400) {
         // Exibe a notificação de erro com Toastify quando o mês já tem lançamentos
-       showLastMonthToast(); // Exibe a notificação de sucesso
+        showLastMonthToast(); // Exibe a notificação de sucesso
       } else {
         console.error("Erro ao duplicar entradas:", response.statusText);
       }
@@ -143,7 +144,6 @@ const IncomePage = () => {
       console.error("Erro ao duplicar entradas:", error);
     }
   };
-  
 
   async function deleteRevenue(id) {
     try {
@@ -235,23 +235,92 @@ const IncomePage = () => {
     setIsAddingRevenue([]);
   };
 
-  const handleEnterPress = async () => {
-    const revenuePromises = isAddingRevenue.map(async (revenue) => {
-      if (revenue.name.trim() && revenue.value) { 
-        await addRevenue(revenue.name, revenue.value);
-      }
-    });
+  const handleEnterPressRevenue = async (e) => {
+    if (e.key === "Enter") {
+      const revenuePromises = isAddingRevenue.map(async (revenue) => {
+        if (revenue.name.trim() && revenue.value) {
+          await addRevenue(revenue.name, revenue.value);
+        }
+      });
 
-    const expensePromises = isAddingExpense.map(async (expense) => {
-      if (expense.name.trim() && expense.value) { 
-        await addExpense(expense.name, expense.value);
+      await Promise.all(revenuePromises);
+      setIsAddingRevenue([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da receita
+      if (revenueNameInputRef.current) {
+        revenueNameInputRef.current.focus();
       }
-    });
-  
-    await Promise.all([...revenuePromises, ...expensePromises]); 
-    setIsAddingRevenue([{ name: "", value: "" }]);
+    }
   };
-  
+
+  const handleEnterPressExpense = async (e) => {
+    if (e.key === "Enter") {
+      const expensePromises = isAddingExpense.map(async (expense) => {
+        if (expense.name.trim() && expense.value) {
+          await addExpense(expense.name, expense.value);
+        }
+      });
+
+      await Promise.all(expensePromises);
+      setIsAddingExpense([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da despesa
+      if (expenseNameInputRef.current) {
+        expenseNameInputRef.current.focus();
+      }
+    }
+  };
+
+  const handleEnterPressRevenueName = (e) => {
+    if (e.key === "Enter" && revenueValueInputRef.current) {
+      revenueValueInputRef.current.focus();
+    }
+  };
+
+  // Função para salvar receita ao pressionar Enter no valor
+  const handleEnterPressRevenueValue = async (e) => {
+    if (e.key === "Enter") {
+      const revenuePromises = isAddingRevenue.map(async (revenue) => {
+        if (revenue.name.trim() && revenue.value) {
+          await addRevenue(revenue.name, revenue.value);
+        }
+      });
+
+      await Promise.all(revenuePromises);
+      setIsAddingRevenue([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da receita
+      if (revenueNameInputRef.current) {
+        revenueNameInputRef.current.focus();
+      }
+    }
+  };
+
+  // Função para focar no valor da despesa ao pressionar Enter no nome
+  const handleEnterPressExpenseName = (e) => {
+    if (e.key === "Enter" && expenseValueInputRef.current) {
+      expenseValueInputRef.current.focus();
+    }
+  };
+
+  // Função para salvar despesa ao pressionar Enter no valor
+  const handleEnterPressExpenseValue = async (e) => {
+    if (e.key === "Enter") {
+      const expensePromises = isAddingExpense.map(async (expense) => {
+        if (expense.name.trim() && expense.value) {
+          await addExpense(expense.name, expense.value);
+        }
+      });
+
+      await Promise.all(expensePromises);
+      setIsAddingExpense([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da despesa
+      if (expenseNameInputRef.current) {
+        expenseNameInputRef.current.focus();
+      }
+    }
+  };
 
   const loadExpenses = async (month, year) => {
     const monthYear = `${month}/${year.slice(-2)}`;
@@ -455,8 +524,11 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingRevenue(index, "name", e.target.value)
                   }
+                  onKeyDown={handleEnterPressRevenueName}
+                  ref={revenueNameInputRef} // associando o ref ao input de nome da receita
                   className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
+                {/* Input de valor da receita */}
                 <input
                   type="text"
                   placeholder="Valor da receita"
@@ -464,11 +536,8 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingRevenue(index, "value", e.target.value)
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleEnterPress();
-                    }
-                  }}
+                  onKeyDown={handleEnterPressRevenueValue}
+                  ref={revenueValueInputRef} // associando o ref ao input de valor da receita
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
@@ -498,9 +567,7 @@ const IncomePage = () => {
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
-                  <button
-                    onClick={() => openModal(expense.id, "expense")}
-                  >
+                  <button onClick={() => openModal(expense.id, "expense")}>
                     <Trash />
                   </button>
                 </div>
@@ -516,8 +583,11 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingExpense(index, "name", e.target.value)
                   }
-                  className="flex w-[146px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
+                  onKeyDown={handleEnterPressExpenseName}
+                  ref={expenseNameInputRef} // associando o ref ao input de nome da despesa
+                  className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
+                {/* Input de valor da despesa */}
                 <input
                   type="text"
                   placeholder="Valor da despesa"
@@ -525,11 +595,8 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingExpense(index, "value", e.target.value)
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleEnterPress();
-                    }
-                  }}
+                  onKeyDown={handleEnterPressExpenseValue}
+                  ref={expenseValueInputRef} // associando o ref ao input de valor da despesa
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
