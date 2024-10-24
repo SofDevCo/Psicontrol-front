@@ -1,21 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; 
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import DropDownProfile from "./components/DropdownProfilePage";
+import {
+  ArchiveCustomer,
+  deleteCustomer,
+} from "../../service/pagesService/pagesService";
+import { HamburguerIcon } from "../../icons/icons";
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../utils/notification/toastify";
 
 const ProfileCustomerPage = () => {
   const [customer, setCustomer] = useState(null);
   const [error, setError] = useState(null);
-  
-  const { customerId } = useParams(); 
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const { customerId } = useParams();
+
+  const dropdownRef = useRef();
+
+  const toggleDropdown = (customer_id) => {
+    setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
+  };
 
   useEffect(() => {
     const fetchCustomer = async () => {
-      const response = await fetch(`http://localhost:3000/events/customers/${customerId}/profile`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('authentication_token')}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/events/customers/${customerId}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        }
+      );
       if (!response.ok) {
-        setError('Erro ao buscar o perfil do paciente');
+        setError("Erro ao buscar o perfil do paciente");
         return;
       }
       const data = await response.json();
@@ -33,9 +53,49 @@ const ProfileCustomerPage = () => {
     return <div>Carregando...</div>;
   }
 
+  const handleDeleteCustomer = async (customerId) => {
+    try {
+      const response = await deleteCustomer(customerId);
+
+      if (response.ok) {
+        setCustomer();
+      } else {
+        showErrorToast("Erro ao excluir cliente!");
+      }
+    } catch (error) {
+      showErrorToast(error.message);
+    }
+  };
+
+  const handleArchviveCustomer = async (customerId) => {
+    const response = await ArchiveCustomer(customerId);
+    if (response.ok) {
+      setCustomer();
+    } else {
+      showErrorToast("Erro ao excluir cliente!");
+    }
+  };
+
   return (
-    <div className="max-w-[1000px] mx-auto bg-white shadow p-6 rounded-lg mt-4">
-      <h2 className="text-2xl font-bold mb-4">Conta do paciente</h2>
+    <div className="relative w-[1076px] h-[330px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] mt-4">
+      <button
+        onClick={() => toggleDropdown(customer.customer_id)}
+        className="absolute top-4 right-4 bg-bg1 hover:bg-bg1"
+      >
+        <HamburguerIcon />
+      </button>
+      {activeDropdown === customer.customer_id && (
+        <DropDownProfile
+          dropdownRef={dropdownRef}
+          customerId={customer.customer_id}
+          onDelete={handleDeleteCustomer}
+          customers={customer}
+          onArchive={handleArchviveCustomer}
+        />
+      )}
+      <h2 className="text-2xl font-bold mb-4 text-primaria">
+        Conta do paciente
+      </h2>
       <div className="grid grid-cols-2 gap-6">
         <div>
           <div className="flex items-center">
@@ -44,32 +104,61 @@ const ProfileCustomerPage = () => {
             </div>
             <h3 className="ml-4 text-xl font-bold">{customer.customer_name}</h3>
           </div>
-          <p className="mt-4 text-gray-700">
-            <strong>CPF/CNPJ:</strong> {customer.customer_cpf_cnpj || 'Não informado'}
+          <p className="mt-4 text-texto2">
+            <strong>CPF/CNPJ:</strong>
+            <label className="text-texto3/50">
+              {" "}
+              {customer.customer_cpf_cnpj || "Não informado"}
+            </label>
           </p>
-          <p className="mt-2 text-gray-700">
-            <strong>E-mail:</strong> {customer.customer_email || 'Não informado'}
+          <p className="mt-2 text-texto2">
+            <strong>Idade:</strong>{" "}
+            <label className="text-texto3/50">
+              {" "}
+              {customer.age || "Não informado"} anos{" "}
+            </label>
           </p>
-          <p className="mt-2 text-gray-700">
-            <strong>Telefone:</strong> {customer.customer_phone || 'Não informado'}
+          <p className="mt-2 text-texto2">
+            <strong>E-mail:</strong>{" "}
+            <label className="text-texto3/50">
+              {customer.customer_email || "Não informado"}{" "}
+            </label>
+          </p>
+          <p className="mt-2 text-texto2">
+            <strong className="texto">Telefone:</strong>{" "}
+            <label className="text-texto3/50">
+              {" "}
+              {customer.customer_phone || "Não informado"}{" "}
+            </label>
           </p>
         </div>
         <div>
           <h3 className="text-xl font-bold">Dados para recibo</h3>
-          <p className="mt-4 text-gray-700">
-            <strong>Nome:</strong> {customer.alternative_name || 'Não informado'}
+          <p className="mt-4 text-texto2">
+            <strong>Nome:</strong>{" "}
+            <label className="text-texto3/50">
+              {" "}
+              {customer.alternative_name || "Não informado"}{" "}
+            </label>
           </p>
-          <p className="mt-2 text-gray-700">
-            <strong>CPF/CNPJ:</strong> {customer.alternative_cpf_cnpj || 'Não informado'}
+          <p className="mt-2 text-texto2">
+            <strong>CPF/CNPJ:</strong>{" "}
+            <label className="text-texto3/50">
+              {" "}
+              {customer.alternative_cpf_cnpj || "Não informado"}{" "}
+            </label>
           </p>
-          <p className="mt-2 text-gray-700">
-            <strong>E-mail:</strong> {customer.alternative_email || 'Não informado'}
+          <p className="mt-2 text-texto2">
+            <strong>E-mail:</strong>{" "}
+            <label className="text-texto3/50">
+              {" "}
+              {customer.customer_email || "Não informado"}{" "}
+            </label>
           </p>
         </div>
       </div>
     </div>
   );
 };
-
 
 export default ProfileCustomerPage;
