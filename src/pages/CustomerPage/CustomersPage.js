@@ -215,7 +215,7 @@ const CustomersPage = () => {
           </button>
         </div>
 
-        <button className="whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1">
+        <button className="whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 hover:text-primaria/50">
           <ArchiveIcon />
           <Link to="/archived">Pacientes arquivados</Link>
         </button>

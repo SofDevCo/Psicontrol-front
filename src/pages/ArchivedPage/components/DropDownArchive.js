@@ -11,13 +11,13 @@ const DropDown = ({
   }) => {
     return (
       <nav
-        className="absolute right-0 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
+        className="absolute right-0 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default "
         ref={dropdownRef}
       >
         <ul>
           <li>
             <button
-              className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
+              className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
               onClick={() => onDelete(customerId)}
             >
               <Trash />
@@ -26,7 +26,7 @@ const DropDown = ({
           </li>
           <li>
             <button
-             className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2"
+             className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
              onClick={()=> onUnarchive(customerId)}
             >
                 <UnarchiveIcon/>
