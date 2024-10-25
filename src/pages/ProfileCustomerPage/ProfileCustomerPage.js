@@ -4,6 +4,7 @@ import DropDownProfile from "./components/DropdownProfilePage";
 import {
   ArchiveCustomer,
   deleteCustomer,
+  fetchCustomerProfile,
 } from "../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../icons/icons";
 import {
@@ -25,15 +26,9 @@ const ProfileCustomerPage = () => {
   };
 
   useEffect(() => {
-    const fetchCustomer = async () => {
-      const response = await fetch(
-        `http://localhost:3000/events/customers/${customerId}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        }
-      );
+    const handleFetchCustomerProfile = async (cutomerId) => {
+
+      const response = await fetchCustomerProfile(customerId)
       if (!response.ok) {
         setError("Erro ao buscar o perfil do paciente");
         return;
@@ -42,7 +37,7 @@ const ProfileCustomerPage = () => {
       setCustomer(data);
     };
 
-    fetchCustomer();
+    handleFetchCustomerProfile();
   }, [customerId]);
 
   if (error) {
@@ -75,6 +70,8 @@ const ProfileCustomerPage = () => {
       showErrorToast("Erro ao excluir cliente!");
     }
   };
+
+ 
 
   return (
     <div className="relative w-[1076px] h-[330px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] mt-4">
