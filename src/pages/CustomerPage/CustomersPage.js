@@ -13,8 +13,11 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
 import { showErrorToast } from "../../utils/notification/toastify";
-import { Link } from "react-router-dom";
-import { ArchiveCustomer, deleteCustomer } from "../../service/pagesService/pagesService";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ArchiveCustomer,
+  deleteCustomer,
+} from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -32,6 +35,7 @@ const CustomersPage = () => {
   });
 
   const dropdownRef = useRef();
+  const navigate = useNavigate();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
@@ -132,6 +136,10 @@ const CustomersPage = () => {
     openModal();
   };
 
+  const handleNavigateClick = (customerId) => {
+    navigate(`/customers/${customerId}/profile`);
+  };
+
   return (
     <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
       <div className="relative flex w-full items-center pl-7 pt-6">
@@ -178,7 +186,7 @@ const CustomersPage = () => {
           )}
 
           {searchTerm && filteredCustomers.length > 0 && (
-            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
+            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-scroll z-10 border border-t-texto2">
               {filteredCustomers.map((customer) => (
                 <li
                   key={customer.customer_id}
@@ -186,6 +194,7 @@ const CustomersPage = () => {
                   onClick={() => {
                     setSearchTerm(customer.customer_name);
                     setFilteredCustomers([]);
+                    handleNavigateClick(customer.customer_id);
                   }}
                 >
                   {customer.customer_name}
@@ -224,33 +233,42 @@ const CustomersPage = () => {
           <p>Carregando clientes...</p>
         ) : (
           <ul className="list-none">
-            {customers.map((customer) => (
-              <li
-                key={`customer-${customer.customer_id}`}
-                className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
-              >
-                <span className="text-xl text-texto1">
-                  {customer.customer_name}
-                </span>
-                <button
-                  onClick={() => toggleDropdown(customer.customer_id)}
-                  className="flex items-center justify-end bg-bg1 pr-8 hover:bg-bg1"
+            {customers
+              .filter((customer) =>
+                customer.customer_name
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+              )
+              .map((customer) => (
+                <li
+                  key={`customer-${customer.customer_id}`}
+                  className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
-                  <HamburguerIcon />
-                </button>
-                {activeDropdown === customer.customer_id && (
-                  <DropDonw
-                    dropdownRef={dropdownRef}
-                    customerId={customer.customer_id}
-                    onDelete={handleDeleteCustomer}
-                    setSelectedPatient={setSelectedPatient}
-                    openModal={() => handleEditPatient(customer)}
-                    customers={customers}
-                    onArchive={handleArchiveCustomer}
-                  />
-                )}
-              </li>
-            ))}
+                  <span
+                    className="text-xl text-texto1"
+                    onClick={() => handleNavigateClick(customer.customer_id)}
+                  >
+                    {customer.customer_name}
+                  </span>
+                  <button
+                    onClick={() => toggleDropdown(customer.customer_id)}
+                    className="flex items-center justify-end bg-bg1 pr-8 hover:bg-bg1"
+                  >
+                    <HamburguerIcon />
+                  </button>
+                  {activeDropdown === customer.customer_id && (
+                    <DropDonw
+                      dropdownRef={dropdownRef}
+                      customerId={customer.customer_id}
+                      onDelete={handleDeleteCustomer}
+                      setSelectedPatient={setSelectedPatient}
+                      openModal={() => handleEditPatient(customer)}
+                      customers={customers}
+                      onArchive={handleArchiveCustomer}
+                    />
+                  )}
+                </li>
+              ))}
           </ul>
         )}
 
