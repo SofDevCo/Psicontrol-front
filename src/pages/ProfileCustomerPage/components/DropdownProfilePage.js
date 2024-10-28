@@ -1,9 +1,4 @@
-import {
-  HamburguerIcon,
-  EditIcon,
-  Trash,
-  ArchiveIcon,
-} from "../../../icons/icons";
+import { EditIcon, Trash, ArchiveIcon } from "../../../icons/icons";
 
 const DropDownProfile = ({
   dropdownRef,
@@ -11,25 +6,20 @@ const DropDownProfile = ({
   onDelete,
   setSelectedPatient,
   openModal,
-  customers,
+  customer,
   onArchive,
 }) => {
   return (
     <nav
-      className="absolute right-0 top-10 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default z-10"
+      className="absolute right-0 mt-4 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
       ref={dropdownRef}
     >
-      <ul className="w-[210px] h-[189px]">
+      <ul className="w-[210px] h-[189px] p-4">
         <li>
           <button
-            className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
+            className="mt-5 flex items-center gap-2 ml-6 font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => {
-              const patient = customers.find(
-                (c) => c.customer_id === customerId
-              );
-              if (patient) {
-                setSelectedPatient(patient);
-              }
+              setSelectedPatient(customer);
               openModal();
             }}
           >
@@ -39,7 +29,7 @@ const DropDownProfile = ({
         </li>
         <li>
           <button
-            className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
+            className="mt-5 flex items-center gap-2 ml-6 font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onDelete(customerId)}
           >
             <Trash />
@@ -48,7 +38,7 @@ const DropDownProfile = ({
         </li>
         <li>
           <button
-            className="item-center font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
+            className="mt-5 flex items-center gap-2 ml-6 font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onArchive(customerId)}
           >
             <ArchiveIcon />
