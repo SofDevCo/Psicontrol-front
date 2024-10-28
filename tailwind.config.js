@@ -33,6 +33,12 @@ module.exports = {
       letterSpacing: {
         normal: "0.25px",
       },
+      fontSize: {
+        F15: "15px",
+        F20: "20px",
+        F25: "25px",
+
+      },
     },
   },
   plugins: [],
