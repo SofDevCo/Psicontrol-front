@@ -23,6 +23,7 @@ module.exports = {
       boxShadow: {
         default: "0px 4px 4px rgba(0, 0, 0, 0.2)",
         innerShadow:"inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
+        dropShadow:"0px 4px 4px rgba(0, 0, 0, 0.2)",
       },
       dropShadow: {
         addShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
