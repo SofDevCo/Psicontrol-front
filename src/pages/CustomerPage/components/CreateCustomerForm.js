@@ -163,7 +163,7 @@ const CreateCustomerForm = ({
           <div className="space-y-4">
             <div className="flex gap-4">
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -178,7 +178,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-2 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nascimento
                 </label>
                 <input
@@ -192,7 +192,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3  block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
               <input
@@ -207,7 +207,7 @@ const CreateCustomerForm = ({
 
             <div className="flex gap-4">
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
                 <input
@@ -221,7 +221,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   CPF/CNPJ
                 </label>
                 <input
@@ -236,7 +236,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Valor
               </label>
               <input
@@ -255,7 +255,7 @@ const CreateCustomerForm = ({
         <div>
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Nome
               </label>
               <input
@@ -270,7 +270,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="relative">
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <div className="flex">
@@ -296,7 +296,7 @@ const CreateCustomerForm = ({
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
-                <label className="mb-1.5 mt-1.5 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1.5 mt-1.5 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome Alternativo {index + 1}
                 </label>
                 <input
@@ -315,7 +315,7 @@ const CreateCustomerForm = ({
                   disabled={customer.patient_status}
                 />
 
-                <label className="mb-1.5 mt-4 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1.5 mt-4 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
                   CPF Alternativo {index + 1}
                 </label>
                 <div className="relative">
@@ -348,7 +348,7 @@ const CreateCustomerForm = ({
           {additionalAlternatives.length < 1 && (
             <button
               type="button"
-              className="grouph-4 justify-center items-start gap-2 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
+              className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
               onClick={handleAddAlternativeFields}
             >
               <AddIcon />
