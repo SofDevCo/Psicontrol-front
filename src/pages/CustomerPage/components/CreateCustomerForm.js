@@ -14,6 +14,7 @@ import {
   showErrorToast,
 } from "../../../utils/notification/toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
 
 registerLocale(ptBR);
 
@@ -123,21 +124,8 @@ const CreateCustomerForm = ({
       customer_dob: startDate ? formatDateIso(startDate) : "", 
     };
 
-    const url = customer.customer_id
-      ? `http://localhost:3000/events/customers/${customer.customer_id}`
-      : `http://localhost:3000/events/create-customer`;
-
-    const method = customer.customer_id ? "PUT" : "POST";
-
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...customer, additionalAlternatives }),
-      });
+      const response = await createOrUpdateCustomer(customer, additionalAlternatives, customer.customer_id);
       const data = await response.json();
 
       if (response.ok) {
