@@ -9,6 +9,7 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import DropDown from "../ArchivedPage/components/DropDownArchive";
 import { deleteCustomer } from "../../service/pagesService/pagesService";
 import { showErrorToast } from "../../utils/notification/toastify";
+import {showDeleteToast} from "../CustomerPage/components/notiificationCustomerPage";
 
 const ArchivedPage = () => {
   const [archivedCustomers, setArchivedCustomers] = useState([]);
@@ -18,6 +19,8 @@ const ArchivedPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
 
   const dropdownRef = useRef();
 
@@ -83,12 +86,20 @@ const ArchivedPage = () => {
     }
   }, [searchTerm, archivedCustomers]);
 
-  const handleDeleteCustomer = async (customerId) => {
+  const handleDeleteConfirmation = (customerId) => {
+    setCustomerToDelete(customerId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleDeleteCustomer = async () => {
     try {
-      const response = await deleteCustomer(customerId);
+      const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
         fetchArchivedCustomers();
+        setIsConfirmModalOpen(false);
+        setCustomerToDelete(null);
+        showDeleteToast();
       } else {
         showErrorToast("Erro ao excluir cliente!");
       }
@@ -102,7 +113,7 @@ const ArchivedPage = () => {
   };
 
   return (
-    <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
+    <div className="relative mx-auto box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -196,8 +207,7 @@ const ArchivedPage = () => {
                   <DropDown
                     dropdownRef={dropdownRef}
                     customerId={customer.customer_id}
-                    onDelete={handleDeleteCustomer}
-                    // setSelectedPatient={setSelectedPatient}
+                    onDelete={handleDeleteConfirmation}
                     customers={customers}
                     onUnarchive={handleUnarchiveCustomer}
                   />
@@ -207,6 +217,31 @@ const ArchivedPage = () => {
           </ul>
         )}
       </div>
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 z-30 backdrop-blur-[6px]">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-64 translate-x-32">
+            <p className="text-lg font-semibold mb-4 text-texto2">
+              Você tem certeza que <br /> deseja
+              <span className="text-primaria"> excluir </span>
+              este <br /> paciente de forma <br /> permanente?
+            </p>
+            <div className="flex justify-around">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="w-[74px] h-[40px] border border-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={handleDeleteCustomer}
+                className="w-[74px] h-[40px] bg-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-texto4"
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
