@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
-import {
-  showSaveToast,
-  showDeleteToast,
-  showLastMonthToast,
-} from "../../utils/notification/toastify";
+import { showSaveToast, showDeleteToast, showLastMonthToast } from "./components/toastIncomePage";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -235,42 +231,6 @@ const IncomePage = () => {
     setIsAddingRevenue([]);
   };
 
-  const handleEnterPressRevenue = async (e) => {
-    if (e.key === "Enter") {
-      const revenuePromises = isAddingRevenue.map(async (revenue) => {
-        if (revenue.name.trim() && revenue.value) {
-          await addRevenue(revenue.name, revenue.value);
-        }
-      });
-
-      await Promise.all(revenuePromises);
-      setIsAddingRevenue([{ name: "", value: "" }]);
-
-      // Focar no próximo input de nome da receita
-      if (revenueNameInputRef.current) {
-        revenueNameInputRef.current.focus();
-      }
-    }
-  };
-
-  const handleEnterPressExpense = async (e) => {
-    if (e.key === "Enter") {
-      const expensePromises = isAddingExpense.map(async (expense) => {
-        if (expense.name.trim() && expense.value) {
-          await addExpense(expense.name, expense.value);
-        }
-      });
-
-      await Promise.all(expensePromises);
-      setIsAddingExpense([{ name: "", value: "" }]);
-
-      // Focar no próximo input de nome da despesa
-      if (expenseNameInputRef.current) {
-        expenseNameInputRef.current.focus();
-      }
-    }
-  };
-
   const handleEnterPressRevenueName = (e) => {
     if (e.key === "Enter" && revenueValueInputRef.current) {
       revenueValueInputRef.current.focus();
@@ -442,8 +402,8 @@ const IncomePage = () => {
   return (
     <div className="">
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#33B8D14D] bg-opacity-30">
+          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-137px]">
             <div className="w-full text-center mx-auto mb-6">
               <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                 Você tem certeza que <br />
@@ -494,7 +454,7 @@ const IncomePage = () => {
             {revenues.map((revenue, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between mb-2"
+                className="flex items-center justify-between -mr-9 mb-2"
               >
                 <div className="flex-1">
                   <div className="text-gray-700 pl-4 cursor-default">
@@ -525,10 +485,9 @@ const IncomePage = () => {
                     updateAddingRevenue(index, "name", e.target.value)
                   }
                   onKeyDown={handleEnterPressRevenueName}
-                  ref={revenueNameInputRef} // associando o ref ao input de nome da receita
+                  ref={revenueNameInputRef}
                   className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
-                {/* Input de valor da receita */}
                 <input
                   type="text"
                   placeholder="Valor da receita"
@@ -556,7 +515,7 @@ const IncomePage = () => {
             {expenses.map((expense, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between mb-2"
+                className="flex items-center justify-between mb-2 mr-[59px]"
               >
                 <div className="flex-1">
                   <div className="text-gray-700 cursor-default">
@@ -625,6 +584,13 @@ const IncomePage = () => {
           </button>
         </div>
       </div>
+      <>
+        <buttom 
+        onClick = {showDeleteToast}
+        className="bg-[#33B8D14D] bg-opacity-30">
+          TESTE
+        </buttom>
+      </>
     </div>
   );
 };
