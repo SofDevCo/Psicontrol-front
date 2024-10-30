@@ -23,6 +23,7 @@ const ProfileCustomerPage = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [originalCustomer, setOriginalCustomer] = useState(null);
 
   const { customerId } = useParams();
 
@@ -113,6 +114,15 @@ const ProfileCustomerPage = () => {
       alternative_cpf_cnpj: prev.customer_cpf_cnpj,
     }));
   };
+  const openModal = () => {
+    setOriginalCustomer(customer); 
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setCustomer(originalCustomer); 
+    setIsEditing(false);
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -129,7 +139,7 @@ const ProfileCustomerPage = () => {
             customerId={customer.customer_id}
             onDelete={handleDeleteConfirmation}
             setSelectedPatient={setSelectedPatient}
-            openModal={() => setIsEditing(true)}
+            openModal={openModal}
             customer={customer}
             onArchive={handleArchviveCustomer}
           />
@@ -211,7 +221,7 @@ const ProfileCustomerPage = () => {
               <h2 className="ml-6 text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                 Editar Paciente
               </h2>
-              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">
+              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">+
                 Dados para recibo
               </h3>
               <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
@@ -225,7 +235,7 @@ const ProfileCustomerPage = () => {
             </div>
 
             <CreateCustomerForm
-              onClose={() => setIsEditing(false)}
+              onClose={handleCancelEdit}
               onSubmit={() => handleEditCustomer(customer)}
               selectedPatient={selectedPatient}
               customer={customer}
