@@ -7,7 +7,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <aside className="flex h-screen w-[250px] flex-col bg-bg1 p-5 text-gray-800">
+    <aside className="flex h-screen w-[250px] z-50 flex-col bg-bg1 p-5 text-gray-800">
       <div>
         <img src={logo} alt="Logo" className=" mb-[78px] w-64" />
         <nav className="text-right">
@@ -51,11 +51,11 @@ const Sidebar = () => {
               </Link>
             </li>
             <li
-              className={`side-menu mb-[40px] ${location.pathname === "/configuracoes" ? "ativo" : ""}`}
+              className={`side-menu mb-[40px] ${location.pathname === "/user" ? "ativo" : ""}`}
             >
               <Link
-                to="/configuracoes"
-                className={`group flex items-center ${location.pathname === "/configuracoes" ? "active" : ""}`}
+                to="/user"
+                className={`group flex items-center ${location.pathname === "/user" ? "active" : ""}`}
               >
                 <ConfigIcon />
                 <div className="text-2xl text-texto2 group-hover:text-primaria leading-none">
