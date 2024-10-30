@@ -10,12 +10,12 @@ import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
 import {
-  showSuccessToast,
   showErrorToast,
 } from "../../../utils/notification/toastify";
-import { showSaveToast } from "../components/notiificationCustomerPage";
+import { showEditToast }from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
 import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
+import {showSuccessToast} from "../components/notiificationCustomerPage"
 
 registerLocale(ptBR);
 
@@ -158,7 +158,7 @@ const CreateCustomerForm = ({
         onClose();
 
         if (customer.customer_id) {
-          showSaveToast();
+          showEditToast();
         } else {
           showSuccessToast();
         }
