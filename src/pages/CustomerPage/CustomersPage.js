@@ -29,6 +29,8 @@ const CustomersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
   const [customer, setCustomer] = useState({
     customer_name: "",
     customer_cpf_cnpj: "",
@@ -90,12 +92,19 @@ const CustomersPage = () => {
     }));
   };
 
-  const handleDeleteCustomer = async (customerId) => {
+  const handleDeleteConfirmation = (customerId) => {
+    setCustomerToDelete(customerId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleDeleteCustomer = async () => {
     try {
-      const response = await deleteCustomer(customerId);
+      const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
         fetchCustomers();
+        setIsConfirmModalOpen(false);
+        setCustomerToDelete(null);
       } else {
         showErrorToast("Erro ao excluir cliente!");
       }
@@ -140,15 +149,35 @@ const CustomersPage = () => {
     navigate(`/customers/${customerId}/profile`);
   };
 
+  const handleBlur = () => {
+    setTimeout(() => {
+      if (searchTerm !== "") {
+        setFilteredCustomers(
+          customers.filter((customer) =>
+            customer.customer_name
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          )
+        );
+        if (filteredCustomers.length === 0) {
+          setFilteredCustomers([]);
+        }
+      } else {
+        setFilteredCustomers([]);
+      }
+    }, 100);
+  };
+
   return (
-    <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
+    <div className="relative mx-auto box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 ">
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
             type="text"
-            placeholder={searchTerm ? "" : "Pesquisar"}
+            placeholder={searchTerm ? "" : "Pesquisar pacientes"}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onBlur={handleBlur}
             className={`h-[56px] w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
           />
           <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
@@ -156,6 +185,8 @@ const CustomersPage = () => {
               <div
                 onClick={() => {
                   setSearchTerm("");
+                  setFilteredCustomers([]);
+                  handleNavigateClick(customer.customer_id);
                 }}
                 className="cursor-pointer"
               >
@@ -207,14 +238,14 @@ const CustomersPage = () => {
         <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md hover:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
             <span>Adicionar paciente</span>
           </button>
         </div>
 
-        <button className="whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 hover:text-primaria/50">
+        <button className="group ml-9 whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 hover:text-primaria/50">
           <ArchiveIcon />
           <Link to="/archived">Pacientes arquivados</Link>
         </button>
@@ -260,7 +291,7 @@ const CustomersPage = () => {
                     <DropDonw
                       dropdownRef={dropdownRef}
                       customerId={customer.customer_id}
-                      onDelete={handleDeleteCustomer}
+                      onDelete={handleDeleteConfirmation}
                       setSelectedPatient={setSelectedPatient}
                       openModal={() => handleEditPatient(customer)}
                       customers={customers}
@@ -273,9 +304,9 @@ const CustomersPage = () => {
         )}
 
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-            <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg overflow-y-auto">
-              <div className="flex flex-wrap items-center mt-[20px] gap-4">
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-destaque bg-opacity-30 p-4">
+            <div className="relative h-[626px] w-[1076px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ">
+              <div className="flex flex-wrap items-center mt-16 gap-4">
                 <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                   Adicionar Paciente
                 </h2>
@@ -304,6 +335,31 @@ const CustomersPage = () => {
           </div>
         )}
       </div>
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center -translate-y-60">
+            <p className="text-lg font-semibold mb-4 text-texto2">
+              Você tem certeza que <br /> deseja
+              <span className="text-primaria"> excluir </span>
+              este <br /> paciente de forma <br /> permanente?
+            </p>
+            <div className="flex justify-around">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="w-[74px] h-[40px] border border-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={handleDeleteCustomer}
+                className="w-[74px] h-[40px] bg-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-texto4"
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
