@@ -9,10 +9,11 @@ import {
   fetchCustomerProfile,
 } from "../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../icons/icons";
+import { showErrorToast } from "../../utils/notification/toastify";
 import {
-  showErrorToast,
-} from "../../utils/notification/toastify";
-import { showSaveToast } from "../CustomerPage/components/notiificationCustomerPage";
+  showDeleteProfileToast,
+  showArchiveProfileToast,
+} from "../ProfileCustomerPage/components/notificationProfilePage";
 
 const ProfileCustomerPage = () => {
   const [customer, setCustomer] = useState(null);
@@ -20,6 +21,8 @@ const ProfileCustomerPage = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
 
   const { customerId } = useParams();
 
@@ -51,12 +54,20 @@ const ProfileCustomerPage = () => {
     return <div>Carregando...</div>;
   }
 
-  const handleDeleteCustomer = async (customerId) => {
+  const handleDeleteConfirmation = (customerId) => {
+    setCustomerToDelete(customerId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleDeleteCustomer = async () => {
     try {
-      const response = await deleteCustomer(customerId);
+      const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
         setCustomer(null);
+        setIsConfirmModalOpen(false);
+        setCustomerToDelete(null);
+        showDeleteProfileToast();
       } else {
         showErrorToast("Erro ao excluir cliente!");
       }
@@ -69,6 +80,7 @@ const ProfileCustomerPage = () => {
     const response = await ArchiveCustomer(customerId);
     if (response.ok) {
       setCustomer(null);
+      showArchiveProfileToast();
     } else {
       showErrorToast("Erro ao excluir cliente!");
     }
@@ -88,7 +100,6 @@ const ProfileCustomerPage = () => {
         setCustomer(profileData);
       }
       setIsEditing(false);
-      showSaveToast();
     } else {
       const errorData = await response.json();
       showErrorToast(errorData.message || "Erro ao atualizar o cliente.");
@@ -116,7 +127,7 @@ const ProfileCustomerPage = () => {
           <DropDownProfile
             dropdownRef={dropdownRef}
             customerId={customer.customer_id}
-            onDelete={handleDeleteCustomer}
+            onDelete={handleDeleteConfirmation}
             setSelectedPatient={setSelectedPatient}
             openModal={() => setIsEditing(true)}
             customer={customer}
@@ -194,8 +205,8 @@ const ProfileCustomerPage = () => {
       </div>
 
       {isEditing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg overflow-y-auto">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM bg-opacity-30 backdrop-blur-[6px]  p-4">
+          <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-60 mb-32">
             <div className="flex flex-wrap items-center mt-[20px] gap-4">
               <h2 className="ml-6 text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                 Editar Paciente
@@ -212,6 +223,7 @@ const ProfileCustomerPage = () => {
                 </button>
               </div>
             </div>
+
             <CreateCustomerForm
               onClose={() => setIsEditing(false)}
               onSubmit={() => handleEditCustomer(customer)}
@@ -220,6 +232,31 @@ const ProfileCustomerPage = () => {
               setCustomer={setCustomer}
               isEditing
             />
+          </div>
+        </div>
+      )}
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 z-30 backdrop-blur-[6px]">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center -translate-y-64 translate-x-32">
+            <p className="text-lg font-semibold mb-4 text-texto2">
+              Você tem certeza que <br /> deseja
+              <span className="text-primaria"> excluir </span>
+              este <br /> paciente de forma <br /> permanente?
+            </p>
+            <div className="flex justify-around">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="w-[74px] h-[40px] border border-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={handleDeleteCustomer}
+                className="w-[74px] h-[40px] bg-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-texto4"
+              >
+                Sim
+              </button>
+            </div>
           </div>
         </div>
       )}
