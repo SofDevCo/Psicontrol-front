@@ -11,6 +11,7 @@ import Layout from "./utils/Layout/layout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ArchivedPage from "./pages/ArchivedPage/ArchivedPage";
+import UserPage from "./pages/UserPage/UserPage";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/create-customer" element={<CreateCustomerPage />} />
           <Route path="/income" element={<IncomePage />} />
           <Route path="/archived" element={<ArchivedPage/>} />
+          <Route path="/user" element={<UserPage/>} />
         </Route>
       </Routes>
     </Router>
