@@ -4,11 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        destaque: "#33C1DB",
         primaria: "#0082BA",
         "custom-white": "#DFEAF2",
         "custom-gray": "#8BA3CB",
         bg1: "#F5F5F5",
         bg2: "#E6EFF5",
+        bgM: "#33B8D1",
         clara4: "#EDF5FC",
         clara3: "#C7E0F7",
         cinza6: "#81A0AE",
