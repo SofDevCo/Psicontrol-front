@@ -1,10 +1,10 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { registerLocale } from "react-datepicker";
 import {
   formatDateBrazilian,
   parseISODate,
   formatDateIso,
-  isValidDate
+  isValidDate,
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
@@ -13,6 +13,7 @@ import {
   showSuccessToast,
   showErrorToast,
 } from "../../../utils/notification/toastify";
+import { showSaveToast } from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
 import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
 
@@ -24,7 +25,7 @@ const CreateCustomerForm = ({
   selectedPatient,
   customer,
   setCustomer,
-  isEditing
+  isEditing,
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
   const [startDate, setStartDate] = useState(null);
@@ -41,36 +42,40 @@ const CreateCustomerForm = ({
     }
   }, [isEditing, selectedPatient, setCustomer]);
 
-
   const handleManualDateChange = (value) => {
     let formattedValue = value.replace(/\D/g, "");
-  
+
     if (formattedValue.length >= 2) {
       formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2)}`;
     }
     if (formattedValue.length >= 5) {
       formattedValue = `${formattedValue.slice(0, 5)}/${formattedValue.slice(5, 9)}`;
     }
-  
+
     setCustomer((prevState) => ({
       ...prevState,
       customer_dob: formattedValue,
     }));
-  
+
     if (formattedValue.length === 10) {
       const regex = /^\d{2}\/\d{2}\/\d{4}$/;
-  
+
       if (regex.test(formattedValue)) {
         const [day, month, year] = formattedValue.split("/").map(Number);
         const date = new Date(year, month - 1, day);
-  
+
         if (year < 1900 || year > new Date().getFullYear()) {
           showErrorToast("Data inválida");
           return;
         }
-  
-        if (isValidDate(date) && date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
-          setStartDate(date); 
+
+        if (
+          isValidDate(date) &&
+          date.getDate() === day &&
+          date.getMonth() === month - 1 &&
+          date.getFullYear() === year
+        ) {
+          setStartDate(date);
         } else {
           showErrorToast("Data inválida! Verifique se a data existe.");
         }
@@ -114,18 +119,26 @@ const CreateCustomerForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!startDate || startDate.getFullYear() < 1900 || startDate.getFullYear() > new Date().getFullYear()) {
+    if (
+      !startDate ||
+      startDate.getFullYear() < 1900 ||
+      startDate.getFullYear() > new Date().getFullYear()
+    ) {
       showErrorToast("Data de nascimento válida");
       return;
     }
-  
+
     const formattedCustomer = {
       ...customer,
-      customer_dob: startDate ? formatDateIso(startDate) : "", 
+      customer_dob: startDate ? formatDateIso(startDate) : "",
     };
 
     try {
-      const response = await createOrUpdateCustomer(customer, additionalAlternatives, customer.customer_id);
+      const response = await createOrUpdateCustomer(
+        customer,
+        additionalAlternatives,
+        customer.customer_id
+      );
       const data = await response.json();
 
       if (response.ok) {
@@ -143,7 +156,13 @@ const CreateCustomerForm = ({
         setAdditionalAlternatives([]);
         onSubmit();
         onClose();
-        showSuccessToast();
+
+        if (customer.customer_id) {
+          showSaveToast();
+        } else {
+          showSuccessToast();
+        }
+
         setStartDate(null);
       } else {
         showErrorToast(data.message || "Erro ao processar a solicitação!");
@@ -289,7 +308,6 @@ const CreateCustomerForm = ({
                   onClick={handleDeleteAlternativeCPF}
                   className="ml-2 flex items-center justify-center bg-bg1 p-1 hover:bg-bg1"
                 >
-                  <Trash />
                 </button>
               </div>
             </div>
