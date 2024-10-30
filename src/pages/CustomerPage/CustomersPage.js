@@ -9,11 +9,16 @@ import {
   ArrowLeftIcon,
   CloseIcon,
 } from "../../icons/icons";
-import { showArchiveToast } from "./components/notiificationCustomerPage";
+import {
+  showArchiveToast,
+  showDeleteToast,
+} from "./components/notiificationCustomerPage";
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
-import { showErrorToast } from "../../utils/notification/toastify";
+import {
+  showErrorToast,
+} from "../../utils/notification/toastify";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArchiveCustomer,
@@ -106,6 +111,7 @@ const CustomersPage = () => {
         fetchCustomers();
         setIsConfirmModalOpen(false);
         setCustomerToDelete(null);
+        showDeleteToast();
       } else {
         showErrorToast("Erro ao excluir cliente!");
       }
@@ -306,8 +312,8 @@ const CustomersPage = () => {
         )}
 
         {isModalOpen && (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-destaque bg-opacity-30 p-4">
-            <div className="relative h-[626px] w-[1076px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ">
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM/30 backdrop-blur-[6px] p-4">
+            <div className="relative h-[626px] w-[1076px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-56 mb-32">
               <div className="flex flex-wrap items-center mt-16 gap-4">
                 <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                   Adicionar Paciente
@@ -338,8 +344,8 @@ const CustomersPage = () => {
         )}
       </div>
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center -translate-y-60">
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 z-30 ">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-64 translate-x-32">
             <p className="text-lg font-semibold mb-4 text-texto2">
               Você tem certeza que <br /> deseja
               <span className="text-primaria"> excluir </span>
