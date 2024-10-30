@@ -9,6 +9,7 @@ import {
   ArrowLeftIcon,
   CloseIcon,
 } from "../../icons/icons";
+import { showArchiveToast } from "./components/notiificationCustomerPage";
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
@@ -118,6 +119,7 @@ const CustomersPage = () => {
 
     if (response.ok) {
       fetchCustomers();
+      showArchiveToast();
     } else {
       showErrorToast("Erro ao excluir cliente!");
     }
