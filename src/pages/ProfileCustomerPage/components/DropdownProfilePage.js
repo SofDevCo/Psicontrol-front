@@ -1,4 +1,6 @@
 import { EditIcon, Trash, ArchiveIcon } from "../../../icons/icons";
+import { Link } from "react-router-dom";
+
 
 const DropDownProfile = ({
   dropdownRef,
@@ -21,7 +23,7 @@ const DropDownProfile = ({
             onClick={() => onArchive(customerId)}
           >
             <ArchiveIcon />
-            Arquivar paciente
+            <Link to="/customers" >Arquivar paciente </Link>
           </button>
         </li>
         <li>
