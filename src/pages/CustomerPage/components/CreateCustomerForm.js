@@ -179,6 +179,7 @@ const CreateCustomerForm = ({
 
   return (
     <div className="max-w space-y-2 p-6">
+     
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
