@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { SuccessIcon } from "../../../icons/icons";
 
 export const showErrorToast = (message) => {
     toast.error(message, {
