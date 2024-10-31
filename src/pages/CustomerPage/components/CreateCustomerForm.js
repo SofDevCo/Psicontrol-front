@@ -9,13 +9,11 @@ import {
 import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
-import {
-  showErrorToast,
-} from "../../../utils/notification/toastify";
-import { showEditToast }from "../components/notiificationCustomerPage";
+import { showErrorToast } from "../../../utils/notification/toastify";
+import { showEditToast } from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
 import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
-import {showSuccessToast} from "../components/notiificationCustomerPage"
+import { showSuccessToast } from "../components/notiificationCustomerPage";
 
 registerLocale(ptBR);
 
@@ -45,11 +43,18 @@ const CreateCustomerForm = ({
   const handleManualDateChange = (value) => {
     let formattedValue = value.replace(/\D/g, "");
 
-    if (formattedValue.length >= 2) {
-      formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2)}`;
+    if (formattedValue.length === 0) {
+      setCustomer((prevState) => ({
+        ...prevState,
+        customer_dob: "",
+      }));
+      return;
     }
-    if (formattedValue.length >= 5) {
-      formattedValue = `${formattedValue.slice(0, 5)}/${formattedValue.slice(5, 9)}`;
+
+    if (formattedValue.length > 2 && formattedValue.length <= 4) {
+      formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2)}`;
+    } else if (formattedValue.length > 4) {
+      formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2, 4)}/${formattedValue.slice(4, 8)}`;
     }
 
     setCustomer((prevState) => ({
@@ -173,7 +178,7 @@ const CreateCustomerForm = ({
   };
 
   return (
-    <div className="max-w space-y-4 p-6">
+    <div className="max-w space-y-2 p-6">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
@@ -300,15 +305,13 @@ const CreateCustomerForm = ({
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
                   className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                  disabled={customer.patient_status}
                 />
 
                 <button
                   type="button"
                   onClick={handleDeleteAlternativeCPF}
                   className="ml-2 flex items-center justify-center bg-bg1 p-1 hover:bg-bg1"
-                >
-                </button>
+                ></button>
               </div>
             </div>
 
