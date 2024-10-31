@@ -160,7 +160,38 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 ">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-53">
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
+          <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+            <div className="flex flex-wrap items-center gap-4">
+              <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
+                Adicionar Paciente
+              </h2>
+              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
+                Dados para recibo
+              </h3>
+              <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
+                <button
+                  onClick={handleUsePatientData}
+                  className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
+                >
+                  Usar dados do <br /> paciente
+                </button>
+              </div>
+            </div>
+            <CreateCustomerForm
+              onClose={closeModal}
+              onSubmit={fetchCustomers}
+              selectedPatient={selectedPatient}
+              customer={customer}
+              setCustomer={setCustomer}
+              isEditing={isEditing}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -295,39 +326,6 @@ const CustomersPage = () => {
                 </li>
               ))}
           </ul>
-        )}
-
-        {isModalOpen && (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM/30 backdrop-blur-[6px] p-4">
-            <div className="relative h-[626px] w-[1076px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-56 mb-32">
-            <div className="flex flex-wrap items-center mt-16 gap-4">
-                  <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
-                    Adicionar Paciente
-                  </h2>
-                  <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
-                    Dados para recibo
-                  </h3>
-                  <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
-                    <button
-                      onClick={handleUsePatientData}
-                      className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
-                    >
-                      Usar dados do <br /> paciente
-                    </button>
-                  </div>
-                </div>
-
-                <CreateCustomerForm
-                  onClose={closeModal}
-                  onSubmit={fetchCustomers}
-                  selectedPatient={selectedPatient}
-                  customer={customer}
-                  setCustomer={setCustomer}
-                  isEditing={isEditing}
-                />
-
-            </div>
-          </div>
         )}
       </div>
       {isConfirmModalOpen && (
