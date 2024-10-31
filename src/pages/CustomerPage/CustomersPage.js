@@ -160,7 +160,7 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-53">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
@@ -329,8 +329,8 @@ const CustomersPage = () => {
         )}
       </div>
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 z-30 ">
-          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-64 translate-x-32">
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30 ">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-52 translate-x-32">
             <p className="text-lg font-semibold mb-4 text-texto2">
               Você tem certeza que <br /> deseja
               <span className="text-primaria"> excluir </span>
