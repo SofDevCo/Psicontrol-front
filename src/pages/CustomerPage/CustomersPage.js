@@ -16,9 +16,7 @@ import {
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import { useModal } from "../../utils/Modal/useModal";
 import DropDonw from "./components/dropdownCustomerPage";
-import {
-  showErrorToast,
-} from "../../utils/notification/toastify";
+import { showErrorToast } from "../../utils/notification/toastify";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArchiveCustomer,
@@ -37,14 +35,18 @@ const CustomersPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [isDropdownVisible] = useState(false);
   const [customer, setCustomer] = useState({
     customer_name: "",
     customer_cpf_cnpj: "",
   });
 
   const dropdownRef = useRef();
+  const searchDropRef = useRef();
+  const inputRef = useRef();
   const navigate = useNavigate();
 
+  useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
   const fetchCustomers = async () => {
@@ -157,27 +159,8 @@ const CustomersPage = () => {
     navigate(`/customers/${customerId}/profile`);
   };
 
-  const handleBlur = () => {
-    setTimeout(() => {
-      if (searchTerm !== "") {
-        setFilteredCustomers(
-          customers.filter((customer) =>
-            customer.customer_name
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
-          )
-        );
-        if (filteredCustomers.length === 0) {
-          setFilteredCustomers([]);
-        }
-      } else {
-        setFilteredCustomers([]);
-      }
-    }, 100);
-  };
-
   return (
-    <div className="relative mx-auto box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 ">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 ">
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -185,7 +168,6 @@ const CustomersPage = () => {
             placeholder={searchTerm ? "" : "Pesquisar pacientes"}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onBlur={handleBlur}
             className={`h-[56px] w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
           />
           <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
@@ -194,7 +176,6 @@ const CustomersPage = () => {
                 onClick={() => {
                   setSearchTerm("");
                   setFilteredCustomers([]);
-                  handleNavigateClick(customer.customer_id);
                 }}
                 className="cursor-pointer"
               >
@@ -218,14 +199,19 @@ const CustomersPage = () => {
               </div>
             </div>
           )}
-          {searchTerm && filteredCustomers.length === 0 && (
-            <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
-              Paciente não encontrado
-            </p>
-          )}
+          {searchTerm &&
+            filteredCustomers.length === 0 &&
+            isDropdownVisible && (
+              <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+                Paciente não encontrado
+              </p>
+            )}
 
           {searchTerm && filteredCustomers.length > 0 && (
-            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-scroll z-10 border border-t-texto2">
+            <ul
+              ref={searchDropRef}
+              className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px]  z-10 border border-t-texto2"
+            >
               {filteredCustomers.map((customer) => (
                 <li
                   key={customer.customer_id}
@@ -253,7 +239,7 @@ const CustomersPage = () => {
           </button>
         </div>
 
-        <button className="group ml-9 whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 hover:text-primaria/50">
+        <button className="group ml-9 whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
           <ArchiveIcon />
           <Link to="/archived">Pacientes arquivados</Link>
         </button>
@@ -314,31 +300,32 @@ const CustomersPage = () => {
         {isModalOpen && (
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM/30 backdrop-blur-[6px] p-4">
             <div className="relative h-[626px] w-[1076px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-56 mb-32">
-              <div className="flex flex-wrap items-center mt-16 gap-4">
-                <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
-                  Adicionar Paciente
-                </h2>
-                <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
-                  Dados para recibo
-                </h3>
-                <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
-                  <button
-                    onClick={handleUsePatientData}
-                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
-                  >
-                    Usar dados do <br /> paciente
-                  </button>
+            <div className="flex flex-wrap items-center mt-16 gap-4">
+                  <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
+                    Adicionar Paciente
+                  </h2>
+                  <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
+                    Dados para recibo
+                  </h3>
+                  <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
+                    <button
+                      onClick={handleUsePatientData}
+                      className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
+                    >
+                      Usar dados do <br /> paciente
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <CreateCustomerForm
-                onClose={closeModal}
-                onSubmit={fetchCustomers}
-                selectedPatient={selectedPatient}
-                customer={customer}
-                setCustomer={setCustomer}
-                isEditing={isEditing}
-              />
+                <CreateCustomerForm
+                  onClose={closeModal}
+                  onSubmit={fetchCustomers}
+                  selectedPatient={selectedPatient}
+                  customer={customer}
+                  setCustomer={setCustomer}
+                  isEditing={isEditing}
+                />
+
             </div>
           </div>
         )}
