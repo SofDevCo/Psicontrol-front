@@ -29,6 +29,7 @@ const ProfileCustomerPage = () => {
 
   const dropdownRef = useRef();
 
+  
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
@@ -159,29 +160,29 @@ const ProfileCustomerPage = () => {
                 {customer.customer_name}
               </h3>
             </div>
-            <p className="mt-4 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal ml-16">
+            <p className="mt-4 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
               <strong>CPF/CNPJ:</strong>
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking- ">
+              <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking- ">
                 {" "}
                 {customer.customer_cpf_cnpj || "Não informado"}
               </label>
             </p>
-            <p className="mt-2 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal ml-16">
+            <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
               <strong>Idade:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
                 {" "}
                 {customer.age || "Não informado"} anos{" "}
               </label>
             </p>
-            <p className="mt-2 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal ml-16">
+            <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
               <strong>E-mail:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
                 {customer.customer_email || "Não informado"}{" "}
               </label>
             </p>
-            <p className="mt-2 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal ml-16">
+            <p className="mt-2 text-texto1 text-17 font-normal font-['Open Sans'] tracking-normal ml-16">
               <strong className="texto">Telefone:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
                 {" "}
                 {customer.customer_phone || "Não informado"}{" "}
               </label>
@@ -189,23 +190,23 @@ const ProfileCustomerPage = () => {
           </div>
           <div className="mt-2 mr-2">
             <h3 className="text-F20 font-bold">Dados para recibo</h3>
-            <p className="mt-4 text-texto2 text-F15 ">
+            <p className="mt-4 text-texto1 text-F17 ">
               <strong>Nome:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-17 font-normal font-['Open Sans'] tracking-normal">
                 {" "}
                 {customer.alternative_name || "Não informado"}{" "}
               </label>
             </p>
-            <p className="mt-2 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal">
+            <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal">
               <strong>CPF/CNPJ:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
                 {" "}
                 {customer.alternative_cpf_cnpj || "Não informado"}{" "}
               </label>
             </p>
-            <p className="mt-3 text-texto2 text-F15 font-normal font-['Open Sans'] tracking-normal">
+            <p className="mt-3 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal">
               <strong>E-mail:</strong>{" "}
-              <label className="text-texto3/50 text-F15 font-normal font-['Open Sans'] tracking-normal">
+              <label className="text-texto2 text-17 font-normal font-['Open Sans'] tracking-normal">
                 {" "}
                 {customer.customer_email || "Não informado"}{" "}
               </label>
