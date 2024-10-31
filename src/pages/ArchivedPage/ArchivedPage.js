@@ -13,7 +13,7 @@ import {showDeleteToast} from "../CustomerPage/components/notiificationCustomerP
 
 const ArchivedPage = () => {
   const [archivedCustomers, setArchivedCustomers] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [customers] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,10 +21,13 @@ const ArchivedPage = () => {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [isDropdownVisible,] = useState(false);
 
   const dropdownRef = useRef();
+  const searchDropRef = useRef();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
+  useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
 
   const fetchArchivedCustomers = async () => {
     setIsLoading(true);
@@ -138,7 +141,7 @@ const ArchivedPage = () => {
             )}
           </div>
 
-          {searchTerm && filteredCustomers.length === 0 && (
+          {searchTerm && filteredCustomers.length === 0 && isDropdownVisible && (
             <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
               Paciente não encontrado
             </p>
@@ -158,7 +161,9 @@ const ArchivedPage = () => {
             </div>
           )}
           {searchTerm && filteredCustomers.length > 0 && (
-            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
+            <ul 
+            ref={searchDropRef}
+            className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
               {filteredCustomers.map((customer) => (
                 <li
                   key={customer.customer_id}
