@@ -584,13 +584,6 @@ const IncomePage = () => {
           </button>
         </div>
       </div>
-      <>
-        <buttom 
-        onClick = {showDeleteToast}
-        className="bg-[#33B8D14D] bg-opacity-30">
-          TESTE
-        </buttom>
-      </>
     </div>
   );
 };
