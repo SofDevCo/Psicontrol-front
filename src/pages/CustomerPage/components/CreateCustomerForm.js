@@ -331,7 +331,7 @@ const CreateCustomerForm = ({
                       e.target.value
                     )
                   }
-                  placeholder={`Nome Alternativo ${index + 2}`}
+                  placeholder={`Nome Alternativo ${index + 1}`}
                   className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   disabled={customer.patient_status}
                 />
