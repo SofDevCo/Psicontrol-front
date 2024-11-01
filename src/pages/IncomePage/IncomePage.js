@@ -402,8 +402,8 @@ const IncomePage = () => {
   return (
     <div className="">
       {isModalOpen && (
-        <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#33B8D14D] bg-opacity-30">
-          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-137px]">
+        <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
+          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
             <div className="w-full text-center mx-auto mb-6">
               <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                 Você tem certeza que <br />
