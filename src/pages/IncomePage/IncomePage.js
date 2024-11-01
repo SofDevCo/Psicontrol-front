@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
+import { showSaveToast, showDeleteToast, showLastMonthToast } from "./components/toastIncomePage";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -28,12 +29,15 @@ const IncomePage = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isAddingRevenue, setIsAddingRevenue] = useState([]);
   const [isAddingExpense, setIsAddingExpense] = useState([]);
+  const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const revenueNameInputRef = useRef(null); // Ref para o input de nome da próxima receita
+  const revenueValueInputRef = useRef(null); // Ref para o input de valor da receita atual
+  const expenseNameInputRef = useRef(null); // Ref para o input de nome da próxima despesa
+  const expenseValueInputRef = useRef(null);
   const [selectedYear, setSelectedYear] = useState(
     String(new Date().getFullYear())
   );
-  // const [isRevenueButtonClicked, setIsRevenueButtonClicked] = useState(false);
-  const [isExpenseButtonClicked, setIsExpenseButtonClicked] = useState(false);
 
   const addExpense = async (name, value) => {
     if (name.trim() && selectedMonth && selectedYear) {
@@ -43,15 +47,7 @@ const IncomePage = () => {
       };
 
       try {
-        // Formata a data no formato ISO "YYYY-MM-DD"
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
-
-        // Verifica o que está sendo enviado
-        console.log({
-          name: newExpense.name,
-          value: parseCurrency(newExpense.value) / 100,
-          date: formattedDate,
-        });
 
         const response = await fetch(`http://localhost:3000/income/expense`, {
           method: "POST",
@@ -62,7 +58,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newExpense.name,
             value: parseCurrency(newExpense.value) / 100,
-            date: formattedDate, // Usando o formato ISO
+            date: formattedDate,
           }),
         });
 
@@ -70,7 +66,6 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar despesa:", responseData);
         } else {
-          // Se tudo ocorrer bem, adiciona a nova despesa à lista
           setExpenses((prevExpenses) => [...prevExpenses, responseData]);
         }
       } catch (error) {
@@ -87,15 +82,7 @@ const IncomePage = () => {
       };
 
       try {
-        // Formata a data no formato ISO "YYYY-MM-DD"
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
-
-        // Verifica o que está sendo enviado
-        console.log({
-          name: newRevenue.name,
-          value: parseCurrency(newRevenue.value) / 100,
-          date: formattedDate,
-        });
 
         const response = await fetch(`http://localhost:3000/income/revenue`, {
           method: "POST",
@@ -106,7 +93,7 @@ const IncomePage = () => {
           body: JSON.stringify({
             name: newRevenue.name,
             value: parseCurrency(newRevenue.value) / 100,
-            date: formattedDate, // Usando o formato ISO
+            date: formattedDate,
           }),
         });
 
@@ -114,7 +101,6 @@ const IncomePage = () => {
         if (!response.ok) {
           console.error("Erro ao adicionar receita:", responseData);
         } else {
-          // Se tudo ocorrer bem, adiciona a nova receita à lista
           setRevenues((prevRevenues) => [...prevRevenues, responseData]);
         }
       } catch (error) {
@@ -144,10 +130,9 @@ const IncomePage = () => {
         const result = await response.json();
         setRevenues((prevRevenues) => [...prevRevenues, ...result.newRevenues]);
         setExpenses((prevExpenses) => [...prevExpenses, ...result.newExpenses]);
-        alert("Entradas do mês passado duplicadas com sucesso!");
       } else if (response.status === 400) {
-        const errorData = await response.json();
-        alert(errorData.message); // Mostra a mensagem de erro ao usuário
+        // Exibe a notificação de erro com Toastify quando o mês já tem lançamentos
+        showLastMonthToast(); // Exibe a notificação de sucesso
       } else {
         console.error("Erro ao duplicar entradas:", response.statusText);
       }
@@ -225,11 +210,8 @@ const IncomePage = () => {
   const confirmDelete = () => {
     handleDelete(itemToDelete, itemType);
     closeModal();
+    showDeleteToast();
     setIsSuccessModalOpen(true);
-  };
-
-  const closeSuccessModal = () => {
-    setIsSuccessModalOpen(false);
   };
 
   const handleClick = async () => {
@@ -241,21 +223,72 @@ const IncomePage = () => {
       await addRevenue(revenue.name, revenue.value);
     });
 
-    // Aguarda todas as promessas de despesas e receitas serem resolvidas
     await Promise.all([...expensePromises, ...revenuePromises]);
 
-    // Limpar inputs após adicionar
+    showSaveToast();
+
     setIsAddingExpense([]);
     setIsAddingRevenue([]);
   };
 
+  const handleEnterPressRevenueName = (e) => {
+    if (e.key === "Enter" && revenueValueInputRef.current) {
+      revenueValueInputRef.current.focus();
+    }
+  };
+
+  // Função para salvar receita ao pressionar Enter no valor
+  const handleEnterPressRevenueValue = async (e) => {
+    if (e.key === "Enter") {
+      const revenuePromises = isAddingRevenue.map(async (revenue) => {
+        if (revenue.name.trim() && revenue.value) {
+          await addRevenue(revenue.name, revenue.value);
+        }
+      });
+
+      await Promise.all(revenuePromises);
+      setIsAddingRevenue([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da receita
+      if (revenueNameInputRef.current) {
+        revenueNameInputRef.current.focus();
+      }
+    }
+  };
+
+  // Função para focar no valor da despesa ao pressionar Enter no nome
+  const handleEnterPressExpenseName = (e) => {
+    if (e.key === "Enter" && expenseValueInputRef.current) {
+      expenseValueInputRef.current.focus();
+    }
+  };
+
+  // Função para salvar despesa ao pressionar Enter no valor
+  const handleEnterPressExpenseValue = async (e) => {
+    if (e.key === "Enter") {
+      const expensePromises = isAddingExpense.map(async (expense) => {
+        if (expense.name.trim() && expense.value) {
+          await addExpense(expense.name, expense.value);
+        }
+      });
+
+      await Promise.all(expensePromises);
+      setIsAddingExpense([{ name: "", value: "" }]);
+
+      // Focar no próximo input de nome da despesa
+      if (expenseNameInputRef.current) {
+        expenseNameInputRef.current.focus();
+      }
+    }
+  };
+
   const loadExpenses = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; // Formato MM/yy para enviar ao back-end
+    const monthYear = `${month}/${year.slice(-2)}`;
     console.log(`Chamando API: /income/expense?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense?monthYear=${monthYear}`, // Ajuste aqui para usar monthYear
+        `http://localhost:3000/income/expense?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
@@ -267,7 +300,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const expenseData = await response.json();
-        setExpenses(expenseData); // O back-end já retorna os dados filtrados
+        setExpenses(expenseData);
         console.log("Despesas carregadas:", expenseData);
       }
     } catch (error) {
@@ -276,12 +309,12 @@ const IncomePage = () => {
   };
 
   const loadRevenues = async (month, year) => {
-    const monthYear = `${month}/${year.slice(-2)}`; // Formato MM/yy para enviar ao back-end
+    const monthYear = `${month}/${year.slice(-2)}`;
     console.log(`Chamando API: /income/revenue?monthYear=${monthYear}`);
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue?monthYear=${monthYear}`, // Ajuste aqui para usar monthYear
+        `http://localhost:3000/income/revenue?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
@@ -293,7 +326,7 @@ const IncomePage = () => {
 
       if (response.ok) {
         const revenueData = await response.json();
-        setRevenues(revenueData); // O back-end já retorna os dados filtrados
+        setRevenues(revenueData);
         console.log("Receitas carregadas:", revenueData);
       }
     } catch (error) {
@@ -315,36 +348,34 @@ const IncomePage = () => {
 
   const handleMonthChange = (month) => {
     const formattedMonth = String(month).padStart(2, "0");
-    console.log("Mês selecionado:", formattedMonth); // Log do mês
+    console.log("Mês selecionado:", formattedMonth);
     setSelectedMonth(formattedMonth);
   };
 
   const handleYearChange = (year) => {
     const formattedYear = String(year);
-    console.log("Ano selecionado:", formattedYear); // Log do ano
+    console.log("Ano selecionado:", formattedYear);
     setSelectedYear(formattedYear);
   };
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
-      setExpenses([]); // Limpa o estado anterior
-      setRevenues([]); // Limpa o estado anterior
+      setExpenses([]);
+      setRevenues([]);
 
-      // Carrega as despesas e receitas atualizadas
       loadExpenses(selectedMonth, selectedYear);
       loadRevenues(selectedMonth, selectedYear);
     }
   }, [selectedMonth, selectedYear]);
 
   const handleCancel = () => {
-    setIsAddingRevenue([]); // Reseta as receitas que estão sendo adicionadas
-    setIsAddingExpense([]); // Reseta as despesas que estão sendo adicionadas
-    closeModal(); // Fecha o modal
+    setIsAddingRevenue([]);
+    setIsAddingExpense([]);
+    closeModal();
   };
 
   const toggleAddRevenue = () => {
     setIsAddingRevenue((prev) => [...prev, { name: "", value: "" }]);
-   // setIsRevenueButtonClicked((prev) => !prev);
   };
 
   const toggleAddExpense = () => {
@@ -371,45 +402,35 @@ const IncomePage = () => {
   return (
     <div className="">
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-[335px] h-[202px] bg-neutral-100 rounded-lg border border-[#81a0ae] p-6 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">
-              Você tem certeza que deseja excluir este item?
-            </h2>
-            <div className="flex justify-end">
+        <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
+          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+            <div className="w-full text-center mx-auto mb-6">
+              <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                Você tem certeza que <br />
+                deseja
+                <span className="text-[#0082ba]"> excluir </span>
+                este <br /> ítem?
+              </span>
+            </div>
+
+            <div className="flex justify-around">
               <button
                 onClick={closeModal}
-                className="mr-4 px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-100"
+                className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
               >
-                Cancelar
+                Não
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
               >
-                Excluir
+                Sim
               </button>
             </div>
           </div>
         </div>
       )}
-      {isSuccessModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-[360px] h-[207px] bg-neutral-100 rounded-lg shadow border border-[#81a0ae] p-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Item excluído com sucesso!
-            </h2>
-            <div className="flex justify-end">
-              <button
-                onClick={closeSuccessModal}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
       <div className="relative w-[727px] mx-auto h-auto bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex justify-between mb-6">
           <Months
@@ -418,7 +439,7 @@ const IncomePage = () => {
             className="p-2 mt-4 border rounded-md border-cinza6"
           />
           <button
-            className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:drop-shadow-lg active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
+            className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
             onClick={repeatLastMonthEntries}
           >
             REPETIR LANÇAMENTO DO
@@ -433,7 +454,7 @@ const IncomePage = () => {
             {revenues.map((revenue, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between mb-2"
+                className="flex items-center justify-between -mr-9 mb-2"
               >
                 <div className="flex-1">
                   <div className="text-gray-700 pl-4 cursor-default">
@@ -463,6 +484,8 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingRevenue(index, "name", e.target.value)
                   }
+                  onKeyDown={handleEnterPressRevenueName}
+                  ref={revenueNameInputRef}
                   className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
                 <input
@@ -472,13 +495,15 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingRevenue(index, "value", e.target.value)
                   }
+                  onKeyDown={handleEnterPressRevenueValue}
+                  ref={revenueValueInputRef} // associando o ref ao input de valor da receita
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
             ))}
             <button
               onClick={toggleAddRevenue}
-              className="flex ml-4 z-[-1] items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
+              className="flex ml-4 z-[-1]  items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px]">Adicionar item</span>
@@ -490,7 +515,7 @@ const IncomePage = () => {
             {expenses.map((expense, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between mb-2"
+                className="flex items-center justify-between mb-2 mr-[59px]"
               >
                 <div className="flex-1">
                   <div className="text-gray-700 cursor-default">
@@ -501,10 +526,7 @@ const IncomePage = () => {
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
-                  <button
-                    onClick={() => openModal(expense.id, "expense")}
-                    className="mr-10 text-red-500 hover:text-red-700"
-                  >
+                  <button onClick={() => openModal(expense.id, "expense")}>
                     <Trash />
                   </button>
                 </div>
@@ -520,8 +542,11 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingExpense(index, "name", e.target.value)
                   }
-                  className="flex w-[146px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
+                  onKeyDown={handleEnterPressExpenseName}
+                  ref={expenseNameInputRef} // associando o ref ao input de nome da despesa
+                  className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
+                {/* Input de valor da despesa */}
                 <input
                   type="text"
                   placeholder="Valor da despesa"
@@ -529,13 +554,15 @@ const IncomePage = () => {
                   onChange={(e) =>
                     updateAddingExpense(index, "value", e.target.value)
                   }
+                  onKeyDown={handleEnterPressExpenseValue}
+                  ref={expenseValueInputRef} // associando o ref ao input de valor da despesa
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex drop-shadow-addShadow ml-4 active:drop-shadow-lg active:opacity-50 items-center mt-4 transition-shadow"
+              className="flex   active:drop-shadow-lg active:opacity-50 items-center mt-4 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px]">Adicionar item</span>

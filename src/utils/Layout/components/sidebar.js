@@ -51,11 +51,11 @@ const Sidebar = () => {
               </Link>
             </li>
             <li
-              className={`side-menu mb-[40px] ${location.pathname === "/configuracoes" ? "ativo" : ""}`}
+              className={`side-menu mb-[40px] ${location.pathname === "/user" ? "ativo" : ""}`}
             >
               <Link
-                to="/configuracoes"
-                className={`group flex items-center ${location.pathname === "/configuracoes" ? "active" : ""}`}
+                to="/user"
+                className={`group flex items-center ${location.pathname === "/user" ? "active" : ""}`}
               >
                 <ConfigIcon />
                 <div className="text-2xl text-texto2 group-hover:text-primaria leading-none">

@@ -27,10 +27,11 @@ const CreateEventForm = () => {
         });
         if (response.ok) {
           const data = await response.json();
+          // Filtra os calendários para incluir apenas os selecionados
           const filteredCalendars = data.filter((calendar) =>
             selectedCalendarIds.includes(calendar.id)
           );
-          setCalendars(data);
+          setCalendars(filteredCalendars); // Seta apenas os calendários filtrados
           if (filteredCalendars.length > 0 && !selectedCalendarId) {
             setSelectedCalendarId(filteredCalendars[0].id);
           }
@@ -41,9 +42,10 @@ const CreateEventForm = () => {
         setLoading(false);
       }
     };
-
+  
     fetchCalendars();
   }, [selectedCalendarIds, selectedCalendarId]);
+  
 
   const fetchEvents = async () => {
     if (selectedCalendarId === "") return;

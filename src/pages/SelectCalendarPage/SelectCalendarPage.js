@@ -27,9 +27,19 @@ const SelectCalendarPage = () => {
         if (response.ok) {
           const data = await response.json();
           setCalendars(data);
+
+          // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
+          const activeCalendars = new Set(
+            data
+              .filter((calendar) => calendar.enabled)
+              .map((calendar) => calendar.id)
+          );
+          setSelectedCalendarIds(activeCalendars);
+
           setLoading(false);
         } else {
           setLoading(false);
+          setError("Erro ao carregar calendários");
         }
       }
     };
@@ -37,22 +47,47 @@ const SelectCalendarPage = () => {
     fetchCalendars();
   }, []);
 
-  const handleCheckboxChange = (id) => {
-    setSelectedCalendarIds((prev) => {
-      const newSelection = new Set(prev);
-      if (newSelection.has(id)) {
-        newSelection.delete(id);
-      } else {
-        newSelection.add(id);
+  const handleCheckboxChange = async (calendar) => {
+    const newSelectedCalendarIds = new Set(selectedCalendarIds);
+    const isSelected = newSelectedCalendarIds.has(calendar.id);
+
+    // Toggle o estado local do calendário
+    if (isSelected) {
+      newSelectedCalendarIds.delete(calendar.id);
+    } else {
+      newSelectedCalendarIds.add(calendar.id);
+    }
+    setSelectedCalendarIds(newSelectedCalendarIds);
+
+    // Envia o estado atualizado para o servidor
+    const authenticationToken = localStorage.getItem("authentication_token");
+    await fetch(
+      `http://localhost:3000/events/calendars/selection/${calendar.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authenticationToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          enabled: !isSelected, // Usa o novo estado após o toggle
+          calendar_name: calendar.summary,
+        }),
       }
-      return newSelection;
-    });
+    );
   };
 
   const handleProceed = () => {
-    const ids = Array.from(selectedCalendarIds).join(",");
-    navigate(`/create-event-form?calendarIds=${ids}`);
+    const ids = Array.from(selectedCalendarIds);
+    
+    // Salva os IDs selecionados no localStorage
+    localStorage.setItem("selectedCalendars", JSON.stringify(ids));
+    console.log("Calendários selecionados salvos no localStorage:", ids); // Verificação
+  
+    // Navega para a página do usuário
+    navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen mx-auto  p-8 bg-bg1 text-center font-sans">
@@ -75,26 +110,24 @@ const SelectCalendarPage = () => {
               <CalendarIcon />
               <span>Minhas Agendas</span>
             </h2>
-            {calendars.map((calendar, index) => (
-              <div
-                key={calendar.id + index}
-                className="mb-2 flex w-full text-texto2"
-              >
+            {calendars.map((calendar) => (
+              <div key={calendar.id} className="mb-2 flex w-full text-texto2">
                 <input
                   type="checkbox"
                   className="mr-2"
                   name="calendar"
                   id={calendar.id}
                   checked={selectedCalendarIds.has(calendar.id)}
-                  onChange={() => handleCheckboxChange(calendar.id)}
+                  onChange={() => handleCheckboxChange(calendar)} // Passa o objeto calendar completo
                 />
                 <label htmlFor={calendar.id} className="font-bold">
                   {calendar.summary}
                 </label>
               </div>
             ))}
+
             <button
-              onClick={handleProceed}
+              onClick={handleProceed} // Confirme que isso está aqui
               className="rounded-[100px] mt-8 block w-[69px] h-[40px] cursor-pointer border-none bg-primaria p-4 text-lg leading-[8px] text-texto4 hover:bg-primaria"
               disabled={selectedCalendarIds.size === 0}
             >
