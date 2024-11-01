@@ -1,19 +1,19 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { registerLocale } from "react-datepicker";
 import {
   formatDateBrazilian,
   parseISODate,
   formatDateIso,
-  isValidDate
+  isValidDate,
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
 import { AddIcon, Trash } from "../../../icons/icons";
 import "../../../index.css";
-import {
-  showSuccessToast,
-  showErrorToast,
-} from "../../../utils/notification/toastify";
+import { showErrorToast } from "../../../utils/notification/toastify";
+import { showEditToast } from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
+import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
+import { showSuccessToast } from "../components/notiificationCustomerPage";
 
 registerLocale(ptBR);
 
@@ -23,7 +23,7 @@ const CreateCustomerForm = ({
   selectedPatient,
   customer,
   setCustomer,
-  isEditing
+  isEditing,
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
   const [startDate, setStartDate] = useState(null);
@@ -40,36 +40,47 @@ const CreateCustomerForm = ({
     }
   }, [isEditing, selectedPatient, setCustomer]);
 
-
   const handleManualDateChange = (value) => {
     let formattedValue = value.replace(/\D/g, "");
-  
-    if (formattedValue.length >= 2) {
+
+    if (formattedValue.length === 0) {
+      setCustomer((prevState) => ({
+        ...prevState,
+        customer_dob: "",
+      }));
+      return;
+    }
+
+    if (formattedValue.length > 2 && formattedValue.length <= 4) {
       formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2)}`;
+    } else if (formattedValue.length > 4) {
+      formattedValue = `${formattedValue.slice(0, 2)}/${formattedValue.slice(2, 4)}/${formattedValue.slice(4, 8)}`;
     }
-    if (formattedValue.length >= 5) {
-      formattedValue = `${formattedValue.slice(0, 5)}/${formattedValue.slice(5, 9)}`;
-    }
-  
+
     setCustomer((prevState) => ({
       ...prevState,
       customer_dob: formattedValue,
     }));
-  
+
     if (formattedValue.length === 10) {
       const regex = /^\d{2}\/\d{2}\/\d{4}$/;
-  
+
       if (regex.test(formattedValue)) {
         const [day, month, year] = formattedValue.split("/").map(Number);
         const date = new Date(year, month - 1, day);
-  
+
         if (year < 1900 || year > new Date().getFullYear()) {
           showErrorToast("Data inválida");
           return;
         }
-  
-        if (isValidDate(date) && date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
-          setStartDate(date); 
+
+        if (
+          isValidDate(date) &&
+          date.getDate() === day &&
+          date.getMonth() === month - 1 &&
+          date.getFullYear() === year
+        ) {
+          setStartDate(date);
         } else {
           showErrorToast("Data inválida! Verifique se a data existe.");
         }
@@ -113,31 +124,26 @@ const CreateCustomerForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!startDate || startDate.getFullYear() < 1900 || startDate.getFullYear() > new Date().getFullYear()) {
+    if (
+      !startDate ||
+      startDate.getFullYear() < 1900 ||
+      startDate.getFullYear() > new Date().getFullYear()
+    ) {
       showErrorToast("Data de nascimento válida");
       return;
     }
-  
+
     const formattedCustomer = {
       ...customer,
-      customer_dob: startDate ? formatDateIso(startDate) : "", 
+      customer_dob: startDate ? formatDateIso(startDate) : "",
     };
 
-    const url = customer.customer_id
-      ? `http://localhost:3000/events/customers/${customer.customer_id}`
-      : `http://localhost:3000/events/create-customer`;
-
-    const method = customer.customer_id ? "PUT" : "POST";
-
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...customer, additionalAlternatives }),
-      });
+      const response = await createOrUpdateCustomer(
+        customer,
+        additionalAlternatives,
+        customer.customer_id
+      );
       const data = await response.json();
 
       if (response.ok) {
@@ -155,7 +161,13 @@ const CreateCustomerForm = ({
         setAdditionalAlternatives([]);
         onSubmit();
         onClose();
-        showSuccessToast();
+
+        if (customer.customer_id) {
+          showEditToast();
+        } else {
+          showSuccessToast();
+        }
+
         setStartDate(null);
       } else {
         showErrorToast(data.message || "Erro ao processar a solicitação!");
@@ -166,7 +178,8 @@ const CreateCustomerForm = ({
   };
 
   return (
-    <div className="max-w space-y-4 p-6">
+    <div className="max-w space-y-2 p-6">
+     
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
@@ -175,7 +188,7 @@ const CreateCustomerForm = ({
           <div className="space-y-4">
             <div className="flex gap-4">
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -190,7 +203,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-2 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nascimento
                 </label>
                 <input
@@ -204,7 +217,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3  block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
               <input
@@ -219,7 +232,7 @@ const CreateCustomerForm = ({
 
             <div className="flex gap-4">
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
                 <input
@@ -233,7 +246,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   CPF/CNPJ
                 </label>
                 <input
@@ -248,7 +261,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Valor
               </label>
               <input
@@ -267,7 +280,7 @@ const CreateCustomerForm = ({
         <div>
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Nome
               </label>
               <input
@@ -282,7 +295,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="relative">
-              <label className="mb-1 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <div className="flex">
@@ -293,22 +306,19 @@ const CreateCustomerForm = ({
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
                   className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                  disabled={customer.patient_status}
                 />
 
                 <button
                   type="button"
                   onClick={handleDeleteAlternativeCPF}
                   className="ml-2 flex items-center justify-center bg-bg1 p-1 hover:bg-bg1"
-                >
-                  <Trash />
-                </button>
+                ></button>
               </div>
             </div>
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
-                <label className="mb-1.5 mt-1.5 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1.5 mt-1.5 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome Alternativo {index + 1}
                 </label>
                 <input
@@ -322,12 +332,12 @@ const CreateCustomerForm = ({
                       e.target.value
                     )
                   }
-                  placeholder={`Nome Alternativo ${index + 2}`}
+                  placeholder={`Nome Alternativo ${index + 1}`}
                   className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   disabled={customer.patient_status}
                 />
 
-                <label className="mb-1.5 mt-4 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1.5 mt-4 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
                   CPF Alternativo {index + 1}
                 </label>
                 <div className="relative">
@@ -360,7 +370,7 @@ const CreateCustomerForm = ({
           {additionalAlternatives.length < 1 && (
             <button
               type="button"
-              className="grouph-4 justify-center items-start gap-2 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
+              className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
               onClick={handleAddAlternativeFields}
             >
               <AddIcon />

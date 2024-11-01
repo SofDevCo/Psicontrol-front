@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ArchivedPage from "./pages/ArchivedPage/ArchivedPage";
 import UserPage from "./pages/UserPage/UserPage";
+import ProfileCustomerPage from "./pages/ProfileCustomerPage/ProfileCustomerPage";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/income" element={<IncomePage />} />
           <Route path="/archived" element={<ArchivedPage/>} />
           <Route path="/user" element={<UserPage/>} />
+          <Route path="/customers/:customerId/profile" element={<ProfileCustomerPage/>} />
         </Route>
       </Routes>
     </Router>

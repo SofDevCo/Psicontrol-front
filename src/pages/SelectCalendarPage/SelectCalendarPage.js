@@ -8,7 +8,7 @@ const SelectCalendarPage = () => {
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarIds, setSelectedCalendarIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {

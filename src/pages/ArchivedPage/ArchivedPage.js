@@ -9,19 +9,25 @@ import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import DropDown from "../ArchivedPage/components/DropDownArchive";
 import { deleteCustomer } from "../../service/pagesService/pagesService";
 import { showErrorToast } from "../../utils/notification/toastify";
+import { showDeleteToast } from "../CustomerPage/components/notiificationCustomerPage";
 
 const ArchivedPage = () => {
   const [archivedCustomers, setArchivedCustomers] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [customers] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
+  const [isDropdownVisible] = useState(false);
 
   const dropdownRef = useRef();
+  const searchDropRef = useRef();
 
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
+  useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
 
   const fetchArchivedCustomers = async () => {
     setIsLoading(true);
@@ -83,12 +89,20 @@ const ArchivedPage = () => {
     }
   }, [searchTerm, archivedCustomers]);
 
-  const handleDeleteCustomer = async (customerId) => {
+  const handleDeleteConfirmation = (customerId) => {
+    setCustomerToDelete(customerId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleDeleteCustomer = async () => {
     try {
-      const response = await deleteCustomer(customerId);
+      const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
         fetchArchivedCustomers();
+        setIsConfirmModalOpen(false);
+        setCustomerToDelete(null);
+        showDeleteToast();
       } else {
         showErrorToast("Erro ao excluir cliente!");
       }
@@ -102,7 +116,7 @@ const ArchivedPage = () => {
   };
 
   return (
-    <div className="absolute left-[314px] top-[145px] box-border h-[544px] w-[1076px] overflow-auto [&::-webkit-scrollbar]:w-auto [&::-webkit-scrollbar-track]:bg-gray-100 rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-50">
       <div className="relative flex w-full items-center pl-7 pt-6">
         <div className="relative">
           <input
@@ -127,11 +141,13 @@ const ArchivedPage = () => {
             )}
           </div>
 
-          {searchTerm && filteredCustomers.length === 0 && (
-            <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
-              Paciente não encontrado
-            </p>
-          )}
+          {searchTerm &&
+            filteredCustomers.length === 0 &&
+            isDropdownVisible && (
+              <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+                Paciente não encontrado
+              </p>
+            )}
 
           {searchTerm.length > 0 && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
@@ -147,7 +163,10 @@ const ArchivedPage = () => {
             </div>
           )}
           {searchTerm && filteredCustomers.length > 0 && (
-            <ul className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2">
+            <ul
+              ref={searchDropRef}
+              className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2"
+            >
               {filteredCustomers.map((customer) => (
                 <li
                   key={customer.customer_id}
@@ -164,14 +183,12 @@ const ArchivedPage = () => {
           )}
         </div>
       </div>
-
       <div className="flex justify-between mt-9 items-center h-[21px] w-full border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         <span>Pacientes Arquivados</span>
         <div className="flex mr-4 items-center h-[21px] w-[52px]">
           <span>Ações</span>
         </div>
       </div>
-
       <div className="mx-auto w-full font-sans">
         {error && <p className="mb-[20px] text-center text-red-500">{error}</p>}
         {isLoading ? (
@@ -196,8 +213,7 @@ const ArchivedPage = () => {
                   <DropDown
                     dropdownRef={dropdownRef}
                     customerId={customer.customer_id}
-                    onDelete={handleDeleteCustomer}
-                    // setSelectedPatient={setSelectedPatient}
+                    onDelete={handleDeleteConfirmation}
                     customers={customers}
                     onUnarchive={handleUnarchiveCustomer}
                   />
@@ -207,6 +223,31 @@ const ArchivedPage = () => {
           </ul>
         )}
       </div>
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 z-30 backdrop-blur-[6px]">
+          <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-52 translate-x-32">
+            <p className="text-lg font-semibold mb-4 text-texto2">
+              Você tem certeza que <br /> deseja
+              <span className="text-primaria"> excluir </span>
+              este <br /> paciente de forma <br /> permanente?
+            </p>
+            <div className="flex justify-around">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="w-[74px] h-[40px] border border-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={handleDeleteCustomer}
+                className="w-[74px] h-[40px] bg-primaria rounded-[100px] shadow flex-col justify-center items-center gap-2 inline-flex text-texto4"
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
