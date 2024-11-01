@@ -61,7 +61,7 @@ export const showSaveToast = () => {
         justifyContent: "center",
         textAlign: "center",
         marginLeft: "95px",
-        marginTop: "105px",
+        marginTop: "104px",
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
@@ -169,7 +169,7 @@ export const showDeleteToast = () => {
         justifyContent: "center",
         textAlign: "center",
         marginLeft: "95px",
-        marginTop: "105px",
+        marginTop: "104px",
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
@@ -277,7 +277,7 @@ export const showLastMonthToast = () => {
         justifyContent: "center",
         textAlign: "center",
         marginLeft: "95px",
-        marginTop: "105px",
+        marginTop: "104px",
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
