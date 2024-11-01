@@ -9,6 +9,7 @@ const UserPage = () => {
     crp_number: "",
     user_phone: "",
     user_message: "", // Novo campo de mensagem
+    image: null, // Campo de imagem para armazenar o arquivo
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -120,18 +121,32 @@ const UserPage = () => {
   // Função para enviar os dados editados
   const handleSave = async () => {
     try {
+      const formData = new FormData();
+      formData.append("user_cpf", userData.user_cpf);
+      formData.append("user_cnpj", userData.user_cnpj);
+      formData.append("crp_number", userData.crp_number);
+      formData.append("user_phone", userData.user_phone);
+      formData.append("user_message", userData.user_message);
+
+      // Adiciona o arquivo de imagem, se houver
+      if (userData.image) {
+        formData.append("image", userData.image);
+      }
+
       const response = await fetch(`http://localhost:3000/user/users`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData),
+        body: formData,
       });
 
       if (response.ok) {
         const updatedData = await response.json();
-        setUserData(updatedData);
+        setUserData((prevData) => ({
+          ...prevData,
+          ...updatedData,
+        }));
         setIsEditing(false);
       } else {
         console.error("Erro ao salvar os dados do usuário.");
@@ -147,6 +162,15 @@ const UserPage = () => {
     setUserData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  // Função para manipular o upload da imagem
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setUserData((prevData) => ({
+      ...prevData,
+      image: file, // Atualiza o estado com o arquivo da imagem
     }));
   };
 
@@ -194,6 +218,14 @@ const UserPage = () => {
               name="user_phone"
               value={userData.user_phone}
               onChange={handleChange}
+            />
+          </label>
+          <label>
+            Imagem:
+            <input
+              type="file"
+              name="image"
+              onChange={handleFileChange} // Função para lidar com o upload de imagem
             />
           </label>
           <button onClick={handleSave}>Salvar</button>
@@ -283,7 +315,11 @@ const UserPage = () => {
                 </div>
                 <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                   <span>Logo: </span>
-                  <span className="text-[#5c5c5c]">(logopsiLaura.png)</span>
+                  <span className="text-[#5c5c5c]">
+                    {userData.image
+                      ? userData.image.split("/").pop()
+                      : "(Imagem não carregada)"}
+                  </span>
                 </div>
               </div>
             </div>
