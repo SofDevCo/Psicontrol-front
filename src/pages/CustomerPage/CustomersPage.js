@@ -21,6 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ArchiveCustomer,
   deleteCustomer,
+  fetchCustomers,
 } from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
@@ -49,29 +50,22 @@ const CustomersPage = () => {
   useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
-  const fetchCustomers = async () => {
+  const HandlefetchCustomers = async () => {
     setIsLoading(true);
-    try {
-      const response = await fetch("http://localhost:3000/events/customers", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
-          )}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setCustomers(data);
-    } catch (error) {
+    const data = await fetchCustomers().catch(() => {
       setError("Erro ao buscar clientes.");
-    } finally {
-      setIsLoading(false);
+      return null;
+    });
+  
+    if (data) {
+      setCustomers(data);
     }
+    
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchCustomers();
+    HandlefetchCustomers();
   }, []);
 
   useEffect(() => {
@@ -110,7 +104,7 @@ const CustomersPage = () => {
       const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
-        fetchCustomers();
+        HandlefetchCustomers();
         setIsConfirmModalOpen(false);
         setCustomerToDelete(null);
         showDeleteToast();
@@ -126,7 +120,7 @@ const CustomersPage = () => {
     const response = await ArchiveCustomer(customerId);
 
     if (response.ok) {
-      fetchCustomers();
+      HandlefetchCustomers();
       showArchiveToast();
     } else {
       showErrorToast("Erro ao excluir cliente!");
@@ -182,7 +176,7 @@ const CustomersPage = () => {
             </div>
             <CreateCustomerForm
               onClose={closeModal}
-              onSubmit={fetchCustomers}
+              onSubmit={HandlefetchCustomers}
               selectedPatient={selectedPatient}
               customer={customer}
               setCustomer={setCustomer}
