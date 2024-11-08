@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CheckMessage, EditIcon } from "../../icons/icons";
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -8,16 +9,16 @@ const UserPage = () => {
     user_cnpj: "",
     crp_number: "",
     user_phone: "",
-    user_message: "", // Novo campo de mensagem
-    image: null, // Campo de imagem para armazenar o arquivo
+    user_message: "", 
+    image: null, 
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendars, setSelectedCalendars] = useState(new Set());
   const [isEditingMessage, setIsEditingMessage] = useState(false);
+  const [fileName, setFileName] = useState("nomedoarquivo.png");
 
-  // Função para buscar os dados do usuário
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -42,8 +43,6 @@ const UserPage = () => {
     fetchUserData();
   }, []);
 
-  // Função para buscar agendas
-  // Buscando as agendas
   useEffect(() => {
     const fetchCalendars = async () => {
       try {
@@ -57,14 +56,12 @@ const UserPage = () => {
           const data = await response.json();
           setCalendars(data);
 
-          // Obter os calendários selecionados do localStorage
           const savedSelectedCalendars = JSON.parse(
             localStorage.getItem("selectedCalendars")
           );
           if (savedSelectedCalendars) {
-            // Converte o array salvo em um Set para manter consistência com selectedCalendars
             const initiallySelected = new Set(savedSelectedCalendars);
-            console.log("Initially selected calendars:", initiallySelected); // Log para verificar
+            console.log("Initially selected calendars:", initiallySelected); 
             setSelectedCalendars(initiallySelected);
           }
         } else {
@@ -78,7 +75,6 @@ const UserPage = () => {
     fetchCalendars();
   }, []);
 
-  // Função para alternar o estado de um calendário
   const toggleCalendar = async (calendarId) => {
     const newSelectedCalendars = new Set(selectedCalendars);
     const isEnabled = !newSelectedCalendars.has(calendarId);
@@ -91,17 +87,14 @@ const UserPage = () => {
 
     setSelectedCalendars(newSelectedCalendars);
 
-    // Atualize o localStorage
     localStorage.setItem(
       "selectedCalendars",
       JSON.stringify(Array.from(newSelectedCalendars))
     );
 
-    // Obtém o nome do calendário atual
     const calendar = calendars.find((cal) => cal.id === calendarId);
-    const calendarName = calendar ? calendar.summary : "Nome padrão"; // Define um padrão se não tiver nome
+    const calendarName = calendar ? calendar.summary : "Nome padrão"; 
 
-    // Envia a atualização de `enabled` e `calendar_name` para o servidor
     await fetch(
       `http://localhost:3000/events/calendars/selection/${calendarId}`,
       {
@@ -111,14 +104,13 @@ const UserPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          enabled: isEnabled, // Define o estado conforme alternado
-          calendar_name: calendarName, // Nome do calendário
+          enabled: isEnabled, 
+          calendar_name: calendarName, 
         }),
       }
     );
   };
 
-  // Função para enviar os dados editados
   const handleSave = async () => {
     try {
       const formData = new FormData();
@@ -128,7 +120,6 @@ const UserPage = () => {
       formData.append("user_phone", userData.user_phone);
       formData.append("user_message", userData.user_message);
 
-      // Adiciona o arquivo de imagem, se houver
       if (userData.image) {
         formData.append("image", userData.image);
       }
@@ -156,7 +147,6 @@ const UserPage = () => {
     }
   };
 
-  // Função para manipular alterações nos campos de entrada
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
@@ -165,243 +155,369 @@ const UserPage = () => {
     }));
   };
 
-  // Função para manipular o upload da imagem
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setUserData((prevData) => ({
       ...prevData,
-      image: file, // Atualiza o estado com o arquivo da imagem
+      image: file, 
     }));
+    setFileName(file ? file.name : ""); 
   };
 
   return (
     <div className="flex flex-col ">
-      {isEditing ? (
-        <div>
-          <p>
-            <strong>Nome:</strong> {userData.user_name}
-          </p>
-          <p>
-            <strong>Email:</strong> {userData.user_email}
-          </p>
-          <label>
-            CPF:
-            <input
-              type="text"
-              name="user_cpf"
-              value={userData.user_cpf}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            CNPJ:
-            <input
-              type="text"
-              name="user_cnpj"
-              value={userData.user_cnpj}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            CRP:
-            <input
-              type="text"
-              name="crp_number"
-              value={userData.crp_number}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Telefone:
-            <input
-              type="text"
-              name="user_phone"
-              value={userData.user_phone}
-              onChange={handleChange}
-            />
-          </label>
-          <label>
-            Imagem:
-            <input
-              type="file"
-              name="image"
-              onChange={handleFileChange} // Função para lidar com o upload de imagem
-            />
-          </label>
-          <button onClick={handleSave}>Salvar</button>
-          <button onClick={() => setIsEditing(false)}>Cancelar</button>
-        </div>
-      ) : (
-        <>
-          {/* Quadrado grande dos dados pessoais */}
-          <div className="relative w-[1076px] mx-auto h-auto bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4 mb-3">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-[#0082ba] text-[25px] font-medium font-['Ubuntu']">
-                Meus dados
-              </h2>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-[#0082ba] text-sm underline"
-              >
-                Editar dados
-              </button>
-            </div>
+      {isEditing && (
+        <div className="fixed inset-0 ml-[195px] backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30  flex justify-center items-center z-30">
+          <div className=" w-[1076px] -mb-24 h-[615px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-8">
+            <div className="flex gap-8">
+              
+              <div className="space-y-6">
+                <h2 className="text-[25px] mx-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                  Editar meus dados
+                </h2>
 
-            {/* Informação do usuário */}
-            <div className="flex justify-between">
-              <div className="flex w-[360px]">
-                <div className="w-10 h-10 bg-[#33b8d1] rounded-[20px] flex justify-center items-center">
-                  {userData.photoUrl ? (
-                    <img
-                      src={userData.photoUrl}
-                      alt="Foto de perfil"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-white font-bold text-xl">
-                      {userData.user_name.charAt(0)}
-                    </span>
-                  )}
-                </div>
+                
                 <div>
-                  <div className="text-black text-xl font-medium font-['Ubuntu'] ml-[20px] mb-2">
-                    {userData.user_name}
+                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    Nome
+                  </label>
+                  <input
+                    type="text"
+                    name="user_name"
+                    value={userData.user_name || ""}
+                    onChange={handleChange}
+                    placeholder="Nome do psicólogo"
+                    className="w-[418px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                  />
+                </div>
+
+                
+                <div>
+                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    E-mail
+                  </label>
+                  <input
+                    type="email"
+                    name="user_email"
+                    value={userData.user_email || ""}
+                    onChange={handleChange}
+                    placeholder="e-mail.psicologo@gmail.com"
+                    className="w-[418px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                  />
+                </div>
+
+                
+                <div className="flex gap-4">
+                  <div>
+                    <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      Telefone
+                    </label>
+                    <input
+                      type="text"
+                      name="user_phone"
+                      value={userData.user_phone || ""}
+                      onChange={handleChange}
+                      placeholder="(00) 0 0000-0000"
+                      className="w-[181px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
                   </div>
-                  <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight">
-                    <span>CPF/CNPJ: </span>
-                    <span className="text-[#5c5c5c]">
-                      {userData.user_cpf || userData.user_cnpj}
-                    </span>
+
+                  <div>
+                    <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      CPF/CNPJ
+                    </label>
+                    <input
+                      type="text"
+                      name="user_cpf"
+                      value={userData.user_cpf || ""}
+                      onChange={handleChange}
+                      placeholder="XX.XXX.XXX/0001-XX"
+                      className="w-[212px] h-[50px]  bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
                   </div>
-                  <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
-                    <span>CRP: </span>
-                    <span className="text-[#5c5c5c]">
-                      {userData.crp_number}
-                    </span>
-                  </div>
-                  <div className="flex items-center ml-[20px] text-[#232323] text-[17px] font-normal tracking-tight mt-2 whitespace-nowrap">
-                    <span className="mr-1 whitespace-nowrap">E-mail:</span>
-                    <span className="text-[#5c5c5c] whitespace-nowrap">
-                      {userData.user_email}
-                    </span>
-                  </div>
-                  <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
-                    <span>Telefone: </span>
-                    <span className="text-[#5c5c5c]">
-                      {userData.user_phone}
-                    </span>
-                  </div>
+                </div>
+
+                
+                <div>
+                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    CRP
+                  </label>
+                  <input
+                    type="text"
+                    name="crp_number"
+                    value={userData.crp_number || ""}
+                    onChange={handleChange}
+                    placeholder="XX/XXXXX"
+                    className="w-[181px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                  />
                 </div>
               </div>
 
-              {/* Coluna Direita - Dados para Recibo */}
-              <div className="w-[316px]">
-                <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2">
+              
+              <div className="space-y-6 ml-16">
+                <h2 className="text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
                   Dados para recibo
+                </h2>
+
+                
+                <div>
+                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    Nome/Clínica
+                  </label>
+                  <input
+                    type="text"
+                    name="clinic_name"
+                    value={userData.clinic_name || ""}
+                    onChange={handleChange}
+                    placeholder="Nome do psicólogo/clínica"
+                    className="w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                  />
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight">
-                  <span>Nome/Clínica: </span>
-                  <span className="text-[#5c5c5c]">{userData.user_name}</span>
+
+               
+                <div>
+                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    CPF/CNPJ
+                  </label>
+                  <input
+                    type="text"
+                    name="clinic_cpf_cnpj"
+                    value={userData.clinic_cpf_cnpj || ""}
+                    onChange={handleChange}
+                    placeholder="XX.XXX.XXX/0001-XX"
+                    className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                  />
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+
+                
+                <div>
+                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    Importar logotipo
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <div className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
+                      <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
+                        {fileName}
+                      </span>
+                    </div>
+                    <label className="flex items-center gap-1 text-[#0082ba] cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4-4m0 0l-4 4m4-4v12"
+                        />
+                      </svg>
+                      <span className="underline">Importar arquivo</span>
+                      <input
+                        type="file"
+                        name="image"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+            <div className="flex mx-[780px] gap-2 mt-[50px]">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-1 border w-[108px] h-[39px] item-center border-primaria text-primaria rounded-[100px] mr-2 "
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 w-[90px] h-[40px] bg-primaria drop-shadow-saveShadow active:drop-shadow-sm text-white rounded-[100px]"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <>
+        
+        <div className="relative w-[1076px] mx-[100px] h-auto bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4 mb-3">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-[#0082ba] text-[25px] font-medium font-['Ubuntu']">
+              Meus dados
+            </h2>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-[#0082ba] text-sm underline"
+            >
+              Editar dados
+            </button>
+          </div>
+
+          
+          <div className="flex justify-between">
+            <div className="flex w-[360px]">
+              <div className="w-10 h-10 bg-[#33b8d1] rounded-[20px] flex justify-center items-center">
+                {userData.photoUrl ? (
+                  <img
+                    src={userData.photoUrl}
+                    alt="Foto de perfil"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-bold text-xl">
+                    {userData.user_name.charAt(0)}
+                  </span>
+                )}
+              </div>
+              <div>
+                <div className="text-black text-xl font-medium font-['Ubuntu'] ml-[20px] mb-2">
+                  {userData.user_name}
+                </div>
+                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight">
                   <span>CPF/CNPJ: </span>
                   <span className="text-[#5c5c5c]">
                     {userData.user_cpf || userData.user_cnpj}
                   </span>
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
                   <span>CRP: </span>
                   <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                  <span>Logo: </span>
-                  <span className="text-[#5c5c5c]">
-                    {userData.image
-                      ? userData.image.split("/").pop()
-                      : "(Imagem não carregada)"}
+                <div className="flex items-center ml-[20px] text-[#232323] text-[17px] font-normal tracking-tight mt-2 whitespace-nowrap">
+                  <span className="mr-1 whitespace-nowrap">E-mail:</span>
+                  <span className="text-[#5c5c5c] whitespace-nowrap">
+                    {userData.user_email}
                   </span>
                 </div>
+                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
+                  <span>Telefone: </span>
+                  <span className="text-[#5c5c5c]">{userData.user_phone}</span>
+                </div>
+              </div>
+            </div>
+
+            
+            <div className="w-[316px]">
+              <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2">
+                Dados para recibo
+              </div>
+              <div className="text-[#232323] text-[17px] font-normal tracking-tight">
+                <span>Nome/Clínica: </span>
+                <span className="text-[#5c5c5c]">{userData.user_name}</span>
+              </div>
+              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                <span>CPF/CNPJ: </span>
+                <span className="text-[#5c5c5c]">
+                  {userData.user_cpf || userData.user_cnpj}
+                </span>
+              </div>
+              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                <span>CRP: </span>
+                <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+              </div>
+              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                <span>Logo: </span>
+                <span className="text-[#5c5c5c]">
+                  {typeof userData.image === "string" &&
+                  userData.image.includes("/")
+                    ? userData.image.split("/").pop()
+                    : "(Imagem não carregada)"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div className="flex space-x-4">
+          <div className="w-[540px] h-auto bg-white mx-[100px] shadow p-6 border-2 border-cinza6 rounded-[15px]">
+            <div className="flex justify-between">
+              <h3 className="text-[#0082ba] text-[20px] font-medium">
+                Minhas agendas
+              </h3>
+              <button className="text-[#0082ba] text-sm underline">
+                Trocar de conta
+              </button>
+            </div>
+
+            <p className="mt-4 font-semibold">{userData.user_name}</p>
+            <p className="text-[#8d8d8d]">
+              <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+              {userData.user_email}
+            </p>
+
+            <div className="mt-6">
+              <h4 className="text-[#232323] text-lg font-medium">
+                Selecionar agendas
+              </h4>
+              <div className="mt-4 space-y-4">
+                {calendars.map((calendar) => (
+                  <div
+                    key={calendar.id}
+                    className="flex items-center space-x-3"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedCalendars.has(calendar.id)}
+                      onChange={() => toggleCalendar(calendar.id)}
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
+                        selectedCalendars.has(calendar.id)
+                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                          : "bg-white border-gray-300 opacity-50"
+                      } focus:ring-0 checked:bg-[#0082ba] checked:border-[#0082ba]`}
+                      style={{
+                        boxShadow: selectedCalendars.has(calendar.id)
+                          ? "inset 0 0 0 3px white"
+                          : "none",
+                      }}
+                    />
+
+                    <span
+                      className={`font-medium ${
+                        selectedCalendars.has(calendar.id)
+                          ? "text-[#5c5c5c]" 
+                          : "text-gray-500 opacity-50"
+                      }`}
+                    >
+                      {calendar.summary}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Quadrado "Minhas agendas" separado */}
-          <div className="flex space-x-4">
-            <div className="w-[563px] h-auto bg-white mx-[52px] shadow p-6 border-2 border-cinza6 rounded-[10px]">
-              <div className="flex justify-between">
-                <h3 className="text-[#0082ba] text-[20px] font-medium">
-                  Minhas agendas
-                </h3>
-                <button className="text-[#0082ba] text-sm underline">
-                  Trocar de conta
-                </button>
-              </div>
-
-              <p className="mt-4 font-semibold">{userData.user_name}</p>
-              <p className="text-[#8d8d8d]">{userData.user_email}</p>
-
-              <div className="mt-6">
-                <h4 className="text-[#232323] text-lg font-medium">
-                  Selecionar agendas
-                </h4>
-                <div className="mt-4 space-y-4">
-                  {calendars.map((calendar) => (
-                    <div
-                      key={calendar.id}
-                      className="flex items-center space-x-3"
-                    >
-                      <button
-                        onClick={() => toggleCalendar(calendar.id)}
-                        className={`w-10 h-5 rounded-full transition-colors ${
-                          selectedCalendars.has(calendar.id)
-                            ? "bg-[#0082ba]"
-                            : "bg-gray-300"
-                        } relative`}
-                      >
-                        <span
-                          className={`block w-4 h-4 bg-white rounded-full transform transition-transform ${
-                            selectedCalendars.has(calendar.id)
-                              ? "translate-x-5"
-                              : "translate-x-0"
-                          }`}
-                        ></span>
-                      </button>
-
-                      <span className="text-[#232323] font-medium">
-                        {calendar.summary}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Caixa "Mensagem de cobrança" */}
-            <div className="w-[563px] h-auto bg-white shadow p-6 border-2 border-cinza6 rounded-[10px]">
+          
+          <div className="flex">
+            <div className="w-[520px] h-auto mx-[-100px] bg-white shadow p-6 border-2 border-cinza6 rounded-[15px]">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-[#0082ba] text-[20px] font-medium">
                   Mensagem de cobrança
                 </h3>
-                <button
-                  onClick={() => setIsEditingMessage(true)}
-                  className="text-[#0082ba] text-sm underline"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5 inline-block"
+                {isEditingMessage ? (
+                  <button
+                    onClick={() => setIsEditingMessage(false)} 
+                    className="text-[#0082ba] text-sm"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15.232 5.232l3.536 3.536M9 11l4 4-4-4zm0 4h4m1 1a2.5 2.5 0 003.536 0L21 11m0 0a5.002 5.002 0 01-1.464 3.536A5.002 5.002 0 0116 17h-.59"
-                    />
-                  </svg>
-                  Editar
-                </button>
+                    <CheckMessage />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsEditingMessage(true)}
+                    className="text-[#0082ba] text-sm underline"
+                  >
+                    <EditIcon />
+                  </button>
+                )}
               </div>
 
               {isEditingMessage ? (
@@ -409,8 +525,8 @@ const UserPage = () => {
                   name="user_message"
                   value={userData.user_message}
                   onChange={handleChange}
-                  rows={15} // Aumenta a altura do textarea no modo de edição
-                  className="w-full p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] leading-relaxed"
+                  rows={3} 
+                  className="w-full p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] h-[250px]"
                   placeholder="Escreva sua mensagem de cobrança aqui..."
                 />
               ) : (
@@ -422,30 +538,10 @@ const UserPage = () => {
                   )}
                 </div>
               )}
-
-              {isEditingMessage && (
-                <div className="flex justify-end mt-2">
-                  <button
-                    onClick={() => {
-                      handleSave(); // Salva a mensagem de cobrança
-                      setIsEditingMessage(false); // Sai do modo de edição da mensagem
-                    }}
-                    className="bg-[#0082ba] text-white px-4 py-2 rounded-md mr-2"
-                  >
-                    Salvar
-                  </button>
-                  <button
-                    onClick={() => setIsEditingMessage(false)}
-                    className="text-[#0082ba] px-4 py-2"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              )}
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </div>
   );
 };
