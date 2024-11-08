@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
+import { fetchCustomers } from "../../service/pagesService/pagesService";
 
-const CreateEventForm = () => {
+const DashBoard = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
+  const [patients, setPatients] = useState([]); 
+  const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
@@ -27,11 +30,10 @@ const CreateEventForm = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          // Filtra os calendários para incluir apenas os selecionados
           const filteredCalendars = data.filter((calendar) =>
             selectedCalendarIds.includes(calendar.id)
           );
-          setCalendars(filteredCalendars); // Seta apenas os calendários filtrados
+          setCalendars(filteredCalendars);
           if (filteredCalendars.length > 0 && !selectedCalendarId) {
             setSelectedCalendarId(filteredCalendars[0].id);
           }
@@ -42,10 +44,8 @@ const CreateEventForm = () => {
         setLoading(false);
       }
     };
-  
     fetchCalendars();
   }, [selectedCalendarIds, selectedCalendarId]);
-  
 
   const fetchEvents = async () => {
     if (selectedCalendarId === "") return;
@@ -78,119 +78,109 @@ const CreateEventForm = () => {
     }
   };
 
+  const fetchUnmatchedPatients = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/events/unmatched-patients",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setUnmatchedPatients(data); 
+      } else {
+        console.error("Erro ao buscar pacientes não encontrados");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar pacientes não encontrados:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnmatchedPatients();
+  }, []);
+
   useEffect(() => {
     fetchEvents();
   }, [selectedCalendarId]);
 
-  const handleCancel = async (googleEventId, calendarId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/events/cancel/${googleEventId}/${calendarId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
-        await fetchEvents();
-      }
-    } catch (error) {
-      setError("Erro ao cancelar o evento");
-    }
-  };
-
-  const syncCalendar = async () => {
+  const fetchPatientData = async () => {
     try {
       setLoading(true);
-      for (const calendarId of selectedCalendarIds) {
-        const response = await fetch(
-          `http://localhost:3000/events/sync-calendar/${calendarId}`,
-          {
-            method: "POST",
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Erro ao sincronizar calendário");
-        }
-      }
-      await fetchEvents(); // Atualiza os eventos após sincronização
+      const data = await fetchCustomers();
+      setPatients(data);
     } catch (error) {
-      setError("Erro ao sincronizar calendário");
+      setError("Erro ao buscar pacientes");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCalendarChange = (e) => {
-    setSelectedCalendarId(e.target.value);
-  };
+  useEffect(() => {
+    fetchPatientData();
+  }, []);
 
   return (
-    <div className="m-0 flex bg-gray-200 p-0">
-      <main className="flex-grow-0 p-5">
-        <h2>Eventos</h2>
-        <div className="bg-white rounded-lg p-5 shadow-default">
-          <section className="events-list-section">
-            <h2 className="event-list-title">
-              Eventos Criados:
-              <select
-                onChange={handleCalendarChange}
-                value={selectedCalendarId}
-                disabled={loading}
-              >
-                {calendars.map((calendar) => (
-                  <option key={calendar.id} value={calendar.id}>
-                    {calendar.summary}
-                  </option>
-                ))}
-              </select>
-              <section className="sync-calendar-section">
-                <button onClick={syncCalendar}>Sincronizar Calendários</button>
-              </section>
-            </h2>
-            {error && <p className="error-message">{error}</p>}
-            <table className="events-table">
-              <thead>
-                <tr>
-                  <th>Nome do Evento</th>
-                  <th>Data</th>
-                  <th>Ação</th>
-                  <th>Status</th>
+    <div className="relative mx-auto mt-12 box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
+      {loading ? (
+        <p>Carregando...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-2">Paciente</th>
+                <th className="text-left px-4 py-2">Valor Consulta</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map((patient, index) => (
+                <tr key={index} className="border-t">
+                  <td className="px-4 py-2">{patient.customer_name}</td>
+                  <td className="px-4 py-2">
+                    R${" "}
+                    {parseFloat(patient.consultation_fee)
+                      .toFixed(2)
+                      .replace(".", ",")}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {events.map((event) => (
-                  <tr key={event.google_event_id}>
-                    <td>{event.event_name}</td>
-                    <td>
-                      {(() => {
-                        const [year, month, day] = event.date.split("-");
-                        return `${day}/${month}/${year}`;
-                      })()}
-                    </td>
-                    <td>
-                      {event.status !== "cancelado" && (
-                        <button
-                          onClick={() =>
-                            handleCancel(
-                              event.google_event_id,
-                              event.calendar_id
-                            )
-                          }
-                        >
-                          Cancelar
-                        </button>
-                      )}
-                    </td>
-                    <td>{event.status}</td>
+              ))}
+            </tbody>
+          </table>
+
+          <h2 className="mt-6 text-lg font-bold">Pacientes não encontrados</h2>
+          <table className="min-w-full bg-white mt-2">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-2">Nome do Evento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {unmatchedPatients.length > 0 ? (
+                unmatchedPatients.map((event, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="px-4 py-2">{event.name}</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-        </div>
-      </main>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center px-4 py-2">
+                    Nenhum paciente não encontrado
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 };
 
-export default CreateEventForm;
+export default DashBoard;
