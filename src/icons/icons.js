@@ -435,6 +435,65 @@ const UnarchiveIcon = () => {
   );
 };
 
+const CheckMessage = () => {
+  return (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_d_1433_5978)">
+        <circle cx="16" cy="12" r="12" fill="#F5F5F5" />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M16 24C17.5759 24 19.1363 23.6896 20.5922 23.0866C22.0481 22.4835 23.371 21.5996 24.4853 20.4853C25.5996 19.371 26.4835 18.0481 27.0866 16.5922C27.6896 15.1363 28 13.5759 28 12C28 10.4241 27.6896 8.86371 27.0866 7.4078C26.4835 5.95189 25.5996 4.62902 24.4853 3.51472C23.371 2.40042 22.0481 1.5165 20.5922 0.913445C19.1363 0.310389 17.5759 -2.34822e-08 16 0C12.8174 4.74244e-08 9.76516 1.26428 7.51472 3.51472C5.26428 5.76515 4 8.8174 4 12C4 15.1826 5.26428 18.2348 7.51472 20.4853C9.76516 22.7357 12.8174 24 16 24ZM15.6907 16.8533L22.3573 8.85333L20.3093 7.14667L14.576 14.0253L11.6093 11.0573L9.724 12.9427L13.724 16.9427L14.756 17.9747L15.6907 16.8533Z"
+          fill="#0082BA"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_1433_5978"
+          x="0"
+          y="0"
+          width="32"
+          height="32"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_1433_5978"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_1433_5978"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
 export {
   HomeIcon,
   RecDespIcon,
@@ -455,4 +514,5 @@ export {
   ArrowLeftIcon,
   CloseIcon,
   UnarchiveIcon,
+  CheckMessage,
 };
