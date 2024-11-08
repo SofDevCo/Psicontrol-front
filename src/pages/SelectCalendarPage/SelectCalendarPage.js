@@ -28,7 +28,6 @@ const SelectCalendarPage = () => {
           const data = await response.json();
           setCalendars(data);
 
-          // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
           const activeCalendars = new Set(
             data
               .filter((calendar) => calendar.enabled)
@@ -39,7 +38,6 @@ const SelectCalendarPage = () => {
           setLoading(false);
         } else {
           setLoading(false);
-          setError("Erro ao carregar calendários");
         }
       }
     };
@@ -59,7 +57,6 @@ const SelectCalendarPage = () => {
     }
     setSelectedCalendarIds(newSelectedCalendarIds);
 
-    // Envia o estado atualizado para o servidor
     const authenticationToken = localStorage.getItem("authentication_token");
     await fetch(
       `http://localhost:3000/events/calendars/selection/${calendar.id}`,
@@ -70,7 +67,7 @@ const SelectCalendarPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          enabled: !isSelected, // Usa o novo estado após o toggle
+          enabled: !isSelected, 
           calendar_name: calendar.summary,
         }),
       }
@@ -80,11 +77,9 @@ const SelectCalendarPage = () => {
   const handleProceed = () => {
     const ids = Array.from(selectedCalendarIds);
     
-    // Salva os IDs selecionados no localStorage
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
     console.log("Calendários selecionados salvos no localStorage:", ids); // Verificação
   
-    // Navega para a página do usuário
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
   
@@ -118,7 +113,7 @@ const SelectCalendarPage = () => {
                   name="calendar"
                   id={calendar.id}
                   checked={selectedCalendarIds.has(calendar.id)}
-                  onChange={() => handleCheckboxChange(calendar)} // Passa o objeto calendar completo
+                  onChange={() => handleCheckboxChange(calendar)} 
                 />
                 <label htmlFor={calendar.id} className="font-bold">
                   {calendar.summary}
@@ -127,7 +122,7 @@ const SelectCalendarPage = () => {
             ))}
 
             <button
-              onClick={handleProceed} // Confirme que isso está aqui
+              onClick={handleProceed} 
               className="rounded-[100px] mt-8 block w-[69px] h-[40px] cursor-pointer border-none bg-primaria p-4 text-lg leading-[8px] text-texto4 hover:bg-primaria"
               disabled={selectedCalendarIds.size === 0}
             >
