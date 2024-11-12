@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import { fetchCustomers } from "../../service/pagesService/pagesService";
+import DropDownDashBoard from "./components/DropDownDashBoard";
+import SearchBarDashBoard from "./components/SearchBarDashBoard";
+import { HamburguerIcon } from "../../icons/icons";
 
 const DashBoard = () => {
   const [events, setEvents] = useState([]);
@@ -9,6 +12,9 @@ const DashBoard = () => {
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [patients, setPatients] = useState([]);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
@@ -19,30 +25,29 @@ const DashBoard = () => {
     [calendarIdsParam]
   );
 
+  const dropdownRef = useRef();
+
   useEffect(() => {
     const fetchCalendars = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("http://localhost:3000/events/calendars", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const filteredCalendars = data.filter((calendar) =>
-            selectedCalendarIds.includes(calendar.id)
-          );
-          setCalendars(filteredCalendars);
-          if (filteredCalendars.length > 0 && !selectedCalendarId) {
-            setSelectedCalendarId(filteredCalendars[0].id);
-          }
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/events/calendars", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const filteredCalendars = data.filter((calendar) =>
+          selectedCalendarIds.includes(calendar.id)
+        );
+        setCalendars(filteredCalendars);
+        if (filteredCalendars.length > 0 && !selectedCalendarId) {
+          setSelectedCalendarId(filteredCalendars[0].id);
         }
-      } catch (error) {
+      } else {
         setError("Erro ao buscar calendários");
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
     fetchCalendars();
   }, [selectedCalendarIds, selectedCalendarId]);
@@ -50,53 +55,50 @@ const DashBoard = () => {
   const fetchEvents = async () => {
     if (selectedCalendarId === "") return;
 
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:3000/events/get-events/${selectedCalendarId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        }
-      );
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          const sortedEvents = data.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
-          setEvents(sortedEvents);
-        }
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:3000/events/get-events/${selectedCalendarId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
       }
-    } catch (error) {
+    );
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        const sortedEvents = data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setEvents(sortedEvents);
+      }
+    } else {
       setError("Erro ao buscar eventos");
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  const fetchUnmatchedPatients = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/events/unmatched-patients",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        }
-      );
+  useEffect(() => {
+    fetchEvents();
+  }, [selectedCalendarId]);
 
-      if (response.ok) {
-        const data = await response.json();
-        setUnmatchedPatients(data);
-      } else {
-        console.error("Erro ao buscar pacientes não encontrados");
+  const fetchUnmatchedPatients = async () => {
+    const response = await fetch(
+      "http://localhost:3000/events/unmatched-patients",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
       }
-    } catch (error) {
-      console.error("Erro ao buscar pacientes não encontrados:", error);
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setUnmatchedPatients(data);
+    } else {
+      return null;
     }
   };
 
@@ -104,25 +106,87 @@ const DashBoard = () => {
     fetchUnmatchedPatients();
   }, []);
 
-  useEffect(() => {
-    fetchEvents();
-  }, [selectedCalendarId]);
-
   const fetchPatientData = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchCustomers();
-      setPatients(data);
-    } catch (error) {
-      setError("Erro ao buscar pacientes");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const data = await fetchCustomers();
+    setPatients(data);
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchPatientData();
   }, []);
+
+  const handleLinkPatient = async (customer_id) => {
+    if (selectedEvent === null || selectedEvent === undefined) {
+      return null;
+    }
+
+    const event = unmatchedPatients[selectedEvent];
+
+    if (!customer_id) {
+      return null;
+    }
+    if (!event) {
+      return null;
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/events/linkCustomerToEvent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          eventId: event.customers_id,
+          customer_id: customer_id,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      alert("Paciente vinculado com sucesso!");
+      fetchUnmatchedPatients();
+      setIsSearchBarOpen(false);
+    } else {
+      return null;
+    }
+  };
+
+  const toggleDropdown = (eventIndex) => {
+    const event = unmatchedPatients[eventIndex];
+    if (!event) {
+      return;
+    }
+    if (isDropdownOpen && selectedEvent === eventIndex) {
+      setIsDropdownOpen(false);
+      setSelectedEvent(null);
+    } else {
+      setSelectedEvent(eventIndex);
+      setIsDropdownOpen(true);
+    }
+  };
+
+  const handleVincularPaciente = () => {
+    if (selectedEvent === null || selectedEvent === undefined) {
+      return null;
+    }
+    const event = unmatchedPatients[selectedEvent];
+    if (!event) {
+      return null;
+    }
+    openSearchBar();
+  };
+
+  const openSearchBar = () => {
+    if (!selectedEvent) {
+      return null;
+    }
+    setIsSearchBarOpen(true);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div>
@@ -136,15 +200,42 @@ const DashBoard = () => {
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
-                  <th className="text-left px-4 py-2">Paciente</th>
-                  <th className="text-left px-4 py-2">Valor Consulta</th>
+                  <th className="w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Paciente
+                  </th>
+                  <th className="w-[125px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Valor Consulta
+                  </th>
+                  <th className="w-10 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Dias
+                  </th>
+                  <th className="w-[136px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Nª de consultas
+                  </th>
+                  <th className="w-11 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Total
+                  </th>
+                  <th className="w-20 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Cobrança
+                  </th>
+                  <th className="w-[98px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Pagamento
+                  </th>
+                  <th className="w-6 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    NF
+                  </th>
+                  <th className="w-[52px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {patients.map((patient, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2">{patient.customer_name}</td>
-                    <td className="px-4 py-2">
+                    <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      {patient.customer_name}
+                    </td>
+                    <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
                       R${" "}
                       {parseFloat(patient.consultation_fee)
                         .toFixed(2)
@@ -155,16 +246,36 @@ const DashBoard = () => {
               </tbody>
             </table>
           </div>
-          <div className="relative mx-auto mt-32 box-border h-[141px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
-            <h2 className="mt-6 text-lg font-bold">
+
+          <div className="relative mx-auto mt-32 box-border h-[263px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+            <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
               Pacientes não encontrados
             </h2>
             <table className="min-w-full bg-bg1 mt-2">
               <tbody>
                 {unmatchedPatients.length > 0 ? (
                   unmatchedPatients.map((event, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="px-4 py-2">{event.name}</td>
+                    <tr
+                      key={event.id}
+                      className="border-b border-b-cinza6 relative"
+                    >
+                      <td className="px-4 py-2 flex items-center justify-between">
+                        <span>{event.name}</span>
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => toggleDropdown(index)}
+                        >
+                          <HamburguerIcon />
+                        </button>
+                        {isDropdownOpen && selectedEvent === index && (
+                          <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                            <DropDownDashBoard
+                              onVincular={() => handleVincularPaciente(event)}
+                              onExcluir={() => console.log("Excluir paciente")}
+                            />
+                          </div>
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -177,6 +288,13 @@ const DashBoard = () => {
               </tbody>
             </table>
           </div>
+
+          {isSearchBarOpen && (
+            <SearchBarDashBoard
+              patients={patients}
+              onSelectPatient={handleLinkPatient}
+            />
+          )}
         </>
       )}
     </div>
