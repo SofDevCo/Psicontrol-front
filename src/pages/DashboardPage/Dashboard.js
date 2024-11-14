@@ -241,6 +241,12 @@ const DashBoard = () => {
                         .toFixed(2)
                         .replace(".", ",")}
                     </td>
+                    <td className="w-10 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      {patient.consultation_days || "-"}
+                    </td>
+                    <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      {patient.num_consultations || "-"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
