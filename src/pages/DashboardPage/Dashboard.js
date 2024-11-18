@@ -247,6 +247,9 @@ const DashBoard = () => {
                     <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
                       {patient.num_consultations || "-"}
                     </td>
+                    <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      R$ {patient.total_consultation_fee || "0,00"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
