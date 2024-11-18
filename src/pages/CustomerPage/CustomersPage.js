@@ -154,7 +154,7 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
