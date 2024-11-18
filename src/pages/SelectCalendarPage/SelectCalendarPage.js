@@ -39,7 +39,6 @@ const SelectCalendarPage = () => {
           setLoading(false);
         } else {
           setLoading(false);
-          setError("Erro ao carregar calendários");
         }
       }
     };
