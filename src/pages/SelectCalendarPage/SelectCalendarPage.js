@@ -8,43 +8,97 @@ const SelectCalendarPage = () => {
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarIds, setSelectedCalendarIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCalendars = async () => {
-      const authenticationToken = localStorage.getItem("authentication_token");
+  // Função para buscar calendários da rota /events/calendars
+  const fetchCalendars = async () => {
+    const authenticationToken = localStorage.getItem("authentication_token");
 
-      if (authenticationToken) {
-        const response = await fetch("http://localhost:3000/events/calendars", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${authenticationToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+    if (authenticationToken) {
+      const response = await fetch("http://localhost:3000/events/calendars", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authenticationToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          setCalendars(data);
+      if (response.ok) {
+        const data = await response.json();
+        setCalendars(data);
 
-          // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
-          const activeCalendars = new Set(
-            data
-              .filter((calendar) => calendar.enabled)
-              .map((calendar) => calendar.id)
-          );
-          setSelectedCalendarIds(activeCalendars);
+        // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
+        const activeCalendars = new Set(
+          data
+            .filter((calendar) => calendar.enabled)
+            .map((calendar) => calendar.id)
+        );
+        setSelectedCalendarIds(activeCalendars);
 
-          setLoading(false);
-        } else {
-          setLoading(false);
-          setError("Erro ao carregar calendários");
-        }
+        setLoading(false);
+      } else {
+        setLoading(false);
+        setError("Erro ao carregar calendários");
       }
+    }
+  };
+
+  // Função para verificar e redirecionar com a rota /check-calendars
+  const checkCalendars = async () => {
+    const authenticationToken = localStorage.getItem("authentication_token");
+  
+    if (!authenticationToken) {
+      setError("Token de autenticação não encontrado.");
+      return setLoading(false);
+    }
+  
+    try {
+      const response = await fetch("http://localhost:3000/events/check-calendars", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authenticationToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        setError("Erro ao verificar calendários.");
+        return setLoading(false);
+      }
+  
+      const data = await response.json();
+  
+      if (data.redirect) {
+        // Evita loop ao verificar a URL atual
+        if (window.location.pathname !== data.redirect) {
+          navigate(data.redirect); // Usa React Router para redirecionar
+        }
+      } else if (data.calendars) {
+        setCalendars(data.calendars);
+        setSelectedCalendarIds(
+          new Set(data.calendars.filter((c) => c.enabled).map((c) => c.id))
+        );
+      } else {
+        console.warn("Nenhum calendário encontrado ou nenhuma ação necessária.");
+      }
+    } catch (error) {
+      setError("Erro ao conectar com o servidor.");
+      console.error("Erro ao conectar com o servidor:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  useEffect(() => {
+    // Primeiro verifica calendários e depois carrega os dados locais
+    const fetchInitialData = async () => {
+      await checkCalendars();
+      await fetchCalendars(); // Busca os calendários locais após a verificação
     };
 
-    fetchCalendars();
+    fetchInitialData();
   }, []);
 
   const handleCheckboxChange = async (calendar) => {
@@ -59,7 +113,6 @@ const SelectCalendarPage = () => {
     }
     setSelectedCalendarIds(newSelectedCalendarIds);
 
-    // Envia o estado atualizado para o servidor
     const authenticationToken = localStorage.getItem("authentication_token");
     await fetch(
       `http://localhost:3000/events/calendars/selection/${calendar.id}`,
@@ -70,7 +123,7 @@ const SelectCalendarPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          enabled: !isSelected, // Usa o novo estado após o toggle
+          enabled: !isSelected,
           calendar_name: calendar.summary,
         }),
       }
@@ -79,15 +132,12 @@ const SelectCalendarPage = () => {
 
   const handleProceed = () => {
     const ids = Array.from(selectedCalendarIds);
-    
-    // Salva os IDs selecionados no localStorage
+
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
     console.log("Calendários selecionados salvos no localStorage:", ids); // Verificação
-  
-    // Navega para a página do usuário
+
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
-  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen mx-auto  p-8 bg-bg1 text-center font-sans">
@@ -118,7 +168,7 @@ const SelectCalendarPage = () => {
                   name="calendar"
                   id={calendar.id}
                   checked={selectedCalendarIds.has(calendar.id)}
-                  onChange={() => handleCheckboxChange(calendar)} // Passa o objeto calendar completo
+                  onChange={() => handleCheckboxChange(calendar)}
                 />
                 <label htmlFor={calendar.id} className="font-bold">
                   {calendar.summary}
@@ -127,7 +177,7 @@ const SelectCalendarPage = () => {
             ))}
 
             <button
-              onClick={handleProceed} // Confirme que isso está aqui
+              onClick={handleProceed}
               className="rounded-[100px] mt-8 block w-[69px] h-[40px] cursor-pointer border-none bg-primaria p-4 text-lg leading-[8px] text-texto4 hover:bg-primaria"
               disabled={selectedCalendarIds.size === 0}
             >
