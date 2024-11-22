@@ -467,7 +467,7 @@ const IncomePage = () => {
                   </div>
                   <button
                     onClick={() => openModal(revenue.id, "revenue")}
-                    className="mr-20 text-blue-500 hover:text-blue-700"
+                    className="mr-20 active:opacity-50 text-blue-500 hover:text-blue-700"
                   >
                     <Trash />
                   </button>
@@ -526,7 +526,9 @@ const IncomePage = () => {
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
-                  <button onClick={() => openModal(expense.id, "expense")}>
+                  <button 
+                  className="active:opacity-50"
+                  onClick={() => openModal(expense.id, "expense")}>
                     <Trash />
                   </button>
                 </div>
