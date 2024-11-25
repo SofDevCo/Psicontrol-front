@@ -375,7 +375,7 @@ const UserPage = () => {
       )}
 
       <>
-        <div className="relative w-[1076px] mx-[100px] h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4 mb-3">
+        <div className="relative w-[1076px] mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4 mb-3">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-[#0082ba] text-[25px] font-medium font-['Ubuntu']">
               Meus dados
@@ -462,7 +462,7 @@ const UserPage = () => {
           </div>
         </div>
 
-        <div className="flex mx-[100px] space-x-4 items-start">
+        <div className="flex mx-auto space-x-4 items-start">
           {/* Box "Minhas agendas" */}
           <div className="w-[540px] h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] overflow-hidden">
             <div className="flex justify-between">
