@@ -56,11 +56,15 @@ const CustomersPage = () => {
       setError("Erro ao buscar clientes.");
       return null;
     });
-  
-    if (data) {
-      setCustomers(data);
-    }
     
+    if (data && Array.isArray(data)) {
+      setCustomers(data);
+    } else if (data && data.customers) {
+      setCustomers(data.customers); 
+    } else {
+      setCustomers([]); 
+    }
+
     setIsLoading(false);
   };
 
@@ -73,11 +77,13 @@ const CustomersPage = () => {
       setFilteredCustomers([]);
     } else {
       setFilteredCustomers(
-        customers.filter((customer) =>
-          customer.customer_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        )
+        Array.isArray(customers)
+          ? customers.filter((customer) =>
+              customer.customer_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
+          : []
       );
     }
   }, [searchTerm, customers]);
