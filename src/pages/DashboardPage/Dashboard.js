@@ -5,12 +5,16 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
+import { CrossIcon } from "./components/IconsDashBoard";
+import CardDashBoard from "./components/CardsDashBoard";
 
 const DashBoard = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [patients, setPatients] = useState([]);
+  const [totalConsultations, setTotalConsultations] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -109,7 +113,9 @@ const DashBoard = () => {
   const fetchPatientData = async () => {
     setLoading(true);
     const data = await fetchCustomers();
-    setPatients(data);
+    setPatients(data.customers || []);
+    setTotalConsultations(data.totalConsultations || 0);
+    setTotalRevenue(parseFloat(data.totalRevenue || 0));
     setLoading(false);
   };
 
@@ -196,6 +202,14 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
+          <div className="flex justify-around gap-4 mb-8 mt-8">
+            <CardDashBoard title="Nº de Consultas" value={totalConsultations} />
+            <CardDashBoard
+              title="Receita Total"
+              value={`R$ ${totalRevenue.toFixed(2).replace(".", ",")}`}
+            />
+          </div>
+
           <div className="relative mx-auto box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
@@ -249,6 +263,15 @@ const DashBoard = () => {
                     </td>
                     <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
                       R$ {patient.total_consultation_fee || "0,00"}
+                    </td>
+                    <td className="w-20 text-center">
+                      <CrossIcon />
+                    </td>
+                    <td className="w-20 text-center">
+                      <CrossIcon />
+                    </td>
+                    <td className="w-20 text-center">
+                      <CrossIcon />
                     </td>
                   </tr>
                 ))}
