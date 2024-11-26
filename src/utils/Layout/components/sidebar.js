@@ -1,29 +1,46 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import logo from "../../../images/Psicontrol.png";
 import { HomeIcon, RecDespIcon, UserIcon, ConfigIcon } from "../../../icons/icons";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [selectedCalendarIds, setSelectedCalendarIds] = useState(new Set());
+
+  useEffect(() => {
+    
+    const savedIds = JSON.parse(localStorage.getItem("selectedCalendars")) || [];
+    setSelectedCalendarIds(new Set(savedIds));
+  }, []);
+
+  const handleProceed = () => {
+    const ids = Array.from(selectedCalendarIds);
+    
+    localStorage.setItem("selectedCalendars", JSON.stringify(ids));
+    console.log("Calendários selecionados salvos no localStorage:", ids); 
+  
+    navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
+  };
 
   return (
-    <aside className="flex  w-[265px] flex-col bg-bg1 p-5 text-gray-800 z-50">
+    <aside className="flex w-[265px] flex-col bg-bg1 p-5 text-gray-800 z-50">
       <div>
-        <img src={logo} alt="Logo" className=" mb-[78px] w-64" />
+        <img src={logo} alt="Logo" className="mb-[78px] w-64" />
         <nav className="text-right">
           <ul className="mt-[100px]">
             <li
-              className={`mb-[40px] ${location.pathname === "/create-event-form" ? "ativo" : ""}`}
+              className={`mb-[40px] ${location.pathname.startsWith("/create-event-form") ? "ativo" : ""}`}
             >
-              <Link
-                to="/create-event-form"
-                className={`group flex items-center ${location.pathname === "/create-event-form" ? "active" : ""}`}
+              <button
+                onClick={handleProceed}
+                className={`group flex items-center ${location.pathname.startsWith("/create-event-form") ? "active" : ""}`}
               >
-                <HomeIcon/>
+                <HomeIcon />
                 <span className="py-1 text-2xl text-texto2 group-hover:text-primaria">
                   Dashboard
                 </span>
-              </Link>
+              </button>
             </li>
             <li
               className={`side-menu mb-[40px] ${location.pathname === "/income" ? "ativo" : ""}`}
