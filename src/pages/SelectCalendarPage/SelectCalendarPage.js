@@ -47,12 +47,12 @@ const SelectCalendarPage = () => {
   // Função para verificar e redirecionar com a rota /check-calendars
   const checkCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
-  
+
     if (!authenticationToken) {
       setError("Token de autenticação não encontrado.");
       return setLoading(false);
     }
-  
+
     try {
       const response = await fetch("http://localhost:3000/events/check-calendars", {
         method: "GET",
@@ -61,26 +61,16 @@ const SelectCalendarPage = () => {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!response.ok) {
         setError("Erro ao verificar calendários.");
         return setLoading(false);
       }
-  
+
       const data = await response.json();
-  
       if (data.redirect) {
-        // Evita loop ao verificar a URL atual
-        if (window.location.pathname !== data.redirect) {
-          navigate(data.redirect); // Usa React Router para redirecionar
-        }
-      } else if (data.calendars) {
-        setCalendars(data.calendars);
-        setSelectedCalendarIds(
-          new Set(data.calendars.filter((c) => c.enabled).map((c) => c.id))
-        );
-      } else {
-        console.warn("Nenhum calendário encontrado ou nenhuma ação necessária.");
+        console.log("Redirecionando para:", data.redirect);
+        navigate(data.redirect); // Redireciona para a rota retornada pelo backend
       }
     } catch (error) {
       setError("Erro ao conectar com o servidor.");
@@ -89,7 +79,7 @@ const SelectCalendarPage = () => {
       setLoading(false);
     }
   };
-  
+
 
   useEffect(() => {
     // Primeiro verifica calendários e depois carrega os dados locais
