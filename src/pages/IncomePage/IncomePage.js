@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Trash, AddIcon } from "../../icons/icons";
 import { Months } from "../../utils/Months/months";
-import { showSaveToast, showDeleteToast, showLastMonthToast } from "./components/toastIncomePage";
+import {
+  showSaveToast,
+  showDeleteToast,
+  showLastMonthToast,
+} from "./components/toastIncomePage";
 
 const formatCurrency = (value) => {
   if (typeof value !== "string") {
@@ -436,7 +440,9 @@ const IncomePage = () => {
           <Months
             onMonthChange={handleMonthChange}
             onYearChange={handleYearChange}
-            className="p-2 mt-4 border rounded-md border-cinza6"
+            selectedMonth={selectedMonth} 
+            selectedYear={selectedYear} 
+            className="z-50"
           />
           <button
             className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
@@ -526,9 +532,10 @@ const IncomePage = () => {
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
-                  <button 
-                  className="active:opacity-50"
-                  onClick={() => openModal(expense.id, "expense")}>
+                  <button
+                    className="active:opacity-50"
+                    onClick={() => openModal(expense.id, "expense")}
+                  >
                     <Trash />
                   </button>
                 </div>

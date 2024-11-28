@@ -2,13 +2,11 @@ import { useState } from "react";
 import { useModal } from "../Modal/useModal";
 import { VerifyIcon, CheckIcon, SetaIcon } from "../../icons/icons";
 
-export const Months = ({ onMonthChange, onYearChange }) => {
+export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYear  }) => {
   const { isModalOpen, openModal, closeModal } = useModal();
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
-  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
-  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [showingMonths, setShowingMonths] = useState(true);
 
   const getYearsRange = () => {
@@ -35,13 +33,11 @@ export const Months = ({ onMonthChange, onYearChange }) => {
   ];
 
   const handleMonthClick = (index) => {
-    setSelectedMonth(index);
-    onMonthChange(index + 1); // Apenas envia o mês
+    onMonthChange(index + 1); 
   };
 
   const handleYearClick = (year) => {
-    setSelectedYear(year);
-    onYearChange(year); // Apenas envia o ano
+    onYearChange(year); 
   };
 
   const toggleModal = () => {
@@ -61,7 +57,7 @@ export const Months = ({ onMonthChange, onYearChange }) => {
         <div className="flex items-center gap-2">
           <VerifyIcon />
           <span className="text-neutral-100 text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-            {`${monthsInRange[selectedMonth]}/${selectedYear.toString().slice(-2)}`}
+            {`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
           </span>
         </div>
         <SetaIcon />
@@ -73,7 +69,7 @@ export const Months = ({ onMonthChange, onYearChange }) => {
               onClick={() => setShowingMonths(true)}
               className="text-[#5c5c5c] text-sm font-normal font-['Open Sans'] mb-3 tracking-tight hover:text-black focus:outline-none"
             >
-              {monthsInRange[selectedMonth]}
+              {monthsInRange[selectedMonth - 1]}
             </button>
             <button
               onClick={() => setShowingMonths(false)}
@@ -89,12 +85,10 @@ export const Months = ({ onMonthChange, onYearChange }) => {
                     key={index}
                     onClick={() => handleMonthClick(index)}
                     className={`w-full px-3 py-2 text-left rounded-md hover:bg-blue-100 ${
-                      selectedMonth === index
-                        ? "bg-blue-100 flex items-center"
-                        : ""
+                      selectedMonth - 1 === index ? "bg-blue-100 flex items-center" : ""
                     }`}
                   >
-                    {selectedMonth === index && <CheckIcon />}
+                    {selectedMonth - 1 === index && <CheckIcon />}
                     {month}
                   </button>
                 ))
@@ -103,9 +97,7 @@ export const Months = ({ onMonthChange, onYearChange }) => {
                     key={year}
                     onClick={() => handleYearClick(year)}
                     className={`w-full px-3 py-2 text-left rounded-md hover:bg-blue-100 ${
-                      selectedYear === year
-                        ? "bg-blue-200 flex items-center"
-                        : ""
+                      selectedYear === year ? "bg-blue-200 flex items-center" : ""
                     }`}
                   >
                     {selectedYear === year && <CheckIcon />}

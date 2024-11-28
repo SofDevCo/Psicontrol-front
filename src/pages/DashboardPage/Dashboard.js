@@ -7,6 +7,7 @@ import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
 import { CrossIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
+import { Months } from "../../utils/Months/months";
 
 const DashBoard = () => {
   const [events, setEvents] = useState([]);
@@ -23,6 +24,8 @@ const DashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const calendarIdsParam = searchParams.get("calendarIds");
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const selectedCalendarIds = useMemo(
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
@@ -194,6 +197,62 @@ const DashBoard = () => {
     setIsDropdownOpen(false);
   };
 
+  const fetchBillingRecords = async (month, year) => {
+    setLoading(true);
+
+    const response = await fetch(
+      `http://localhost:3000/dashboard/billing-records?month=${month}&year=${year}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            "authentication_token"
+          )}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setPatients(data); 
+    } else if (response.status === 404) {
+      setPatients([]); 
+    } else {
+      setError("Erro ao buscar registros de faturamento.");
+    }
+
+    setLoading(false);
+  };
+
+  
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const initialMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const initialYear = String(currentDate.getFullYear());
+
+    setSelectedMonth(initialMonth);
+    setSelectedYear(initialYear);
+
+    fetchBillingRecords(initialMonth, initialYear);
+  }, []);
+
+  const handleMonthChange = (month) => {
+    const formattedMonth = String(month).padStart(2, "0");
+    setSelectedMonth(formattedMonth);
+    fetchBillingRecords(formattedMonth, selectedYear);
+  };
+
+  const handleYearChange = (year) => {
+    const formattedYear = String(year);
+    setSelectedYear(formattedYear);
+    fetchBillingRecords(selectedMonth, formattedYear);
+  };
+
+  useEffect(() => {
+    setPatients([]); // Reseta os dados antes de buscar novos registros
+    fetchBillingRecords(selectedMonth, selectedYear);
+  }, [selectedMonth, selectedYear]);
+
   return (
     <div>
       {loading ? (
@@ -203,6 +262,13 @@ const DashBoard = () => {
       ) : (
         <>
           <div className="flex justify-around gap-4 mb-8 mt-8">
+            <Months
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
+              selectedMonth={selectedMonth} 
+              selectedYear={selectedYear} 
+              className="z-50"
+            />
             <CardDashBoard title="Nº de Consultas" value={totalConsultations} />
             <CardDashBoard
               title="Receita Total"
@@ -210,7 +276,7 @@ const DashBoard = () => {
             />
           </div>
 
-          <div className="relative mx-auto box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className=" mx-auto box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
@@ -244,37 +310,45 @@ const DashBoard = () => {
                 </tr>
               </thead>
               <tbody>
-                {patients.map((patient, index) => (
-                  <tr key={index}>
-                    <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                      {patient.customer_name}
-                    </td>
-                    <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
-                      R${" "}
-                      {parseFloat(patient.consultation_fee)
-                        .toFixed(2)
-                        .replace(".", ",")}
-                    </td>
-                    <td className="w-10 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                      {patient.consultation_days || "-"}
-                    </td>
-                    <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                      {patient.num_consultations || "-"}
-                    </td>
-                    <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                      R$ {patient.total_consultation_fee || "0,00"}
-                    </td>
-                    <td className="w-20 text-center">
-                      <CrossIcon />
-                    </td>
-                    <td className="w-20 text-center">
-                      <CrossIcon />
-                    </td>
-                    <td className="w-20 text-center">
-                      <CrossIcon />
+                {patients.length > 0 ? (
+                  patients.map((patient, index) => (
+                    <tr key={index}>
+                      <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        {patient.customer_name }
+                      </td>
+                      <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
+                        R${" "}
+                        {parseFloat(patient.consultation_fee)
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </td>
+                      <td className="w-10 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        {patient.consultation_days || "-"}
+                      </td>
+                      <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        {patient.num_consultations || "-"}
+                      </td>
+                      <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        R$ {patient.total_consultation_fee || "0,00"}
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center px-4 py-2">
+                      Nenhum registro encontrado para este mês e ano.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
