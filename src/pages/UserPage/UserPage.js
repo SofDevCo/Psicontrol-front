@@ -22,6 +22,7 @@ const UserPage = () => {
   const [fileName, setFileName] = useState("nomedoarquivo.png");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [activeCalendarId, setActiveCalendarId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -65,7 +66,6 @@ const UserPage = () => {
           );
           if (savedSelectedCalendars) {
             const initiallySelected = new Set(savedSelectedCalendars);
-            console.log("Initially selected calendars:", initiallySelected);
             setSelectedCalendars(initiallySelected);
           }
         } else {
@@ -129,37 +129,79 @@ const UserPage = () => {
   };
 
   const handleSave = async () => {
-    const formData = new FormData();
-    formData.append("user_cpf", userData.user_cpf);
-    formData.append("user_cnpj", userData.user_cnpj);
-    formData.append("crp_number", userData.crp_number);
-    formData.append("user_phone", userData.user_phone);
-    formData.append("user_message", userData.user_message);
+    try {
+      const formData = new FormData();
+      formData.append("user_cpf", userData.user_cpf || "");
+      formData.append("user_cnpj", userData.user_cnpj || "");
+      formData.append("crp_number", userData.crp_number || "");
+      formData.append("user_phone", userData.user_phone || "");
+      formData.append("user_message", userData.user_message || "");
+      formData.append("clinic_name", userData.clinic_name || "");
 
-    if (userData.image) {
-      formData.append("image", userData.image);
+      if (userData.image instanceof File) {
+        formData.append("image", userData.image);
+      }
+
+      const response = await fetch(`http://localhost:3000/user/save-users`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar os dados do usuário.");
+      }
+
+      // Atualiza o estado com os dados mais recentes do servidor
+      const updatedData = await response.json();
+      setUserData((prevData) => ({
+        ...prevData,
+        ...updatedData, // Garante que `image` seja atualizado
+      }));
+
+      setRefreshKey((prevKey) => prevKey + 1); // Força a re-renderização
+      setIsEditing(false);
+      showAlteredToast();
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    const response = await fetch(`http://localhost:3000/user/users`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-      },
-      body: formData,
-    });
+  const saveMessage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("user_message", userData.user_message || "");
 
-    if (response.ok) {
+
+      const response = await fetch(`http://localhost:3000/user/save-users`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar a mensagem.");
+      }
+
       const updatedData = await response.json();
       setUserData((prevData) => ({
         ...prevData,
         ...updatedData,
       }));
-      setIsEditing(false);
-      showAlteredToast(); // Exibe a Toastify para indicar alterações salvas
-    } else {
-      console.error("Erro ao salvar os dados do usuário.");
+
+      setIsEditingMessage(false); 
+    } catch (error) {
+      console.error("Erro ao salvar a mensagem:", error);
+      alert("Erro ao salvar a mensagem. Tente novamente.");
     }
   };
+
+
+
 
   const openModalToChangeAccount = () => {
     setIsModalOpen(true); // Abre o modal de confirmação
@@ -171,11 +213,19 @@ const UserPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Adicione logs para depuração, se necessário:
+    if (name === "user_message") {
+      console.log(`Mensagem atualizada: ${value}`);
+    }
+
+    // Atualiza o estado
     setUserData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -292,18 +342,17 @@ const UserPage = () => {
 
                 <div>
                   <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    Nome/Clínica
+                    Nome/Clínica:
                   </label>
                   <input
                     type="text"
-                    name="clinic_name"
+                    id="clinic_name"
                     value={userData.clinic_name || ""}
-                    onChange={handleChange}
-                    placeholder="Nome do psicólogo/clínica"
-                    className="w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    onChange={(e) => setUserData({ ...userData, clinic_name: e.target.value })}
+                    placeholder="Nome/Clínica"
+                    className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                   />
                 </div>
-
                 <div>
                   <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                     CPF/CNPJ
@@ -437,7 +486,7 @@ const UserPage = () => {
               </div>
               <div className="text-[#232323] text-[17px] font-normal tracking-tight">
                 <span>Nome/Clínica: </span>
-                <span className="text-[#5c5c5c]">{userData.user_name}</span>
+                <span className="text-[#5c5c5c]">{userData.clinic_name}</span>
               </div>
               <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                 <span>CPF/CNPJ: </span>
@@ -452,12 +501,22 @@ const UserPage = () => {
               <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                 <span>Logo: </span>
                 <span className="text-[#5c5c5c]">
-                  {typeof userData.image === "string" &&
-                  userData.image.includes("/")
-                    ? userData.image.split("/").pop()
-                    : "(Imagem não carregada)"}
+                  {userData.image ? (
+                    userData.image instanceof File ? (
+                      userData.image.name // Exibe o nome do arquivo se for um `File`
+                    ) : (
+                      typeof userData.image === "string" && userData.image.includes("/")
+                        ? userData.image.split("/").pop() // Exibe o nome do arquivo a partir do caminho
+                        : userData.image // Exibe o nome direto se for uma string
+                    )
+                  ) : (
+                    "(Imagem não carregada)"
+                  )}
                 </span>
               </div>
+
+
+
             </div>
           </div>
         </div>
@@ -503,11 +562,10 @@ const UserPage = () => {
                       type="checkbox"
                       checked={selectedCalendars.has(calendar.id)}
                       onChange={() => openConfirmationModal(calendar.id)}
-                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
-                        selectedCalendars.has(calendar.id)
-                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                          : "bg-white border-gray-300 opacity-50"
-                      } focus:ring-0 checked:bg-[#0082ba] checked:border-[#0082ba]`}
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.id)
+                        ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                        : "bg-white border-gray-300 opacity-50"
+                        } focus:ring-0 checked:bg-[#0082ba] checked:border-[#0082ba]`}
                       style={{
                         boxShadow: selectedCalendars.has(calendar.id)
                           ? "inset 0 0 0 3px white"
@@ -516,11 +574,10 @@ const UserPage = () => {
                     />
 
                     <span
-                      className={`font-medium ${
-                        selectedCalendars.has(calendar.id)
-                          ? "text-[#5c5c5c]"
-                          : "text-gray-500 opacity-50"
-                      }`}
+                      className={`font-medium ${selectedCalendars.has(calendar.id)
+                        ? "text-[#5c5c5c]"
+                        : "text-gray-500 opacity-50"
+                        }`}
                     >
                       {calendar.summary}
                     </span>
@@ -564,7 +621,7 @@ const UserPage = () => {
             {/* Modal de Confirmação */}
             {isConfirmationModalOpen && (
               <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
-                 <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+                <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
                   <div className="w-full text-center mx-auto mb-12">
                     <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                       Você tem certeza que deseja
@@ -606,28 +663,32 @@ const UserPage = () => {
                 </h3>
                 {isEditingMessage ? (
                   <button
-                    onClick={() => setIsEditingMessage(false)}
+                    onClick={saveMessage} // Salva a mensagem
                     className="text-[#0082ba] text-sm"
                   >
                     <CheckMessage />
                   </button>
+
                 ) : (
-                  <div>
-                    <button
-                      onClick={() => setIsEditingMessage(true)}
-                      className="text-[#0082ba] drop-shadow-editShadow  text-sm underline"
-                    >
-                      <EditIcon />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setIsEditingMessage(true)}
+                    className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
+                  >
+                    <EditIcon />
+                  </button>
                 )}
               </div>
 
               {isEditingMessage ? (
                 <textarea
                   name="user_message"
-                  value={userData.user_message}
-                  onChange={handleChange}
+                  value={userData.user_message || ""}
+                  onChange={(e) =>
+                    setUserData((prevData) => ({
+                      ...prevData,
+                      [e.target.name]: e.target.value,
+                    }))
+                  }
                   rows={3}
                   className="w-full p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] h-[250px]"
                   placeholder="Escreva sua mensagem de cobrança aqui..."
@@ -643,6 +704,7 @@ const UserPage = () => {
               )}
             </div>
           </div>
+
         </div>
       </>
     </div>
