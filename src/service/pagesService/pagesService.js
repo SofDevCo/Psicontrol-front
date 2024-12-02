@@ -55,3 +55,15 @@ export const deleteCustomer = async (customerId) => {
   
     return response;
   };
+
+  export const fetchCustomers = async () => {
+    const response = await fetch("http://localhost:3000/events/customers", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+  
+    return response.json();
+  };

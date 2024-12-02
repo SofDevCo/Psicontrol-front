@@ -21,6 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ArchiveCustomer,
   deleteCustomer,
+  fetchCustomers,
 } from "../../service/pagesService/pagesService";
 
 const CustomersPage = () => {
@@ -49,29 +50,26 @@ const CustomersPage = () => {
   useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
   useOutsideClick(dropdownRef, () => setActiveDropdown(null));
 
-  const fetchCustomers = async () => {
+  const HandlefetchCustomers = async () => {
     setIsLoading(true);
-    try {
-      const response = await fetch("http://localhost:3000/events/customers", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
-          )}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setCustomers(data);
-    } catch (error) {
+    const data = await fetchCustomers().catch(() => {
       setError("Erro ao buscar clientes.");
-    } finally {
-      setIsLoading(false);
+      return null;
+    });
+    
+    if (data && Array.isArray(data)) {
+      setCustomers(data);
+    } else if (data && data.customers) {
+      setCustomers(data.customers); 
+    } else {
+      setCustomers([]); 
     }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchCustomers();
+    HandlefetchCustomers();
   }, []);
 
   useEffect(() => {
@@ -79,11 +77,13 @@ const CustomersPage = () => {
       setFilteredCustomers([]);
     } else {
       setFilteredCustomers(
-        customers.filter((customer) =>
-          customer.customer_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        )
+        Array.isArray(customers)
+          ? customers.filter((customer) =>
+              customer.customer_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
+          : []
       );
     }
   }, [searchTerm, customers]);
@@ -110,7 +110,7 @@ const CustomersPage = () => {
       const response = await deleteCustomer(customerToDelete);
 
       if (response.ok) {
-        fetchCustomers();
+        HandlefetchCustomers();
         setIsConfirmModalOpen(false);
         setCustomerToDelete(null);
         showDeleteToast();
@@ -126,7 +126,7 @@ const CustomersPage = () => {
     const response = await ArchiveCustomer(customerId);
 
     if (response.ok) {
-      fetchCustomers();
+      HandlefetchCustomers();
       showArchiveToast();
     } else {
       showErrorToast("Erro ao excluir cliente!");
@@ -160,7 +160,7 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
@@ -182,7 +182,7 @@ const CustomersPage = () => {
             </div>
             <CreateCustomerForm
               onClose={closeModal}
-              onSubmit={fetchCustomers}
+              onSubmit={HandlefetchCustomers}
               selectedPatient={selectedPatient}
               customer={customer}
               setCustomer={setCustomer}

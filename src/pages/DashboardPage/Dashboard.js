@@ -1,196 +1,426 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
+import { fetchCustomers } from "../../service/pagesService/pagesService";
+import DropDownDashBoard from "./components/DropDownDashBoard";
+import SearchBarDashBoard from "./components/SearchBarDashBoard";
+import { HamburguerIcon } from "../../icons/icons";
+import { CrossIcon } from "./components/IconsDashBoard";
+import CardDashBoard from "./components/CardsDashBoard";
+import { Months } from "../../utils/Months/months";
 
-const CreateEventForm = () => {
+const DashBoard = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
+  const [patients, setPatients] = useState([]);
+  const [totalConsultations, setTotalConsultations] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [netRevenue, setNetRevenue] = useState(0);
+  const [netTime, setNetTime] = useState(0)
+  const [unmatchedPatients, setUnmatchedPatients] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const calendarIdsParam = searchParams.get("calendarIds");
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const selectedCalendarIds = useMemo(
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
     [calendarIdsParam]
   );
 
+  const dropdownRef = useRef();
+
   useEffect(() => {
     const fetchCalendars = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("http://localhost:3000/events/calendars", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          // Filtra os calendários para incluir apenas os selecionados
-          const filteredCalendars = data.filter((calendar) =>
-            selectedCalendarIds.includes(calendar.id)
-          );
-          setCalendars(filteredCalendars); // Seta apenas os calendários filtrados
-          if (filteredCalendars.length > 0 && !selectedCalendarId) {
-            setSelectedCalendarId(filteredCalendars[0].id);
-          }
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/events/calendars", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const filteredCalendars = data.filter((calendar) =>
+          selectedCalendarIds.includes(calendar.id)
+        );
+        setCalendars(filteredCalendars);
+        if (filteredCalendars.length > 0 && !selectedCalendarId) {
+          setSelectedCalendarId(filteredCalendars[0].id);
         }
-      } catch (error) {
+      } else {
         setError("Erro ao buscar calendários");
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
-  
     fetchCalendars();
   }, [selectedCalendarIds, selectedCalendarId]);
-  
 
   const fetchEvents = async () => {
     if (selectedCalendarId === "") return;
 
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:3000/events/get-events/${selectedCalendarId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-        }
-      );
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          const sortedEvents = data.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
-          setEvents(sortedEvents);
-        }
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:3000/events/get-events/${selectedCalendarId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
       }
-    } catch (error) {
+    );
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        const sortedEvents = data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setEvents(sortedEvents);
+      }
+    } else {
       setError("Erro ao buscar eventos");
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchEvents();
   }, [selectedCalendarId]);
 
-  const handleCancel = async (googleEventId, calendarId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/events/cancel/${googleEventId}/${calendarId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
-        await fetchEvents();
+  const fetchUnmatchedPatients = async () => {
+    const response = await fetch(
+      "http://localhost:3000/events/unmatched-patients",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
       }
-    } catch (error) {
-      setError("Erro ao cancelar o evento");
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setUnmatchedPatients(data);
+    } else {
+      return null;
     }
   };
 
-  const syncCalendar = async () => {
-    try {
-      setLoading(true);
-      for (const calendarId of selectedCalendarIds) {
-        const response = await fetch(
-          `http://localhost:3000/events/sync-calendar/${calendarId}`,
-          {
-            method: "POST",
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Erro ao sincronizar calendário");
-        }
+  useEffect(() => {
+    fetchUnmatchedPatients();
+  }, []);
+
+  const fetchPatientData = async () => {
+    setLoading(true);
+    const data = await fetchCustomers();
+    setPatients(data.customers || []);
+    setTotalConsultations(data.totalConsultations || 0);
+    setTotalRevenue(parseFloat(data.totalRevenue || 0));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPatientData();
+  }, []);
+
+  const handleLinkPatient = async (customer_id) => {
+    if (selectedEvent === null || selectedEvent === undefined) {
+      return null;
+    }
+
+    const event = unmatchedPatients[selectedEvent];
+
+    if (!customer_id) {
+      return null;
+    }
+    if (!event) {
+      return null;
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/events/linkCustomerToEvent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          eventId: event.customers_id,
+          customer_id: customer_id,
+        }),
       }
-      await fetchEvents(); // Atualiza os eventos após sincronização
-    } catch (error) {
-      setError("Erro ao sincronizar calendário");
-    } finally {
-      setLoading(false);
+    );
+
+    if (response.ok) {
+      alert("Paciente vinculado com sucesso!");
+      fetchUnmatchedPatients();
+      setIsSearchBarOpen(false);
+    } else {
+      return null;
     }
   };
 
-  const handleCalendarChange = (e) => {
-    setSelectedCalendarId(e.target.value);
+  const toggleDropdown = (eventIndex) => {
+    const event = unmatchedPatients[eventIndex];
+    if (!event) {
+      return;
+    }
+    if (isDropdownOpen && selectedEvent === eventIndex) {
+      setIsDropdownOpen(false);
+      setSelectedEvent(null);
+    } else {
+      setSelectedEvent(eventIndex);
+      setIsDropdownOpen(true);
+    }
   };
+
+  const handleVincularPaciente = () => {
+    if (selectedEvent === null || selectedEvent === undefined) {
+      return null;
+    }
+    const event = unmatchedPatients[selectedEvent];
+    if (!event) {
+      return null;
+    }
+    openSearchBar();
+  };
+
+  const openSearchBar = () => {
+    if (!selectedEvent) {
+      return null;
+    }
+    setIsSearchBarOpen(true);
+    setIsDropdownOpen(false);
+  };
+
+  const fetchBillingRecords = async (month, year) => {
+    setLoading(true);
+
+    const response = await fetch(
+      `http://localhost:3000/dashboard/billing-records?month=${month}&year=${year}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            "authentication_token"
+          )}`,
+        },
+      }
+    );
+  
+    if (response.ok) {
+      const data = await response.json();
+      setPatients(data.billingRecords || []);
+      setTotalConsultations(data.totalConsultations || 0);
+      setTotalRevenue(parseFloat(data.totalRevenue || 0));
+      setNetRevenue(parseFloat(data.netRevenue || 0));
+      setNetTime(parseFloat(data.netTime) || 0);
+    } else if (response.status === 404) {
+      setPatients([]);
+      setTotalConsultations(0);
+      setTotalRevenue(0);
+    } else {
+      setError("Erro ao buscar registros de faturamento.");
+    }
+  
+    setLoading(false);
+  };
+
+  
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const initialMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const initialYear = String(currentDate.getFullYear());
+
+    setSelectedMonth(initialMonth);
+    setSelectedYear(initialYear);
+
+    fetchBillingRecords(initialMonth, initialYear);
+  }, []);
+
+  const handleMonthChange = (month) => {
+    const formattedMonth = String(month).padStart(2, "0");
+    setSelectedMonth(formattedMonth);
+    fetchBillingRecords(formattedMonth, selectedYear);
+  };
+
+  const handleYearChange = (year) => {
+    const formattedYear = String(year);
+    setSelectedYear(formattedYear);
+    fetchBillingRecords(selectedMonth, formattedYear);
+  };
+
+  useEffect(() => {
+    setPatients([]); 
+    fetchBillingRecords(selectedMonth, selectedYear);
+  }, [selectedMonth, selectedYear]);
 
   return (
-    <div className="m-0 relative bg-gray-200 p-0">
-      <main className="fixed p-5">
-        <h2>Eventos</h2>
-        <div className="bg-white rounded-lg p-5 shadow-default">
-          <section className="events-list-section">
-            <h2 className="event-list-title">
-              Eventos Criados:
-              <select
-                onChange={handleCalendarChange}
-                value={selectedCalendarId}
-                disabled={loading}
-              >
-                {calendars.map((calendar) => (
-                  <option key={calendar.id} value={calendar.id}>
-                    {calendar.summary}
-                  </option>
-                ))}
-              </select>
-              <section className="sync-calendar-section">
-                <button onClick={syncCalendar}>Sincronizar Calendários</button>
-              </section>
-            </h2>
-            {error && <p className="error-message">{error}</p>}
-            <table className="events-table">
+    <div>
+      {loading ? (
+        <p>Carregando...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          <div className="flex justify-around gap-4 mb-8 mt-8">
+            <Months
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
+              selectedMonth={selectedMonth} 
+              selectedYear={selectedYear} 
+              className="z-50"
+            />
+            <CardDashBoard title="Nº de Consultas" value={totalConsultations} />
+            <CardDashBoard
+              title="Receita Total"
+              value={`R$ ${totalRevenue.toFixed(2).replace(".", ",")}`}
+            />
+            <CardDashBoard 
+              title="Receita liquida"
+              value={`R$ ${netRevenue.toFixed(2).replace(".", ".")}`}
+            />
+             <CardDashBoard 
+              title="Hora liquida"
+              value={`R$ ${netTime.toFixed(2).replace(".", ".")}`}
+            />
+          </div>
+
+          <div className=" mx-auto box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+            <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
-                  <th>Nome do Evento</th>
-                  <th>Data</th>
-                  <th>Ação</th>
-                  <th>Status</th>
+                  <th className="w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Paciente
+                  </th>
+                  <th className="w-[125px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Valor Consulta
+                  </th>
+                  <th className="w-10 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Dias
+                  </th>
+                  <th className="w-[136px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Nª de consultas
+                  </th>
+                  <th className="w-11 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Total
+                  </th>
+                  <th className="w-20 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Cobrança
+                  </th>
+                  <th className="w-[98px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Pagamento
+                  </th>
+                  <th className="w-6 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    NF
+                  </th>
+                  <th className="w-[52px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {events.map((event) => (
-                  <tr key={event.google_event_id}>
-                    <td>{event.event_name}</td>
-                    <td>
-                      {(() => {
-                        const [year, month, day] = event.date.split("-");
-                        return `${day}/${month}/${year}`;
-                      })()}
+                {patients.length > 0 ? (
+                  patients.map((patient, index) => (
+                    <tr key={index}>
+                      <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      {patient.Customer?.customer_name || "-"}
+                      </td>
+                      <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
+                        R${" "}
+                        {parseFloat(patient.consultation_fee)
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </td>
+                      <td className="w-10 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        {patient.consultation_days || "-"}
+                      </td>
+                      <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        {patient.num_consultations || "-"}
+                      </td>
+                      <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                        R$ {patient.total_consultation_fee || "0,00"}
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                      <td className="w-20 text-center">
+                        <CrossIcon />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center px-4 py-2">
+                      Nenhum registro encontrado para este mês e ano.
                     </td>
-                    <td>
-                      {event.status !== "cancelado" && (
-                        <button
-                          onClick={() =>
-                            handleCancel(
-                              event.google_event_id,
-                              event.calendar_id
-                            )
-                          }
-                        >
-                          Cancelar
-                        </button>
-                      )}
-                    </td>
-                    <td>{event.status}</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
-          </section>
-        </div>
-      </main>
+          </div>
+
+          <div className="relative mx-auto mt-32 box-border h-[263px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+            <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
+              Pacientes não encontrados
+            </h2>
+            <table className="min-w-full bg-bg1 mt-2">
+              <tbody>
+                {unmatchedPatients.length > 0 ? (
+                  unmatchedPatients.map((event, index) => (
+                    <tr
+                      key={event.id}
+                      className="border-b border-b-cinza6 relative"
+                    >
+                      <td className="px-4 py-2 flex items-center justify-between">
+                        <span>{event.name}</span>
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => toggleDropdown(index)}
+                        >
+                          <HamburguerIcon />
+                        </button>
+                        {isDropdownOpen && selectedEvent === index && (
+                          <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                            <DropDownDashBoard
+                              onVincular={() => handleVincularPaciente(event)}
+                              onExcluir={() => console.log("Excluir paciente")}
+                            />
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center px-4 py-2">
+                      Nenhum paciente não encontrado
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {isSearchBarOpen && (
+            <SearchBarDashBoard
+              patients={patients}
+              onSelectPatient={handleLinkPatient}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };
 
-export default CreateEventForm;
+export default DashBoard;
