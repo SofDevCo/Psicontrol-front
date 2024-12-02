@@ -125,8 +125,8 @@ const CreateEventForm = () => {
   };
 
   return (
-    <div className="m-0 flex bg-gray-200 p-0">
-      <main className="flex-grow-0 p-5">
+    <div className="m-0 relative bg-gray-200 p-0">
+      <main className="fixed p-5">
         <h2>Eventos</h2>
         <div className="bg-white rounded-lg p-5 shadow-default">
           <section className="events-list-section">
