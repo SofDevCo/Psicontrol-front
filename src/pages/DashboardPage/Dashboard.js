@@ -210,16 +210,20 @@ const DashBoard = () => {
         },
       }
     );
-
+  
     if (response.ok) {
       const data = await response.json();
-      setPatients(data); 
+      setPatients(data.billingRecords || []);
+      setTotalConsultations(data.totalConsultations || 0);
+      setTotalRevenue(parseFloat(data.totalRevenue || 0));
     } else if (response.status === 404) {
-      setPatients([]); 
+      setPatients([]);
+      setTotalConsultations(0);
+      setTotalRevenue(0);
     } else {
       setError("Erro ao buscar registros de faturamento.");
     }
-
+  
     setLoading(false);
   };
 
@@ -249,7 +253,7 @@ const DashBoard = () => {
   };
 
   useEffect(() => {
-    setPatients([]); // Reseta os dados antes de buscar novos registros
+    setPatients([]); 
     fetchBillingRecords(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
@@ -314,7 +318,7 @@ const DashBoard = () => {
                   patients.map((patient, index) => (
                     <tr key={index}>
                       <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                        {patient.customer_name }
+                      {patient.Customer?.customer_name || "-"}
                       </td>
                       <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
                         R${" "}
