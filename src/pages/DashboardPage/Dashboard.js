@@ -17,6 +17,7 @@ const DashBoard = () => {
   const [totalConsultations, setTotalConsultations] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [netRevenue, setNetRevenue] = useState(0);
+  const [netTime, setNetTime] = useState(0)
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -218,6 +219,7 @@ const DashBoard = () => {
       setTotalConsultations(data.totalConsultations || 0);
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
       setNetRevenue(parseFloat(data.netRevenue || 0));
+      setNetTime(parseFloat(data.netTime) || 0);
     } else if (response.status === 404) {
       setPatients([]);
       setTotalConsultations(0);
@@ -283,6 +285,10 @@ const DashBoard = () => {
             <CardDashBoard 
               title="Receita liquida"
               value={`R$ ${netRevenue.toFixed(2).replace(".", ".")}`}
+            />
+             <CardDashBoard 
+              title="Hora liquida"
+              value={`R$ ${netTime.toFixed(2).replace(".", ".")}`}
             />
           </div>
 
