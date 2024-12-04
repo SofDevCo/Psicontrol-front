@@ -20,6 +20,7 @@ const DashBoard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [netRevenue, setNetRevenue] = useState(0);
   const [netTime, setNetTime] = useState(0);
+  const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -168,6 +169,12 @@ const DashBoard = () => {
     }
   };
 
+  const toggleDropdownPatients = (eventIndex) => {
+    setIsDropdownOpenPatients((prevIndex) =>
+      prevIndex === eventIndex ? null : eventIndex
+    );
+  };
+
   const toggleDropdown = (eventIndex) => {
     const event = unmatchedPatients[eventIndex];
     if (!event) {
@@ -262,32 +269,34 @@ const DashBoard = () => {
 
   const handleSendWhatsApp = async (customer) => {
     const customerId = customer.customer_id;
-  
+
     if (!customerId) {
       alert("ID do cliente não encontrado.");
       return;
     }
-  
+
     setLoading(true);
-  
-    const response = await fetch("http://localhost:3000/whatsapp/send-whatsapp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-      },
-      body: JSON.stringify({
-        customer_id: customerId,
-      }),
-    });
-  
+
+    const response = await fetch(
+      "http://localhost:3000/whatsapp/send-whatsapp",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+        }),
+      } 
+    );
+
     setLoading(false);
-  
     if (response.ok) {
       const data = await response.json();
       const whatsappLink = data.whatsappLink;
       alert("Redirecionando para o WhatsApp...");
-      window.location.href = whatsappLink;
+      window.open(whatsappLink, "_blank");
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
@@ -306,8 +315,8 @@ const DashBoard = () => {
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
-              selectedMonth={selectedMonth} 
-              selectedYear={selectedYear} 
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
               className="z-50"
             />
             <CardDashBoard title="Nº de Consultas" value={totalConsultations} />
@@ -315,11 +324,11 @@ const DashBoard = () => {
               title="Receita Total"
               value={`R$ ${totalRevenue.toFixed(2).replace(".", ",")}`}
             />
-            <CardDashBoard 
+            <CardDashBoard
               title="Receita liquida"
               value={`R$ ${netRevenue.toFixed(2).replace(".", ".")}`}
             />
-            <CardDashBoard 
+            <CardDashBoard
               title="Hora liquida"
               value={`R$ ${netTime.toFixed(2).replace(".", ".")}`}
             />
@@ -390,9 +399,19 @@ const DashBoard = () => {
                         <CrossIcon />
                       </td>
                       <td className="w-[52px] border-b border-b-cinza6 text-center px-4 py-2">
-                        <DropDownDashActions
-                          onSendWhatsApp={() => handleSendWhatsApp(patient)}
-                        />
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => toggleDropdownPatients(index)}
+                        >
+                          <HamburguerIcon />
+                        </button>
+                        {isDropdownOpenPatients === index && (
+                          <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                            <DropDownDashActions
+                              onSendWhatsApp={() => handleSendWhatsApp(patient)}
+                            />
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))
