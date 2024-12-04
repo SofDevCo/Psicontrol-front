@@ -7,9 +7,11 @@ import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
 import { CrossIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
+import DropDownDashActions from "./components/DropDownDashActions";
 import { Months } from "../../utils/Months/months";
 
 const DashBoard = () => {
+  const [customersData, setCustomersData] = useState([]);
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
@@ -17,7 +19,7 @@ const DashBoard = () => {
   const [totalConsultations, setTotalConsultations] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [netRevenue, setNetRevenue] = useState(0);
-  const [netTime, setNetTime] = useState(0)
+  const [netTime, setNetTime] = useState(0);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -118,7 +120,7 @@ const DashBoard = () => {
   const fetchPatientData = async () => {
     setLoading(true);
     const data = await fetchCustomers();
-    setPatients(data.customers || []);
+    setCustomersData(data.customers || []);
     setTotalConsultations(data.totalConsultations || 0);
     setTotalRevenue(parseFloat(data.totalRevenue || 0));
     setLoading(false);
@@ -212,7 +214,7 @@ const DashBoard = () => {
         },
       }
     );
-  
+
     if (response.ok) {
       const data = await response.json();
       setPatients(data.billingRecords || []);
@@ -227,11 +229,8 @@ const DashBoard = () => {
     } else {
       setError("Erro ao buscar registros de faturamento.");
     }
-  
     setLoading(false);
   };
-
-  
 
   useEffect(() => {
     const currentDate = new Date();
@@ -257,9 +256,43 @@ const DashBoard = () => {
   };
 
   useEffect(() => {
-    setPatients([]); 
+    setPatients([]);
     fetchBillingRecords(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
+
+  const handleSendWhatsApp = async (customer) => {
+    const customerId = customer.customer_id;
+  
+    if (!customerId) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+  
+    setLoading(true);
+  
+    const response = await fetch("http://localhost:3000/whatsapp/send-whatsapp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+      }),
+    });
+  
+    setLoading(false);
+  
+    if (response.ok) {
+      const data = await response.json();
+      const whatsappLink = data.whatsappLink;
+      alert("Redirecionando para o WhatsApp...");
+      window.location.href = whatsappLink;
+    } else {
+      const errorData = await response.json();
+      alert(`Erro: ${errorData.error}`);
+    }
+  };
 
   return (
     <div>
@@ -286,7 +319,7 @@ const DashBoard = () => {
               title="Receita liquida"
               value={`R$ ${netRevenue.toFixed(2).replace(".", ".")}`}
             />
-             <CardDashBoard 
+            <CardDashBoard 
               title="Hora liquida"
               value={`R$ ${netTime.toFixed(2).replace(".", ".")}`}
             />
@@ -330,7 +363,7 @@ const DashBoard = () => {
                   patients.map((patient, index) => (
                     <tr key={index}>
                       <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
-                      {patient.Customer?.customer_name || "-"}
+                        {patient.Customer?.customer_name || "-"}
                       </td>
                       <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
                         R${" "}
@@ -355,6 +388,11 @@ const DashBoard = () => {
                       </td>
                       <td className="w-20 text-center">
                         <CrossIcon />
+                      </td>
+                      <td className="w-[52px] border-b border-b-cinza6 text-center px-4 py-2">
+                        <DropDownDashActions
+                          onSendWhatsApp={() => handleSendWhatsApp(patient)}
+                        />
                       </td>
                     </tr>
                   ))
