@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
     "postcss": "^8.4.47",

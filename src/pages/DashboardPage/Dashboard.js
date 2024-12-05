@@ -8,6 +8,7 @@ import { HamburguerIcon } from "../../icons/icons";
 import { CrossIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
+import BillingDashBoard from "./components/BillingDashBoard";
 import { Months } from "../../utils/Months/months";
 
 const DashBoard = () => {
@@ -20,9 +21,11 @@ const DashBoard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [netRevenue, setNetRevenue] = useState(0);
   const [netTime, setNetTime] = useState(0);
+  const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const [error, setError] = useState(null);
@@ -169,7 +172,14 @@ const DashBoard = () => {
     }
   };
 
-  const toggleDropdownPatients = (eventIndex) => {
+  const toggleDropdownPatients = (eventIndex, patient) => {
+    console.log("Paciente selecionado:", patient);
+    if (patient && patient.customer_id) {
+      setSelectedPatient(patient);
+    } else {
+      alert("Paciente não possui ID.");
+    }
+
     setIsDropdownOpenPatients((prevIndex) =>
       prevIndex === eventIndex ? null : eventIndex
     );
@@ -224,6 +234,7 @@ const DashBoard = () => {
 
     if (response.ok) {
       const data = await response.json();
+      console.log("Dados de faturamento:", data);
       setPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
@@ -267,7 +278,16 @@ const DashBoard = () => {
     fetchBillingRecords(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
+  const openBillingModal = () => {
+    setIsBillingModalOpen(true);
+  };
+
+  const closeBillingModal = () => {
+    setIsBillingModalOpen(false);
+  };
+
   const handleSendWhatsApp = async (customer) => {
+    console.log("selectedPatient:", customer);
     const customerId = customer.customer_id;
 
     if (!customerId) {
@@ -288,7 +308,7 @@ const DashBoard = () => {
         body: JSON.stringify({
           customer_id: customerId,
         }),
-      } 
+      }
     );
 
     setLoading(false);
@@ -408,7 +428,7 @@ const DashBoard = () => {
                         {isDropdownOpenPatients === index && (
                           <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                             <DropDownDashActions
-                              onSendWhatsApp={() => handleSendWhatsApp(patient)}
+                              onOpenModal={openBillingModal}
                             />
                           </div>
                         )}
@@ -475,6 +495,18 @@ const DashBoard = () => {
             />
           )}
         </>
+      )}
+      {isBillingModalOpen && selectedPatient && (
+        <BillingDashBoard
+          onClose={closeBillingModal}
+          onSendWhatsApp={() => {
+            if (selectedPatient && selectedPatient.customer_id) {
+              handleSendWhatsApp(selectedPatient);
+            } else {
+              alert("Paciente não encontrado ou sem ID.");
+            }
+          }}
+        />
       )}
     </div>
   );
