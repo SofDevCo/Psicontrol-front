@@ -27,7 +27,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/user/users`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/users`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchCalendars = async () => {
       try {
-        const response = await fetch("http://localhost:3000/events/calendars", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           },
@@ -100,7 +100,7 @@ const UserPage = () => {
     const calendarName = calendar ? calendar.summary : "Nome padrão";
 
     await fetch(
-      `http://localhost:3000/events/calendars/selection/${calendarId}`,
+      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendarId}`,
       {
         method: "POST",
         headers: {
@@ -117,7 +117,7 @@ const UserPage = () => {
 
   const handleChangeAccount = async () => {
     try {
-      const response = await fetch("http://localhost:3000/google");
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
       const data = await response.json();
 
       if (data.authUrl) {
@@ -142,7 +142,7 @@ const UserPage = () => {
         formData.append("image", userData.image);
       }
 
-      const response = await fetch(`http://localhost:3000/user/save-users`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/save-users`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -175,7 +175,7 @@ const UserPage = () => {
       formData.append("user_message", userData.user_message || "");
 
 
-      const response = await fetch(`http://localhost:3000/user/save-users`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/save-users`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,

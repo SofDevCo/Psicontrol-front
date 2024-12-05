@@ -39,7 +39,7 @@ const DashBoard = () => {
   useEffect(() => {
     const fetchCalendars = async () => {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/events/calendars", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
@@ -66,7 +66,7 @@ const DashBoard = () => {
 
     setLoading(true);
     const response = await fetch(
-      `http://localhost:3000/events/get-events/${selectedCalendarId}`,
+      `${process.env.REACT_APP_API_URL}/events/get-events/${selectedCalendarId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -95,7 +95,7 @@ const DashBoard = () => {
 
   const fetchUnmatchedPatients = async () => {
     const response = await fetch(
-      "http://localhost:3000/events/unmatched-patients",
+      `${process.env.REACT_APP_API_URL}/events/unmatched-patients`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -143,7 +143,7 @@ const DashBoard = () => {
     }
 
     const response = await fetch(
-      `http://localhost:3000/events/linkCustomerToEvent`,
+      `${process.env.REACT_APP_API_URL}/events/linkCustomerToEvent`,
       {
         method: "POST",
         headers: {
@@ -203,7 +203,7 @@ const DashBoard = () => {
     setLoading(true);
 
     const response = await fetch(
-      `http://localhost:3000/dashboard/billing-records?month=${month}&year=${year}`,
+      `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(

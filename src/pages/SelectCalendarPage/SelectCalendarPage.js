@@ -16,7 +16,7 @@ const SelectCalendarPage = () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
     if (authenticationToken) {
-      const response = await fetch("http://localhost:3000/events/calendars", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${authenticationToken}`,
@@ -54,7 +54,7 @@ const SelectCalendarPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/events/check-calendars", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/check-calendars`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${authenticationToken}`,
@@ -105,7 +105,7 @@ const SelectCalendarPage = () => {
 
     const authenticationToken = localStorage.getItem("authentication_token");
     await fetch(
-      `http://localhost:3000/events/calendars/selection/${calendar.id}`,
+      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.id}`,
       {
         method: "POST",
         headers: {
