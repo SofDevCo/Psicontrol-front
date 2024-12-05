@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for psicontrol-front on 2024-12-05T00:30:52-03:00
+# fly.toml app configuration file generated for psicontrol-front on 2024-12-05T00:44:39-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -17,4 +17,4 @@ primary_region = 'gru'
   processes = ['app']
 
 [[vm]]
-  size = 'performance-4x'
+  size = 'performance-8x'

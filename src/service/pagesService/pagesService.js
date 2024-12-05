@@ -1,5 +1,5 @@
 export const deleteCustomer = async (customerId) => {
-      const response = await fetch(`http://localhost:3000/events/customers/${customerId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/customers/${customerId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -12,7 +12,7 @@ export const deleteCustomer = async (customerId) => {
 
   export const ArchiveCustomer = async (customerId) => {
     const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}/archive`,
+      `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/archive`,
       {
         method: "PUT",
         headers: {
@@ -28,7 +28,7 @@ export const deleteCustomer = async (customerId) => {
 
   export const fetchCustomerProfile = async (customerId) => {
     const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}/profile`,
+      `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/profile`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -40,8 +40,8 @@ export const deleteCustomer = async (customerId) => {
 
   export const createOrUpdateCustomer = async (customer, additionalAlternatives, customerId = null) => {
     const url = customerId
-      ? `http://localhost:3000/events/customers/${customerId}`
-      : `http://localhost:3000/events/create-customer`;
+      ? `${process.env.REACT_APP_API_URL}/events/customers/${customerId}`
+      : `${process.env.REACT_APP_API_URL}/events/create-customer`;
     const method = customerId ? "PUT" : "POST";
   
     const response = await fetch(url, {
@@ -57,7 +57,7 @@ export const deleteCustomer = async (customerId) => {
   };
 
   export const fetchCustomers = async () => {
-    const response = await fetch("http://localhost:3000/events/customers", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/events/customers`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,

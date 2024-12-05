@@ -32,7 +32,7 @@ const ArchivedPage = () => {
   const fetchArchivedCustomers = async () => {
     setIsLoading(true);
     const response = await fetch(
-      "http://localhost:3000/events/customers/archived",
+      `${process.env.REACT_APP_API_URL}/events/customers/archived`,
       {
         method: "GET",
         headers: {
@@ -53,7 +53,7 @@ const ArchivedPage = () => {
 
   const handleUnarchiveCustomer = async (customerId) => {
     const response = await fetch(
-      `http://localhost:3000/events/customers/${customerId}/archive`,
+      `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/archive`,
       {
         method: "PUT",
         headers: {
