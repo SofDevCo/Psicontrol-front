@@ -53,7 +53,7 @@ const IncomePage = () => {
       try {
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        const response = await fetch(`http://localhost:3000/income/expense`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/income/expense`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -88,7 +88,7 @@ const IncomePage = () => {
       try {
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        const response = await fetch(`http://localhost:3000/income/revenue`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/income/revenue`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
@@ -116,7 +116,7 @@ const IncomePage = () => {
   const repeatLastMonthEntries = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/income/entries/repeat-last-month",
+        `${process.env.REACT_APP_API_URL}/income/entries/repeat-last-month`,
         {
           method: "POST",
           headers: {
@@ -148,7 +148,7 @@ const IncomePage = () => {
   async function deleteRevenue(id) {
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue/${id}`,
+        `${process.env.REACT_APP_API_URL}/income/revenue/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -171,7 +171,7 @@ const IncomePage = () => {
   async function deleteExpense(id) {
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense/${id}`,
+        `${process.env.REACT_APP_API_URL}/income/expense/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -292,7 +292,7 @@ const IncomePage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/expense?monthYear=${monthYear}`,
+        `${process.env.REACT_APP_API_URL}/income/expense?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
@@ -318,7 +318,7 @@ const IncomePage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/income/revenue?monthYear=${monthYear}`,
+        `${process.env.REACT_APP_API_URL}/income/revenue?monthYear=${monthYear}`,
         {
           method: "GET",
           headers: {
