@@ -2,7 +2,7 @@
   "name": "psicontrol-front",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://psicontrol-back.fly.dev",
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@testing-library/jest-dom": "^5.17.0",
