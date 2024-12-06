@@ -288,7 +288,7 @@ const DashBoard = () => {
 
   const handleSendWhatsApp = async (customer) => {
     console.log("selectedPatient:", customer);
-    const customerId = customer.customer_id;
+    const customerId = customer?.customer_id;
 
     if (!customerId) {
       alert("ID do cliente não encontrado.");
@@ -421,7 +421,7 @@ const DashBoard = () => {
                       <td className="w-[52px] border-b border-b-cinza6 text-center px-4 py-2">
                         <button
                           className="cursor-pointer"
-                          onClick={() => toggleDropdownPatients(index)}
+                          onClick={() => toggleDropdownPatients(index, patient)}
                         >
                           <HamburguerIcon />
                         </button>
