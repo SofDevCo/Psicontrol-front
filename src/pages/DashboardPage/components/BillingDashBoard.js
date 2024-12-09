@@ -1,34 +1,44 @@
-import React from 'react'
+import React from "react";
 
-const BillingDashBoard = ({ onClose, onSendEmail, onSendWhatsApp , message}) =>  {
+const BillingDashBoard = ({
+  onClose,
+  onSendEmail,
+  onSendWhatsApp,
+  message,
+}) => {
   return (
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white rounded-md p-6 w-[300px]">
-          <h2 className="w-[303px] text-primaria text-[21px] font-medium font-['Ubuntu'] tracking-tight mb-4">Enviar mensagem de cobrança</h2>
-          <p className="mb-4">{message}</p>
-          <div className="flex justify-between">
-            <button
-              onClick={onSendEmail}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
-            >
-              Enviar por Email
-            </button>
-            <button
-              onClick={onSendWhatsApp}
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700"
-            >
-              Enviar por WhatsApp
-            </button>
-          </div>
+    <div className="fixed inset-0 bg-bgM/30 bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-bg1 rounded-md p-6 w-[477px] h-[521px]">
+        <h2 className="w-[303px] text-primaria text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+          Enviar mensagem de cobrança
+        </h2>
+        <p
+          className="mb-4 w-[403px] h-[347.32px]"
+          dangerouslySetInnerHTML={{ __html: message.replace(/\n/g, "<br />") }}
+        ></p>
+        <div className="flex justify-between">
           <button
-            onClick={onClose}
-            className="mt-4 w-full text-center text-sm text-gray-700"
+            onClick={onSendEmail}
+            className="h-[39px] px-6 py-2.5 bg-bg1 rounded-[100px] border border-primaria justify-center items-center gap-2 inline-flex text-center text-primaria text-sm font-semibold font-['Open Sans'] underline tracking-tight"
           >
-            Fechar
+            Enviar por Email
+          </button>
+          <button
+            onClick={onSendWhatsApp}
+            className="h-[39px] px-6 py-2.5 bg-bg1 rounded-[100px] border border-primaria justify-center items-center gap-2 inline-flex text-center text-primaria text-sm font-semibold font-['Open Sans'] underline tracking-tight"
+          >
+            Enviar por WhatsApp
           </button>
         </div>
+        <button
+          onClick={onClose}
+          className="mt-4 w-full text-center text-sm text-gray-700"
+        >
+          Fechar
+        </button>
       </div>
-    );
-  };
-  
-export default BillingDashBoard
+    </div>
+  );
+};
+
+export default BillingDashBoard;
