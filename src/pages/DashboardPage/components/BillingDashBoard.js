@@ -1,11 +1,11 @@
 import React from 'react'
 
-const BillingDashBoard = ({ onClose, onSendEmail, onSendWhatsApp }) =>  {
+const BillingDashBoard = ({ onClose, onSendEmail, onSendWhatsApp , message}) =>  {
   return (
       <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-white rounded-md p-6 w-[300px]">
-          <h2 className="text-lg font-semibold mb-4">Enviar Cobrança</h2>
-          <p className="mb-4">Mensagem de WhatsApp: "Sua cobrança foi gerada. Por favor, pague o valor devido o quanto antes!"</p>
+          <h2 className="w-[303px] text-primaria text-[21px] font-medium font-['Ubuntu'] tracking-tight mb-4">Enviar mensagem de cobrança</h2>
+          <p className="mb-4">{message}</p>
           <div className="flex justify-between">
             <button
               onClick={onSendEmail}

@@ -21,6 +21,7 @@ const DashBoard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [netRevenue, setNetRevenue] = useState(0);
   const [netTime, setNetTime] = useState(0);
+  const [billingMessage, setBillingMessage] = useState("");
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
@@ -45,11 +46,14 @@ const DashBoard = () => {
   useEffect(() => {
     const fetchCalendars = async () => {
       setLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/calendars`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         const filteredCalendars = data.filter((calendar) =>
@@ -286,7 +290,7 @@ const DashBoard = () => {
     setIsBillingModalOpen(false);
   };
 
-  const handleSendWhatsApp = async (customer) => {
+  const handleSendWhatsApp = async (customer, openModalOnly = false) => {
     console.log("selectedPatient:", customer);
     const customerId = customer?.customer_id;
 
@@ -298,7 +302,7 @@ const DashBoard = () => {
     setLoading(true);
 
     const response = await fetch(
-      "http://localhost:3000/whatsapp/send-whatsapp",
+      `${process.env.REACT_APP_API_URL}/whatsapp/send-whatsapp`,
       {
         method: "POST",
         headers: {
@@ -315,8 +319,14 @@ const DashBoard = () => {
     if (response.ok) {
       const data = await response.json();
       const whatsappLink = data.whatsappLink;
-      alert("Redirecionando para o WhatsApp...");
-      window.open(whatsappLink, "_blank");
+      setBillingMessage(data.user_message);
+
+      if (openModalOnly) {
+        setIsBillingModalOpen(true);
+      } else {
+        alert("Redirecionando para o WhatsApp...");
+        window.open(whatsappLink, "_blank");
+      }
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
@@ -428,7 +438,9 @@ const DashBoard = () => {
                         {isDropdownOpenPatients === index && (
                           <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                             <DropDownDashActions
-                              onOpenModal={openBillingModal}
+                              onOpenModal={() =>
+                                handleSendWhatsApp(patient, true)
+                              }
                             />
                           </div>
                         )}
@@ -506,6 +518,7 @@ const DashBoard = () => {
               alert("Paciente não encontrado ou sem ID.");
             }
           }}
+          message={billingMessage}
         />
       )}
     </div>
