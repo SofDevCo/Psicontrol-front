@@ -353,6 +353,7 @@ const DashBoard = () => {
         },
         body: JSON.stringify({
           customer_id: customerId,
+          total_consultation_fee: customer.total_consultation_fee,
         }),
       }
     );
