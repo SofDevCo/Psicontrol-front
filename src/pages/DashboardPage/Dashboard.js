@@ -302,7 +302,7 @@ const DashBoard = () => {
     setLoading(true);
 
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/whatsapp/send-whatsapp`,
+      `${process.env.REACT_APP_API_URL}/message/send-whatsapp`,
       {
         method: "POST",
         headers: {
@@ -327,6 +327,44 @@ const DashBoard = () => {
         alert("Redirecionando para o WhatsApp...");
         window.open(whatsappLink, "_blank");
       }
+    } else {
+      const errorData = await response.json();
+      alert(`Erro: ${errorData.error}`);
+    }
+  };
+
+  const handleSendEmail = async (customer) => {
+    const customerId = customer?.customer_id;
+
+    if (!customerId) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/message/send-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+        }),
+      }
+    );
+
+    setLoading(false);
+
+    if (response.ok) {
+      const data = await response.json();
+      const mailtoLink = data.mailtoLink;
+      setBillingMessage(data.user_message);
+      alert("Abrindo cliente de email...");
+      window.open(mailtoLink, "_blank");
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
@@ -364,29 +402,29 @@ const DashBoard = () => {
             />
           </div>
 
-          <div className=" mx-auto box-border h-[436px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className=" mx-auto box-border md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
-                  <th className="w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Paciente
                   </th>
-                  <th className="w-[125px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-[125px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Valor Consulta
                   </th>
-                  <th className="w-10 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-10 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Dias
                   </th>
-                  <th className="w-[136px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-[136px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Nª de consultas
                   </th>
-                  <th className="w-11 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-11 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Total
                   </th>
-                  <th className="w-20 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-20 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Cobrança
                   </th>
-                  <th className="w-[98px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="md:w-[98px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
                     Pagamento
                   </th>
                   <th className="w-6 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
@@ -458,7 +496,7 @@ const DashBoard = () => {
             </table>
           </div>
 
-          <div className="relative mx-auto mt-32 box-border h-[263px] w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-32 box-border md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
               Pacientes não encontrados
             </h2>
@@ -514,6 +552,13 @@ const DashBoard = () => {
           onSendWhatsApp={() => {
             if (selectedPatient && selectedPatient.customer_id) {
               handleSendWhatsApp(selectedPatient);
+            } else {
+              alert("Paciente não encontrado ou sem ID.");
+            }
+          }}
+          onSendEmail={() => {
+            if (selectedPatient && selectedPatient.customer_id) {
+              handleSendEmail(selectedPatient);
             } else {
               alert("Paciente não encontrado ou sem ID.");
             }
