@@ -177,7 +177,6 @@ const DashBoard = () => {
   };
 
   const toggleDropdownPatients = (eventIndex, patient) => {
-    console.log("Paciente selecionado:", patient);
     if (patient && patient.customer_id) {
       setSelectedPatient(patient);
     } else {
@@ -238,7 +237,6 @@ const DashBoard = () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Dados de faturamento:", data);
       setPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
@@ -291,7 +289,6 @@ const DashBoard = () => {
   };
 
   const handleSendWhatsApp = async (customer, openModalOnly = false) => {
-    console.log("selectedPatient:", customer);
     const customerId = customer?.customer_id;
 
     if (!customerId) {
