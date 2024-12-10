@@ -44,3 +44,8 @@ processes = []
 [[statics]]
   guest_path = "/usr/share/nginx/html/"
   url_prefix = "/"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
