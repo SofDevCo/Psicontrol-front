@@ -160,15 +160,15 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-auto w-full md:w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 overflow-y-auto z-10">
+    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
-          <div className="fixed w-full md:w-[1076px] h-auto mt-40 mx-auto rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+          <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
             <div className="flex flex-wrap items-center gap-4">
               <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                 Adicionar Paciente
               </h2>
-              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-auto">
+              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[262px]">
                 Dados para recibo
               </h3>
               <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
@@ -192,14 +192,14 @@ const CustomersPage = () => {
         </div>
       )}
 
-      <div className="relative flex w-full items-center px-7 pt-6">
-        <div className="relative w-full">
+      <div className="relative flex w-full items-center pl-7 pt-6">
+        <div className="relative">
           <input
             type="text"
             placeholder={searchTerm ? "" : "Pesquisar pacientes"}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`h-[56px] w-full md:w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+            className={`h-[56px] w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
           />
           <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
             {searchTerm.length > 0 ? (
@@ -260,25 +260,25 @@ const CustomersPage = () => {
           )}
         </div>
 
-        <div className="ml-0 md:ml-[40px] flex justify-center mt-4 md:mt-0">
+        <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-full md:w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
             <span>Adicionar paciente</span>
           </button>
         </div>
 
-        <button className="group ml-0 md:ml-9 mt-4 md:mt-0 whitespace-no-wrap flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+        <button className="group ml-9 whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
           <ArchiveIcon />
           <Link to="/archived">Pacientes arquivados</Link>
         </button>
       </div>
 
-      <div className="top-[275px] flex h-[21px] w-full border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="ml-auto flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="left-[1305px] top-[275px] ml-[893.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -298,7 +298,7 @@ const CustomersPage = () => {
               .map((customer) => (
                 <li
                   key={`customer-${customer.customer_id}`}
-                  className="flex items-center justify-between border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
+                  className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
                   <span
                     className="text-xl text-texto1"
