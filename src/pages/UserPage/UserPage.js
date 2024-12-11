@@ -503,11 +503,11 @@ const UserPage = () => {
                 <span className="text-[#5c5c5c]">
                   {userData.image ? (
                     userData.image instanceof File ? (
-                      userData.image.name // Exibe o nome do arquivo se for um `File`
+                      userData.image.name 
                     ) : (
                       typeof userData.image === "string" && userData.image.includes("/")
-                        ? userData.image.split("/").pop() // Exibe o nome do arquivo a partir do caminho
-                        : userData.image // Exibe o nome direto se for uma string
+                        ? userData.image.split("/").pop()
+                        : userData.image 
                     )
                   ) : (
                     "(Imagem não carregada)"

@@ -40,7 +40,7 @@ const Login = () => {
 
       {/* Quadrado central */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-        <div className="w-[285px] h-[166px] md:w-[392px] md:h-[218px] rounded-[20px] bg-white shadow-lg flex flex-col items-center justify-center mb-6">
+        <div className="w-[285px] h-[166px] md:w-[392px] md:h-[218px] rounded-[20px] bg-white drop-shadow-loginShadow flex flex-col items-center justify-center mb-6">
           <p className="font-semibold text-gray-700-4 text-10 md:text-lg md:w-[283px] w-[255px] mb-4 tracking-wide leading-normal text-center">
             Entrar com sua conta Google
           </p>
@@ -62,7 +62,7 @@ const Login = () => {
       <div className="absolute md:bottom-[200px] bottom-[400px] opacity-50 right-0">
         <img src={BoxBlueCourt} alt="logo" className="md:w-[520px] md:h-[566px] w-[210px] h-[210px]" />
       </div>
-      <div className="absolute md:bottom-[700px] bottom-[320px] opacity-50 md:right-[150px] right-[-5px]">
+      <div className="absolute md:bottom-[700px] bottom-[320px] opacity-50 md:right-[470px] right-[-5px]">
         <img src={BoxBlue} alt="logo" className="md:w-[150px] md:h-[100px] w-[65px] h-[50px]" />
       </div>
       <div className="absolute md:bottom-[100px] bottom-[576px] opacity-50 md:right-[150px] right-[100px]">

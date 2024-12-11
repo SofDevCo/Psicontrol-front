@@ -134,46 +134,49 @@ const SelectCalendarPage = () => {
       <img
         src={logo}
         alt="Logo"
-        className="mx-auto mb-8 w-[275px]  h-[165px]"
+        className="mx-auto mb-8 md:w-[275px] md:h-[165px] w-[212px] h-[127px]"
       />
       {loading ? (
         <p className="italic text-gray-500">Carregando calendários...</p>
       ) : error ? (
         <p className="italic text-gray-500">{error}</p>
       ) : (
-        <div className="mt-8 flex flex-col items-center justify-center gap-8">
-          <div className="flex w-auto p-[5px] rounded-[8px] border-2 border-solid border-primaria flex-col items-center justify-center">
-            <h1 className="mb-8 text-[25px] leading-[29px] text-texto1 font-['Ubuntu'] font-normal">
+        <div className="mt-8 flex flex-col items-center shadow-xl justify-center gap-8">
+          <div className="flex w-auto md:p-6 p-1 rounded-[8px] border-2 border-solid border-primaria flex-col items-center justify-center">
+            <h1 className="mb-6 md:text-[22px] text-[18px] leading-[26px] text-texto1 font-['Ubuntu'] font-normal">
               Escolher agenda
             </h1>
-            <h2 className="mb-[16px] border-b border-b-cinza6 text-center text-[19.2px] text-texto1 font-bold flex items-center justify-center">
+            <h2 className="mb-4 border-b border-b-cinza6 text-center md:text-[16px] text-[16px] font-bold text-texto1 flex items-center justify-center gap-2">
               <CalendarIcon />
-              <span>Minhas Agendas</span>
+              <span className="mr-3">Minhas Agendas</span>
             </h2>
+
             {calendars.map((calendar) => (
-              <div key={calendar.id} className="mb-2 flex w-full text-texto2">
+              <div key={calendar.id} className="mb-3 flex w-full items-center text-texto2">
                 <input
                   type="checkbox"
-                  className="mr-2"
+                  className="appearance-none md:w-[20px] md:h-[20px] w-[16px] h-[16px] rounded-full border-2 border-primaria checked:border-primaria checked:bg-white checked:relative checked:before:content-[''] checked:before:absolute checked:before:top-[50%] checked:before:left-[50%] checked:before:w-[10px] checked:before:h-[10px] checked:before:rounded-full checked:before:bg-primaria checked:before:transform checked:before:translate-x-[-50%] checked:before:translate-y-[-50%] ml-5 mr-3 cursor-pointer"
                   name="calendar"
                   id={calendar.id}
                   checked={selectedCalendarIds.has(calendar.id)}
                   onChange={() => handleCheckboxChange(calendar)}
                 />
-                <label htmlFor={calendar.id} className="font-bold">
+                <label htmlFor={calendar.id} className="font-bold md:text-[15px] text-[13px]">
                   {calendar.summary}
                 </label>
               </div>
             ))}
 
+
             <button
               onClick={handleProceed}
-              className="rounded-[100px] mt-8 block w-[69px] h-[40px] cursor-pointer border-none bg-primaria p-4 text-lg leading-[8px] text-texto4 hover:bg-primaria"
+              className="rounded-[100px] md:mt-6 mt-3 md:mb-0 mb-3 px-6 py-2 cursor-pointer border-2 border-solid border-primaria bg-white text-primaria text-[14px] font-bold hover:bg-primaria hover:text-white disabled:opacity-50 drop-shadow-monthsShadow"
               disabled={selectedCalendarIds.size === 0}
             >
-              Ok
+              Continuar
             </button>
           </div>
+
         </div>
       )}
     </div>
