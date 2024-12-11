@@ -3,8 +3,11 @@ import React, { useState } from "react";
 const SearchBarDashBoard = ({ patients, onSelectPatient }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredPatients = patients.filter((patient) =>
-    patient.customer_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPatients = patients.filter(
+    (patient) =>
+      patient &&
+      (!searchTerm ||
+        patient.customer_name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -22,11 +25,10 @@ const SearchBarDashBoard = ({ patients, onSelectPatient }) => {
             key={patient.customer_id}
             className="p-2 hover:bg-gray-100 cursor-pointer"
             onClick={() => {
-              console.log("Paciente clicado:", patient.customer_id);
               onSelectPatient(patient.customer_id);
             }}
           >
-            {patient.customer_name}
+            {patient.Customer?.customer_name }
           </div>
         ))}
       </div>

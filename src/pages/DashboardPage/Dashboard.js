@@ -128,7 +128,9 @@ const DashBoard = () => {
   const fetchPatientData = async () => {
     setLoading(true);
     const data = await fetchCustomers();
-    setCustomersData(data.customers || []);
+    setCustomersData(
+      (data.customers || []).filter((customer) => customer.customer_name)
+    );
     setTotalConsultations(data.totalConsultations || 0);
     setTotalRevenue(parseFloat(data.totalRevenue || 0));
     setLoading(false);
@@ -202,7 +204,7 @@ const DashBoard = () => {
     }
   };
 
-  const handleVincularPaciente = () => {
+  const handleVinculatePatient = async () => {
     if (selectedEvent === null || selectedEvent === undefined) {
       return null;
     }
@@ -210,9 +212,11 @@ const DashBoard = () => {
     if (!event) {
       return null;
     }
+    if (!patients || patients.length === 0) {
+      await fetchPatientData(); 
+    }
     openSearchBar();
   };
-
   const openSearchBar = () => {
     if (!selectedEvent) {
       return null;
@@ -517,7 +521,7 @@ const DashBoard = () => {
                         {isDropdownOpen && selectedEvent === index && (
                           <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                             <DropDownDashBoard
-                              onVincular={() => handleVincularPaciente(event)}
+                              onVincular={() => handleVinculatePatient(event)}
                               onExcluir={() => console.log("Excluir paciente")}
                             />
                           </div>
