@@ -11,28 +11,29 @@ const SelectCalendarPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Função para buscar calendários da rota /events/calendars
   const fetchCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
     if (authenticationToken) {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authenticationToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/calendars`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authenticationToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setCalendars(data);
 
-        // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
         const activeCalendars = new Set(
           data
             .filter((calendar) => calendar.enabled)
-            .map((calendar) => calendar.id)
+            .map((calendar) => calendar.calendar_id)
         );
         setSelectedCalendarIds(activeCalendars);
 
@@ -44,7 +45,6 @@ const SelectCalendarPage = () => {
     }
   };
 
-  // Função para verificar e redirecionar com a rota /check-calendars
   const checkCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
@@ -54,13 +54,16 @@ const SelectCalendarPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/check-calendars`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authenticationToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/check-calendars`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authenticationToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         setError("Erro ao verificar calendários.");
@@ -70,7 +73,7 @@ const SelectCalendarPage = () => {
       const data = await response.json();
       if (data.redirect) {
         console.log("Redirecionando para:", data.redirect);
-        navigate(data.redirect); // Redireciona para a rota retornada pelo backend
+        navigate(data.redirect);
       }
     } catch (error) {
       setError("Erro ao conectar com o servidor.");
@@ -80,12 +83,10 @@ const SelectCalendarPage = () => {
     }
   };
 
-
   useEffect(() => {
-    // Primeiro verifica calendários e depois carrega os dados locais
     const fetchInitialData = async () => {
       await checkCalendars();
-      await fetchCalendars(); // Busca os calendários locais após a verificação
+      await fetchCalendars();
     };
 
     fetchInitialData();
@@ -95,7 +96,6 @@ const SelectCalendarPage = () => {
     const newSelectedCalendarIds = new Set(selectedCalendarIds);
     const isSelected = newSelectedCalendarIds.has(calendar.id);
 
-    // Toggle o estado local do calendário
     if (isSelected) {
       newSelectedCalendarIds.delete(calendar.id);
     } else {
@@ -114,7 +114,7 @@ const SelectCalendarPage = () => {
         },
         body: JSON.stringify({
           enabled: !isSelected,
-          calendar_name: calendar.summary,
+          calendar_name: calendar.calendar_name,
         }),
       }
     );
@@ -157,11 +157,11 @@ const SelectCalendarPage = () => {
                   className="mr-2"
                   name="calendar"
                   id={calendar.id}
-                  checked={selectedCalendarIds.has(calendar.id)}
+                  checked={selectedCalendarIds.has(calendar.calendar_id)}
                   onChange={() => handleCheckboxChange(calendar)}
                 />
                 <label htmlFor={calendar.id} className="font-bold">
-                  {calendar.summary}
+                  {calendar.calendar_name}
                 </label>
               </div>
             ))}
