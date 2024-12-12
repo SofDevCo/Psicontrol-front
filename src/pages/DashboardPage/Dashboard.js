@@ -213,7 +213,7 @@ const DashBoard = () => {
       return null;
     }
     if (!patients || patients.length === 0) {
-      await fetchPatientData(); 
+      await fetchPatientData();
     }
     openSearchBar();
   };
@@ -373,6 +373,29 @@ const DashBoard = () => {
     }
   };
 
+  const handleDeleteUnmatchedEvent = async (google_event_id) => {
+    console.log("Tentando excluir evento com ID:", google_event_id);
+
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      alert("Evento excluído com sucesso.");
+      fetchUnmatchedPatients();
+    } else {
+      const errorData = await response.json();
+      alert(`Erro: ${errorData.error}`);
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -522,7 +545,9 @@ const DashBoard = () => {
                           <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                             <DropDownDashBoard
                               onVincular={() => handleVinculatePatient(event)}
-                              onExcluir={() => console.log("Excluir paciente")}
+                              onExcluir={() =>
+                                handleDeleteUnmatchedEvent(event.google_event_id)
+                              }
                             />
                           </div>
                         )}
