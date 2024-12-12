@@ -573,6 +573,7 @@ const DashBoard = () => {
             <SearchBarDashBoard
               patients={patients}
               onSelectPatient={handleLinkPatient}
+              onClose={() => setIsSearchBarOpen(false)}
             />
           )}
         </>
