@@ -521,7 +521,7 @@ const DashBoard = () => {
             </table>
           </div>
 
-          <div className="relative mx-auto mt-32 box-border md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-[30px] box-border md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
               Pacientes não encontrados
             </h2>
