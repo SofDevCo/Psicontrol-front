@@ -376,7 +376,6 @@ const DashBoard = () => {
   const handleDeleteUnmatchedEvent = async (google_event_id) => {
     console.log("Tentando excluir evento com ID:", google_event_id);
 
-
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
       {
@@ -522,6 +521,9 @@ const DashBoard = () => {
           </div>
 
           <div className="relative mx-auto mt-[30px] box-border md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+            {isSearchBarOpen && (
+              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-screen z-20 "></div>
+            )}
             <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
               Pacientes não encontrados
             </h2>
@@ -546,7 +548,9 @@ const DashBoard = () => {
                             <DropDownDashBoard
                               onVincular={() => handleVinculatePatient(event)}
                               onExcluir={() =>
-                                handleDeleteUnmatchedEvent(event.google_event_id)
+                                handleDeleteUnmatchedEvent(
+                                  event.google_event_id
+                                )
                               }
                             />
                           </div>
