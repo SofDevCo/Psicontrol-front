@@ -105,7 +105,7 @@ const SelectCalendarPage = () => {
 
     const authenticationToken = localStorage.getItem("authentication_token");
     await fetch(
-      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.id}`,
+      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.calendar_id}`,
       {
         method: "POST",
         headers: {
