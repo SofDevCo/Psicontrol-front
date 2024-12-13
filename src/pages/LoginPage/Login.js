@@ -24,31 +24,25 @@ const Login = () => {
   };
 
   return (
-    <div className="flex md:w-screen w-screen h-scree">
+    <div className="flex md:w-full w-screen h-scree">
       {/* Lado esquerdo - Azul */}
       <div className="w-1/2 fixed h-screen bg-primaria">
         <img src={PsiText} alt="Text" className="w-[137px] h-[16px] md:mt-[40px] md:ml-[40px] mt-[48px] ml-[15px]" />
       </div>
 
-      <div className=" md:mt-[425px] mt-[495px] [font-family:'Oswald-Bold',Helvetica] font-bold md:ml-[41px] ml-[16px] text-white z-10 md:text-[26px] text-[19px] md:flex flex scale-y-125">
-        Vamos Começar!
-      </div>
 
-      <div className="flex md:flex text-white w-[150px] md:w-[293px] [font-family:'Questrial-Regular',Helvetica] font-normal text-variable-collection-bg-1 md:mt-[460px] mt-[520px] md:ml-[-213px] ml-[-153px] md:text-[16px] text-[12px] z-10 tracking-[1.10px] leading-6.50">
-        Faça o login com seu e-mail profissional.
-      </div>
 
-      {/* Quadrado central */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-        <div className="w-[285px] h-[166px] md:w-[392px] md:h-[218px] rounded-[20px] bg-white drop-shadow-loginShadow flex flex-col items-center justify-center mb-6">
-          <p className="font-semibold text-gray-700-4 text-10 md:text-lg md:w-[283px] w-[255px] mb-4 tracking-wide leading-normal text-center">
+      {/* Lado direito (box branca) */}
+      <div className="flex flex-col my-[-90px] justify-center items-center h-screen w-screen bg-white">
+        <div className="w-[285px] md:w-[392px] h-[166px] md:h-[218px] bg-white z-50 rounded-[20px] drop-shadow-loginShadow flex flex-col md:mb-0 mb-[290px] items-center justify-center">
+          <p className="font-semibold text-gray-700-4 text-[14px] md:text-[20px] w-[255px] md:w-[303px] mb-4 tracking-wide leading-normal text-center">
             Entrar com sua conta Google
           </p>
 
           {/* Botão Google */}
           <button
             onClick={handleLogin}
-            className="flex items-center border-2 border-[#0082ba] my-2 mt-4 md:my-4 md:mt-7 rounded-full md:px-4 md:py-2 px-2 py-1 text-variable-collection-prim-ria hover:bg-gray-100 focus:outline-none shadow"
+            className="flex items-center border-2 border-[#0082ba] my-2 mt-4 md:my-4 md:mt-7 rounded-full px-2 py-1 md:px-4 md:py-2 text-variable-collection-prim-ria hover:bg-gray-100 focus:outline-none shadow"
           >
             <span className="mr-2">
               <GoogleIcon className="w-[18px] h-[18px]" />
@@ -57,12 +51,25 @@ const Login = () => {
           </button>
         </div>
 
+        <div className="w-[90%] md:w-[95%] md:my-[-130px] my-[-270px]">
+          <div className="[font-family:'Oswald-Bold',Helvetica] font-bold text-white text-[19px] md:text-[26px] scale-y-125 ">
+            Vamos Começar!
+          </div>
+
+          {/* Subtítulo */}
+          <div className="[font-family:'Questrial-Regular',Helvetica] md:w-[240px] w-[140px] font-normal text-white text-[14px] md:text-[19px] scale-y-100 mb-4">
+            Faça o login com seu e-mail profissional.
+          </div>
+        </div>
+
       </div>
+
+
 
       <div className="absolute md:bottom-[200px] bottom-[400px] opacity-50 right-0">
         <img src={BoxBlueCourt} alt="logo" className="md:w-[520px] md:h-[566px] w-[210px] h-[210px]" />
       </div>
-      <div className="absolute md:bottom-[700px] bottom-[320px] opacity-50 md:right-[470px] right-[-5px]">
+      <div className="absolute md:bottom-[700px] bottom-[320px] opacity-50 md:right-[470px] right-[5px]">
         <img src={BoxBlue} alt="logo" className="md:w-[150px] md:h-[100px] w-[65px] h-[50px]" />
       </div>
       <div className="absolute md:bottom-[100px] bottom-[576px] opacity-50 md:right-[150px] right-[100px]">
