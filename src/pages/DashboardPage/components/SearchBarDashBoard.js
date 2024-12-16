@@ -1,31 +1,55 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from "../../../icons/icons";
+import { fetchCustomers } from "../../../service/pagesService/pagesService";
 
 const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [remotePatients, setRemotePatients] = useState([]);
   const searchDropRef = useRef(null);
+
+  useEffect(() => {
+    const fetchRemotePatients = async () => {
+      if (searchTerm) {
+        const data = await fetchCustomers();
+        setRemotePatients(data.customers || []);
+      } else {
+        setRemotePatients([]);
+      }
+    };
+  
+    fetchRemotePatients();
+  }, [searchTerm]);
 
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredPatients([]);
       setIsDropdownVisible(false);
     } else {
-      const filtered = patients.filter((patient) =>
-        patient?.Customer?.customer_name
+      const localFiltered = patients.filter((patient) =>
+        patient.customer?.customer_name
           .toLowerCase()
           .startsWith(searchTerm.toLowerCase())
       );
-      setFilteredPatients(filtered);
+      const combinedResults = [
+        ...localFiltered,
+        ...remotePatients.filter(
+          (remotePatient) =>
+            !localFiltered.some((local) => local.id === remotePatient.id)
+        ),
+      ];
+
+      setFilteredPatients(combinedResults);
       setIsDropdownVisible(true);
     }
-  }, [searchTerm, patients]);
+  }, [searchTerm, patients, remotePatients]);
 
   const handleClearSearch = () => {
     setSearchTerm("");
+    setRemotePatients([]);
     setFilteredPatients([]);
-    if(onClose){
+    if (onClose) {
       onClose();
     }
   };
@@ -72,18 +96,18 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
           ref={searchDropRef}
           className="absolute top-full left-0 w-full bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
         >
-          {filteredPatients.map((patient) => (
+          {filteredPatients.map((customer, patient) => (
             <li
-              key={patient.customer_id}
+              key={customer.customer_id || patient.id}
               className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6"
               onClick={() => {
-                setSearchTerm(patient.Customer.customer_name);
+                setSearchTerm(customer.Customer?.customer_name || "");
                 setFilteredPatients([]);
-                onSelectPatient(patient.customer_id);
+                onSelectPatient(customer.customer_id || patient.id);
                 setIsDropdownVisible(false);
               }}
             >
-              {patient.Customer?.customer_name}
+              {customer?.customer_name || "Nome não disponível"}
             </li>
           ))}
         </ul>
