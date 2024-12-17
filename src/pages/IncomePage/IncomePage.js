@@ -435,7 +435,7 @@ const IncomePage = () => {
         </div>
       )}
 
-      <div className="relative w-[727px] mx-auto h-auto bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
+      <div className="relative w-[727px] mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex justify-between mb-6">
           <Months
             onMonthChange={handleMonthChange}
