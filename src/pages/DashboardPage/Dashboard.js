@@ -312,6 +312,7 @@ const DashBoard = () => {
         },
         body: JSON.stringify({
           customer_id: customerId,
+          selected_month: `${selectedYear}-${selectedMonth}`,
         }),
       }
     );
@@ -355,6 +356,7 @@ const DashBoard = () => {
         body: JSON.stringify({
           customer_id: customerId,
           total_consultation_fee: customer.total_consultation_fee,
+          selected_month: `${selectedYear}-${selectedMonth}`,
         }),
       }
     );
