@@ -405,7 +405,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-around gap-4 mb-8 mt-20">
+          <div className="flex mx-[400px]  gap-4 mb-8 mt-20">
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
