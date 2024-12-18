@@ -15,7 +15,7 @@ const TopBar = ({ onMenuClick }) => {
       case "/customers":
         return { title: "Pacientes", margin: "md:mx-[400px] mr-[-108px]" };
       case "/income":
-        return { title: "Receitas e Despesas", margin: "md:mx-[400px] mr-[-29px]" };
+        return { title: "Receitas e Despesas", margin: "md:mx-[400px] mr-[-31px]" };
       case "/user":
         return { title: "Minhas Configurações", margin: "md:mx-[400px] mr-[-16px]" };
       default:
@@ -26,11 +26,11 @@ const TopBar = ({ onMenuClick }) => {
  const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed h-[100px] w-screen bg-slate-300 items-center md:rounded-b-[0px] rounded-b-[35px]">
+    <div className="fixed h-[100px] w-screen bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
       {/* Botão hambúrguer visível apenas em telas menores */}
-      <div className="mt-[20px]">
+      <div className="mt-[32px]">
         <button
-          className="md:hidden p-4 "
+          className="md:hidden p-5 "
           onClick={onMenuClick}
           aria-label="Abrir menu">
           <svg
@@ -52,14 +52,14 @@ const TopBar = ({ onMenuClick }) => {
         <img
           src={BaseIcon}
           alt="Base Icon"
-          className="w-[55px] h-[40px] mx-auto ml-auto md:my-[-30px] my-[-48px]  md:opacity-0 opacity-100"
+          className="w-[55px] h-[40px] mx-auto ml-auto md:my-[-30px] my-[-60px]  md:opacity-0 opacity-100"
         />
       
 
 
       {/* Nome da página */}
       <h2
-        className={`md:text-[28px] md:w-screen w-[200px] text-[16px] text-primaria font-semibold md:my-[28px] my-[15px] mx-auto ${pageInfo.margin}`}>
+        className={`md:text-[28px] md:w-screen w-[200px] text-[15px] text-primaria font-semibold md:my-[28px] my-[35px] mx-auto ${pageInfo.margin}`}>
         {pageInfo.title}
       </h2>
 

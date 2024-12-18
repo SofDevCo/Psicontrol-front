@@ -13,7 +13,7 @@ const Layout = () => {
   return (
     <div className="layout-container flex h-screen">
       {/* Sidebar com estado controlado */}
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       <div className="main-content flex flex-col w-full h-screen bg-clara4">
         {/* Passando a função toggleSidebar para o TopBar */}
