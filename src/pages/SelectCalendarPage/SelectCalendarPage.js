@@ -11,28 +11,29 @@ const SelectCalendarPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Função para buscar calendários da rota /events/calendars
   const fetchCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
     if (authenticationToken) {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authenticationToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/calendars`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authenticationToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setCalendars(data);
 
-        // Atualiza selectedCalendarIds com os calendários que estão ativados no banco de dados
         const activeCalendars = new Set(
           data
             .filter((calendar) => calendar.enabled)
-            .map((calendar) => calendar.id)
+            .map((calendar) => calendar.calendar_id)
         );
         setSelectedCalendarIds(activeCalendars);
 
@@ -44,7 +45,6 @@ const SelectCalendarPage = () => {
     }
   };
 
-  // Função para verificar e redirecionar com a rota /check-calendars
   const checkCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
@@ -54,13 +54,16 @@ const SelectCalendarPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/check-calendars`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authenticationToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/check-calendars`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authenticationToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         setError("Erro ao verificar calendários.");
@@ -68,10 +71,10 @@ const SelectCalendarPage = () => {
       }
 
       const data = await response.json();
-      if (data.redirect) {
-        console.log("Redirecionando para:", data.redirect);
-        navigate(data.redirect); // Redireciona para a rota retornada pelo backend
-      }
+      // if (data.redirect) {
+      //   console.log("Redirecionando para:", data.redirect);
+      //   navigate(data.redirect);
+      // }
     } catch (error) {
       setError("Erro ao conectar com o servidor.");
       console.error("Erro ao conectar com o servidor:", error);
@@ -80,12 +83,10 @@ const SelectCalendarPage = () => {
     }
   };
 
-
   useEffect(() => {
-    // Primeiro verifica calendários e depois carrega os dados locais
     const fetchInitialData = async () => {
       await checkCalendars();
-      await fetchCalendars(); // Busca os calendários locais após a verificação
+      await fetchCalendars();
     };
 
     fetchInitialData();
@@ -93,19 +94,18 @@ const SelectCalendarPage = () => {
 
   const handleCheckboxChange = async (calendar) => {
     const newSelectedCalendarIds = new Set(selectedCalendarIds);
-    const isSelected = newSelectedCalendarIds.has(calendar.id);
+    const isSelected = newSelectedCalendarIds.has(calendar.calendar_id);
 
-    // Toggle o estado local do calendário
     if (isSelected) {
-      newSelectedCalendarIds.delete(calendar.id);
+      newSelectedCalendarIds.delete(calendar.calendar_id);
     } else {
-      newSelectedCalendarIds.add(calendar.id);
+      newSelectedCalendarIds.add(calendar.calendar_id);
     }
     setSelectedCalendarIds(newSelectedCalendarIds);
 
     const authenticationToken = localStorage.getItem("authentication_token");
     await fetch(
-      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.id}`,
+      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.calendar_id}`,
       {
         method: "POST",
         headers: {
@@ -114,7 +114,7 @@ const SelectCalendarPage = () => {
         },
         body: JSON.stringify({
           enabled: !isSelected,
-          calendar_name: calendar.summary,
+          calendar_name: calendar.calendar_name,
         }),
       }
     );
@@ -124,9 +124,9 @@ const SelectCalendarPage = () => {
     const ids = Array.from(selectedCalendarIds);
 
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
-    console.log("Calendários selecionados salvos no localStorage:", ids); // Verificação
+    console.log("Calendários selecionados salvos no localStorage:", ids);
 
-    navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
+     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
 
   return (
@@ -152,21 +152,26 @@ const SelectCalendarPage = () => {
             </h2>
 
             {calendars.map((calendar) => (
-              <div key={calendar.id} className="mb-3 flex w-full items-center text-texto2">
+              <div
+                key={calendar.calendar_id}
+                className="mb-3 flex w-full items-center text-texto2"
+              >
                 <input
                   type="checkbox"
                   className="appearance-none md:w-[20px] md:h-[20px] w-[16px] h-[16px] rounded-full border-2 border-primaria checked:border-primaria checked:bg-white checked:relative checked:before:content-[''] checked:before:absolute checked:before:top-[50%] checked:before:left-[50%] checked:before:w-[10px] checked:before:h-[10px] checked:before:rounded-full checked:before:bg-primaria checked:before:transform checked:before:translate-x-[-50%] checked:before:translate-y-[-50%] ml-5 mr-3 cursor-pointer"
                   name="calendar"
-                  id={calendar.id}
-                  checked={selectedCalendarIds.has(calendar.id)}
+                  id={calendar.calendar_id}
+                  checked={selectedCalendarIds.has(calendar.calendar_id)}
                   onChange={() => handleCheckboxChange(calendar)}
                 />
-                <label htmlFor={calendar.id} className="font-bold md:text-[15px] text-[13px]">
-                  {calendar.summary}
+                <label
+                  htmlFor={calendar.calendar_id}
+                  className="font-bold md:text-[15px] text-[13px]"
+                >
+                  {calendar.calendar_name}
                 </label>
               </div>
             ))}
-
 
             <button
               onClick={handleProceed}
@@ -176,7 +181,6 @@ const SelectCalendarPage = () => {
               Continuar
             </button>
           </div>
-
         </div>
       )}
     </div>
