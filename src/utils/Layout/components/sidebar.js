@@ -33,15 +33,16 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-full w-[265px] bg-bg1 p-5 z-40 text-gray-800 transform transition-transform duration-300 ${
+      className={`fixed top-0 z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 md:flex-shrink-0`}
     >
       <div>
+
         <img
           src={logo}
           alt="Logo"
-          className="w-[155px] h-[95px] ml-[22px] mt-[18px]"
+          className="w-[155px] md:opacity-100 opacity-0 h-[95px] z-50 ml-[22px] mt-[18px]"
         />
         <nav className="text-right">
           <ul className="mt-[67px] ml-[11px]">
@@ -208,7 +209,7 @@ const Sidebar = ({ isOpen }) => {
           </ul>
           <button
             onClick={handleLogout}
-            className="text-primaria font-medium font-['Ubuntu'] underline absolute bottom-4 left-4 fixed"
+            className="text-primaria font-medium font-['Ubuntu'] underline absolute bottom-4 left-4 "
           >
             Sair
           </button>
