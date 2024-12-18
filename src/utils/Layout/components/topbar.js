@@ -6,73 +6,67 @@ import BaseIcon from "./images/BaseIcon.png";
 const TopBar = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
+ 
 
   const getPageTitle = () => {
     switch (location.pathname) {
       case "/create-event-form":
-        return "Página Inicial";
+        return { title: "Página Inicial", margin: "md:mx-[400px] mr-[-81px]" };
       case "/customers":
-        return "Pacientes";
+        return { title: "Pacientes", margin: "md:mx-[400px] mr-[-108px]" };
       case "/income":
-        return "Receitas e Despesas";
+        return { title: "Receitas e Despesas", margin: "md:mx-[400px] mr-[-29px]" };
       case "/user":
-        return "Minhas Configurações";
+        return { title: "Minhas Configurações", margin: "md:mx-[400px] mr-[-16px]" };
       default:
-        return "Página Não Encontrada";
+        return { title: "Página Não Encontrada", margin: "mx-auto" };
     }
   };
+  
+ const pageInfo = getPageTitle();
 
   return (
-    <header
-      className="flex items-center bg-bg1 z-49"
-      style={{
-        height: "100px",
-        position: "fixed",
-        top: 0,
-        width: "100%",
-      }}
-    >
+    <div className="fixed h-[100px] w-screen bg-slate-300 items-center md:rounded-b-[0px] rounded-b-[35px]">
       {/* Botão hambúrguer visível apenas em telas menores */}
-      <button
-        className="md:hidden p-4"
-        onClick={onMenuClick}
-        aria-label="Abrir menu"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-8 w-8 text-primaria"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
+      <div className="mt-[20px]">
+        <button
+          className="md:hidden p-4 "
+          onClick={onMenuClick}
+          aria-label="Abrir menu">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 text-primaria "
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
 
-      {/* Logo centralizada no mobile e alinhada à esquerda no desktop */}
-      <img
-        src={BaseIcon}
-        alt="Base Icon"
-        className="w-[36px] h-[39px] mx-auto md:mx-0 md:ml-[20px]"
-      />
+      
+        <img
+          src={BaseIcon}
+          alt="Base Icon"
+          className="w-[55px] h-[40px] mx-auto ml-auto md:my-[-30px] my-[-48px]  md:opacity-0 opacity-100"
+        />
+      
+
 
       {/* Nome da página */}
       <h2
-        className="text-[20px] text-primaria font-semibold hidden md:block md:ml-4"
-      >
-        {getPageTitle()}
+        className={`md:text-[28px] md:w-screen w-[200px] text-[16px] text-primaria font-semibold md:my-[28px] my-[15px] mx-auto ${pageInfo.margin}`}>
+        {pageInfo.title}
       </h2>
 
-      {/* Nome da página no mobile */}
-      <h2 className="text-[20px] text-primaria font-semibold md:hidden pr-4">
-        {getPageTitle()}
-      </h2>
-    </header>
+    </div>
+
+
+
   );
 };
 
