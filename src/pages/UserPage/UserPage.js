@@ -26,80 +26,61 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/users`, {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/users`,
+        {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
             "Content-Type": "application/json",
           },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data);
-        } else {
-          console.error("Erro ao buscar os dados do usuário.");
         }
-      } catch (error) {
-        console.error("Erro ao conectar com o servidor:", error);
+      );
+  
+      if (!response.ok) {
+        console.error("Erro ao buscar os dados do usuário:", await response.text());
+        return;
       }
+  
+      const data = await response.json();
+      setUserData(data);
     };
-
+  
     fetchUserData();
   }, []);
 
   useEffect(() => {
     const fetchCalendars = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars`, {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/events/calendars`,
+        {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
           },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setCalendars(data);
-
-          const savedSelectedCalendars = JSON.parse(
-            localStorage.getItem("selectedCalendars")
-          );
-          if (savedSelectedCalendars) {
-            const initiallySelected = new Set(savedSelectedCalendars);
-            setSelectedCalendars(initiallySelected);
-          }
-        } else {
-          console.error("Erro ao buscar as agendas.");
         }
-      } catch (error) {
-        console.error("Erro ao conectar com o servidor:", error);
+      );
+
+      if (!response.ok) {
+        return;
       }
+
+      const data = await response.json();
+      setCalendars(data);
+
+      const selected = new Set(
+        data.filter((cal) => cal.enabled).map((cal) => cal.calendar_id)
+      );
+      setSelectedCalendars(selected);
     };
 
     fetchCalendars();
-  }, []);
+  }, [refreshKey]);
 
   const toggleCalendar = async (calendarId) => {
-    const newSelectedCalendars = new Set(selectedCalendars);
-    const isEnabled = !newSelectedCalendars.has(calendarId);
-
-    if (isEnabled) {
-      newSelectedCalendars.add(calendarId);
-    } else {
-      newSelectedCalendars.delete(calendarId);
-    }
-
-    setSelectedCalendars(newSelectedCalendars);
-
-    localStorage.setItem(
-      "selectedCalendars",
-      JSON.stringify(Array.from(newSelectedCalendars))
-    );
+    const isEnabled = !selectedCalendars.has(calendarId);
 
     const calendar = calendars.find((cal) => cal.id === calendarId);
-    const calendarName = calendar ? calendar.summary : "Nome padrão";
 
-    await fetch(
+    const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendarId}`,
       {
         method: "POST",
@@ -109,10 +90,25 @@ const UserPage = () => {
         },
         body: JSON.stringify({
           enabled: isEnabled,
-          calendar_name: calendarName,
+          calendar_name: calendar ? calendar.summary : "default name",
         }),
       }
     );
+    if (!response.ok) {
+      return;
+    }
+
+    setSelectedCalendars((prevSelected) => {
+      const updatedSelected = new Set(prevSelected);
+      if (isEnabled) {
+        updatedSelected.add(calendarId);
+      } else {
+        updatedSelected.delete(calendarId);
+      }
+      return updatedSelected;
+    });
+
+    setRefreshKey((prevKey) => prevKey + 1);
   };
 
   const handleChangeAccount = async () => {
@@ -142,26 +138,28 @@ const UserPage = () => {
         formData.append("image", userData.image);
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/save-users`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/save-users`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao salvar os dados do usuário.");
       }
 
-      // Atualiza o estado com os dados mais recentes do servidor
       const updatedData = await response.json();
       setUserData((prevData) => ({
         ...prevData,
-        ...updatedData, // Garante que `image` seja atualizado
+        ...updatedData, 
       }));
 
-      setRefreshKey((prevKey) => prevKey + 1); // Força a re-renderização
+      setRefreshKey((prevKey) => prevKey + 1); 
       setIsEditing(false);
       showAlteredToast();
     } catch (error) {
@@ -174,14 +172,16 @@ const UserPage = () => {
       const formData = new FormData();
       formData.append("user_message", userData.user_message || "");
 
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/save-users`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/save-users`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao salvar a mensagem.");
@@ -193,39 +193,33 @@ const UserPage = () => {
         ...updatedData,
       }));
 
-      setIsEditingMessage(false); 
+      setIsEditingMessage(false);
     } catch (error) {
       console.error("Erro ao salvar a mensagem:", error);
       alert("Erro ao salvar a mensagem. Tente novamente.");
     }
   };
 
-
-
-
   const openModalToChangeAccount = () => {
-    setIsModalOpen(true); // Abre o modal de confirmação
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Fecha o modal
+    setIsModalOpen(false);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Adicione logs para depuração, se necessário:
     if (name === "user_message") {
       console.log(`Mensagem atualizada: ${value}`);
     }
 
-    // Atualiza o estado
     setUserData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -247,7 +241,7 @@ const UserPage = () => {
   };
 
   const handleToggleCalendar = (calendarId) => {
-    toggleCalendar(calendarId); // Sua lógica original
+    toggleCalendar(calendarId);
     closeConfirmationModal();
   };
 
@@ -348,7 +342,9 @@ const UserPage = () => {
                     type="text"
                     id="clinic_name"
                     value={userData.clinic_name || ""}
-                    onChange={(e) => setUserData({ ...userData, clinic_name: e.target.value })}
+                    onChange={(e) =>
+                      setUserData({ ...userData, clinic_name: e.target.value })
+                    }
                     placeholder="Nome/Clínica"
                     className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                   />
@@ -501,22 +497,16 @@ const UserPage = () => {
               <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                 <span>Logo: </span>
                 <span className="text-[#5c5c5c]">
-                  {userData.image ? (
-                    userData.image instanceof File ? (
-                      userData.image.name 
-                    ) : (
-                      typeof userData.image === "string" && userData.image.includes("/")
-                        ? userData.image.split("/").pop()
+                  {userData.image
+                    ? userData.image instanceof File
+                      ? userData.image.name 
+                      : typeof userData.image === "string" &&
+                          userData.image.includes("/")
+                        ? userData.image.split("/").pop() 
                         : userData.image 
-                    )
-                  ) : (
-                    "(Imagem não carregada)"
-                  )}
+                    : "(Imagem não carregada)"}
                 </span>
               </div>
-
-
-
             </div>
           </div>
         </div>
@@ -555,31 +545,34 @@ const UserPage = () => {
               <div className="mt-3 space-y-4 max-h-[120px] overflow-y-auto">
                 {calendars.map((calendar) => (
                   <div
-                    key={calendar.id}
+                    key={calendar.calendar_id}
                     className="flex items-center space-x-3"
                   >
                     <input
                       type="checkbox"
-                      checked={selectedCalendars.has(calendar.id)}
-                      onChange={() => openConfirmationModal(calendar.id)}
-                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.id)
-                        ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                        : "bg-white border-gray-300 opacity-50"
-                        } focus:ring-0 checked:bg-[#0082ba] checked:border-[#0082ba]`}
+                      checked={selectedCalendars.has(calendar.calendar_id)}
+                      onChange={() =>
+                        openConfirmationModal(calendar.calendar_id)
+                      }
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
+                        selectedCalendars.has(calendar.calendar_id)
+                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                          : "bg-white border-gray-300 opacity-50"
+                      }`}
                       style={{
-                        boxShadow: selectedCalendars.has(calendar.id)
+                        boxShadow: selectedCalendars.has(calendar.calendar_id)
                           ? "inset 0 0 0 3px white"
                           : "none",
                       }}
                     />
-
                     <span
-                      className={`font-medium ${selectedCalendars.has(calendar.id)
-                        ? "text-[#5c5c5c]"
-                        : "text-gray-500 opacity-50"
-                        }`}
+                      className={`font-medium ${
+                        selectedCalendars.has(calendar.calendar_id)
+                          ? "text-[#5c5c5c]"
+                          : "text-gray-500 opacity-50"
+                      }`}
                     >
-                      {calendar.summary}
+                      {calendar.calendar_name}
                     </span>
                   </div>
                 ))}
@@ -663,12 +656,11 @@ const UserPage = () => {
                 </h3>
                 {isEditingMessage ? (
                   <button
-                    onClick={saveMessage} // Salva a mensagem
+                    onClick={saveMessage} 
                     className="text-[#0082ba] text-sm"
                   >
                     <CheckMessage />
                   </button>
-
                 ) : (
                   <button
                     onClick={() => setIsEditingMessage(true)}
@@ -704,7 +696,6 @@ const UserPage = () => {
               )}
             </div>
           </div>
-
         </div>
       </>
     </div>

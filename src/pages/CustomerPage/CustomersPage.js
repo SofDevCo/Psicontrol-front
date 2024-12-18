@@ -56,13 +56,13 @@ const CustomersPage = () => {
       setError("Erro ao buscar clientes.");
       return null;
     });
-    
+
     if (data && Array.isArray(data)) {
       setCustomers(data);
     } else if (data && data.customers) {
-      setCustomers(data.customers); 
+      setCustomers(data.customers);
     } else {
-      setCustomers([]); 
+      setCustomers([]);
     }
 
     setIsLoading(false);
