@@ -424,7 +424,7 @@ const UserPage = () => {
       )}
 
       <>
-        <div className="relative w-[1076px] mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4 mb-3">
+        <div className="relative w-[1076px] mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-20 mb-3">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-[#0082ba] text-[25px] font-medium font-['Ubuntu']">
               Meus dados
