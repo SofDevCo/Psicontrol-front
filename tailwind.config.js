@@ -34,6 +34,7 @@ module.exports = {
         lastMonthShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         editShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         loginShadow: "9px 9px 2px rgba(0, 0, 0, 0.30)",
+        topbatShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
       },
       letterSpacing: {
         normal: "0.25px",
