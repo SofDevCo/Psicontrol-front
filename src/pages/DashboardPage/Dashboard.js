@@ -596,11 +596,12 @@ const DashBoard = () => {
                         )}
                       </td>
                       <td className="w-20 text-center">
-                        {patient.was_charged ? (
+                        {patient.payment_status === "pago" ? (
                           <VerifyGreenIcon />
-                        ) : patient.payment_amount &&
-                          parseFloat(patient.payment_amount) > 0 ? (
-                          `R$ ${parseFloat(patient.payment_amount).toFixed(2).replace(".", ",")}`
+                        ) : patient.payment_status === "parcial" ? (
+                          `R$ ${parseFloat(patient.payment_amount || 0)
+                            .toFixed(2)
+                            .replace(".", ",")}`
                         ) : (
                           <CrossIcon />
                         )}
