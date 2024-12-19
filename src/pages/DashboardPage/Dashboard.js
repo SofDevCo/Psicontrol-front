@@ -5,7 +5,7 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
-import { CrossIcon } from "./components/IconsDashBoard";
+import { CrossIcon, VerifyGreenIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
 import BillingDashBoard from "./components/BillingDashBoard";
@@ -15,6 +15,7 @@ const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
+  const [sendingStatus, setSendingStatus] = useState({});
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [patients, setPatients] = useState([]);
   const [totalConsultations, setTotalConsultations] = useState(0);
@@ -323,6 +324,14 @@ const DashBoard = () => {
       const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
 
+      setPatients((prevPatients) =>
+        prevPatients.map((patient) =>
+          patient.customer_id === customerId
+            ? { ...patient, sending_invoice: true } 
+            : patient
+        )
+      );
+
       if (openModalOnly) {
         setIsBillingModalOpen(true);
       } else {
@@ -367,6 +376,13 @@ const DashBoard = () => {
       const data = await response.json();
       const mailtoLink = data.mailtoLink;
       setBillingMessage(data.user_message);
+      setPatients((prevPatients) =>
+        prevPatients.map((patient) =>
+          patient.customer_id === customerId
+            ? { ...patient, sending_invoice: true } 
+            : patient
+        )
+      );
       alert("Abrindo cliente de email...");
       window.open(mailtoLink, "_blank");
     } else {
@@ -484,7 +500,7 @@ const DashBoard = () => {
                         R$ {patient.total_consultation_fee || "0,00"}
                       </td>
                       <td className="w-20 text-center">
-                        <CrossIcon />
+                      {patient.sending_invoice ? <VerifyGreenIcon /> : <CrossIcon />}
                       </td>
                       <td className="w-20 text-center">
                         <CrossIcon />
