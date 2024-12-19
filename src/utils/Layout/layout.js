@@ -11,13 +11,24 @@ const Layout = () => {
   };
 
   return (
-    <div className="layout-container flex h-screen">
+    <div className="layout-container flex h-screen relative">
       {/* Sidebar com estado controlado */}
       <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
-      <div className="main-content flex flex-col w-full h-screen bg-clara4">
-        {/* Passando a função toggleSidebar para o TopBar */}
+      {/* Overlay para blur com cor personalizada */}
+      {isSidebarOpen && (
+        <div
+          className="absolute inset-0 bg-[#BDE3ED] bg-opacity-40 backdrop-blur-md z-20"
+          onClick={toggleSidebar} // Fecha o sidebar ao clicar no fundo
+        ></div>
+      )}
+
+      {/* Topbar sempre visível */}
+      <div className="relative z-30">
         <TopBar onMenuClick={toggleSidebar} />
+      </div>
+
+      <div className="main-content flex flex-col w-full h-screen bg-clara4 z-10">
         <main className="flex-1 p-6">
           <Outlet />
         </main>

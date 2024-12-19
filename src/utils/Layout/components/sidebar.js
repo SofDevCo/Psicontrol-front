@@ -34,7 +34,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
   return (
     <>
       <aside
-        className={`fixed top-0 z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0  z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
           } md:translate-x-0 md:flex-shrink-0`}
       >
         <div>
@@ -46,7 +46,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-primaria"
+              className="h-8 w-8 mx-[-20px] mb-[-40px] my-[12px] text-primaria"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -60,28 +60,24 @@ const Sidebar = ({ isOpen, onToggle }) => {
             </svg>
           </button>
 
-
           <img
             src={logo}
             alt="Logo"
-            className="w-[155px] md:opacity-100 opacity-0 h-[95px] z-50 ml-[22px] mt-[18px]"
-          />
+            className="w-[155px]  md:opacity-100 opacity-0 h-[95px] z-50 ml-[22px] mt-[18px]"/>
           <nav className="text-right">
-            <ul className="mt-[67px] ml-[11px]">
+            <ul className="md:mt-[70px] mt-[-35px] ml-[11px]">
               {/* Página Inicial */}
               <li
                 className={`mb-[27px] -mx-8 ${location.pathname.startsWith("/create-event-form")
                     ? "text-[#0082ba]"
                     : ""
-                  }`}
-              >
+                  }`}>
                 <button
                   onClick={handleProceed}
                   className={`group flex items-center w-full ${location.pathname.startsWith("/create-event-form")
                       ? ""
                       : "hover:text-[#0082ba]"
-                    }`}
-                >
+                    }`}>
                   <BorderIcon
                     isSelected={location.pathname.startsWith(
                       "/create-event-form"

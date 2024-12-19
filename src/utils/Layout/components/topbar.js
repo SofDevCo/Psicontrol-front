@@ -26,7 +26,7 @@ const TopBar = ({ onMenuClick }) => {
  const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed h-[100px] w-screen bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
+    <div className="fixed h-[100px] drop-shadow-topbatShadow w-screen bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
       {/* Botão hambúrguer visível apenas em telas menores */}
       <div className="mt-[32px]">
         <button
@@ -35,7 +35,7 @@ const TopBar = ({ onMenuClick }) => {
           aria-label="Abrir menu">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-primaria "
+            className="h-8 w-8 text-primaria active:"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
