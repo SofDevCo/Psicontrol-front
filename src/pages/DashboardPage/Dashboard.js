@@ -9,13 +9,13 @@ import { CrossIcon, VerifyGreenIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
 import BillingDashBoard from "./components/BillingDashBoard";
+import ModalPaymentDash from "./components/ModalPaymentDash";
 import { Months } from "../../utils/Months/months";
 
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
-  const [sendingStatus, setSendingStatus] = useState({});
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [patients, setPatients] = useState([]);
   const [totalConsultations, setTotalConsultations] = useState(0);
@@ -33,6 +33,12 @@ const DashBoard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
+  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] =
+    useState(false);
+  const [
+    selectedPatientForPartialPayment,
+    setSelectedPatientForPartialPayment,
+  ] = useState(null);
   const calendarIdsParam = searchParams.get("calendarIds");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -327,7 +333,7 @@ const DashBoard = () => {
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
-            ? { ...patient, sending_invoice: true } 
+            ? { ...patient, sending_invoice: true }
             : patient
         )
       );
@@ -379,7 +385,7 @@ const DashBoard = () => {
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
-            ? { ...patient, sending_invoice: true } 
+            ? { ...patient, sending_invoice: true }
             : patient
         )
       );
@@ -411,6 +417,53 @@ const DashBoard = () => {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
     }
+  };
+
+  const handleSavePartialPayment = async (paymentAmount) => {
+    if (!selectedPatientForPartialPayment) return;
+
+    const { customer_id } = selectedPatientForPartialPayment;
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/update-partial-payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id,
+          month_and_year: `${selectedYear}-${selectedMonth}`,
+          payment_amount: parseFloat(paymentAmount),
+        }),
+      }
+    );
+
+    if (response.ok) {
+      alert("Pagamento parcial salvo com sucesso!");
+
+      setPatients((prevPatients) =>
+        prevPatients.map((patient) =>
+          patient.customer_id === customer_id
+            ? {
+                ...patient,
+                payment_amount: parseFloat(paymentAmount),
+                payment_status: "parcial",
+              }
+            : patient
+        )
+      );
+
+      setIsPartialPaymentModalOpen(false);
+    } else {
+      alert("Erro ao salvar pagamento parcial.");
+    }
+  };
+
+  const handleOpenPartialPayment = (patient) => {
+    setSelectedPatientForPartialPayment(patient);
+    setIsPartialPaymentModalOpen(true);
   };
 
   return (
@@ -500,10 +553,19 @@ const DashBoard = () => {
                         R$ {patient.total_consultation_fee || "0,00"}
                       </td>
                       <td className="w-20 text-center">
-                      {patient.sending_invoice ? <VerifyGreenIcon /> : <CrossIcon />}
+                        {patient.sending_invoice ? (
+                          <VerifyGreenIcon />
+                        ) : (
+                          <CrossIcon />
+                        )}
                       </td>
                       <td className="w-20 text-center">
-                        <CrossIcon />
+                        {patient.payment_amount &&
+                        parseFloat(patient.payment_amount) > 0 ? (
+                          `R$ ${parseFloat(patient.payment_amount).toFixed(2).replace(".", ",")}`
+                        ) : (
+                          <CrossIcon />
+                        )}
                       </td>
                       <td className="w-20 text-center">
                         <CrossIcon />
@@ -520,6 +582,9 @@ const DashBoard = () => {
                             <DropDownDashActions
                               onOpenModal={() =>
                                 handleSendWhatsApp(patient, true)
+                              }
+                              onPartialPayment={() =>
+                                handleOpenPartialPayment(patient)
                               }
                             />
                           </div>
@@ -616,6 +681,18 @@ const DashBoard = () => {
           message={billingMessage}
         />
       )}
+
+      <>
+        {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
+          <ModalPaymentDash
+            onClose={() => setIsPartialPaymentModalOpen(false)}
+            onSave={handleSavePartialPayment}
+            totalAmount={
+              selectedPatientForPartialPayment.total_consultation_fee
+            }
+          />
+        )}
+      </>
     </div>
   );
 };
