@@ -466,6 +466,42 @@ const DashBoard = () => {
     setIsPartialPaymentModalOpen(true);
   };
 
+  const handleConfirmPayment = async (patient) => {
+    if (!patient || !patient.customer_id) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/confirm-payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: patient.customer_id,
+          month_and_year: `${selectedYear}-${selectedMonth}`,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      alert("Pagamento confirmado com sucesso!");
+
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === patient.customer_id
+            ? { ...p, was_charged: true, payment_status: "pago" }
+            : p
+        )
+      );
+    } else {
+      alert("Erro ao confirmar pagamento.");
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -560,8 +596,10 @@ const DashBoard = () => {
                         )}
                       </td>
                       <td className="w-20 text-center">
-                        {patient.payment_amount &&
-                        parseFloat(patient.payment_amount) > 0 ? (
+                        {patient.was_charged ? (
+                          <VerifyGreenIcon />
+                        ) : patient.payment_amount &&
+                          parseFloat(patient.payment_amount) > 0 ? (
                           `R$ ${parseFloat(patient.payment_amount).toFixed(2).replace(".", ",")}`
                         ) : (
                           <CrossIcon />
@@ -585,6 +623,9 @@ const DashBoard = () => {
                               }
                               onPartialPayment={() =>
                                 handleOpenPartialPayment(patient)
+                              }
+                              onConfirmedPayment={() =>
+                                handleConfirmPayment(patient)
                               }
                             />
                           </div>
