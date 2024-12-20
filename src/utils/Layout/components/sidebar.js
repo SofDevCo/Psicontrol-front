@@ -17,12 +17,15 @@ const Sidebar = ({ isOpen, onToggle }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
+    // Função que captura o evento de scroll
     const handleScroll = () => {
       setScrollPosition(window.scrollY); // Atualiza a posição do scroll
     };
 
+    // Adiciona o listener para o scroll
     window.addEventListener("scroll", handleScroll);
 
+    // Remove o listener quando o componente for desmontado
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -46,12 +49,11 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
   return (
     <>
-     <aside
-      style={{
-        transform: `translateX(${isOpen ? "0" : "-100%"}) translateY(${scrollPosition}px)`,
-      }}
-      className="fixed top-0 left-0 z-40 h-screen w-[265px] bg-bg1 p-5 text-gray-800 transition-transform duration-300 md:translate-x-0 md:flex-shrink-0"
-    >
+      <aside
+        className={`fixed top-0 z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:flex-shrink-0`}
+      >
         <div>
           {/* Botão Hambúrguer para Fechar */}
           <button
@@ -78,21 +80,26 @@ const Sidebar = ({ isOpen, onToggle }) => {
           <img
             src={logo}
             alt="Logo"
-            className="md:w-[155px] md:h-[95px] w-[1px] h-[1px] md:opacity-100 opacity-0  z-50 ml-[22px] md:mt-[18px]" />
+            className="md:w-[155px] md:h-[95px] w-[1px] h-[1px] md:opacity-100 opacity-0  z-50 ml-[22px] md:mt-[18px]"
+          />
           <nav className="text-right">
             <ul className="md:mt-[70px] mt-[53px] ml-[11px]">
               {/* Página Inicial */}
               <li
-                className={`mb-[27px] -mx-8 ${location.pathname.startsWith("/create-event-form")
-                  ? "text-[#0082ba]"
-                  : ""
-                  }`}>
+                className={`mb-[27px] -mx-8 ${
+                  location.pathname.startsWith("/create-event-form")
+                    ? "text-[#0082ba]"
+                    : ""
+                }`}
+              >
                 <button
                   onClick={handleProceed}
-                  className={`group flex items-center w-full ${location.pathname.startsWith("/create-event-form")
-                    ? ""
-                    : "hover:text-[#0082ba]"
-                    }`}>
+                  className={`group flex items-center w-full ${
+                    location.pathname.startsWith("/create-event-form")
+                      ? ""
+                      : "hover:text-[#0082ba]"
+                  }`}
+                >
                   <BorderIcon
                     isSelected={location.pathname.startsWith(
                       "/create-event-form"
@@ -106,10 +113,11 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }
                   />
                   <span
-                    className={`py-1 text-lg font-medium font-['Ubuntu'] tracking-tight ${location.pathname.startsWith("/create-event-form")
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`py-1 text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                      location.pathname.startsWith("/create-event-form")
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   >
                     Página Inicial
                   </span>
@@ -118,28 +126,32 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
               {/* Receitas e Despesas */}
               <li
-                className={`side-menu -mx-8 mb-[27px] ${location.pathname === "/income" ? "text-[#0082ba]" : ""
-                  }`}
+                className={`side-menu -mx-8 mb-[27px] ${
+                  location.pathname === "/income" ? "text-[#0082ba]" : ""
+                }`}
               >
                 <Link
                   to="/income"
-                  className={`group flex items-center w-full ${location.pathname === "/income"
-                    ? ""
-                    : "hover:text-[#0082ba]"
-                    }`}
+                  className={`group flex items-center w-full ${
+                    location.pathname === "/income"
+                      ? ""
+                      : "hover:text-[#0082ba]"
+                  }`}
                 >
                   <BorderIcon isSelected={location.pathname === "/income"} />
                   <RecDespIcon
-                    className={`h-8 w-8 ${location.pathname === "/income"
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`h-8 w-8 ${
+                      location.pathname === "/income"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${location.pathname === "/income"
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                      location.pathname === "/income"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   >
                     <span className="flex">Receitas e</span>
                     <span className="flex">Despesas</span>
@@ -149,19 +161,19 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
               {/* Pacientes */}
               <li
-                className={`side-menu -mx-8 mb-[27px] ${location.pathname === "/customers" ? "text-[#0082ba]" : ""
-                  }`}
+                className={`side-menu -mx-8 mb-[27px] ${
+                  location.pathname === "/customers" ? "text-[#0082ba]" : ""
+                }`}
               >
                 <Link
                   to="/customers"
-                  className={`group flex items-center w-full ${location.pathname === "/customers"
-                    ? ""
-                    : "hover:text-[#0082ba]"
-                    }`}
+                  className={`group flex items-center w-full ${
+                    location.pathname === "/customers"
+                      ? ""
+                      : "hover:text-[#0082ba]"
+                  }`}
                 >
-                  <BorderIcon
-                    isSelected={location.pathname === "/customers"}
-                  />
+                  <BorderIcon isSelected={location.pathname === "/customers"} />
                   <UserIcon
                     className={
                       location.pathname === "/customers"
@@ -170,10 +182,11 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${location.pathname === "/customers"
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                      location.pathname === "/customers"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   >
                     Pacientes
                   </div>
@@ -182,28 +195,30 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
               {/* Minhas Configurações */}
               <li
-                className={`side-menu -mx-8 mb-[27px] ${location.pathname === "/user" ? "text-[#0082ba]" : ""
-                  }`}
+                className={`side-menu -mx-8 mb-[27px] ${
+                  location.pathname === "/user" ? "text-[#0082ba]" : ""
+                }`}
               >
                 <Link
                   to="/user"
-                  className={`group flex items-center w-full ${location.pathname === "/user"
-                    ? ""
-                    : "hover:text-[#0082ba]"
-                    }`}
+                  className={`group flex items-center w-full ${
+                    location.pathname === "/user" ? "" : "hover:text-[#0082ba]"
+                  }`}
                 >
                   <BorderIcon isSelected={location.pathname === "/user"} />
                   <ConfigIcon
-                    className={`h-8 w-8 ${location.pathname === "/user"
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`h-8 w-8 ${
+                      location.pathname === "/user"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${location.pathname === "/user"
-                      ? "text-[#0082ba]"
-                      : "text-texto2 group-hover:text-[#0082ba]"
-                      }`}
+                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                      location.pathname === "/user"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
                   >
                     <span className="flex">Minhas</span>
                     <span className="flex">Configurações</span>
@@ -234,7 +249,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
             >
               Sair
             </button>
-
           </nav>
         </div>
       </aside>
