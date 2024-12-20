@@ -10,6 +10,7 @@ import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
 import BillingDashBoard from "./components/BillingDashBoard";
 import ModalPaymentDash from "./components/ModalPaymentDash";
+import FilterStatusDashBoard from "./components/FilterStatusDashBoard";
 import { Months } from "../../utils/Months/months";
 
 const DashBoard = () => {
@@ -25,6 +26,8 @@ const DashBoard = () => {
   const [billingMessage, setBillingMessage] = useState("");
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -253,8 +256,10 @@ const DashBoard = () => {
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
       setNetRevenue(parseFloat(data.netRevenue || 0));
       setNetTime(parseFloat(data.netTime) || 0);
+      setFilteredPatients(data.billingRecords || []);
     } else if (response.status === 404) {
       setPatients([]);
+      setFilteredPatients([]);
       setTotalConsultations(0);
       setTotalRevenue(0);
     } else {
@@ -262,6 +267,24 @@ const DashBoard = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    const filterPatients = () => {
+     
+      const filtered = patients.filter((patient) => {
+        if (selectedStatus === "aberto") {
+          return !patient.payment_status; 
+        }
+        return selectedStatus
+          ? patient.payment_status === selectedStatus
+          : true;
+      });
+
+      setFilteredPatients(filtered);
+    };
+
+    filterPatients();
+  }, [selectedStatus, patients]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -533,6 +556,12 @@ const DashBoard = () => {
             />
           </div>
 
+          <div className="flex mx-[400px] gap-4 mb-8 mt-20">
+            <FilterStatusDashBoard
+              selectedStatus={selectedStatus}
+              onChangeStatus={setSelectedStatus}
+            />
+          </div>
           <div className=" mx-auto box-border md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
@@ -567,8 +596,8 @@ const DashBoard = () => {
                 </tr>
               </thead>
               <tbody>
-                {patients.length > 0 ? (
-                  patients.map((patient, index) => (
+                {filteredPatients.length > 0 ? (
+                   filteredPatients.map((patient, index) => (
                     <tr key={index}>
                       <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
                         {patient.Customer?.customer_name || "-"}
