@@ -270,14 +270,14 @@ const DashBoard = () => {
 
   useEffect(() => {
     const filterPatients = () => {
-     
       const filtered = patients.filter((patient) => {
-        if (selectedStatus === "aberto") {
-          return !patient.payment_status; 
+        if (selectedStatus.length === 0) return true; 
+
+        if (selectedStatus.includes("aberto") && !patient.payment_status) {
+          return true; 
         }
-        return selectedStatus
-          ? patient.payment_status === selectedStatus
-          : true;
+
+        return selectedStatus.includes(patient.payment_status);
       });
 
       setFilteredPatients(filtered);
