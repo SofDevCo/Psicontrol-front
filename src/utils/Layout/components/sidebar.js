@@ -34,7 +34,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
   return (
     <>
       <aside
-        className={`fixed top-0  z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`absolute top-0 z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
           } md:translate-x-0 md:flex-shrink-0`}
       >
         <div>
@@ -63,9 +63,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
           <img
             src={logo}
             alt="Logo"
-            className="w-[155px]  md:opacity-100 opacity-0 h-[95px] z-50 ml-[22px] mt-[18px]"/>
+            className="md:w-[155px] md:h-[95px] w-[1px] h-[1px] md:opacity-100 opacity-0  z-50 ml-[22px] md:mt-[18px]"/>
           <nav className="text-right">
-            <ul className="md:mt-[70px] mt-[-35px] ml-[11px]">
+            <ul className="md:mt-[70px] mt-[53px] ml-[11px]">
               {/* Página Inicial */}
               <li
                 className={`mb-[27px] -mx-8 ${location.pathname.startsWith("/create-event-form")
