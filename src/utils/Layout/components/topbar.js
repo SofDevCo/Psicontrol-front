@@ -26,7 +26,7 @@ const TopBar = ({ onMenuClick }) => {
  const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed h-[100px] drop-shadow-topbatShadow w-screen bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
+    <div className="fixed h-[100px] md:drop-shadow-none drop-shadow-topbatShadow w-screen bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
       {/* Botão hambúrguer visível apenas em telas menores */}
       <div className="mt-[32px]">
         <button
