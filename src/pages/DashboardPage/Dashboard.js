@@ -271,20 +271,21 @@ const DashBoard = () => {
   useEffect(() => {
     const filterPatients = () => {
       const filtered = patients.filter((patient) => {
-        if (selectedStatus.length === 0) return true; 
+        if (selectedStatus.length === 0) return true;
         const matchesPaymentStatus =
-        (selectedStatus.includes("aberto") && !patient.payment_status) || 
-        selectedStatus.includes(patient.payment_status);
+          (selectedStatus.includes("aberto") && !patient.payment_status) ||
+          selectedStatus.includes(patient.payment_status);
 
-      const matchesInvoiceStatus =
-        (selectedStatus.includes("realizada") && patient.sending_invoice) || 
-        (selectedStatus.includes("nao-realizada") && !patient.sending_invoice); 
+        const matchesInvoiceStatus =
+          (selectedStatus.includes("realizada") && patient.sending_invoice) ||
+          (selectedStatus.includes("nao-realizada") &&
+            !patient.sending_invoice);
 
-      return matchesPaymentStatus || matchesInvoiceStatus;
-    });
+        return matchesPaymentStatus || matchesInvoiceStatus;
+      });
 
-    setFilteredPatients(filtered);
-  };
+      setFilteredPatients(filtered);
+    };
 
     filterPatients();
   }, [selectedStatus, patients]);
@@ -536,7 +537,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex mx-[400px]  gap-4 mb-8 mt-20">
+          <div className="flex md:mx-[400px]  gap-4 md:mt-32">
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
@@ -551,11 +552,11 @@ const DashBoard = () => {
             />
             <CardDashBoard
               title="Receita liquida"
-              value={`R$ ${netRevenue.toFixed(2).replace(".", ".")}`}
+              value={`R$ ${netRevenue.toFixed(2).replace(".", ",")}`}
             />
             <CardDashBoard
               title="Hora liquida"
-              value={`R$ ${netTime.toFixed(2).replace(".", ".")}`}
+              value={`R$ ${netTime.toFixed(2).replace(".", ",")}`}
             />
           </div>
 
@@ -600,7 +601,7 @@ const DashBoard = () => {
               </thead>
               <tbody>
                 {filteredPatients.length > 0 ? (
-                   filteredPatients.map((patient, index) => (
+                  filteredPatients.map((patient, index) => (
                     <tr key={index}>
                       <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
                         {patient.Customer?.customer_name || "-"}
