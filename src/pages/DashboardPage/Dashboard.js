@@ -272,16 +272,19 @@ const DashBoard = () => {
     const filterPatients = () => {
       const filtered = patients.filter((patient) => {
         if (selectedStatus.length === 0) return true; 
+        const matchesPaymentStatus =
+        (selectedStatus.includes("aberto") && !patient.payment_status) || 
+        selectedStatus.includes(patient.payment_status);
 
-        if (selectedStatus.includes("aberto") && !patient.payment_status) {
-          return true; 
-        }
+      const matchesInvoiceStatus =
+        (selectedStatus.includes("realizada") && patient.sending_invoice) || 
+        (selectedStatus.includes("nao-realizada") && !patient.sending_invoice); 
 
-        return selectedStatus.includes(patient.payment_status);
-      });
+      return matchesPaymentStatus || matchesInvoiceStatus;
+    });
 
-      setFilteredPatients(filtered);
-    };
+    setFilteredPatients(filtered);
+  };
 
     filterPatients();
   }, [selectedStatus, patients]);

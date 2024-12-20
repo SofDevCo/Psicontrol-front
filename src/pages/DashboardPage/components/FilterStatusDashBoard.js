@@ -23,8 +23,8 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
           Filtrar dados
         </button>
         {isOpen && (
-          <div className="dropdown-menu absolute bg-white border rounded shadow-md p-2">
-           <p>Pagamento</p>
+          <div className="dropdown-menu absolute w-[211px] h-[355px] bg-white border rounded shadow-md p-2">
+            <p>Pagamento</p>
             <div className="checkbox-item">
               <input
                 type="checkbox"
@@ -51,6 +51,25 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
                 onChange={() => handleCheckboxChange("aberto")}
               />
               <label htmlFor="aberto">Não confirmados</label>
+            </div>
+            <p className="mt-4">Cobrança</p>
+            <div className="checkbox-item">
+              <input
+                type="checkbox"
+                id="realizada"
+                checked={selectedStatus.includes("realizada")}
+                onChange={() => handleCheckboxChange("realizada")}
+              />
+              <label htmlFor="realizada">Realizada</label>
+            </div>
+            <div className="checkbox-item">
+              <input
+                type="checkbox"
+                id="nao-realizada"
+                checked={selectedStatus.includes("nao-realizada")}
+                onChange={() => handleCheckboxChange("nao-realizada")}
+              />
+              <label htmlFor="nao-realizada">Não Realizada</label>
             </div>
           </div>
         )}
