@@ -34,7 +34,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
   return (
     <>
       <aside
-        className={`fixed top-0  z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`absolute top-0 z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
           } md:translate-x-0 md:flex-shrink-0`}
       >
         <div>
