@@ -63,9 +63,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
           <img
             src={logo}
             alt="Logo"
-            className="w-[155px]  md:opacity-100 opacity-0 h-[95px] z-50 ml-[22px] mt-[18px]"/>
+            className="md:w-[155px] md:h-[95px] w-[1px] h-[1px] md:opacity-100 opacity-0  z-50 ml-[22px] md:mt-[18px]"/>
           <nav className="text-right">
-            <ul className="md:mt-[70px] mt-[-35px] ml-[11px]">
+            <ul className="md:mt-[70px] mt-[53px] ml-[11px]">
               {/* Página Inicial */}
               <li
                 className={`mb-[27px] -mx-8 ${location.pathname.startsWith("/create-event-form")
