@@ -537,7 +537,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex md:mx-[400px]  gap-4 md:mt-32">
+          <div className="flex md:mx-[400px] gap-4 md:mt-32 mt-32">
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
