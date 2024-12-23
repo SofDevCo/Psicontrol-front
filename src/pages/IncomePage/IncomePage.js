@@ -165,7 +165,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async function deleteExpense(id) {
@@ -188,7 +188,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const handleDelete = (id, type) => {
@@ -436,21 +436,26 @@ const IncomePage = () => {
       )}
 
       <div className="relative md:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
-        <div className="flex justify-between mb-6">
+        <div className="flex justi mb-6">
           <Months
             onMonthChange={handleMonthChange}
             onYearChange={handleYearChange}
-            selectedMonth={selectedMonth} 
-            selectedYear={selectedYear} 
-            className="z-50"
+            selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+            className="z-50 "
           />
           <button
-            className="w-[200px] h-[57.69px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] mr-[220px] border-2 font-['Ubuntu'] border-primaria mt-[5px] text-primaria text-xs font-medium"
+            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[280px] ml-[100px] border-2 font-['Ubuntu'] fixed border-primaria mt-[5px] text-primaria md:text-xs text-[11px] font-medium"
             onClick={repeatLastMonthEntries}
           >
-            REPETIR LANÇAMENTO DO
-            <br /> MÊS ANTERIOR
+            <span className="hidden md:inline">
+              REPETIR LANÇAMENTO DO<br/>MÊS ANTERIOR
+            </span>
+            <span className="inline md:hidden">
+              REPETIR LANÇAMENTO <br/> ANTERIOR
+            </span>
           </button>
+
         </div>
         <div className="flex flex-wrap gap-6 z-10">
           <div className="flex-1">
@@ -502,7 +507,7 @@ const IncomePage = () => {
                     updateAddingRevenue(index, "value", e.target.value)
                   }
                   onKeyDown={handleEnterPressRevenueValue}
-                  ref={revenueValueInputRef} // associando o ref ao input de valor da receita
+                  ref={revenueValueInputRef} 
                   className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
@@ -516,7 +521,7 @@ const IncomePage = () => {
             </button>
           </div>
 
-          <div className="flex-1 ">
+          <div className="flex-1 mx-[20px]">
             <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
@@ -528,8 +533,8 @@ const IncomePage = () => {
                     {expense.name}
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex items-center justify-center">
+                <div className="flex mx-[-40px]">
+                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-4 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
                   <button
@@ -553,7 +558,7 @@ const IncomePage = () => {
                   }
                   onKeyDown={handleEnterPressExpenseName}
                   ref={expenseNameInputRef} // associando o ref ao input de nome da despesa
-                  className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
+                  className="flex w-[140px]  p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
                 />
                 {/* Input de valor da despesa */}
                 <input
@@ -565,7 +570,7 @@ const IncomePage = () => {
                   }
                   onKeyDown={handleEnterPressExpenseValue}
                   ref={expenseValueInputRef} // associando o ref ao input de valor da despesa
-                  className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                  className="fixed w-[118px] mx-[155px] p-2  bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
             ))}

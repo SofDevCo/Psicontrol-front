@@ -15,9 +15,9 @@ const TopBar = ({ onMenuClick }) => {
       case "/customers":
         return { title: "Pacientes", margin: "md:mx-[400px] mr-[-108px]" };
       case "/income":
-        return { title: "Receitas e Despesas", margin: "md:mx-[400px] mr-[-31px]" };
+        return { title: "Receitas e Despesas", margin: "md:mx-[400px] mr-[-34px]" };
       case "/user":
-        return { title: "Minhas Configurações", margin: "md:mx-[400px] mr-[-16px]" };
+        return { title: "Minhas Configurações", margin: "md:mx-[400px] mr-[-21px] " };
       default:
         return { title: "Página Não Encontrada", margin: "mx-auto" };
     }
@@ -52,7 +52,7 @@ const TopBar = ({ onMenuClick }) => {
         <img
           src={BaseIcon}
           alt="Base Icon"
-          className="w-[55px] h-[40px] mx-auto ml-auto md:my-[-30px] my-[-60px]  md:opacity-0 opacity-100"
+          className="w-[55px] h-[40px] ml-[37%] md:my-[-30px] my-[-60px]  md:opacity-0 opacity-100"
         />
       
 

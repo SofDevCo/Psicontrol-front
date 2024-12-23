@@ -17,12 +17,15 @@ const Sidebar = ({ isOpen, onToggle }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
+    // Função que captura o evento de scroll
     const handleScroll = () => {
       setScrollPosition(window.scrollY); // Atualiza a posição do scroll
     };
 
+    // Adiciona o listener para o scroll
     window.addEventListener("scroll", handleScroll);
 
+    // Remove o listener quando o componente for desmontado
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -46,12 +49,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
   return (
     <>
-     <aside
-      style={{
-        transform: `translateX(${isOpen ? "0" : "-100%"}) translateY(${scrollPosition}px)`,
-      }}
-      className="fixed top-0 left-0 z-40 h-screen w-[265px] bg-bg1 p-5 text-gray-800 transition-transform duration-300 md:translate-x-0 md:flex-shrink-0"
-    >
+      <aside
+        className={`fixed top-0 z-40 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:flex-shrink-0`}
+      >
         <div>
           {/* Botão Hambúrguer para Fechar */}
           <button
