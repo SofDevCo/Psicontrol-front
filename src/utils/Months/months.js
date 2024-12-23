@@ -32,6 +32,21 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
     "Dezembro",
   ];
 
+  const monthsInRangeShort = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
+  
   const handleMonthClick = (index) => {
     onMonthChange(index + 1); 
   };
@@ -52,12 +67,15 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
     <div className="drop-shadow-monthsShadow active:drop-shadow-lg active:opacity-50 ml-3 relative top-3">
       <button
         onClick={toggleModal}
-        className="w-[213px] h-[46px] px-3 py-2 bg-[#0082ba] rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
+        className="md:w-[213px] md:h-[46px] w-[75px] h-[26px] px-3 py-2 bg-[#0082ba] rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
-          <span className="text-neutral-100 text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-            {`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
+          
+          <span className="text-neutral-100 md:text-[21px] text-[10px] font-medium font-['Ubuntu'] tracking-tight">
+          <span className="block md:hidden">    {`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
+          </span>
+          <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
         </div>
         <SetaIcon />
@@ -89,7 +107,8 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
                     }`}
                   >
                     {selectedMonth - 1 === index && <CheckIcon />}
-                    {month}
+                    <span className="block md:hidden">{monthsInRangeShort[index]}</span>
+                    <span className="hidden md:block">{month}</span>
                   </button>
                 ))
               : getYearsRange().map((year) => (
