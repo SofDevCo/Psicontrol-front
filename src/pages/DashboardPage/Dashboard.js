@@ -537,7 +537,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex md:mx-[400px] gap-4 md:mt-32 mt-32">
+          <div className="flex justify-center md:mx-[400px] gap-4 md:mt-32 mt-32">
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
@@ -560,13 +560,13 @@ const DashBoard = () => {
             />
           </div>
 
-          <div className="flex mx-[400px] gap-4 mb-8 mt-20">
+          <div className="flex ustify-end items-center gap-4 mt-4">
             <FilterStatusDashBoard
               selectedStatus={selectedStatus}
               onChangeStatus={setSelectedStatus}
             />
           </div>
-          <div className=" mx-auto box-border md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="md:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
@@ -678,7 +678,7 @@ const DashBoard = () => {
             </table>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-[30px] box-border w-[398px] h-[122px] md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             {isSearchBarOpen && (
               <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-screen z-20 "></div>
             )}

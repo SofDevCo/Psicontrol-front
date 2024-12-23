@@ -13,12 +13,12 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
   };
 
   return (
-    <div className="filter-container">
+    <div className="flex mx-auto justify-end">
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="dropdown-button"
+          className="text-left text-primaria"
         >
           Filtrar dados
         </button>
