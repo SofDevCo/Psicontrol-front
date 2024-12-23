@@ -64,7 +64,7 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
   };
 
   return (
-    <div className="drop-shadow-monthsShadow active:drop-shadow-lg active:opacity-50 ml-3 relative top-3">
+    <div className="drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3">
       <button
         onClick={toggleModal}
         className="md:w-[213px] md:h-[46px] w-[75px] h-[26px] px-3 py-2 bg-[#0082ba] rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
@@ -72,8 +72,8 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
         <div className="flex items-center gap-2">
           <VerifyIcon />
           
-          <span className="text-neutral-100 md:text-[21px] text-[10px] font-medium font-['Ubuntu'] tracking-tight">
-          <span className="block md:hidden">    {`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
+          <span className="text-texto4 md:text-[21px] text-[10px] font-medium font-['Ubuntu'] tracking-tight">
+          <span className="block md:hidden">{`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
           </span>
           <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
