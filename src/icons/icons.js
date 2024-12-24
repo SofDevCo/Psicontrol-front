@@ -306,7 +306,7 @@ const CalendarIcon = () => {
 const VerifyIcon = () => {
   return (
     <svg
-    className="w-full h-full max-w-[24px] max-h-[24px] md:max-w-[32px] md:max-h-[32px]" 
+      className="w-full h-full max-w-[24px] max-h-[24px] md:max-w-[32px] md:max-h-[32px]" 
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

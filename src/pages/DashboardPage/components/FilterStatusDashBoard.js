@@ -13,17 +13,17 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
   };
 
   return (
-    <div className="flex mx-auto justify-end">
-      <div className="relative">
+    <div className="flex items-center ">
+      <div className="flex items-center gap-2 -ml-36">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="text-left text-primaria"
+          className="text-left text-primaria w-[85px] text-sm font-medium font-['Ubuntu-Medium', Helvetica] tracking-[0.15px] leading-normal underline "
         >
           Filtrar dados
         </button>
         {isOpen && (
-          <div className="dropdown-menu absolute w-[211px] h-[355px] bg-white border rounded shadow-md p-2">
+          <div className="dropdown-menu absolute w-[211px] h-[355px] bg-clara4 border rounded shadow-md p-2">
             <p>Pagamento</p>
             <div className="checkbox-item">
               <input

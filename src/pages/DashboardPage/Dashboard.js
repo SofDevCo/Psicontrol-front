@@ -5,7 +5,7 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
-import { CrossIcon, VerifyGreenIcon } from "./components/IconsDashBoard";
+import { CrossIcon, VerifyGreenIcon, FilterIcon } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
 import BillingDashBoard from "./components/BillingDashBoard";
@@ -537,38 +537,46 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center flex-grow-0 lg:mx-[540px] gap-1 lg:gap-4 lg:mt-32 mt-32 -ml-11">
-            <Months
-              onMonthChange={handleMonthChange}
-              onYearChange={handleYearChange}
-              selectedMonth={selectedMonth}
-              selectedYear={selectedYear}
-              className="z-50"
-            />
-            <CardDashBoard title="Nº de Consultas" value={totalConsultations}  isCurrency={false}/>
-            <CardDashBoard
-              title="Receita Total"
-              value={totalRevenue.toFixed(2).replace(".", ",")}
-              isCurrency={true}
-            />
-            <CardDashBoard
-              title="Receita líquida"
-              value={netRevenue.toFixed(2).replace(".", ",")}
-              isCurrency={true}
-            />
-            <CardDashBoard
-              title="Hora líquida"
-              value={netTime.toFixed(2).replace(".", ",")}
-              isCurrency={true}
-            />
+          <div className="flex justify-center lg:mx-[540px] gap-1 lg:mt-32 mt-32 -ml-11">
+            <div className="flex justify-center gap-2">
+              <Months
+                onMonthChange={handleMonthChange}
+                onYearChange={handleYearChange}
+                selectedMonth={selectedMonth}
+                selectedYear={selectedYear}
+                className="z-50"
+              />
+              <CardDashBoard
+                title="Nº de Consultas"
+                value={totalConsultations}
+                isCurrency={false}
+              />
+              <CardDashBoard
+                title="Receita Total"
+                value={totalRevenue.toFixed(2).replace(".", ",")}
+                isCurrency={true}
+              />
+              <CardDashBoard
+                title="Receita líquida"
+                value={netRevenue.toFixed(2).replace(".", ",")}
+                isCurrency={true}
+              />
+              <CardDashBoard
+                title="Hora líquida"
+                value={netTime.toFixed(2).replace(".", ",")}
+                isCurrency={true}
+              />
+            </div>
+
+            <div className="md:mt-20 md:mb-2">
+              <FilterStatusDashBoard
+                selectedStatus={selectedStatus}
+                onChangeStatus={setSelectedStatus}
+              />
+              <FilterIcon/>
+            </div>
           </div>
 
-          <div className="flex ustify-end items-center gap-4 mt-4">
-            <FilterStatusDashBoard
-              selectedStatus={selectedStatus}
-              onChangeStatus={setSelectedStatus}
-            />
-          </div>
           <div className="lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
