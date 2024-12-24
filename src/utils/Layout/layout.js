@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "./components/topbar";
 import Sidebar from "./components/sidebar";
@@ -9,6 +9,16 @@ const Layout = () => {
   const toggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
+
+  // No início do componente Layout
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden"; // Desabilita o scroll
+    } else {
+      document.body.style.overflow = ""; // Restaura o scroll
+    }
+  }, [isSidebarOpen]);
+
 
   return (
     <div className="layout-container flex h-screen overflow-hidden relative">

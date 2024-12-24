@@ -435,8 +435,8 @@ const IncomePage = () => {
         </div>
       )}
 
-      <div className="relative md:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
-        <div className="flex justi mb-6">
+      <div className=" md:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
+        <div className="flex mb-6">
           <Months
             onMonthChange={handleMonthChange}
             onYearChange={handleYearChange}
@@ -445,16 +445,17 @@ const IncomePage = () => {
             className="z-50 "
           />
           <button
-            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[280px] ml-[100px] border-2 font-['Ubuntu'] fixed border-primaria mt-[5px] text-primaria md:text-xs text-[11px] font-medium"
+            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria md:text-xs text-[11px] font-medium"
             onClick={repeatLastMonthEntries}
           >
-            <span className="hidden md:inline">
-              REPETIR LANÇAMENTO DO<br/>MÊS ANTERIOR
+            <span className="hidden md:inline text-center">
+              REPETIR LANÇAMENTO DO<br />MÊS ANTERIOR
             </span>
-            <span className="inline md:hidden">
-              REPETIR LANÇAMENTO <br/> ANTERIOR
+            <span className="inline md:hidden text-center">
+              REPETIR LANÇAMENTO <br /> ANTERIOR
             </span>
           </button>
+
 
         </div>
         <div className="flex flex-wrap gap-6 z-10">
@@ -487,30 +488,31 @@ const IncomePage = () => {
             ))}
 
             {isAddingRevenue.map((revenue, index) => (
-              <div className="flex flex-wrap ml-4 mb-2" key={index}>
-                <input
-                  type="text"
-                  placeholder="Nome da receita"
-                  value={revenue.name}
-                  onChange={(e) =>
-                    updateAddingRevenue(index, "name", e.target.value)
-                  }
-                  onKeyDown={handleEnterPressRevenueName}
-                  ref={revenueNameInputRef}
-                  className="flex w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
-                />
-                <input
-                  type="text"
-                  placeholder="Valor da receita"
-                  value={formatCurrency(revenue.value)}
-                  onChange={(e) =>
-                    updateAddingRevenue(index, "value", e.target.value)
-                  }
-                  onKeyDown={handleEnterPressRevenueValue}
-                  ref={revenueValueInputRef} 
-                  className="flex w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
-                />
-              </div>
+              <div className="flex items-center gap-4 ml-4 mb-2" key={index}>
+              <input
+                type="text"
+                placeholder="Nome da receita"
+                value={revenue.name}
+                onChange={(e) =>
+                  updateAddingRevenue(index, "name", e.target.value)
+                }
+                onKeyDown={handleEnterPressRevenueName}
+                ref={revenueNameInputRef}
+                className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+              />
+              <input
+                type="text"
+                placeholder="Valor da receita"
+                value={formatCurrency(revenue.value)}
+                onChange={(e) =>
+                  updateAddingRevenue(index, "value", e.target.value)
+                }
+                onKeyDown={handleEnterPressRevenueValue}
+                ref={revenueValueInputRef}
+                className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+              />
+            </div>
+            
             ))}
             <button
               onClick={toggleAddRevenue}
@@ -521,7 +523,7 @@ const IncomePage = () => {
             </button>
           </div>
 
-          <div className="flex-1 mx-[20px]">
+          <div className="flex-1 md:mr-0 mr-[460px] ml-[12px]">
             <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
@@ -548,42 +550,41 @@ const IncomePage = () => {
             ))}
 
             {isAddingExpense.map((expense, index) => (
-              <div className="flex flex-wrap mb-2" key={index}>
+              <div className="flex items-center mb-2 gap-4" key={index}>
+                {/* Input de nome da despesa */}
                 <input
                   type="text"
                   placeholder="Nome da despesa"
                   value={expense.name}
-                  onChange={(e) =>
-                    updateAddingExpense(index, "name", e.target.value)
-                  }
+                  onChange={(e) => updateAddingExpense(index, "name", e.target.value)}
                   onKeyDown={handleEnterPressExpenseName}
                   ref={expenseNameInputRef} // associando o ref ao input de nome da despesa
-                  className="flex w-[140px]  p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md mr-4"
+                  className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
                 {/* Input de valor da despesa */}
                 <input
                   type="text"
                   placeholder="Valor da despesa"
                   value={formatCurrency(expense.value)}
-                  onChange={(e) =>
-                    updateAddingExpense(index, "value", e.target.value)
-                  }
+                  onChange={(e) => updateAddingExpense(index, "value", e.target.value)}
                   onKeyDown={handleEnterPressExpenseValue}
                   ref={expenseValueInputRef} // associando o ref ao input de valor da despesa
-                  className="fixed w-[118px] mx-[155px] p-2  bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                  className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
+
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex   active:drop-shadow-lg active:opacity-50 items-center mt-4 transition-shadow"
+              className="flex items-center ml-[5px] mt-4 transition-shadow active:drop-shadow-lg active:opacity-50"
             >
               <AddIcon />
-              <span className="text-primaria ml-[8px]">Adicionar item</span>
+              <span className="text-primaria ml-[9px] whitespace-nowrap">Adicionar item</span>
             </button>
+
           </div>
         </div>
-        <div className="flex mr-10 justify-end mt-4">
+        <div className="flex md:mr-[38px] mr-[10px] justify-end mt-4">
           <button
             onClick={handleCancel}
             className="px-4 py-2 border w-[108px] h-[39px] item-center border-primaria text-primaria rounded-[100px] mr-2 "
