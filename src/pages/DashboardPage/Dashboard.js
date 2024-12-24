@@ -530,14 +530,14 @@ const DashBoard = () => {
   };
 
   return (
-    <div>
+    <div className="fixed top-0 w-full z-50">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center md:mx-[540px] md:gap-4 md:mt-32 mt-32">
+          <div className="flex justify-center flex-grow-0 lg:mx-[540px] gap-1 lg:gap-4 lg:mt-32 mt-32 -ml-11">
             <Months
               onMonthChange={handleMonthChange}
               onYearChange={handleYearChange}
@@ -545,18 +545,21 @@ const DashBoard = () => {
               selectedYear={selectedYear}
               className="z-50"
             />
-            <CardDashBoard title="Nº de Consultas" value={totalConsultations} />
+            <CardDashBoard title="Nº de Consultas" value={totalConsultations}  isCurrency={false}/>
             <CardDashBoard
               title="Receita Total"
-              value={`R$ ${totalRevenue.toFixed(2).replace(".", ",")}`}
+              value={totalRevenue.toFixed(2).replace(".", ",")}
+              isCurrency={true}
             />
             <CardDashBoard
-              title="Receita liquida"
-              value={`R$ ${netRevenue.toFixed(2).replace(".", ",")}`}
+              title="Receita líquida"
+              value={netRevenue.toFixed(2).replace(".", ",")}
+              isCurrency={true}
             />
             <CardDashBoard
-              title="Hora liquida"
-              value={`R$ ${netTime.toFixed(2).replace(".", ",")}`}
+              title="Hora líquida"
+              value={netTime.toFixed(2).replace(".", ",")}
+              isCurrency={true}
             />
           </div>
 
@@ -566,7 +569,7 @@ const DashBoard = () => {
               onChangeStatus={setSelectedStatus}
             />
           </div>
-          <div className="md:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>

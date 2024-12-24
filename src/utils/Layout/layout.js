@@ -13,6 +13,7 @@ const Layout = () => {
   return (
     <div className="layout-container flex h-screen overflow-hidden relative">
 
+      {/* Sidebar com estado controlado */}
       <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       {isSidebarOpen && (
@@ -26,8 +27,7 @@ const Layout = () => {
         <TopBar onMenuClick={toggleSidebar} />
       </div>
 
-      <div className="main-content flex flex-col w-full h-full overflow-auto bg-clara4 z-10">
-      <div className="main-content flex flex-col w-full h-full overflow-auto bg-clara4 z-10">
+      <div className="main-content flex flex-col w-full h-full bg-clara4 z-10">
         <main className="flex-1 p-6">
           <Outlet />
         </main>

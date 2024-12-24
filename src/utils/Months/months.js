@@ -67,7 +67,7 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
     <div className="drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3">
       <button
         onClick={toggleModal}
-        className="md:w-[213px] md:h-[46px] w-[75px] h-[26px] px-3 py-2 bg-[#0082ba] rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
+        className="md:w-[213px] md:h-[46px] w-[75px] h-[26px] px-3 py-2 bg-primaria rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
