@@ -20,7 +20,7 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
   const monthsInRange = [
     "Janeiro",
     "Fevereiro",
-    "Março",
+    "MarÃ§o",
     "Abril",
     "Maio",
     "Junho",
