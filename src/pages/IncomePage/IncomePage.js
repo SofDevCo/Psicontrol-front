@@ -544,6 +544,7 @@ const IncomePage = () => {
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
+                  
                   <button
                     className="ml-4 active:opacity-50"
                     onClick={() => openModal(expense.id, "expense")}
