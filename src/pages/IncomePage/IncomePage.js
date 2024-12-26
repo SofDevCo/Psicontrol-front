@@ -466,53 +466,57 @@ const IncomePage = () => {
             {revenues.map((revenue, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between -mr-9 mb-2"
-              >
-                <div className="flex-1">
-                  <div className="text-gray-700 pl-4 cursor-default">
-                    {revenue.name}
-                  </div>
+                className="flex items-center gap-4 w-[200px]  shrink-0">
+
+                <div className="flex-1 text-gray-700 pl-4 cursor-default">
+                  {revenue.name}
                 </div>
-                <div className="flex ml-8 items-center">
-                  <div className="w-[140px] p-2  bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-2 rounded-[15px] cursor-default flex justify-center">
+
+                {/* Contêiner fixo para valor e botão */}
+                <div className="flex items-center gap-4 w-[200px] justify-end shrink-0">
+                  {/* Valor da receita */}
+                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(revenue.value)}
                   </div>
+                  {/* Botão de excluir */}
                   <button
                     onClick={() => openModal(revenue.id, "revenue")}
-                    className="mr-20 active:opacity-50 text-blue-500 hover:text-blue-700"
+                    className="active:opacity-50 text-blue-500 hover:text-blue-700"
                   >
                     <Trash />
                   </button>
                 </div>
+
               </div>
+
             ))}
 
             {isAddingRevenue.map((revenue, index) => (
               <div className="flex items-center gap-4 ml-4 mb-2" key={index}>
-              <input
-                type="text"
-                placeholder="Nome da receita"
-                value={revenue.name}
-                onChange={(e) =>
-                  updateAddingRevenue(index, "name", e.target.value)
-                }
-                onKeyDown={handleEnterPressRevenueName}
-                ref={revenueNameInputRef}
-                className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
-              />
-              <input
-                type="text"
-                placeholder="Valor da receita"
-                value={formatCurrency(revenue.value)}
-                onChange={(e) =>
-                  updateAddingRevenue(index, "value", e.target.value)
-                }
-                onKeyDown={handleEnterPressRevenueValue}
-                ref={revenueValueInputRef}
-                className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
-              />
-            </div>
-            
+                <input
+                  type="text"
+                  placeholder="Nome da receita"
+                  value={revenue.name}
+                  onChange={(e) =>
+                    updateAddingRevenue(index, "name", e.target.value)
+                  }
+                  onKeyDown={handleEnterPressRevenueName}
+                  ref={revenueNameInputRef}
+                  className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                />
+                <input
+                  type="text"
+                  placeholder="Valor da receita"
+                  value={formatCurrency(revenue.value)}
+                  onChange={(e) =>
+                    updateAddingRevenue(index, "value", e.target.value)
+                  }
+                  onKeyDown={handleEnterPressRevenueValue}
+                  ref={revenueValueInputRef}
+                  className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
+                />
+              </div>
+
             ))}
             <button
               onClick={toggleAddRevenue}
@@ -528,25 +532,28 @@ const IncomePage = () => {
             {expenses.map((expense, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between mb-2 mr-[59px]"
+                className="flex items-center justify-between mb-2"
               >
-                <div className="flex-1">
-                  <div className="text-gray-700 cursor-default">
-                    {expense.name}
-                  </div>
+                {/* Nome da despesa */}
+                <div className="flex text-gray-700 cursor-default mr-4">
+                  {expense.name}
                 </div>
-                <div className="flex mx-[-40px]">
-                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 mr-4 rounded-[15px] cursor-default flex items-center justify-center">
+
+                {/* Valor e botão de excluir */}
+                <div className="flex mx-[25px] items-center">
+                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
+                  
                   <button
-                    className="active:opacity-50"
+                    className="ml-4 active:opacity-50"
                     onClick={() => openModal(expense.id, "expense")}
                   >
                     <Trash />
                   </button>
                 </div>
               </div>
+
             ))}
 
             {isAddingExpense.map((expense, index) => (
