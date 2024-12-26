@@ -14,11 +14,11 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
 
   return (
     <div className="flex items-center ">
-      <div className="flex items-center gap-2 -ml-36">
+      <div className="flex items-center gap-2 md:-ml-36 -ml-[107px] md:mt-0 ">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="text-left text-primaria w-[85px] text-sm font-medium font-['Ubuntu-Medium', Helvetica] tracking-[0.15px] leading-normal underline "
+          className="md:text-left text-primaria w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] tracking-[0.15px] leading-normal underline "
         >
           Filtrar dados
         </button>

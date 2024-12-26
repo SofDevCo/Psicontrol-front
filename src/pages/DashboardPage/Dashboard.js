@@ -568,7 +568,7 @@ const DashBoard = () => {
               />
             </div>
 
-            <div className="md:mt-20 md:mb-2">
+            <div className="md:mt-20 md:mb-2 mt-16 ">
               <FilterStatusDashBoard
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -577,7 +577,7 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="mt-3 md:mt-0 lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             <table className="min-w-full bg-bg1">
               <thead>
                 <tr>
