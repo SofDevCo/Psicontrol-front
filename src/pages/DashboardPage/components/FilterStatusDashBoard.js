@@ -23,53 +23,70 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
           Filtrar dados
         </button>
         {isOpen && (
-          <div className="dropdown-menu absolute w-[211px] h-[355px] bg-clara4 border rounded shadow-md p-2">
-            <p>Pagamento</p>
-            <div className="checkbox-item">
-              <input
-                type="checkbox"
-                id="pago"
-                checked={selectedStatus.includes("pago")}
-                onChange={() => handleCheckboxChange("pago")}
-              />
-              <label htmlFor="pago">Confirmado</label>
-            </div>
-            <div className="checkbox-item">
-              <input
-                type="checkbox"
-                id="parcial"
-                checked={selectedStatus.includes("parcial")}
-                onChange={() => handleCheckboxChange("parcial")}
-              />
-              <label htmlFor="parcial">Parciais</label>
-            </div>
-            <div className="checkbox-item">
+          <div className="dropdown-menu absolute md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded shadow-md p-2 md:mt-[388px] -ml-[55px]">
+            <p className="md:w-[93px] text-texto2 md:text-[17px] font-normal font-['Open Sans'] tracking-tight underline">
+              Pagamentos
+            </p>
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] font-normal font-['Open Sans'] tracking-tight mt-1">
               <input
                 type="checkbox"
                 id="aberto"
                 checked={selectedStatus.includes("aberto")}
                 onChange={() => handleCheckboxChange("aberto")}
+                className="w-[16px] h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
+
               />
-              <label htmlFor="aberto">Não confirmados</label>
+              <label className="ml-2" htmlFor="aberto">
+                Não confirmados
+              </label>
             </div>
-            <p className="mt-4">Cobrança</p>
-            <div className="checkbox-item">
+            <div className="md:w-[124px] text-texto2 md:text-[15px] font-normal font-['Open Sans'] tracking-tight">
               <input
                 type="checkbox"
-                id="realizada"
-                checked={selectedStatus.includes("realizada")}
-                onChange={() => handleCheckboxChange("realizada")}
-              />
-              <label htmlFor="realizada">Realizada</label>
+                id="pago"
+                checked={selectedStatus.includes("pago")}
+                onChange={() => handleCheckboxChange("pago")}
+                className="w-[16px] h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"              />
+              <label className="ml-2" htmlFor="pago">
+                Confirmados
+              </label>
             </div>
-            <div className="checkbox-item">
+            <div className="md:w-[124px] text-texto2 md:text-[15px] font-normal font-['Open Sans'] tracking-tights">
+              <input
+                type="checkbox"
+                id="parcial"
+                checked={selectedStatus.includes("parcial")}
+                onChange={() => handleCheckboxChange("parcial")}
+                className="w-[16px] h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"              />
+              <label className="ml-2" htmlFor="parcial">
+                Parciais
+              </label>
+            </div>
+
+            <p className="md:mt-4 md:w-[93px] text-texto2 md:text-[17px] font-normal font-['Open Sans'] tracking-tight underline ">
+              Cobrança
+            </p>
+            <div className="md:w-[124px] text-texto2 md:text-[15px] font-normal font-['Open Sans'] tracking-tight mt-1">
               <input
                 type="checkbox"
                 id="nao-realizada"
                 checked={selectedStatus.includes("nao-realizada")}
                 onChange={() => handleCheckboxChange("nao-realizada")}
-              />
-              <label htmlFor="nao-realizada">Não Realizada</label>
+                className="w-[16px] h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"              />
+              <label className="ml-2" htmlFor="nao-realizada">
+                Não Realizada
+              </label>
+            </div>
+            <div className="md:w-[124px] text-texto2 md:text-[15px] font-normal font-['Open Sans'] tracking-tight ">
+              <input
+                type="checkbox"
+                id="realizada"
+                checked={selectedStatus.includes("realizada")}
+                onChange={() => handleCheckboxChange("realizada")}
+                className="w-[16px] h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"              />
+              <label className="ml-2" htmlFor="realizada">
+                Realizada
+              </label>
             </div>
           </div>
         )}
