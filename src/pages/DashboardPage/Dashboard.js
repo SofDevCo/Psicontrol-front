@@ -627,37 +627,42 @@ const DashBoard = () => {
                           .toFixed(2)
                           .replace(".", ",")}
                       </td>
-                      <td className="w-10 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      <td className="text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
                         {patient.consultation_days || "-"}
                       </td>
-                      <td className="w-[136px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      <td className="flex w-full justify-center text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight  ">
                         {patient.num_consultations || "-"}
                       </td>
-                      <td className="w-11 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      <td className="text-center w-20 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2 whitespace-nowrap">
                         R$ {patient.total_consultation_fee || "0,00"}
                       </td>
-                      <td className="w-20 text-center">
+                      <td className="flex text-center items-center justify-center mt-[20px]">
                         {patient.sending_invoice ? (
                           <VerifyGreenIcon />
                         ) : (
                           <CrossIcon />
                         )}
                       </td>
-                      <td className="w-20 text-center">
-                        {patient.payment_status === "pago" ? (
-                          <VerifyGreenIcon />
-                        ) : patient.payment_status === "parcial" ? (
-                          `R$ ${parseFloat(patient.payment_amount || 0)
-                            .toFixed(2)
-                            .replace(".", ",")}`
-                        ) : (
-                          <CrossIcon />
-                        )}
+                      <td>
+                        <div className="flex items-center justify-center">
+                          {patient.payment_status === "pago" ? (
+                            <VerifyGreenIcon />
+                          ) : patient.payment_status === "parcial" ? (
+                            <span className="text-texto2 text-[15px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
+                              R${" "}
+                              {parseFloat(patient.payment_amount || 0)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                            </span>
+                          ) : (
+                            <CrossIcon />
+                          )}
+                        </div>
                       </td>
-                      <td className="w-20 text-center">
+                      <td className="flex items-center justify-center">
                         <CrossIcon />
                       </td>
-                      <td className="w-[52px] border-b border-b-cinza6 text-center px-4 py-2">
+                      <td className="w-[52px] text-center px-4 py-2">
                         <button
                           className="cursor-pointer"
                           onClick={() => toggleDropdownPatients(index, patient)}
