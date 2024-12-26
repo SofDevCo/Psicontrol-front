@@ -5,7 +5,11 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
-import { CrossIcon, VerifyGreenIcon, FilterIcon } from "./components/IconsDashBoard";
+import {
+  CrossIcon,
+  VerifyGreenIcon,
+  FilterIcon,
+} from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
 import BillingDashBoard from "./components/BillingDashBoard";
@@ -573,12 +577,12 @@ const DashBoard = () => {
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
               />
-              <FilterIcon/>
+              <FilterIcon />
             </div>
           </div>
 
           <div className="mt-3 md:mt-0 lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
-            <table className="min-w-full bg-bg1">
+            <table className="min-w-full bg-bg1 ">
               <thead>
                 <tr>
                   <th className="md:w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
@@ -614,7 +618,7 @@ const DashBoard = () => {
                 {filteredPatients.length > 0 ? (
                   filteredPatients.map((patient, index) => (
                     <tr key={index}>
-                      <td className="w-[97px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      <td className="flex flex-col md:w-1 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight md:ml-[8px] px-4 py-2 md:whitespace-pre-wrap ">
                         {patient.Customer?.customer_name || "-"}
                       </td>
                       <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
