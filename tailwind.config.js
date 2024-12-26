@@ -20,7 +20,8 @@ module.exports = {
         texto2: "#5C5C5C",
         texto3: "#808080",
         texto4: "#F5F5F5",
-        d_medio3: "#63BDD1"
+        d_medio3: "#63BDD1",
+        aviso:"#ffd200"
       },
       boxShadow: {
         default: "0px 4px 4px rgba(0, 0, 0, 0.2)",
