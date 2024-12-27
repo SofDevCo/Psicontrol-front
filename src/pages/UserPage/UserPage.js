@@ -35,16 +35,16 @@ const UserPage = () => {
           },
         }
       );
-  
+
       if (!response.ok) {
         console.error("Erro ao buscar os dados do usuário:", await response.text());
         return;
       }
-  
+
       const data = await response.json();
       setUserData(data);
     };
-  
+
     fetchUserData();
   }, []);
 
@@ -156,10 +156,10 @@ const UserPage = () => {
       const updatedData = await response.json();
       setUserData((prevData) => ({
         ...prevData,
-        ...updatedData, 
+        ...updatedData,
       }));
 
-      setRefreshKey((prevKey) => prevKey + 1); 
+      setRefreshKey((prevKey) => prevKey + 1);
       setIsEditing(false);
       showAlteredToast();
     } catch (error) {
@@ -420,23 +420,25 @@ const UserPage = () => {
       )}
 
       <>
-        <div className="relative md:w-[1076px] w-auto mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-20 mb-3">
+        <div className="relative md:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px]  mt-20 mb-3">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-[#0082ba] text-[25px] font-medium font-['Ubuntu']">
+            <h2 className="text-[#0082ba] md:text-[25px] text-[16px] font-medium font-['Ubuntu']">
               Meus dados
             </h2>
             <button
               onClick={() => setIsEditing(true)}
               className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
             >
-              <div className="mr-1 mt-[-6\px] relative">Editar dados</div>
+              <div className="mr-1 mt-[-6px] relative">Editar dados</div>
               <EditIcon />
             </button>
           </div>
 
-          <div className="flex justify-between">
-            <div className="flex w-[360px]">
-              <div className="w-10 h-10 bg-[#33b8d1] rounded-[20px] flex justify-center items-center">
+          {/* Ajuste no layout para ser responsivo */}
+          <div className="flex flex-col md:flex-row justify-between">
+            {/* Primeira coluna */}
+            <div className="flex md:w-[360px] w-full mb-6 md:mb-0">
+              <div className="md:w-10 md:h-10 w-7 h-7 bg-[#33b8d1] rounded-[20px] flex justify-center items-center">
                 {userData.photoUrl ? (
                   <img
                     src={userData.photoUrl}
@@ -450,34 +452,35 @@ const UserPage = () => {
                 )}
               </div>
               <div>
-                <div className="text-black text-xl font-medium font-['Ubuntu'] ml-[20px] mb-2">
+                <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
                   {userData.user_name}
                 </div>
-                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight">
+                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight">
                   <span>CPF/CNPJ: </span>
                   <span className="text-[#5c5c5c]">
                     {userData.user_cpf || userData.user_cnpj}
                   </span>
                 </div>
-                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
+                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                   <span>CRP: </span>
                   <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                 </div>
-                <div className="flex items-center ml-[20px] text-[#232323] text-[17px] font-normal tracking-tight mt-2 whitespace-nowrap">
+                <div className="flex items-center ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 whitespace-nowrap">
                   <span className="mr-1 whitespace-nowrap">E-mail:</span>
                   <span className="text-[#5c5c5c] whitespace-nowrap">
                     {userData.user_email}
                   </span>
                 </div>
-                <div className="text-[#232323] ml-[20px] text-[17px] font-normal tracking-tight mt-2">
+                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                   <span>Telefone: </span>
                   <span className="text-[#5c5c5c]">{userData.user_phone}</span>
                 </div>
               </div>
             </div>
 
-            <div className="w-[316px]">
-              <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2">
+            {/* Segunda coluna */}
+            <div className="md:w-[316px] w-full mx-[45px]">
+              <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                 Dados para recibo
               </div>
               <div className="text-[#232323] text-[17px] font-normal tracking-tight">
@@ -499,11 +502,11 @@ const UserPage = () => {
                 <span className="text-[#5c5c5c]">
                   {userData.image
                     ? userData.image instanceof File
-                      ? userData.image.name 
+                      ? userData.image.name
                       : typeof userData.image === "string" &&
-                          userData.image.includes("/")
-                        ? userData.image.split("/").pop() 
-                        : userData.image 
+                        userData.image.includes("/")
+                        ? userData.image.split("/").pop()
+                        : userData.image
                     : "(Imagem não carregada)"}
                 </span>
               </div>
@@ -511,21 +514,20 @@ const UserPage = () => {
           </div>
         </div>
 
-        <div className="flex mx-auto space-x-4 items-start">
+        <div className="md:flex flex-1 md:mx-auto w-auto md:space-x-4 items-start">
           {/* Box "Minhas agendas" */}
-          <div className="w-[540px] h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] overflow-hidden">
-            <div className="flex justify-between">
-              <h3 className="text-[#0082ba] text-[20px] font-medium">
+          <div className="md:w-[540px] w-auto h-[370px]  bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+            <div className="flex">
+              <h3 className="text-[#0082ba] md:w-[100px] w-[200px] text-[20px] font-medium">
                 Minhas agendas
               </h3>
               <button
                 onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center"
-              >
-                <span className="relative drop-shadow-editShadow -mt-1">
+                className="text-[#0082ba] text-sm underline flex items-center md:ml-[250px] ml-[80px]">
+                <span className="relative md:w-32 w-[100px] drop-shadow-editShadow -mt-1">
                   Trocar de conta
                 </span>
-                <span className="ml-2">
+                <span className="md:ml-1 ml-2">
                   <RefreshIcon />
                 </span>
               </button>
@@ -554,11 +556,10 @@ const UserPage = () => {
                       onChange={() =>
                         openConfirmationModal(calendar.calendar_id)
                       }
-                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
-                        selectedCalendars.has(calendar.calendar_id)
-                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                          : "bg-white border-gray-300 opacity-50"
-                      }`}
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
+                        ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                        : "bg-white border-gray-300 opacity-50"
+                        }`}
                       style={{
                         boxShadow: selectedCalendars.has(calendar.calendar_id)
                           ? "inset 0 0 0 3px white"
@@ -566,11 +567,10 @@ const UserPage = () => {
                       }}
                     />
                     <span
-                      className={`font-medium ${
-                        selectedCalendars.has(calendar.calendar_id)
-                          ? "text-[#5c5c5c]"
-                          : "text-gray-500 opacity-50"
-                      }`}
+                      className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
+                        ? "text-[#5c5c5c]"
+                        : "text-gray-500 opacity-50"
+                        }`}
                     >
                       {calendar.calendar_name}
                     </span>
@@ -648,54 +648,56 @@ const UserPage = () => {
             )}
           </div>
 
-          <div className="flex">
-            <div className="w-[520px] h-[370px] mx-[-0px] bg-bg1 p-6 border-2 border-cinza6 rounded-[15px]">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-[#0082ba] text-[20px] font-medium">
-                  Mensagem de cobrança
-                </h3>
-                {isEditingMessage ? (
-                  <button
-                    onClick={saveMessage} 
-                    className="text-[#0082ba] text-sm"
-                  >
-                    <CheckMessage />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setIsEditingMessage(true)}
-                    className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
-                  >
-                    <EditIcon />
-                  </button>
-                )}
-              </div>
-
-              {isEditingMessage ? (
-                <textarea
-                  name="user_message"
-                  value={userData.user_message || ""}
-                  onChange={(e) =>
-                    setUserData((prevData) => ({
-                      ...prevData,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  rows={3}
-                  className="w-full p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] h-[250px]"
-                  placeholder="Escreva sua mensagem de cobrança aqui..."
-                />
-              ) : (
-                <div className="border border-gray-300 p-4 rounded-md text-[#232323] text-[15px] leading-relaxed whitespace-pre-wrap min-h-[250px]">
-                  {userData.user_message || (
-                    <span className="text-gray-400">
-                      Escreva sua mensagem de cobrança aqui...
-                    </span>
+            
+            <div className="md:relative md:my-0 my-[10px]">
+              <div className="md:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+                <div className="flex  justify-between items-center mb-4">
+                  <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
+                    Mensagem de cobrança
+                  </h3>
+                  {isEditingMessage ? (
+                    <button
+                      onClick={saveMessage}
+                      className="text-[#0082ba] text-sm"
+                    >
+                      <CheckMessage />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingMessage(true)}
+                      className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
+                    >
+                      <EditIcon />
+                    </button>
                   )}
                 </div>
-              )}
-            </div>
+
+                {isEditingMessage ? (
+                  <textarea
+                    name="user_message"
+                    value={userData.user_message || ""}
+                    onChange={(e) =>
+                      setUserData((prevData) => ({
+                        ...prevData,
+                        [e.target.name]: e.target.value,
+                      }))
+                    }
+                    className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
+                    placeholder="Escreva sua mensagem de cobrança aqui..."
+                  />
+                ) : (
+                  <div className="border border-gray-300 p-4 rounded-md text-[#232323] text-[15px]  h-[250px] bg-white">
+                    {userData.user_message || (
+                      <span className="text-gray-400">
+                        Escreva sua mensagem de cobrança aqui...
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
           </div>
+
+
         </div>
       </>
     </div>
