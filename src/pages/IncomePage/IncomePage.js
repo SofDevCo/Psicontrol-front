@@ -492,7 +492,7 @@ const IncomePage = () => {
             ))}
 
             {isAddingRevenue.map((revenue, index) => (
-              <div className="flex items-center gap-4 ml-4 mb-2" key={index}>
+              <div className="flex items-center gap-4 ml-4 mt-2" key={index}>
                 <input
                   type="text"
                   placeholder="Nome da receita"
@@ -527,7 +527,7 @@ const IncomePage = () => {
             </button>
           </div>
 
-          <div className="flex-1 md:mr-0 mr-[460px] ml-[12px]">
+          <div className="flex-1 md:mr-0 mr-[460px] ml-[15px]">
             <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
@@ -540,7 +540,7 @@ const IncomePage = () => {
                 </div>
 
                 {/* Valor e botão de excluir */}
-                <div className="flex mx-[25px] items-center">
+                <div className="flex mx-[30px] items-center">
                   <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
                     {formatCurrency(expense.value)}
                   </div>
@@ -583,10 +583,10 @@ const IncomePage = () => {
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex items-center ml-[5px] mt-4 transition-shadow active:drop-shadow-lg active:opacity-50"
+              className="flex items-center ml-[1px] mt-4 transition-shadow active:drop-shadow-lg active:opacity-50"
             >
               <AddIcon />
-              <span className="text-primaria ml-[9px] whitespace-nowrap">Adicionar item</span>
+              <span className="text-primaria ml-[8px] whitespace-nowrap">Adicionar item</span>
             </button>
 
           </div>
