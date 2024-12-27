@@ -158,7 +158,7 @@ const SelectCalendarPage = () => {
               >
                 <input
                   type="checkbox"
-                  className="appearance-none md:w-[20px] md:h-[20px] w-[16px] h-[16px] rounded-full border-2 border-primaria checked:border-primaria checked:bg-white checked:relative checked:before:content-[''] checked:before:absolute checked:before:top-[50%] checked:before:left-[50%] checked:before:w-[10px] checked:before:h-[10px] checked:before:rounded-full checked:before:bg-primaria checked:before:transform checked:before:translate-x-[-50%] checked:before:translate-y-[-50%] ml-5 mr-3 cursor-pointer"
+                  class="appearance-none md:w-[20px] md:h-[20px] w-[16px] h-[16px] rounded-full border-2 border-primaria checked:border-primaria checked:bg-white checked:relative checked:before:content-[''] checked:before:absolute checked:before:inset-0 checked:before:m-auto md:checked:before:w-[10px] checked:before:w-[7px] md:checked:before:h-[10px] checked:before:h-[7px] checked:before:rounded-full checked:before:bg-primaria ml-5 mr-3 cursor-pointer"
                   name="calendar"
                   id={calendar.calendar_id}
                   checked={selectedCalendarIds.has(calendar.calendar_id)}
