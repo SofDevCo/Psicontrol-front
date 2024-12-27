@@ -7,12 +7,12 @@ const DropDownDashActions = ({
   onConfirmedPayment,
 }) => {
   return (
-    <nav className="absolute right-0 md:w-[234px] md:h-[204px] mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-l-md">
-      <ul className="w-[210px] h-auto mx-auto mt-8">
+    <nav className="absolute right-0 w-[151px] h-[131px] md:w-[234px] md:h-[204px] md:mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-l-md">
+      <ul className="w-[210px] h-auto mx-auto md:mt-8">
         <li>
           <button
             onClick={onOpenModal}
-            className="group w-full flex text-center mt-1 gap-2  py-2 text-sm text-texto2 active:text-texto2/50 text-[15px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-[87px]  md:w-full flex text-center mt-1 gap-2  py-2 text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <SendIcon />
             Enviar Cobrança
@@ -21,7 +21,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onPartialPayment}
-            className="group w-full flex text-center mt-1 gap-2  py-2  text-sm text-texto2 active:text-texto2/50 text-[15px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-full flex text-center mt-1 gap-2  py-2  text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <PartialIcon />
             Pagamento Parcial
@@ -31,7 +31,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onConfirmedPayment}
-            className="group w-full flex text-center mt-1 gap-1 py-2 text-sm text-texto2 active:text-texto2/50 text-[15px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-full flex text-center mt-1 gap-1 py-2 text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <ConfirmPaymentIcon />
             Pagamento Confirmado
