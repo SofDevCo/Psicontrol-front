@@ -517,7 +517,7 @@ const UserPage = () => {
 
         <div className="md:relative flex-col md:space-x-4 w-full  mx-auto">
           {/* Caixa "Minhas agendas" */}
-          <div className="md:w-[540px] w-full max-w-[540px] mx-[390px] bg-bg1  shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+          <div className="md:w-[540px] w-full max-w-[540px] md:mx-[390px] mx-auto bg-bg1  shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-[#0082ba] md:text-[20px] text-[16px] font-medium">
                 Minhas agendas
@@ -648,7 +648,7 @@ const UserPage = () => {
 
 
         <div className="">
-          <div className="md:w-[520px] w-auto mx-[938px] mt-[-338px] h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+          <div className="md:w-[520px] w-auto md:mx-[938px] md:mt-[-338px] mt-3 mx-auto h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex  justify-between items-center mb-4">
               <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
                 Mensagem de cobrança
