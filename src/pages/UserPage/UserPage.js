@@ -246,7 +246,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col overflow">
       {isEditing && (
         <div className="fixed inset-0 ml-[195px] backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30  flex justify-center items-center z-30">
           <div className=" w-[1076px] -mb-14 h-[615px] mr-16 bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-8">
