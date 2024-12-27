@@ -3,8 +3,7 @@ import "../../../index.css";
 const CrossIcon = () => {
   return (
     <svg
-      width="18"
-      height="18"
+      className="w-[15px] h-[15px] md:w-[18px] md:h-[18px]"
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +38,7 @@ const CrossIcon = () => {
 const VerifyGreenIcon = () => {
   return (
     <svg
-      className=" w-[18px] h-[18px]"
+      className="w-[15px] h-[15px] md:w-[18px] md:h-[18px]"
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -572,7 +572,7 @@ const DashBoard = () => {
               />
             </div>
 
-            <div className="group md:mt-20 md:mb-2 mt-16 ">
+            <div className="group md:mt-20 md:mb-2 mt-16 z-50 ">
               <FilterStatusDashBoard
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -581,35 +581,35 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="mt-3 md:mt-0 lg:flex md:mx-auto justify-center box-border w-[398px] h-[238px]  md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
-            <table className="min-w-full bg-bg1 ">
+          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-[398px] max-w-full h-auto md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-x-auto md:overflow-hidden border-solid border-cinza6 bg-bg1 z-10">
+            <table className="table-auto w-full bg-bg1 mt-5">
               <thead>
                 <tr>
-                  <th className="md:w-[75px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative min-w-[50px] md:w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Paciente
                   </th>
-                  <th className="md:w-[125px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-[125px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Valor Consulta
                   </th>
-                  <th className="md:w-10 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="hidden md:table-cell md:w-10 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Dias
                   </th>
-                  <th className="md:w-[136px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-[136px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Nª de consultas
                   </th>
-                  <th className="md:w-11 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-11 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Total
                   </th>
-                  <th className="md:w-20 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-20 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Cobrança
                   </th>
-                  <th className="md:w-[98px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-[98px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Pagamento
                   </th>
-                  <th className="w-6 border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-6 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     NF
                   </th>
-                  <th className="w-[52px] border-b border-b-cinza6 text-primaria text-lg font-medium font-['Ubuntu'] tracking-tight px-4 py-2">
+                  <th className="relative w-[80px] md:w-[52px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     Ações
                   </th>
                 </tr>
@@ -618,51 +618,49 @@ const DashBoard = () => {
                 {filteredPatients.length > 0 ? (
                   filteredPatients.map((patient, index) => (
                     <tr key={index} className="relative">
-                      <td className="flex flex-col md:w-1 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight md:ml-[8px] px-4 py-2 md:whitespace-pre-wrap ">
+                      <td className="flex flex-col md:w-auto text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 md:whitespace-pre-wrap">
                         {patient.Customer?.customer_name || "-"}
                       </td>
-                      <td className="w-[73px] text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-12 py-2">
+                      <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                         R${" "}
                         {parseFloat(patient.consultation_fee)
                           .toFixed(2)
                           .replace(".", ",")}
                       </td>
-                      <td className="text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2">
+                      <td className="hidden md:table-cell text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                         {patient.consultation_days || "-"}
                       </td>
-                      <td className="flex w-full justify-center text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight  ">
+                      <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                         {patient.num_consultations || "-"}
                       </td>
-                      <td className="text-center w-20 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight px-4 py-2 whitespace-nowrap">
+                      <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                         R$ {patient.total_consultation_fee || "0,00"}
                       </td>
-                      <td className="flex text-center items-center justify-center mt-[20px]">
+                      <td className="text-center">
                         {patient.sending_invoice ? (
                           <VerifyGreenIcon />
                         ) : (
                           <CrossIcon />
                         )}
                       </td>
-                      <td>
-                        <div className="flex items-center justify-center">
-                          {patient.payment_status === "pago" ? (
-                            <VerifyGreenIcon />
-                          ) : patient.payment_status === "parcial" ? (
-                            <span className="text-texto2 text-[15px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
-                              R${" "}
-                              {parseFloat(patient.payment_amount || 0)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                            </span>
-                          ) : (
-                            <CrossIcon />
-                          )}
-                        </div>
+                      <td className="text-center">
+                        {patient.payment_status === "pago" ? (
+                          <VerifyGreenIcon />
+                        ) : patient.payment_status === "parcial" ? (
+                          <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
+                            R${" "}
+                            {parseFloat(patient.payment_amount || 0)
+                              .toFixed(2)
+                              .replace(".", ",")}
+                          </span>
+                        ) : (
+                          <CrossIcon />
+                        )}
                       </td>
-                      <td className="flex items-center justify-center">
+                      <td className="text-center">
                         <CrossIcon />
                       </td>
-                      <td className="w-[52px] text-center px-4 py-2">
+                      <td className="text-center px-2 md:px-4 py-1 md:py-2">
                         <button
                           className="cursor-pointer"
                           onClick={() => toggleDropdownPatients(index, patient)}
@@ -689,7 +687,10 @@ const DashBoard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center px-4 py-2">
+                    <td
+                      colSpan="9"
+                      className="text-center px-2 md:px-4 py-1 md:py-2"
+                    >
                       Nenhum registro encontrado para este mês e ano.
                     </td>
                   </tr>
