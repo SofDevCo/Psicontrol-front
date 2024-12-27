@@ -572,7 +572,7 @@ const DashBoard = () => {
               />
             </div>
 
-            <div className="md:mt-20 md:mb-2 mt-16 ">
+            <div className="group md:mt-20 md:mb-2 mt-16 ">
               <FilterStatusDashBoard
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -617,7 +617,7 @@ const DashBoard = () => {
               <tbody>
                 {filteredPatients.length > 0 ? (
                   filteredPatients.map((patient, index) => (
-                    <tr key={index}>
+                    <tr key={index} className="relative">
                       <td className="flex flex-col md:w-1 text-texto1 text-[15px] font-normal font-['Open Sans'] tracking-tight md:ml-[8px] px-4 py-2 md:whitespace-pre-wrap ">
                         {patient.Customer?.customer_name || "-"}
                       </td>
