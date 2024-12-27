@@ -7,7 +7,7 @@ const DropDownDashActions = ({
   onConfirmedPayment,
 }) => {
   return (
-    <nav className="absolute right-0 md:w-[234px] md:h-[204px] mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-md">
+    <nav className="absolute right-0 md:w-[234px] md:h-[204px] mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-l-md">
       <ul className="w-[210px] h-auto mx-auto mt-8">
         <li>
           <button

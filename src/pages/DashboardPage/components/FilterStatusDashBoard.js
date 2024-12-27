@@ -23,7 +23,7 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
           Filtrar dados
         </button>
         {isOpen && (
-          <div className="dropdown-menu absolute w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded shadow-md p-2 mt-[300px] md:mt-[388px] md:-ml-[55px] -ml-[50px]">
+          <div className="dropdown-menu absolute w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-[300px] md:mt-[388px] md:-ml-[55px] -ml-[50px]">
             <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
               Pagamentos
             </p>
