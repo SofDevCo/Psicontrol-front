@@ -534,15 +534,15 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="fixed top-0 w-full z-50">
+    <div className="top-0 w-full z-50">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center lg:mx-[540px] gap-1 lg:mt-32 mt-32 -ml-11">
-            <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-1 mt-32 ">
+            <div className="flex w-full justify-center gap-2">
               <Months
                 onMonthChange={handleMonthChange}
                 onYearChange={handleYearChange}
@@ -580,123 +580,126 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-
-          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-[398px] max-w-full h-auto md:h-[436px] md:w-[1076px] rounded-[15px] border-[3px] overflow-x-auto md:overflow-hidden border-solid border-cinza6 bg-bg1 z-10">
-            <table className="table-auto w-full bg-bg1 mt-5">
-              <thead>
-                <tr>
-                  <th className="relative min-w-[50px] md:w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Paciente
-                  </th>
-                  <th className="relative w-[80px] md:w-[125px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Valor Consulta
-                  </th>
-                  <th className="hidden md:table-cell md:w-10 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Dias
-                  </th>
-                  <th className="relative w-[80px] md:w-[136px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Nª de consultas
-                  </th>
-                  <th className="relative w-[80px] md:w-11 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Total
-                  </th>
-                  <th className="relative w-[80px] md:w-20 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Cobrança
-                  </th>
-                  <th className="relative w-[80px] md:w-[98px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Pagamento
-                  </th>
-                  <th className="relative w-[80px] md:w-6 border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    NF
-                  </th>
-                  <th className="relative w-[80px] md:w-[52px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium font-['Ubuntu'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                    Ações
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPatients.length > 0 ? (
-                  filteredPatients.map((patient, index) => (
-                    <tr key={index} className="relative">
-                      <td className="flex flex-col md:w-auto text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 md:whitespace-pre-wrap">
-                        {patient.Customer?.customer_name || "-"}
-                      </td>
-                      <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                        R${" "}
-                        {parseFloat(patient.consultation_fee)
-                          .toFixed(2)
-                          .replace(".", ",")}
-                      </td>
-                      <td className="hidden md:table-cell text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                        {patient.consultation_days || "-"}
-                      </td>
-                      <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                        {patient.num_consultations || "-"}
-                      </td>
-                      <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                        R$ {patient.total_consultation_fee || "0,00"}
-                      </td>
-                      <td className="text-center">
-                        {patient.sending_invoice ? (
-                          <VerifyGreenIcon />
-                        ) : (
+          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full rounded-[15px] border-[3px] overflow-x-auto md:overflow-hidden border-solid border-cinza6 bg-bg1 z-10">
+            <div className="overflow-x-auto md:overflow-hidden">
+              <table className="table-fixed w-full bg-bg1 mt-5 text-left">
+                <thead>
+                  <tr>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Paciente
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Valor Consulta
+                    </th>
+                    <th className="hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Dias
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Nº de consultas
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Total
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Cobrança
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Pagamento
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      NF
+                    </th>
+                    <th className="min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                      Ações
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPatients.length > 0 ? (
+                    filteredPatients.map((patient, index) => (
+                      <tr key={index} className="relative">
+                        <td className="flex flex-col md:w-auto text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 md:whitespace-pre-wrap">
+                          {patient.Customer?.customer_name || "-"}
+                        </td>
+                        <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                          R${" "}
+                          {parseFloat(patient.consultation_fee)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                        </td>
+                        <td className="hidden md:table-cell text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                          {patient.consultation_days || "-"}
+                        </td>
+                        <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                          {patient.num_consultations || "-"}
+                        </td>
+                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                          R$ {patient.total_consultation_fee || "0,00"}
+                        </td>
+                        <td className="text-center">
+                          {patient.sending_invoice ? (
+                            <VerifyGreenIcon />
+                          ) : (
+                            <CrossIcon />
+                          )}
+                        </td>
+                        <td className="text-center">
+                          {patient.payment_status === "pago" ? (
+                            <VerifyGreenIcon />
+                          ) : patient.payment_status === "parcial" ? (
+                            <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
+                              R${" "}
+                              {parseFloat(patient.payment_amount || 0)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                            </span>
+                          ) : (
+                            <CrossIcon />
+                          )}
+                        </td>
+                        <td className="text-center">
                           <CrossIcon />
-                        )}
-                      </td>
-                      <td className="text-center">
-                        {patient.payment_status === "pago" ? (
-                          <VerifyGreenIcon />
-                        ) : patient.payment_status === "parcial" ? (
-                          <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
-                            R${" "}
-                            {parseFloat(patient.payment_amount || 0)
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </span>
-                        ) : (
-                          <CrossIcon />
-                        )}
-                      </td>
-                      <td className="text-center">
-                        <CrossIcon />
-                      </td>
-                      <td className="text-center px-2 md:px-4 py-1 md:py-2">
-                        <button
-                          className="cursor-pointer"
-                          onClick={() => toggleDropdownPatients(index, patient)}
-                        >
-                          <HamburguerIcon />
-                        </button>
-                        {isDropdownOpenPatients === index && (
-                          <div className="absolute right-0 shadow-lg rounded p-2 z-20">
-                            <DropDownDashActions
-                              onOpenModal={() =>
-                                handleSendWhatsApp(patient, true)
-                              }
-                              onPartialPayment={() =>
-                                handleOpenPartialPayment(patient)
-                              }
-                              onConfirmedPayment={() =>
-                                handleConfirmPayment(patient)
-                              }
-                            />
-                          </div>
-                        )}
+                        </td>
+                        <td className="text-center px-2 md:px-4 py-1 md:py-2">
+                          <button
+                            className="cursor-pointer"
+                            onClick={() =>
+                              toggleDropdownPatients(index, patient)
+                            }
+                          >
+                            <HamburguerIcon />
+                          </button>
+                          {isDropdownOpenPatients === index && (
+                            <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                              <DropDownDashActions
+                                onOpenModal={() =>
+                                  handleSendWhatsApp(patient, true)
+                                }
+                                onPartialPayment={() =>
+                                  handleOpenPartialPayment(patient)
+                                }
+                                onConfirmedPayment={() =>
+                                  handleConfirmPayment(patient)
+                                }
+                              />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="9"
+                        className="text-center px-2 md:px-4 py-1 md:py-2"
+                      >
+                        Nenhum registro encontrado para este mês e ano.
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="9"
-                      className="text-center px-2 md:px-4 py-1 md:py-2"
-                    >
-                      Nenhum registro encontrado para este mês e ano.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="relative mx-auto mt-[30px] box-border w-[398px] h-[122px] md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
