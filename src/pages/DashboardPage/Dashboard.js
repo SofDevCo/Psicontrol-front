@@ -580,8 +580,8 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full rounded-[15px] border-[3px] overflow-x-auto md:overflow-hidden border-solid border-cinza6 bg-bg1 z-10">
-            <div className="overflow-x-auto md:overflow-hidden">
+          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full rounded-[15px] border-[3px] overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
+            <div className="overflow-x-auto">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
                   <tr>
@@ -702,7 +702,7 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border w-[398px] h-[122px] md:h-[263px] md:w-[1076px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
             {isSearchBarOpen && (
               <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-screen z-20 "></div>
             )}
