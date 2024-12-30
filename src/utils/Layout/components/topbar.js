@@ -25,11 +25,11 @@ const TopBar = ({ onMenuClick }) => {
   const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed flex justify-between w-screen md:w-[calc(100vw-280px)] p-4 h-[100px] md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
+    <div className="fixed flex justify-between w-screen md:w-[calc(100vw-280px)] p-4 max-md:pt-12 md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
       {/* Botão hambúrguer visível apenas em telas menores */}
 
       <button
-        className="md:hidden p-5 "
+        className="md:hidden md:p-5 "
         onClick={onMenuClick}
         aria-label="Abrir menu"
       >
