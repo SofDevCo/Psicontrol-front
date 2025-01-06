@@ -246,7 +246,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="flex flex-col overflow">
+    <div className="flex flex-col overflow-y-auto">
       {isEditing && (
         <div className="fixed inset-0 ml-[195px] backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30  flex justify-center items-center z-30">
           <div className=" w-[1076px] -mb-14 h-[615px] mr-16 bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-8">
@@ -515,189 +515,193 @@ const UserPage = () => {
         </div>
 
 
-        <div className="md:relative flex-col md:space-x-4 w-full  mx-auto">
-          {/* Caixa "Minhas agendas" */}
-          <div className="md:w-[540px] w-full max-w-[540px] md:mx-[390px] mx-auto bg-bg1  shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-[#0082ba] md:text-[20px] text-[16px] font-medium">
+        <div className="md:flex flex-1 md:mx-auto w-auto md:space-x-4 items-start">
+          {/* Box "Minhas agendas" */}
+          <div className="md:w-[540px] w-auto h-[370px]  bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+            <div className="flex justify-between">
+              <h3 className="text-[#0082ba] md:w-[200px] w-[200px] text-[20px] font-medium">
                 Minhas agendas
               </h3>
               <button
                 onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center"
-              >
-                Trocar de conta
-                <RefreshIcon className="ml-2" />
+                className="text-[#0082ba] text-sm underline flex items-center md:ml-[0px] ml-[80px]">
+                <span className="relative md:w-32 w-[100px] drop-shadow-editShadow -mt-1">
+                  Trocar de conta
+                </span>
+                <span className="md:ml-1 ml-2">
+                  <RefreshIcon />
+                </span>
               </button>
             </div>
-            {/* Conteúdo da caixa */}
-            <p className="mt-4 text-[#5c5c5c] font-medium">{userData.user_name}</p>
-            <p className="text-[#8d8d8d] mt-2">
-              E-mail: <span className="text-[#5c5c5c]">{userData.user_email}</span>
+
+            <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
+            <p className="text-[#8d8d8d] ml-10">
+              <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+              {userData.user_email}
             </p>
-          
 
-          <div className="mt-6 ml-10">
-            <h4 className="text-[#232323] text-lg font-medium">
-              Agendas sincronizadas
-            </h4>
 
-            <div className="mt-3 space-y-4 max-h-[120px] overflow-y-auto">
-              {calendars.map((calendar) => (
-                <div
-                  key={calendar.calendar_id}
-                  className="flex items-center space-x-3"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCalendars.has(calendar.calendar_id)}
-                    onChange={() =>
-                      openConfirmationModal(calendar.calendar_id)
-                    }
-                    className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
-                      ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                      : "bg-white border-gray-300 opacity-50"
-                      }`}
-                    style={{
-                      boxShadow: selectedCalendars.has(calendar.calendar_id)
-                        ? "inset 0 0 0 3px white"
-                        : "none",
-                    }}
-                  />
-                  <span
-                    className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
-                      ? "text-[#5c5c5c]"
-                      : "text-gray-500 opacity-50"
-                      }`}
+            <div className="mt-6 ml-10">
+              <h4 className="text-[#232323] text-lg font-medium">
+                Agendas sincronizadas
+              </h4>
+
+              <div className="mt-3 space-y-4 max-h-[120px] overflow-y-auto">
+                {calendars.map((calendar) => (
+                  <div
+                    key={calendar.calendar_id}
+                    className="flex items-center space-x-3"
                   >
-                    {calendar.calendar_name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {isModalOpen && (
-            <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
-              <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
-                <div className="w-full text-center mx-auto mb-12">
-                  <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-                    Você tem certeza que <br />
-                    deseja
-                    <span className="text-[#0082ba]"> trocar de conta? </span>
-                  </span>
-                </div>
-
-                <div className="flex justify-around">
-                  <button
-                    onClick={closeModal}
-                    className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
-                  >
-                    Não
-                  </button>
-                  <button
-                    onClick={() => {
-                      closeModal();
-                      handleChangeAccount();
-                    }}
-                    className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
-                  >
-                    Sim
-                  </button>
-                </div>
+                    <input
+                      type="checkbox"
+                      checked={selectedCalendars.has(calendar.calendar_id)}
+                      onChange={() =>
+                        openConfirmationModal(calendar.calendar_id)
+                      }
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
+                        ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                        : "bg-white border-gray-300 opacity-50"
+                        }`}
+                      style={{
+                        boxShadow: selectedCalendars.has(calendar.calendar_id)
+                          ? "inset 0 0 0 3px white"
+                          : "none",
+                      }}
+                    />
+                    <span
+                      className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
+                        ? "text-[#5c5c5c]"
+                        : "text-gray-500 opacity-50"
+                        }`}
+                    >
+                      {calendar.calendar_name}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
 
-          {/* Modal de Confirmação */}
-          {isConfirmationModalOpen && (
-            <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
-              <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
-                <div className="w-full text-center mx-auto mb-12">
-                  <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-                    Você tem certeza que deseja
-                    <br />
-                    {selectedCalendars.has(activeCalendarId) ? (
-                      <span className="text-[#0082ba]">
-                        desativar a agenda?
-                      </span>
-                    ) : (
-                      <span className="text-[#0082ba]">ativar a agenda?</span>
-                    )}
-                  </span>
-                </div>
+            {isModalOpen && (
+              <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
+                <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+                  <div className="w-full text-center mx-auto mb-12">
+                    <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                      Você tem certeza que <br />
+                      deseja
+                      <span className="text-[#0082ba]"> trocar de conta? </span>
+                    </span>
+                  </div>
 
-                <div className="flex justify-around">
-                  <button
-                    onClick={closeConfirmationModal}
-                    className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
-                  >
-                    Não
-                  </button>
-                  <button
-                    onClick={() => handleToggleCalendar(activeCalendarId)}
-                    className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
-                  >
-                    Sim
-                  </button>
+                  <div className="flex justify-around">
+                    <button
+                      onClick={closeModal}
+                      className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
+                    >
+                      Não
+                    </button>
+                    <button
+                      onClick={() => {
+                        closeModal();
+                        handleChangeAccount();
+                      }}
+                      className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
+                    >
+                      Sim
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
 
+            {/* Modal de Confirmação */}
+            {isConfirmationModalOpen && (
+              <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
+                <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+                  <div className="w-full text-center mx-auto mb-12">
+                    <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                      Você tem certeza que deseja
+                      <br />
+                      {selectedCalendars.has(activeCalendarId) ? (
+                        <span className="text-[#0082ba]">
+                          desativar a agenda?
+                        </span>
+                      ) : (
+                        <span className="text-[#0082ba]">ativar a agenda?</span>
+                      )}
+                    </span>
+                  </div>
 
-        <div className="">
-          <div className="md:w-[520px] w-auto md:mx-[938px] md:mt-[-338px] mt-3 mx-auto h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-            <div className="flex  justify-between items-center mb-4">
-              <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
-                Mensagem de cobrança
-              </h3>
-              {isEditingMessage ? (
-                <button
-                  onClick={saveMessage}
-                  className="text-[#0082ba] text-sm"
-                >
-                  <CheckMessage />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsEditingMessage(true)}
-                  className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
-                >
-                  <EditIcon />
-                </button>
-              )}
-            </div>
-
-            {isEditingMessage ? (
-              <textarea
-                name="user_message"
-                value={userData.user_message || ""}
-                onChange={(e) =>
-                  setUserData((prevData) => ({
-                    ...prevData,
-                    [e.target.name]: e.target.value,
-                  }))
-                }
-                className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
-                placeholder="Escreva sua mensagem de cobrança aqui..."
-              />
-            ) : (
-              <div className="border border-gray-300 p-4 rounded-md text-[#232323] text-[15px]  h-[250px] bg-white">
-                {userData.user_message || (
-                  <span className="text-gray-400">
-                    Escreva sua mensagem de cobrança aqui...
-                  </span>
-                )}
+                  <div className="flex justify-around">
+                    <button
+                      onClick={closeConfirmationModal}
+                      className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
+                    >
+                      Não
+                    </button>
+                    <button
+                      onClick={() => handleToggleCalendar(activeCalendarId)}
+                      className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
+                    >
+                      Sim
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
+
+
+          <div className="md:relative md:my-0 my-[10px]">
+            <div className="md:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+              <div className="flex  justify-between items-center mb-4">
+                <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
+                  Mensagem de cobrança
+                </h3>
+                {isEditingMessage ? (
+                  <button
+                    onClick={saveMessage}
+                    className="text-[#0082ba] text-sm"
+                  >
+                    <CheckMessage />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsEditingMessage(true)}
+                    className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
+                  >
+                    <EditIcon />
+                  </button>
+                )}
+              </div>
+
+              {isEditingMessage ? (
+                <textarea
+                  name="user_message"
+                  value={userData.user_message || ""}
+                  onChange={(e) =>
+                    setUserData((prevData) => ({
+                      ...prevData,
+                      [e.target.name]: e.target.value,
+                    }))
+                  }
+                  className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
+                  placeholder="Escreva sua mensagem de cobrança aqui..."
+                />
+              ) : (
+                <div className="border border-gray-300 p-4 rounded-md text-[#232323] text-[15px]  h-[250px] bg-white">
+                  {userData.user_message || (
+                    <span className="text-gray-400">
+                      Escreva sua mensagem de cobrança aqui...
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+
         </div>
-
-
-      </div>
-    </>
+      </>
     </div >
   );
 };
