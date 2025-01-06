@@ -618,19 +618,30 @@ const DashBoard = () => {
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
-                        <td className="flex flex-col md:w-auto text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 md:whitespace-pre-wrap">
-                          {patient.Customer?.customer_name || "-"}
+                        <td className=" text-texto1 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2">
+                          <div className="flex flex-col justify-center leading-tight space-y-2">
+                            <span>
+                              {patient.Customer?.customer_name?.split(" ")[0] ||
+                                "-"}
+                            </span>
+                            <span>
+                              {patient.Customer?.customer_name
+                                ?.split(" ")
+                                .slice(1)
+                                .join(" ") || ""}
+                            </span>
+                          </div>
                         </td>
-                        <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           R${" "}
                           {parseFloat(patient.consultation_fee)
                             .toFixed(2)
                             .replace(".", ",")}
                         </td>
-                        <td className="hidden md:table-cell text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="hidden md:table-cell text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.consultation_days || "-"}
                         </td>
-                        <td className="text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.num_consultations || "-"}
                         </td>
                         <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
@@ -660,6 +671,7 @@ const DashBoard = () => {
                         <td className="text-center">
                           <CrossIcon />
                         </td>
+
                         <td className="text-center px-2 md:px-4 py-1 md:py-2">
                           <button
                             className="cursor-pointer"
