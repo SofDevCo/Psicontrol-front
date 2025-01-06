@@ -64,10 +64,10 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
   };
 
   return (
-    <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3">
+    <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 z-50">
       <button
         onClick={toggleModal}
-        className="w-full md:h-[46px] h-[26px] px-3 py-2 bg-primaria rounded-[10px] shadow justify-start items-center gap-3 inline-flex z-50"
+        className="w-full md:h-[46px] h-[26px] px-3 py-2 bg-primaria rounded-[10px] shadow justify-start items-center gap-3 inline-flex"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
@@ -81,8 +81,8 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
         <SetaIcon />
       </button>
       {isModalOpen && (
-        <div className="flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute w-[250px] z-50">
-          <div className="flex items-center my-3 justify-between w-full px-4 mb-2 border-b border-[#cac4d0]">
+        <div className="w-full flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute w-[250px] z-50">
+          <div className="flex items-center my-3 justify-between  px-4 mb-2 border-b border-[#cac4d0]">
             <button
               onClick={() => setShowingMonths(true)}
               className="text-[#5c5c5c] text-sm font-normal font-['Open Sans'] mb-3 tracking-tight hover:text-black focus:outline-none"
