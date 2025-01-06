@@ -170,12 +170,11 @@ const ArchiveIcon = () => {
 const HamburguerIcon = () => {
   return (
     <svg
-      width="25"
-      height="25"
+    
       viewBox="0 0 25 25"
       fillRule="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="flex"
+      className="flex md:w-[25px] md:h-[25px] w-[12px] h-[12px]"
     >
       <g clipPath="url(#clip0_348_7214)">
         <g filter="url(#filter0_d_348_7214)">
