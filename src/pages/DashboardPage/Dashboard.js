@@ -594,20 +594,20 @@ const DashBoard = () => {
                     <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Dias
                     </th>
-                    <th className="text-center align-middle  md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Nº de consultas
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
                       Total
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                       Cobrança
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                       Pagamento
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
-                      NF 
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                      NF
                     </th>
                     <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Ações
