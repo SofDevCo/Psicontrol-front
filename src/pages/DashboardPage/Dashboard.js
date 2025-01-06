@@ -647,29 +647,36 @@ const DashBoard = () => {
                         <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           R$ {patient.total_consultation_fee || "0,00"}
                         </td>
-                        <td className="text-center">
-                          {patient.sending_invoice ? (
-                            <VerifyGreenIcon />
-                          ) : (
-                            <CrossIcon />
-                          )}
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            {patient.sending_invoice ? (
+                              <VerifyGreenIcon />
+                            ) : (
+                              <CrossIcon />
+                            )}
+                          </div>
                         </td>
-                        <td className="text-center">
-                          {patient.payment_status === "pago" ? (
-                            <VerifyGreenIcon />
-                          ) : patient.payment_status === "parcial" ? (
-                            <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
-                              R${" "}
-                              {parseFloat(patient.payment_amount || 0)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                            </span>
-                          ) : (
-                            <CrossIcon />
-                          )}
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            {" "}
+                            {patient.payment_status === "pago" ? (
+                              <VerifyGreenIcon />
+                            ) : patient.payment_status === "parcial" ? (
+                              <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
+                                R${" "}
+                                {parseFloat(patient.payment_amount || 0)
+                                  .toFixed(2)
+                                  .replace(".", ",")}
+                              </span>
+                            ) : (
+                              <CrossIcon />
+                            )}{" "}
+                          </div>
                         </td>
-                        <td className="text-center">
-                          <CrossIcon />
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            <CrossIcon />
+                          </div>
                         </td>
 
                         <td className="text-center px-2 md:px-4 py-1 md:py-2">
