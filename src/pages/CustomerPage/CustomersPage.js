@@ -160,7 +160,7 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border h-[544px] w-[1076px] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
+    <div className="relative mx-auto mt-12 box-border w-full rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
@@ -192,75 +192,74 @@ const CustomersPage = () => {
         </div>
       )}
 
-      <div className="relative flex w-full items-center pl-7 pt-6">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder={searchTerm ? "" : "Pesquisar pacientes"}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={`h-[56px] w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
-          />
-          <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
-            {searchTerm.length > 0 ? (
-              <div
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilteredCustomers([]);
-                }}
-                className="cursor-pointer"
-              >
-                <ArrowLeftIcon />
+      <div className="relative w-full items-center pl-7 pt-6">
+        <div className="relative flex items-center gap-8 flex-col md:flex-row">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={searchTerm ? "" : "Pesquisar pacientes"}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`h-[56px] md:w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+            />
+            <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
+              {searchTerm.length > 0 ? (
+                <div
+                  onClick={() => {
+                    setSearchTerm("");
+                    setFilteredCustomers([]);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <ArrowLeftIcon />
+                </div>
+              ) : (
+                <SearchIcon />
+              )}
+            </div>
+
+            {searchTerm.length > 0 && (
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                <div
+                  onClick={() => {
+                    setSearchTerm("");
+                    setFilteredCustomers([]);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <CloseIcon />
+                </div>
               </div>
-            ) : (
-              <SearchIcon />
+            )}
+            {searchTerm &&
+              filteredCustomers.length === 0 &&
+              isDropdownVisible && (
+                <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+                  Paciente não encontrado
+                </p>
+              )}
+
+            {searchTerm && filteredCustomers.length > 0 && (
+              <ul
+                ref={searchDropRef}
+                className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px]  z-10 border border-t-texto2 overflow-auto"
+              >
+                {filteredCustomers.map((customer) => (
+                  <li
+                    key={customer.customer_id}
+                    className="px-4 py-2 hover:bg-d_medio3 cursor-pointer"
+                    onClick={() => {
+                      setSearchTerm(customer.customer_name);
+                      setFilteredCustomers([]);
+                      handleNavigateClick(customer.customer_id);
+                    }}
+                  >
+                    {customer.customer_name}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
-
-          {searchTerm.length > 0 && (
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <div
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilteredCustomers([]);
-                }}
-                className="cursor-pointer"
-              >
-                <CloseIcon />
-              </div>
-            </div>
-          )}
-          {searchTerm &&
-            filteredCustomers.length === 0 &&
-            isDropdownVisible && (
-              <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
-                Paciente não encontrado
-              </p>
-            )}
-
-          {searchTerm && filteredCustomers.length > 0 && (
-            <ul
-              ref={searchDropRef}
-              className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px]  z-10 border border-t-texto2"
-            >
-              {filteredCustomers.map((customer) => (
-                <li
-                  key={customer.customer_id}
-                  className="px-4 py-2 hover:bg-d_medio3 cursor-pointer"
-                  onClick={() => {
-                    setSearchTerm(customer.customer_name);
-                    setFilteredCustomers([]);
-                    handleNavigateClick(customer.customer_id);
-                  }}
-                >
-                  {customer.customer_name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="ml-[40px] flex justify-center">
           <button
             onClick={handleAddPatient}
             className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
@@ -268,12 +267,12 @@ const CustomersPage = () => {
             <AddIcon />
             <span>Adicionar paciente</span>
           </button>
-        </div>
 
-        <button className="group ml-9 whitespace-no-wrap left-[1191px] top-[194px] flex w-full gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
-          <ArchiveIcon />
-          <Link to="/archived">Pacientes arquivados</Link>
-        </button>
+          <button className="group whitespace-no-wrap flex gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+            <ArchiveIcon />
+            <Link to="/archived">Pacientes arquivados</Link>
+          </button>
+        </div>
       </div>
 
       <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
