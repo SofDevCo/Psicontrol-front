@@ -22,10 +22,10 @@ const Layout = () => {
 
   return (
     <div className="layout-container flex h-screen overflow-hidden relative">
+
       {/* Sidebar com estado controlado */}
       <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
-      {/* Overlay para blur com cor personalizada */}
       {isSidebarOpen && (
         <div
           className="absolute inset-0 bg-[#BDE3ED] bg-opacity-40 backdrop-blur-md z-20 pointer-events-auto"
@@ -33,13 +33,12 @@ const Layout = () => {
         ></div>
       )}
 
-      {/* Topbar sempre visível */}
       <div className="relative z-30">
         <TopBar onMenuClick={toggleSidebar} />
       </div>
 
-      <div className="main-content flex flex-col w-full h-full overflow-auto bg-clara4 z-10">
-        <main className="flex-1 p-6">
+      <div className="main-content flex flex-col w-full h-full bg-clara4 z-10">
+        <main className="flex-1 p-6 overflow-auto">
           <Outlet />
         </main>
       </div>
