@@ -580,7 +580,7 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full rounded-[15px] border-[3px] overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-[15px] rounded-[10px] md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
             <div className="overflow-x-auto">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
