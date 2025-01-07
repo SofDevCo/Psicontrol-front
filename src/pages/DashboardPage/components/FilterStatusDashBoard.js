@@ -18,7 +18,7 @@ const FilterStatusDashBoard = ({ selectedStatus, onChangeStatus }) => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="group md:text-left text-primaria active:text-primaria/50 w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] tracking-[0.15px] leading-normal underline "
+          className="group md:text-left text-primaria active:text-primaria/50 w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] md:tracking-[0.15px] tracking-tight  leading-normal underline "
         >
           Filtrar dados
         </button>
