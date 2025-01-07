@@ -6,8 +6,6 @@ module.exports = {
       colors: {
         destaque: "#33C1DB",
         primaria: "#0082BA",
-        "custom-white": "#DFEAF2",
-        "custom-gray": "#8BA3CB",
         bg1: "#F5F5F5",
         bg2: "#E6EFF5",
         bgM: "#33B8D1",
