@@ -170,7 +170,6 @@ const ArchiveIcon = () => {
 const HamburguerIcon = () => {
   return (
     <svg
-    
       viewBox="0 0 25 25"
       fillRule="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -305,7 +304,7 @@ const CalendarIcon = () => {
 const VerifyIcon = () => {
   return (
     <svg
-      className="w-full h-full max-w-[24px] max-h-[24px] md:max-w-[32px] md:max-h-[32px]" 
+      className="w-[8px] h-[6px] md:w-[24px] md:h-[24px]"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -385,17 +384,16 @@ const ArrowLeftIcon = () => {
 const SetaIcon = () => {
   return (
     <svg
-      width="18 "
-      height="18"
+      className="hidden md:table-cell  w-[18px] h-[18px] md:w-[24px] md:h-[24px] "
       viewBox="5 5 14 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute ml-[171px]"
     >
       <path d="M7 10L17 10L12 15L7 10Z" fill="#F5F5F5" />
     </svg>
   );
 };
+
 const CloseIcon = () => {
   return (
     <svg
