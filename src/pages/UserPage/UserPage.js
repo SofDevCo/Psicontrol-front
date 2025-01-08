@@ -537,10 +537,10 @@ const UserPage = () => {
         </div>
 
         {isEditing && (
-          <div className="fixed top-24 inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 flex justify-center items-center z-30">
-            <div className="w-[90%] max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 md:p-8 overflow-y-auto">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="space-y-6">
+          <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
+            <div className="w-[90%] md:mt-0 mt-28 md:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 md:p-8 overflow-y-auto">
+              <div className="flex flex-col md:flex-row gap-6 md:ml-9">
+                <div className="space-y-6 mr-0 md:mr-20">
                   <h2 className="text-lg md:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
                     Editar meus dados
                   </h2>
@@ -635,7 +635,7 @@ const UserPage = () => {
                         setUserData({ ...userData, clinic_name: e.target.value })
                       }
                       placeholder="Nome/Clínica"
-                      className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
 
