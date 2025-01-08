@@ -170,7 +170,7 @@ const ConfirmPaymentIcon = () => {
 const VinculateIcon = () => {
   return (
     <svg
-      className="w-[23px] h-[23px] md:mr-[10px] ml-1 "
+      className="w-[10px] md:w-[23px] h-[10px] md:h-[23px] md:mr-[10px] ml-1 "
       viewBox="0 0 23 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +194,7 @@ const VinculateIcon = () => {
 const TrashIconDash = () => {
   return (
     <svg
-      className="w-[15px] h-[20px] md:mr-[2px]"
+      className="w-[9px] md:w-[15px] h-[11px] md:h-[20px] md:mr-[2px] -mr-0"
       viewBox="0 0 15 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
