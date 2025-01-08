@@ -39,11 +39,19 @@ module.exports = {
         normal: "0.25px",
       },
       fontSize: {
+        F8: "8px",
+        F10: "10px",
         F15: "15px",
         F17: "17px",
         F20: "20px",
         F25: "25px",
-
+      },
+      fontFamily:{
+        ubuntu: ["ubuntu-regular", "helvetica"],
+      },
+      borderRadius:{
+        B10: "10px",
+        B15: "15px",
       },
     },
   },
