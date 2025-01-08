@@ -40,6 +40,7 @@ module.exports = {
       },
       fontSize: {
         F8: "8px",
+        F9: "9px",
         F10: "10px",
         F15: "15px",
         F17: "17px",
