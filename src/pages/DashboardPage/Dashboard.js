@@ -534,7 +534,7 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="top-0 w-full z-50">
+    <div className="top-0 w-full z-50 p-6">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
