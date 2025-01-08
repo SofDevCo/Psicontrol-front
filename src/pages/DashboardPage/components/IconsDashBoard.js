@@ -136,7 +136,7 @@ const SendIcon = () => {
 const PartialIcon = () => {
   return (
     <svg
-      className="w-[13px] h-[13px] md:w-[21px] md:h-[20px] md:mr-[6px] md:ml-[3px]"
+      className="w-[13px] h-[13px] md:w-[21px] md:h-[20px] md:mr-[6px] md:ml-[3px] ml-1"
       viewBox="0 0 21 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@ const PartialIcon = () => {
 const ConfirmPaymentIcon = () => {
   return (
     <svg
-      className="w-[13px] h-[13px] md:w-[24px] md:h-[24px] md:mr-[10px] "
+      className="w-[14px] h-[14px] md:w-[24px] md:h-[24px] md:mr-[10px] ml-1"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
