@@ -77,7 +77,7 @@ export const Months = ({
         <div className="flex items-center gap-2">
           <VerifyIcon />
 
-          <span className="text-texto4 md:text-[21px] text-[10px] font-medium md:font-['Ubuntu'] font-['] tracking-tight">
+          <span className="text-texto4 md:text-[21px] text-[15px] md:font-medium md:font-['Ubuntu'] font-semibold  font-['Inter'] md:tracking-tight tracking-wider">
             <span className="block md:hidden">
               {`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
             </span>
@@ -87,7 +87,7 @@ export const Months = ({
         <SetaIcon />
       </button>
       {isModalOpen && (
-        <div className="w-full flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute z-50">
+        <div className="w-[213px] h-[277px] md:w-full flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute z-50">
           <div className="flex items-center justify-between w-full px-5 py-1 mb-2 border-b border-[#cac4d0]">
             <button
               onClick={() => setShowingMonths(true)}
@@ -113,10 +113,10 @@ export const Months = ({
                     }`}
                   >
                     {selectedMonth - 1 === index && <CheckIcon />}
-                    <span className="block md:hidden">
-                      {monthsInRangeShort[index]}
+                    <span className="block md:hidden  ">
+                      {monthsInRange[index]}
                     </span>
-                    <span className="hidden md:block">{month}</span>
+                    <span className="hidden md:block ">{month}</span>
                   </button>
                 ))
               : getYearsRange().map((year) => (
