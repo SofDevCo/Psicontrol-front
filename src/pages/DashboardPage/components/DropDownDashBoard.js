@@ -8,7 +8,7 @@ const DropDownDashBoard  = ({ onVincular, onExcluir }) => {
         <li className="w-full">
           <button
             onClick={onVincular}
-            className="flex items-center justify-center w-full gap-2 py-2 text-texto2 md:text-F15 font-normal font-openSans underline tracking-tight"
+            className="group flex items-center justify-center w-full gap-2 py-2 text-texto2 active:text-texto2/50 md:text-F15 font-normal font-openSans underline tracking-tight"
           >
             <VinculateIcon />
             <span>Vincular paciente</span>
@@ -17,7 +17,7 @@ const DropDownDashBoard  = ({ onVincular, onExcluir }) => {
         <li className="w-full">
           <button
             onClick={onExcluir}
-            className="flex items-center justify-center w-full gap-6 py-2 text-texto2 md:text-F15 font-normal font-openSans underline tracking-tight"
+            className="group flex items-center justify-center w-full gap-6 py-2 text-texto2 active:text-texto2/50 md:text-F15 font-normal font-openSans underline tracking-tight"
           >
             <TrashIconDash />
             <span>Excluir paciente</span>
