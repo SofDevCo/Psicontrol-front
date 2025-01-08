@@ -48,6 +48,7 @@ module.exports = {
       },
       fontFamily:{
         ubuntu: ["ubuntu-regular", "helvetica"],
+        openSans: ["Open_sans-regular","helvetica" ]
       },
       borderRadius:{
         B10: "10px",
