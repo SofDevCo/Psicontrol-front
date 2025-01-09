@@ -18,7 +18,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
         setRemotePatients([]);
       }
     };
-  
+
     fetchRemotePatients();
   }, [searchTerm]);
 
@@ -55,7 +55,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
   };
 
   return (
-    <div className="relative mx-auto -m-64 ml-2 top-2 w-[360px] z-30">
+    <div className="relative mx-auto max-w-[90%] md:-m-64 md:ml-2 md:top-2 -top-28  md:w-[360px] z-30">
       <input
         type="text"
         placeholder={searchTerm ? "" : "Pesquisar paciente para vincular"}
@@ -86,7 +86,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
       {searchTerm.length > 0 &&
         filteredPatients.length === 0 &&
         isDropdownVisible && (
-          <p className="absolute top-full left-0 w-full px-4 py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-gray-500">
+          <p className="absolute top-full left-0 w-full px-4 py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-[8px] md:text-[12px] text-text2/50">
             Paciente não encontrado
           </p>
         )}
@@ -94,7 +94,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
       {searchTerm && filteredPatients.length > 0 && (
         <ul
           ref={searchDropRef}
-          className="absolute top-full left-0 w-full bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
+          className="absolute top-full left-0 w-full  bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
         >
           {filteredPatients.map((customer, patient) => (
             <li
