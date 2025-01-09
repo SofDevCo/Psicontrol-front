@@ -16,6 +16,8 @@ import BillingDashBoard from "./components/BillingDashBoard";
 import ModalPaymentDash from "./components/ModalPaymentDash";
 import FilterStatusDashBoard from "./components/FilterStatusDashBoard";
 import { Months } from "../../utils/Months/months";
+import { useOutletContext } from "react-router-dom";
+
 
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
@@ -30,6 +32,7 @@ const DashBoard = () => {
   const [billingMessage, setBillingMessage] = useState("");
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const { setIsModalOpen } = useOutletContext();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -190,8 +193,10 @@ const DashBoard = () => {
       setIsSearchBarOpen(false);
       setIsConfirmModalOpen(false);
       setSelectedPatient(null);
+      setIsModalOpen(false);
     } else {
       setIsConfirmModalOpen(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -238,6 +243,7 @@ const DashBoard = () => {
   const confirmLinkPatient = (patient) => {
     setSelectedPatient(patient);
     setIsConfirmModalOpen(true);
+    setIsModalOpen(true);
   };
 
   const openSearchBar = () => {
@@ -821,9 +827,9 @@ const DashBoard = () => {
         )}
       </>
 
-      {isConfirmModalOpen && (
-        <div className="fixed inset-0 md:-top-64 md:left-64 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-50">
-          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center">
+      {isConfirmModalOpen && ( 
+        <div className="fixed inset-0 flex items-center justify-center md:bg-destaque bg-[#1c6e7d] md:bg-opacity-30  backdrop-blur-[6px] z-50">
+          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center -mt-64 ml-64">
             <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
@@ -832,7 +838,10 @@ const DashBoard = () => {
             </p>
             <div className="flex justify-around mt-4">
               <button
-                onClick={() => setIsConfirmModalOpen(false)}
+                 onClick={() => {
+                  setIsConfirmModalOpen(false);
+                  setIsModalOpen(false); 
+                }}
                 className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
               >
                 Não
