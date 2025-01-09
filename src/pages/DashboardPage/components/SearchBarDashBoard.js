@@ -55,7 +55,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
   };
 
   return (
-    <div className="relative mx-auto -m-64 ml-72 w-[360px] z-30">
+    <div className="relative mx-auto -m-64 ml-2 top-2 w-[360px] z-30">
       <input
         type="text"
         placeholder={searchTerm ? "" : "Pesquisar paciente para vincular"}
