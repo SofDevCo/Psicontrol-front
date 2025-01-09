@@ -18,7 +18,6 @@ import FilterStatusDashBoard from "./components/FilterStatusDashBoard";
 import { Months } from "../../utils/Months/months";
 import { useOutletContext } from "react-router-dom";
 
-
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
   const [events, setEvents] = useState([]);
@@ -827,9 +826,9 @@ const DashBoard = () => {
         )}
       </>
 
-      {isConfirmModalOpen && ( 
-        <div className="fixed inset-0 flex items-center justify-center md:bg-destaque bg-[#1c6e7d] md:bg-opacity-30  backdrop-blur-[6px] z-50">
-          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center -mt-64 ml-64">
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-start justify-center md:bg-destaque bg-[#1c6e7d] md:bg-opacity-30 backdrop-blur-[6px] z-50">
+          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64  mt-[10vh]">
             <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
@@ -838,9 +837,9 @@ const DashBoard = () => {
             </p>
             <div className="flex justify-around mt-4">
               <button
-                 onClick={() => {
+                onClick={() => {
                   setIsConfirmModalOpen(false);
-                  setIsModalOpen(false); 
+                  setIsModalOpen(false);
                 }}
                 className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
               >
@@ -848,7 +847,7 @@ const DashBoard = () => {
               </button>
               <button
                 onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
-                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm  bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
+                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
               >
                 Sim
               </button>
