@@ -2,7 +2,12 @@ import { useState } from "react";
 import { useModal } from "../Modal/useModal";
 import { VerifyIcon, CheckIcon, SetaIcon } from "../../icons/icons";
 
-export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYear }) => {
+export const Months = ({
+  onMonthChange,
+  onYearChange,
+  selectedMonth,
+  selectedYear,
+}) => {
   const { isModalOpen, openModal, closeModal } = useModal();
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -18,13 +23,33 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
   };
 
   const monthsInRange = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
   ];
 
   const monthsInRangeShort = [
-    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", 
-    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
   ];
 
   const handleMonthClick = (index) => {
@@ -49,7 +74,7 @@ export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYea
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
-          <span className="text-texto4 md:text-[21px] text-[10px] font-medium md:font-['Ubuntu'] tracking-tight">
+          <span className="text-texto4 md:text-[21px] text-[15px] md:font-medium md:font-['Ubuntu'] font-semibold  font-['Inter'] md:tracking-tight tracking-wider">
             <span className="block md:hidden">{`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
             <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
