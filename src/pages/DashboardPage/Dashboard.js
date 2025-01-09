@@ -30,6 +30,7 @@ const DashBoard = () => {
   const [billingMessage, setBillingMessage] = useState("");
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
@@ -184,11 +185,13 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Paciente vinculado com sucesso!");
+      fetchUnmatchedPatients();
       fetchUnmatchedPatients();
       setIsSearchBarOpen(false);
+      setIsConfirmModalOpen(false);
+      setSelectedPatient(null);
     } else {
-      return null;
+      setIsConfirmModalOpen(false);
     }
   };
 
@@ -231,6 +234,12 @@ const DashBoard = () => {
     }
     openSearchBar();
   };
+
+  const confirmLinkPatient = (patient) => {
+    setSelectedPatient(patient);
+    setIsConfirmModalOpen(true);
+  };
+
   const openSearchBar = () => {
     if (!selectedEvent) {
       return null;
@@ -534,7 +543,7 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="top-0 w-full z-50 p-6">
+    <div className="top-0 w-full z-10 p-6">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
@@ -773,7 +782,7 @@ const DashBoard = () => {
           {isSearchBarOpen && (
             <SearchBarDashBoard
               patients={patients}
-              onSelectPatient={handleLinkPatient}
+              onConfirmPatient={confirmLinkPatient}
               onClose={() => setIsSearchBarOpen(false)}
             />
           )}
@@ -811,6 +820,33 @@ const DashBoard = () => {
           />
         )}
       </>
+
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 md:-top-64 md:left-64 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-50">
+          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center">
+            <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
+              Você tem certeza que <br />
+              deseja <span className="text-primaria">vincular</span> este <br />
+              paciente à informação <br />
+              <span>“{selectedPatient?.customer_name}”</span>?
+            </p>
+            <div className="flex justify-around mt-4">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
+                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm  bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
