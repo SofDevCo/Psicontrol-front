@@ -2,12 +2,7 @@ import { useState } from "react";
 import { useModal } from "../Modal/useModal";
 import { VerifyIcon, CheckIcon, SetaIcon } from "../../icons/icons";
 
-export const Months = ({
-  onMonthChange,
-  onYearChange,
-  selectedMonth,
-  selectedYear,
-}) => {
+export const Months = ({ onMonthChange, onYearChange, selectedMonth, selectedYear }) => {
   const { isModalOpen, openModal, closeModal } = useModal();
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -23,49 +18,27 @@ export const Months = ({
   };
 
   const monthsInRange = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
 
   const monthsInRangeShort = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", 
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
   ];
 
   const handleMonthClick = (index) => {
     onMonthChange(index + 1);
+    closeModal(); // Fecha o modal após selecionar o mês
   };
 
   const handleYearClick = (year) => {
     onYearChange(year);
+    setShowingMonths(true); // Mostra os meses após selecionar o ano
   };
 
   const toggleModal = () => {
-    if (isModalOpen) {
-      closeModal();
-    } else {
-      openModal();
-    }
+    isModalOpen ? closeModal() : openModal();
   };
 
   return (
@@ -76,11 +49,8 @@ export const Months = ({
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
-
-          <span className="text-texto4 md:text-[21px] text-[15px] md:font-medium md:font-['Ubuntu'] font-semibold  font-['Inter'] md:tracking-tight tracking-wider">
-            <span className="block md:hidden">
-              {`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}
-            </span>
+          <span className="text-texto4 md:text-[21px] text-[10px] font-medium md:font-['Ubuntu'] tracking-tight">
+            <span className="block md:hidden">{`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
             <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
         </div>
@@ -91,18 +61,22 @@ export const Months = ({
           <div className="flex items-center justify-between w-full px-5 py-1 mb-2 border-b border-[#cac4d0]">
             <button
               onClick={() => setShowingMonths(true)}
-              className="text-[#5c5c5c] text-sm font-normal font-['Open Sans'] mb-3 tracking-tight hover:text-black focus:outline-none"
+              className={`text-[#5c5c5c] text-sm font-normal font-['Open Sans'] tracking-tight hover:text-black ${
+                showingMonths ? "font-bold text-black" : ""
+              }`}
             >
-              {monthsInRange[selectedMonth - 1]}
+              {showingMonths ? "Meses" : monthsInRange[selectedMonth - 1]}
             </button>
             <button
               onClick={() => setShowingMonths(false)}
-              className="text-[#5c5c5c] text-sm font-normal font-['Open Sans'] tracking-tight mb-3 hover:text-black focus:outline-none"
+              className={`text-[#5c5c5c] text-sm font-normal font-['Open Sans'] tracking-tight hover:text-black ${
+                !showingMonths ? "font-bold text-black" : ""
+              }`}
             >
               {selectedYear}
             </button>
           </div>
-          <div className="flex flex-col w-full overflow-y-auto max-h-60 ">
+          <div className="flex flex-col w-full overflow-y-auto max-h-60">
             {showingMonths
               ? monthsInRange.map((month, index) => (
                   <button

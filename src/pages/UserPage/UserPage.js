@@ -246,181 +246,10 @@ const UserPage = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-y-auto">
-      {isEditing && (
-        <div className="fixed inset-0 ml-[195px] backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30  flex justify-center items-center z-30">
-          <div className=" w-[1076px] -mb-14 h-[615px] mr-16 bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-8">
-            <div className="flex gap-8">
-              <div className="space-y-6">
-                <h2 className="text-[25px] mx-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
-                  Editar meus dados
-                </h2>
-
-                <div>
-                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    Nome
-                  </label>
-                  <input
-                    type="text"
-                    name="user_name"
-                    value={userData.user_name || ""}
-                    onChange={handleChange}
-                    placeholder="Nome do psicólogo"
-                    className="w-[418px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    E-mail
-                  </label>
-                  <input
-                    type="email"
-                    name="user_email"
-                    value={userData.user_email || ""}
-                    onChange={handleChange}
-                    placeholder="e-mail.psicologo@gmail.com"
-                    className="w-[418px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                  />
-                </div>
-
-                <div className="flex gap-4">
-                  <div>
-                    <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      Telefone
-                    </label>
-                    <input
-                      type="text"
-                      name="user_phone"
-                      value={userData.user_phone || ""}
-                      onChange={handleChange}
-                      placeholder="(00) 0 0000-0000"
-                      className="w-[181px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      CPF/CNPJ
-                    </label>
-                    <input
-                      type="text"
-                      name="user_cpf"
-                      value={userData.user_cpf || ""}
-                      onChange={handleChange}
-                      placeholder="XX.XXX.XXX/0001-XX"
-                      className="w-[212px] h-[50px]  bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block mx-[42px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    CRP
-                  </label>
-                  <input
-                    type="text"
-                    name="crp_number"
-                    value={userData.crp_number || ""}
-                    onChange={handleChange}
-                    placeholder="XX/XXXXX"
-                    className="w-[181px] h-[50px] mx-[23px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-6 ml-16">
-                <h2 className="text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
-                  Dados para recibo
-                </h2>
-
-                <div>
-                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    Nome/Clínica:
-                  </label>
-                  <input
-                    type="text"
-                    id="clinic_name"
-                    value={userData.clinic_name || ""}
-                    onChange={(e) =>
-                      setUserData({ ...userData, clinic_name: e.target.value })
-                    }
-                    placeholder="Nome/Clínica"
-                    className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                  />
-                </div>
-                <div>
-                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    CPF/CNPJ
-                  </label>
-                  <input
-                    type="text"
-                    name="clinic_cpf_cnpj"
-                    value={userData.clinic_cpf_cnpj || ""}
-                    onChange={handleChange}
-                    placeholder="XX.XXX.XXX/0001-XX"
-                    className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mx-[18px] text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                    Importar logotipo
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div className="w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
-                      <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
-                        {fileName}
-                      </span>
-                    </div>
-                    <label className="flex items-center gap-1 text-[#0082ba] cursor-pointer">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4-4m0 0l-4 4m4-4v12"
-                        />
-                      </svg>
-                      <span className="underline">Importar arquivo</span>
-                      <input
-                        type="file"
-                        name="image"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex mx-[780px] gap-2 mt-[50px]">
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-1 border w-[108px] h-[39px] item-center border-primaria text-primaria rounded-[100px] mr-2 "
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 w-[90px] h-[40px] bg-primaria drop-shadow-saveShadow active:drop-shadow-sm text-white rounded-[100px]"
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+    <div className="flex flex-col p-6 overflow-y-auto overflow-x-hidden ">
+ 
       <>
-        <div className="relative md:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px]  mt-20 mb-3">
+        <div className="relative md:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] md:mt-28 mt-28 mb-3">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-[#0082ba] md:text-[25px] text-[16px] font-medium font-['Ubuntu']">
               Meus dados
@@ -438,12 +267,12 @@ const UserPage = () => {
           <div className="flex flex-col md:flex-row justify-between">
             {/* Primeira coluna */}
             <div className="flex md:w-[360px] w-full mb-6 md:mb-0">
-              <div className="md:w-10 md:h-10 w-7 h-7 bg-[#33b8d1] rounded-[20px] flex justify-center items-center">
+              <div className="md:w-10 md:h-10 w-7 h-7 md:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
                 {userData.photoUrl ? (
                   <img
                     src={userData.photoUrl}
                     alt="Foto de perfil"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <span className="text-white font-bold text-xl">
@@ -451,6 +280,7 @@ const UserPage = () => {
                   </span>
                 )}
               </div>
+
               <div>
                 <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
                   {userData.user_name}
@@ -465,12 +295,14 @@ const UserPage = () => {
                   <span>CRP: </span>
                   <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                 </div>
-                <div className="flex items-center ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 whitespace-nowrap">
-                  <span className="mr-1 whitespace-nowrap">E-mail:</span>
-                  <span className="text-[#5c5c5c] whitespace-nowrap">
+                <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
+                  <span className="mr-1 whitespace-nowrap self-start">E-mail:</span>
+                  <span className="text-[#5c5c5c] break-all">
                     {userData.user_email}
                   </span>
                 </div>
+
+
                 <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                   <span>Telefone: </span>
                   <span className="text-[#5c5c5c]">{userData.user_phone}</span>
@@ -479,7 +311,7 @@ const UserPage = () => {
             </div>
 
             {/* Segunda coluna */}
-            <div className="md:w-[316px] w-full mx-[45px]">
+            <div className="md:w-[316px] w-full mx-[44px]">
               <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                 Dados para recibo
               </div>
@@ -515,9 +347,11 @@ const UserPage = () => {
         </div>
 
 
+
+
         <div className="md:flex flex-1 md:mx-auto w-auto md:space-x-4 items-start">
           {/* Box "Minhas agendas" */}
-          <div className="md:w-[540px] w-auto h-[370px]  bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+          <div className="md:w-[540px] w-auto md:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex justify-between">
               <h3 className="text-[#0082ba] md:w-[200px] w-[200px] text-[20px] font-medium">
                 Minhas agendas
@@ -613,6 +447,8 @@ const UserPage = () => {
               </div>
             )}
 
+
+
             {/* Modal de Confirmação */}
             {isConfirmationModalOpen && (
               <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
@@ -698,9 +534,182 @@ const UserPage = () => {
               )}
             </div>
           </div>
-
-
         </div>
+
+        {isEditing && (
+          <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
+            <div className="w-[90%] md:mt-0 mt-28 md:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 md:p-8 overflow-y-auto">
+              <div className="flex flex-col md:flex-row gap-6 md:ml-9">
+                <div className="space-y-6 mr-0 md:mr-20">
+                  <h2 className="text-lg md:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                    Editar meus dados
+                  </h2>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      Nome
+                    </label>
+                    <input
+                      type="text"
+                      name="user_name"
+                      value={userData.user_name || ""}
+                      onChange={handleChange}
+                      placeholder="Nome do psicólogo"
+                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      E-mail
+                    </label>
+                    <input
+                      type="email"
+                      name="user_email"
+                      value={userData.user_email || ""}
+                      onChange={handleChange}
+                      placeholder="e-mail.psicologo@gmail.com"
+                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div>
+                      <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        Telefone
+                      </label>
+                      <input
+                        type="text"
+                        name="user_phone"
+                        value={userData.user_phone || ""}
+                        onChange={handleChange}
+                        placeholder="(00) 0 0000-0000"
+                        className="w-full md:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        CPF/CNPJ
+                      </label>
+                      <input
+                        type="text"
+                        name="user_cpf"
+                        value={userData.user_cpf || ""}
+                        onChange={handleChange}
+                        placeholder="XX.XXX.XXX/0001-XX"
+                        className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      CRP
+                    </label>
+                    <input
+                      type="text"
+                      name="crp_number"
+                      value={userData.crp_number || ""}
+                      onChange={handleChange}
+                      placeholder="XX/XXXXX"
+                      className="w-full md:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <h2 className="text-lg md:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                    Dados para recibo
+                  </h2>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      Nome/Clínica
+                    </label>
+                    <input
+                      type="text"
+                      id="clinic_name"
+                      value={userData.clinic_name || ""}
+                      onChange={(e) =>
+                        setUserData({ ...userData, clinic_name: e.target.value })
+                      }
+                      placeholder="Nome/Clínica"
+                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      CPF/CNPJ
+                    </label>
+                    <input
+                      type="text"
+                      name="clinic_cpf_cnpj"
+                      value={userData.clinic_cpf_cnpj || ""}
+                      onChange={handleChange}
+                      placeholder="XX.XXX.XXX/0001-XX"
+                      className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      Importar logotipo
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
+                        <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
+                          {fileName}
+                        </span>
+                      </div>
+                      <label className="flex items-center gap-1 text-[#0082ba] cursor-pointer">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4-4m0 0l-4 4m4-4v12"
+                          />
+                        </svg>
+                        <span className="underline">Importar arquivo</span>
+                        <input
+                          type="file"
+                          name="image"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-6">
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 border w-[108px] h-[39px] border-primaria text-primaria rounded-[100px]"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 w-[90px] h-[40px] bg-primaria text-white rounded-[100px]"
+                >
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
       </>
     </div >
   );
