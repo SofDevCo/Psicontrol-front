@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from "../../../icons/icons";
 import { fetchCustomers } from "../../../service/pagesService/pagesService";
 
-const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
+const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -100,12 +100,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
             <li
               key={customer.customer_id || patient.id}
               className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6 md:text-base text-[8px]"
-              onClick={() => {
-                setSearchTerm(customer.Customer?.customer_name || "");
-                setFilteredPatients([]);
-                onSelectPatient(customer.customer_id || patient.id);
-                setIsDropdownVisible(false);
-              }}
+              onClick={() => onConfirmPatient(customer)}
             >
               {customer?.customer_name || "Nome não disponível"}
             </li>
