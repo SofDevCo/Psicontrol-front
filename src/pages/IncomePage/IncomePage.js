@@ -445,52 +445,51 @@ const IncomePage = () => {
             className="z-50 "
           />
           <button
-            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria md:text-xs text-[11px] font-medium"
+            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria md:text-xs text-[10px] font-medium leading-tight"
             onClick={repeatLastMonthEntries}
           >
             <span className="hidden md:inline text-center">
               REPETIR LANÇAMENTO DO<br />MÊS ANTERIOR
             </span>
-            <span className="inline md:hidden text-center">
-              REPETIR LANÇAMENTO <br /> ANTERIOR
+            <span className="inline w-auto md:hidden text-center text-[9px] leading-tight">
+              REPETIR LANÇAMENTO <br />ANTERIOR
             </span>
           </button>
 
-
         </div>
-        <div className="flex flex-wrap gap-6 z-10">
-          <div className="flex-1">
-            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">
-              Receitas
-            </h2>
+
+
+        <div className="flex flex-wrap gap-6 z-10" style={{ maxWidth: "100%", alignItems: "flex-start" }}>
+          {/* Contêiner de Receitas */}
+          <div className="flex-1 min-w-[300px]">
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">Receitas</h2>
             {revenues.map((revenue, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 w-[200px]  shrink-0">
-
-                <div className="flex-1 text-gray-700 pl-4 cursor-default">
+                className="flex items-center mt-2 gap-4"
+                style={{ width: "100%", maxWidth: "400px" }}
+              >
+                <div
+                  className="flex-1 text-gray-700 pl-4 cursor-default overflow-hidden"
+                  style={{
+                    wordBreak: "break-word",
+                    whiteSpace: "normal",
+                    maxWidth: "200px",
+                  }}
+                >
                   {revenue.name}
                 </div>
-
-                {/* Contêiner fixo para valor e botão */}
-                <div className="flex items-center gap-4 w-[200px] justify-end shrink-0">
-                  {/* Valor da receita */}
-                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
-                    {formatCurrency(revenue.value)}
-                  </div>
-                  {/* Botão de excluir */}
-                  <button
-                    onClick={() => openModal(revenue.id, "revenue")}
-                    className="active:opacity-50 text-blue-500 hover:text-blue-700"
-                  >
-                    <Trash />
-                  </button>
+                <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
+                  {formatCurrency(revenue.value)}
                 </div>
-
+                <button
+                  onClick={() => openModal(revenue.id, "revenue")}
+                  className="active:opacity-50 text-blue-500 hover:text-blue-700"
+                >
+                  <Trash />
+                </button>
               </div>
-
             ))}
-
             {isAddingRevenue.map((revenue, index) => (
               <div className="flex items-center gap-4 ml-4 mt-2" key={index}>
                 <input
@@ -516,81 +515,81 @@ const IncomePage = () => {
                   className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
-
             ))}
             <button
               onClick={toggleAddRevenue}
-              className="flex ml-4 z-[-1]  items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
+              className="flex ml-4 items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px]">Adicionar item</span>
             </button>
           </div>
 
-          <div className="flex-1 md:mr-0 mr-[460px] ml-[15px]">
+          {/* Contêiner de Despesas */}
+          <div className="flex-1 min-w-[300px]">
             <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
-                key={index}
-                className="flex items-center justify-between mb-2"
-              >
-                {/* Nome da despesa */}
-                <div className="flex text-gray-700 cursor-default mr-4">
+              key={index}
+              className="flex items-center mt-2 gap-4 w-full max-w-[390px] md:max-w-[300px]"
+            >
+            
+                <div
+                  className="flex-1 text-gray-700 cursor-default overflow-hidden"
+                  style={{
+                    wordBreak: "break-word",
+                    whiteSpace: "normal",
+                    maxWidth: "200px",
+                  }}
+                >
                   {expense.name}
                 </div>
-
-                {/* Valor e botão de excluir */}
-                <div className="flex mx-[30px] items-center">
-                  <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
-                    {formatCurrency(expense.value)}
-                  </div>
-                  
-                  <button
-                    className="ml-4 active:opacity-50"
-                    onClick={() => openModal(expense.id, "expense")}
-                  >
-                    <Trash />
-                  </button>
+                <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
+                  {formatCurrency(expense.value)}
                 </div>
+                <button
+                  onClick={() => openModal(expense.id, "expense")}
+                  className="active:opacity-50 text-blue-500 hover:text-blue-700"
+                >
+                  <Trash />
+                </button>
               </div>
-
             ))}
-
             {isAddingExpense.map((expense, index) => (
-              <div className="flex items-center mb-2 gap-4" key={index}>
-                {/* Input de nome da despesa */}
+              <div className="flex items-center mb-2 mt-2 gap-4" key={index}>
                 <input
                   type="text"
                   placeholder="Nome da despesa"
                   value={expense.name}
                   onChange={(e) => updateAddingExpense(index, "name", e.target.value)}
                   onKeyDown={handleEnterPressExpenseName}
-                  ref={expenseNameInputRef} // associando o ref ao input de nome da despesa
+                  ref={expenseNameInputRef}
                   className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
-                {/* Input de valor da despesa */}
                 <input
                   type="text"
                   placeholder="Valor da despesa"
                   value={formatCurrency(expense.value)}
                   onChange={(e) => updateAddingExpense(index, "value", e.target.value)}
                   onKeyDown={handleEnterPressExpenseValue}
-                  ref={expenseValueInputRef} // associando o ref ao input de valor da despesa
+                  ref={expenseValueInputRef}
                   className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
                 />
               </div>
-
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex items-center ml-[1px] mt-4 transition-shadow active:drop-shadow-lg active:opacity-50"
+              className="flex items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
-              <span className="text-primaria ml-[8px] whitespace-nowrap">Adicionar item</span>
+              <span className="text-primaria ml-[8px] whitespace-nowrap">
+                Adicionar item
+              </span>
             </button>
-
           </div>
         </div>
+
+
         <div className="flex md:mr-[38px] mr-[10px] justify-end mt-4">
           <button
             onClick={handleCancel}
