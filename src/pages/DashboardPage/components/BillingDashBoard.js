@@ -8,8 +8,8 @@ const BillingDashBoard = ({
   message,
 }) => {
   return (
-    <div className="fixed inset-0 bg-bgM/30 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-bg1 rounded-B15 p-6 w-[477px] h-[521px] border-cinza6 border-[3px]">
+    <div className="fixed inset-0 bg-bgM/30 bg-opacity-50 flex justify-center items-start z-50">
+      <div className="bg-bg1 rounded-B15 p-6 w-[477px] h-[521px] border-cinza6 border-[3px] mt-64 ml-64">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-center text-primaria text-[21px] font-medium font-ubuntu tracking-tight ml-16 mt-3">
             Enviar mensagem de cobrança
