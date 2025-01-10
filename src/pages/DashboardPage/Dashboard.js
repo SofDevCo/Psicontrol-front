@@ -5,6 +5,7 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
+import { vinculateToast } from "./components/ToastDashBoard";
 import {
   CrossIcon,
   VerifyGreenIcon,
@@ -193,6 +194,7 @@ const DashBoard = () => {
       setIsConfirmModalOpen(false);
       setSelectedPatient(null);
       setIsModalOpen(false);
+      vinculateToast();
     } else {
       setIsConfirmModalOpen(false);
       setIsModalOpen(false);
@@ -443,8 +445,6 @@ const DashBoard = () => {
   };
 
   const handleDeleteUnmatchedEvent = async (google_event_id) => {
-    console.log("Tentando excluir evento com ID:", google_event_id);
-
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
       {
@@ -855,6 +855,14 @@ const DashBoard = () => {
           </div>
         </div>
       )}
+      <div className="mb-4">
+        <button
+          onClick={vinculateToast}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Test Toast
+        </button>
+      </div>
     </div>
   );
 };
