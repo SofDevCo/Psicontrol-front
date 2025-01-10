@@ -74,7 +74,7 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
           searchTerm ? "md:rounded-b-none rounded-b-none" : ""
         } bg-clara3 pl-11 text-texto2/50 md:text-base text-[11px] focus:outline-none focus:ring-0 caret-primaria`}
       />
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 transform">
         {searchTerm.length > 0 ? (
           <div onClick={handleClearSearch} className="cursor-pointer">
             <ArrowLeftIcon />
