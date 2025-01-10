@@ -3,6 +3,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { SuccessIcon } from "../../../icons/icons";
 
 export const showSaveToast = () => {
+
+  const isMobile = window.innerWidth <= 768;
+
   // Cria o elemento overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -15,8 +18,6 @@ export const showSaveToast = () => {
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
-  // Adiciona o overlay ao body do documento
-  document.body.appendChild(overlay);
 
   // Função para remover o overlay
   const removeOverlay = () => document.body.removeChild(overlay);
@@ -38,7 +39,7 @@ export const showSaveToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -49,8 +50,8 @@ export const showSaveToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -60,8 +61,8 @@ export const showSaveToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: "95px",
-        marginTop: "104px",
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Alinha ao centro horizontalmente no mobile
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Alinha ao centro verticalmente no mobile
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
@@ -75,10 +76,14 @@ export const showSaveToast = () => {
       onClose: removeOverlay, // Remove o overlay ao fechar o toast
     }
   );
+  
 };
   
 
 export const showDeleteToast = () => {
+
+  const isMobile = window.innerWidth <= 768;
+
   // Cria o overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -90,6 +95,7 @@ export const showDeleteToast = () => {
   overlay.style.zIndex = "30"; // Coloca o overlay acima do conteúdo
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
+
 
   // Remove o overlay quando a notificação fecha
   const removeOverlay = () => document.body.removeChild(overlay);
@@ -114,7 +120,7 @@ export const showDeleteToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -124,7 +130,7 @@ export const showDeleteToast = () => {
         <span
           style={{
             color: "#0082BA",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -135,7 +141,7 @@ export const showDeleteToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -146,7 +152,7 @@ export const showDeleteToast = () => {
         <div
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -157,8 +163,8 @@ export const showDeleteToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "145px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -168,8 +174,8 @@ export const showDeleteToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: "95px",
-        marginTop: "104px",
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Centraliza horizontalmente no mobile
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Centraliza verticalmente no mobile
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
@@ -183,10 +189,14 @@ export const showDeleteToast = () => {
       onClose: removeOverlay, // Remove o overlay ao fechar o toast
     }
   );
+  
 };
 
   
 export const showLastMonthToast = () => {
+
+  const isMobile = window.innerWidth <= 768;
+
   // Cria o elemento overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -197,9 +207,6 @@ export const showLastMonthToast = () => {
   overlay.style.backgroundColor = "#33B8D14D"; // Fundo semi-transparente
   overlay.style.zIndex = "30"; // Coloca o overlay acima de outros elementos
   overlay.style.backdropFilter = "blur(6px)";
-  document.body.appendChild(overlay);
-
-  // Adiciona o overlay ao body do documento
   document.body.appendChild(overlay);
 
   // Função para remover o overlay
@@ -222,7 +229,7 @@ export const showLastMonthToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -232,7 +239,7 @@ export const showLastMonthToast = () => {
         <span
           style={{
             color: "#0082BA",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -243,18 +250,18 @@ export const showLastMonthToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
         >
           {" "}
-          no mês 
+          no mês
         </span>
         <div
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -265,8 +272,8 @@ export const showLastMonthToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "145px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -276,8 +283,8 @@ export const showLastMonthToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: "95px",
-        marginTop: "104px",
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Centraliza horizontalmente no mobile
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Centraliza verticalmente no mobile
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
