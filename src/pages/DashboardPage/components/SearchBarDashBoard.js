@@ -27,18 +27,27 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
       setFilteredPatients([]);
       setIsDropdownVisible(false);
     } else {
-      const localFiltered = patients.filter((patient) =>
-        patient.customer?.customer_name
-          .toLowerCase()
-          .startsWith(searchTerm.toLowerCase())
+      // Filtro local
+      const localFiltered = patients.filter(
+        (patient) =>
+          patient?.Customer?.customer_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) 
       );
-      const combinedResults = [
-        ...localFiltered,
-        ...remotePatients.filter(
-          (remotePatient) =>
-            !localFiltered.some((local) => local.id === remotePatient.id)
-        ),
-      ];
+
+      // Filtro remoto, garantindo que não haja duplicados
+      const remoteFiltered = remotePatients.filter(
+        (remotePatient) =>
+          !localFiltered.some(
+            (local) => local.Customer?.customer_id === remotePatient.customer_id
+          ) &&
+          remotePatient?.customer_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) 
+      );
+
+      // Combinar os dois resultados
+      const combinedResults = [...localFiltered, ...remoteFiltered];
 
       setFilteredPatients(combinedResults);
       setIsDropdownVisible(true);
@@ -96,13 +105,15 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
           ref={searchDropRef}
           className="absolute top-full left-0 md:w-full w-[207px] bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
         >
-          {filteredPatients.map((customer, patient) => (
+          {filteredPatients.map((customer) => (
             <li
-              key={customer.customer_id || patient.id}
+              key={customer.customer_id || customer.id}
               className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6 md:text-base text-[8px]"
               onClick={() => onConfirmPatient(customer)}
             >
-              {customer?.customer_name || "Nome não disponível"}
+              {customer?.Customer?.customer_name ||
+                customer?.customer_name ||
+                "Nome não disponível"}
             </li>
           ))}
         </ul>
