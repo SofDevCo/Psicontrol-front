@@ -213,7 +213,7 @@ const CloseIconMessageModal = () => {
       viewBox="0 0 23 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-[15px] h-[15px]"
+      className="md:w-[15px] md:h-[15px] w-[9.44px] h-[9.44px] md:mt-0 mb-4"
     >
       <g filter="url(#filter0_d_1666_7005)">
         <path
