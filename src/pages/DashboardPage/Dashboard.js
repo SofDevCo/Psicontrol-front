@@ -653,7 +653,13 @@ const DashBoard = () => {
                             .replace(".", ",")}
                         </td>
                         <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                          {patient.consultation_days || "-"}
+                          {patient.consultation_days
+                            ? patient.consultation_days
+                                .split(", ") 
+                                .map(Number) 
+                                .sort((a, b) => a - b) 
+                                .join(", ")
+                            : "-"}
                         </td>
                         <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.num_consultations || "-"}
