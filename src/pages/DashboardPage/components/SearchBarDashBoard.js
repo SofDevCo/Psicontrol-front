@@ -28,11 +28,10 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
       setIsDropdownVisible(false);
     } else {
       // Filtro local
-      const localFiltered = patients.filter(
-        (patient) =>
-          patient?.Customer?.customer_name
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) 
+      const localFiltered = patients.filter((patient) =>
+        patient?.Customer?.customer_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
 
       // Filtro remoto, garantindo que não haja duplicados
@@ -43,7 +42,7 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
           ) &&
           remotePatient?.customer_name
             ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) 
+            .includes(searchTerm.toLowerCase())
       );
 
       // Combinar os dois resultados
@@ -95,7 +94,7 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
       {searchTerm.length > 0 &&
         filteredPatients.length === 0 &&
         isDropdownVisible && (
-          <p className="absolute top-full left-0 w-full md:px-4 md:py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-[8px] md:text-[12px] text-text2/50">
+          <p className="absolute top-full left-0 md:w-full w-[207px] md:px-4 md:py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-[8px] md:text-[12px] text-text2/50">
             Paciente não encontrado
           </p>
         )}
@@ -109,7 +108,9 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
             <li
               key={customer.customer_id || customer.id}
               className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6 md:text-base text-[8px]"
-              onClick={() => onConfirmPatient(customer)}
+              onClick={() => {
+                onConfirmPatient(customer);
+              }}
             >
               {customer?.Customer?.customer_name ||
                 customer?.customer_name ||

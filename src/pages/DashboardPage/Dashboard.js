@@ -655,9 +655,9 @@ const DashBoard = () => {
                         <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                                .split(", ") 
-                                .map(Number) 
-                                .sort((a, b) => a - b) 
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
                                 .join(", ")
                             : "-"}
                         </td>
@@ -839,7 +839,10 @@ const DashBoard = () => {
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
               paciente à informação <br />
-              <span>“{selectedPatient?.customer_name}”</span>?
+              <span>
+                “{selectedPatient?.customer_name || "Nome não disponível"}”
+              </span>
+              ?
             </p>
             <div className="flex justify-around mt-4">
               <button
