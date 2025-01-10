@@ -10,17 +10,55 @@ const TopBar = ({ onMenuClick }) => {
   const getPageTitle = () => {
     switch (location.pathname) {
       case "/create-event-form":
-        return { title: "Página Inicial", margin: "" };
+      return { title: "Página Inicial", margin: "" };
+      // case "/create-event-form":
+      //   return { 
+      //     title: (
+      //       <>
+      //         <span className="hidden md:inline">Página Inicial</span>
+      //         <span className="block md:hidden">Página<br />Inicial</span>
+      //       </>
+      //     ), 
+      //     margin: "" 
+      //   };
       case "/customers":
-        return { title: "Pacientes", margin: "" };
+        return { 
+          title: "Pacientes", 
+          margin: "" 
+        }; // Nome simples, sem alteração
       case "/income":
-        return { title: "Receitas e Despesas", margin: "" };
+        return { 
+          title: (
+            <>
+              <span className="hidden md:inline">Receitas e Despesas</span>
+              <span className="block md:hidden">Receitas<br />e Despesas</span>
+            </>
+          ), 
+          margin: "" 
+        };
       case "/user":
-        return { title: "Minhas Configurações", margin: "" };
+        return { 
+          title: (
+            <>
+              <span className="hidden md:inline">Minhas Configurações</span>
+              <span className="block md:hidden">Minhas<br />Configurações</span>
+            </>
+          ), 
+          margin: "" 
+        };
       default:
-        return { title: "Página Não Encontrada", margin: "" };
+        return { 
+          title: (
+            <>
+              <span className="hidden md:inline">Página Não Encontrada</span>
+              <span className="block md:hidden">Página<br />Não Encontrada</span>
+            </>
+          ), 
+          margin: "" 
+        };
     }
   };
+  
 
   const pageInfo = getPageTitle();
 
