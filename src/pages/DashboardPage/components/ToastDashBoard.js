@@ -30,13 +30,13 @@ export const vinculateToast = () => {
       }}
     >
       <div style={{ marginBottom: "10px" }}>
-        <SuccessIcon style={{ fontSize: isMobile ?  "40px" : "16px", color: "#0091D0" }} />
+        <SuccessIcon style={{ fontSize:  "40px" , color: "#0091D0" }} />
       </div>
       <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " :"21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -46,7 +46,7 @@ export const vinculateToast = () => {
         <span
           style={{
             color: "#0082BA",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " :"21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -57,7 +57,7 @@ export const vinculateToast = () => {
         <div
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " :"21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}

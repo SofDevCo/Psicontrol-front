@@ -321,11 +321,10 @@ const VerifyIcon = () => {
 const SuccessIcon = () => {
   return (
     <svg
-      width="45"
-      height="45"
       viewBox="0 0 45 45"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="w-[25.34px] h-[25.34px] md:w-[45px] md:h-[45px]"
     >
       <circle cx="22.5" cy="22.5" r="22.5" fill="#0082BA" />
       <path
