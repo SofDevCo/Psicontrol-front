@@ -43,7 +43,7 @@ const Layout = () => {
       )}
 
       {(!isMobile || !isModalOpen) && (
-        <div className="relative z-30">
+        <div className="relative z-20">
           <TopBar onMenuClick={toggleSidebar} />
         </div>
       )}

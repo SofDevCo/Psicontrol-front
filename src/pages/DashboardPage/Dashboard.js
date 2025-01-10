@@ -6,7 +6,10 @@ import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
-import { ShowVinculateToast, showDeleteToast } from "./components/ToastDashBoard";
+import {
+  ShowVinculateToast,
+  showDeleteToast,
+} from "./components/ToastDashBoard";
 import {
   CrossIcon,
   VerifyGreenIcon,
@@ -745,7 +748,7 @@ const DashBoard = () => {
                     <tr>
                       <td
                         colSpan="9"
-                        className="text-center px-2 md:px-4 py-1 md:py-2"
+                        className="md:text-base text-[8px] text-center px-2 md:px-4 py-1 md:py-2"
                       >
                         Nenhum registro encontrado para este mês e ano.
                       </td>
@@ -756,9 +759,9 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 z-50">
+          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
             {isSearchBarOpen && (
-              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-full z-50 "></div>
+              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-20 "></div>
             )}
             <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
               Pacientes não encontrados

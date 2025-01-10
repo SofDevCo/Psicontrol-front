@@ -11,7 +11,7 @@ export const ShowVinculateToast = () => {
   overlay.style.left = "0";
   overlay.style.width = "100vw";
   overlay.style.height = "100vh";
-  overlay.style.zIndex = "50";
+  overlay.style.zIndex = "10";
   overlay.style.backdropFilter = "blur(6px)";
   overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
   document.body.appendChild(overlay);
@@ -100,7 +100,7 @@ export const showDeleteToast = () => {
   overlay.style.width = "100vw";
   overlay.style.height = "100vh";
   overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
-  overlay.style.zIndex = "30";
+  overlay.style.zIndex = "10";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
