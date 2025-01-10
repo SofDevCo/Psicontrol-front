@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
+import DeletePatientModal from "./components/DeletePatientModal";
 import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
-import { vinculateToast } from "./components/ToastDashBoard";
+import { ShowVinculateToast, showDeleteToast } from "./components/ToastDashBoard";
 import {
   CrossIcon,
   VerifyGreenIcon,
@@ -30,6 +31,8 @@ const DashBoard = () => {
   const [netRevenue, setNetRevenue] = useState(0);
   const [netTime, setNetTime] = useState(0);
   const [billingMessage, setBillingMessage] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
   const { setIsModalOpen } = useOutletContext();
@@ -194,7 +197,7 @@ const DashBoard = () => {
       setIsConfirmModalOpen(false);
       setSelectedPatient(null);
       setIsModalOpen(false);
-      vinculateToast();
+      ShowVinculateToast();
     } else {
       setIsConfirmModalOpen(false);
       setIsModalOpen(false);
@@ -456,11 +459,23 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Evento excluído com sucesso.");
+      showDeleteToast();
       fetchUnmatchedPatients();
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
+    }
+  };
+
+  const openDeleteModal = (google_event_id) => {
+    setEventToDelete(google_event_id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (eventToDelete) {
+      handleDeleteUnmatchedEvent(eventToDelete); // Chama a função de deletar
+      setIsDeleteModalOpen(false); // Fecha o modal
     }
   };
 
@@ -586,7 +601,7 @@ const DashBoard = () => {
               />
             </div>
 
-            <div className="group md:mt-20 md:mb-2 mt-16 z-50 ">
+            <div className="group md:mt-20 md:mb-2 mt-16 z-10">
               <FilterStatusDashBoard
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -633,7 +648,7 @@ const DashBoard = () => {
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
                         <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2 z-10">
-                          <div className="flex flex-col justify-center leading-tight space-y-2">
+                          <div className="flex flex-col justify-center leading-tight ">
                             <span>
                               {patient.Customer?.customer_name?.split(" ")[0] ||
                                 "-"}
@@ -741,9 +756,9 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 z-50">
             {isSearchBarOpen && (
-              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-screen z-20 "></div>
+              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-full z-50 "></div>
             )}
             <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
               Pacientes não encontrados
@@ -769,9 +784,7 @@ const DashBoard = () => {
                             <DropDownDashBoard
                               onVincular={() => handleVinculatePatient(event)}
                               onExcluir={() =>
-                                handleDeleteUnmatchedEvent(
-                                  event.google_event_id
-                                )
+                                openDeleteModal(event.google_event_id)
                               }
                             />
                           </div>
@@ -788,6 +801,11 @@ const DashBoard = () => {
                 )}
               </tbody>
             </table>
+            <DeletePatientModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={confirmDelete}
+            />
           </div>
 
           {isSearchBarOpen && (
@@ -799,6 +817,7 @@ const DashBoard = () => {
           )}
         </>
       )}
+
       {isBillingModalOpen && selectedPatient && (
         <BillingDashBoard
           onClose={closeBillingModal}
@@ -833,7 +852,7 @@ const DashBoard = () => {
       </>
 
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-start justify-center md:bg-destaque bg-[#1c6e7d] md:bg-opacity-30 backdrop-blur-[6px] z-50">
+        <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-50">
           <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64  mt-[10vh]">
             <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
@@ -866,7 +885,7 @@ const DashBoard = () => {
       )}
       <div className="mb-4">
         <button
-          onClick={vinculateToast}
+          onClick={showDeleteToast}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Test Toast
