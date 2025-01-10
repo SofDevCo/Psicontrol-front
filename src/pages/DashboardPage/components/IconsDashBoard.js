@@ -207,6 +207,63 @@ const TrashIconDash = () => {
   );
 };
 
+const CloseIconMessageModal = () => {
+  return (
+    <svg
+      viewBox="0 0 23 23"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-[15px] h-[15px]"
+    >
+      <g filter="url(#filter0_d_1666_7005)">
+        <path
+          d="M18.7802 13.719C18.8499 13.7887 18.9052 13.8714 18.9429 13.9625C18.9806 14.0535 19 14.1511 19 14.2496C19 14.3482 18.9806 14.4457 18.9429 14.5368C18.9052 14.6278 18.8499 14.7105 18.7802 14.7802C18.7105 14.8499 18.6278 14.9052 18.5368 14.9429C18.4457 14.9806 18.3482 15 18.2496 15C18.1511 15 18.0535 14.9806 17.9625 14.9429C17.8714 14.9052 17.7887 14.8499 17.719 14.7802L11.5 8.56025L5.28097 14.7802C5.14025 14.9209 4.94939 15 4.75038 15C4.55136 15 4.3605 14.9209 4.21978 14.7802C4.07906 14.6395 4 14.4486 4 14.2496C4 14.0506 4.07906 13.8598 4.21978 13.719L10.4397 7.5L4.21978 1.28097C4.07906 1.14025 4 0.949387 4 0.750375C4 0.551363 4.07906 0.360502 4.21978 0.21978C4.3605 0.0790571 4.55136 1.48275e-09 4.75038 0C4.94939 -1.48275e-09 5.14025 0.0790571 5.28097 0.21978L11.5 6.43975L17.719 0.21978C17.8598 0.0790571 18.0506 -3.923e-09 18.2496 0C18.4486 3.923e-09 18.6395 0.0790571 18.7802 0.21978C18.9209 0.360502 19 0.551363 19 0.750375C19 0.949387 18.9209 1.14025 18.7802 1.28097L12.5603 7.5L18.7802 13.719Z"
+          fill="#0082BA"
+          fill-opacity="0.5"
+          shape-rendering="crispEdges"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_1666_7005"
+          x="0"
+          y="0"
+          width="23"
+          height="23"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_1666_7005"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_1666_7005"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
 export {
   CrossIcon,
   VerifyGreenIcon,
@@ -216,4 +273,5 @@ export {
   ConfirmPaymentIcon,
   TrashIconDash,
   VinculateIcon,
+  CloseIconMessageModal
 };
