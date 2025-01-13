@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { SuccessIcon } from "../../../icons/icons";
 
 export const showAlteredToast = () => {
+  
   // Cria o elemento overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -14,6 +15,8 @@ export const showAlteredToast = () => {
   overlay.style.zIndex = "30"; // Coloca o overlay acima de outros elementos
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
+
+  const isMobile = window.innerWidth <= 768;
 
   // Função para remover o overlay
   const removeOverlay = () => document.body.removeChild(overlay);
@@ -35,7 +38,7 @@ export const showAlteredToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
             display: "block", // Garante que o texto fique em uma linha separada
@@ -46,7 +49,7 @@ export const showAlteredToast = () => {
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px" : "21px",
             fontWeight: "500",
             letterSpacing: "-1.5px",
             display: "block", // Garante que o texto fique em uma linha separada
@@ -58,8 +61,8 @@ export const showAlteredToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "150px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -70,7 +73,8 @@ export const showAlteredToast = () => {
         justifyContent: "center",
         textAlign: "center",
         position: "relative",
-        top: "100px", // Move o toast para baixo
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "0", // Centraliza horizontalmente no mobile
+        marginTop: isMobile ? "calc(50vh - 192px)" : "100px", // Centraliza verticalmente no mobile
         zIndex: "1000", // Coloca o toast acima do overlay
       },
       position: "top-center",
@@ -84,4 +88,5 @@ export const showAlteredToast = () => {
       onClose: removeOverlay, // Remove o overlay ao fechar o toast
     }
   );
+  
 };
