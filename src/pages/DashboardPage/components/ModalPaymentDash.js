@@ -35,7 +35,7 @@ const ModalPaymentDash = ({ onClose, onSave, totalAmount }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm md:z-30 ">
+    <div className="fixed inset-0 flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm md:z-30 z-50 ">
       <div className="bg-white rounded-lg shadow-lg p-6 md:w-[445px] w-[280px] md:h-[280px] h-44 border border-cinza6 md:mt-40 md:ml-64 mt-[18vh]">
         <div className="flex justify-between items-center md:mb-4">
           <h2 className="flex justify-center text-center md:text-F21 text-sm text-primaria font-medium font-ubuntu md:ml-[78px] ml-8 md:mt-5  tracking-tight ">
