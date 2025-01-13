@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
+import DeletePatientModal from "./components/DeletePatientModal";
 import { fetchCustomers } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
+import {
+  ShowVinculateToast,
+  showDeleteToast,
+  showConfirmPaymentToast,
+} from "./components/ToastDashBoard";
 import {
   CrossIcon,
   VerifyGreenIcon,
@@ -28,8 +34,11 @@ const DashBoard = () => {
   const [netRevenue, setNetRevenue] = useState(0);
   const [netTime, setNetTime] = useState(0);
   const [billingMessage, setBillingMessage] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
@@ -184,11 +193,14 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Paciente vinculado com sucesso!");
+      fetchUnmatchedPatients();
       fetchUnmatchedPatients();
       setIsSearchBarOpen(false);
+      setIsConfirmModalOpen(false);
+      setSelectedPatient(null);
+      ShowVinculateToast();
     } else {
-      return null;
+      setIsConfirmModalOpen(false);
     }
   };
 
@@ -231,8 +243,14 @@ const DashBoard = () => {
     }
     openSearchBar();
   };
+
+  const confirmLinkPatient = (patient) => {
+    setSelectedPatient(patient);
+    setIsConfirmModalOpen(true);
+  };
+
   const openSearchBar = () => {
-    if (!selectedEvent) {
+    if (selectedEvent === null || selectedEvent === undefined) {
       return null;
     }
     setIsSearchBarOpen(true);
@@ -429,8 +447,6 @@ const DashBoard = () => {
   };
 
   const handleDeleteUnmatchedEvent = async (google_event_id) => {
-    console.log("Tentando excluir evento com ID:", google_event_id);
-
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
       {
@@ -442,11 +458,23 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Evento excluído com sucesso.");
+      showDeleteToast();
       fetchUnmatchedPatients();
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
+    }
+  };
+
+  const openDeleteModal = (google_event_id) => {
+    setEventToDelete(google_event_id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (eventToDelete) {
+      handleDeleteUnmatchedEvent(eventToDelete); // Chama a função de deletar
+      setIsDeleteModalOpen(false); // Fecha o modal
     }
   };
 
@@ -472,8 +500,7 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Pagamento parcial salvo com sucesso!");
-
+      showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
@@ -519,8 +546,7 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Pagamento confirmado com sucesso!");
-
+      showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
           p.customer_id === patient.customer_id
@@ -534,7 +560,7 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="top-0 w-full z-50 p-6">
+    <div className="top-0 w-full p-6">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
@@ -572,7 +598,7 @@ const DashBoard = () => {
               />
             </div>
 
-            <div className="group md:mt-20 md:mb-2 mt-16 z-50 ">
+            <div className="group md:mt-20 md:mb-2 mt-16 z-10">
               <FilterStatusDashBoard
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -580,36 +606,36 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full rounded-[15px] border-[3px] overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
             <div className="overflow-x-auto">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
                   <tr>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Paciente
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Valor Consulta
                     </th>
-                    <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Dias
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Nº de consultas
                     </th>
-                    <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
                       Total
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                       Cobrança
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                       Pagamento
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
                       NF
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-[10px] font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                       Ações
                     </th>
                   </tr>
@@ -618,8 +644,8 @@ const DashBoard = () => {
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
-                        <td className=" text-texto1 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2">
-                          <div className="flex flex-col justify-center leading-tight space-y-2">
+                        <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2 z-10">
+                          <div className="flex flex-col justify-center leading-tight ">
                             <span>
                               {patient.Customer?.customer_name?.split(" ")[0] ||
                                 "-"}
@@ -632,19 +658,25 @@ const DashBoard = () => {
                             </span>
                           </div>
                         </td>
-                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           R${" "}
                           {parseFloat(patient.consultation_fee)
                             .toFixed(2)
                             .replace(".", ",")}
                         </td>
-                        <td className="hidden md:table-cell text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                          {patient.consultation_days || "-"}
+                        <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                          {patient.consultation_days
+                            ? patient.consultation_days
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
+                            : "-"}
                         </td>
-                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.num_consultations || "-"}
                         </td>
-                        <td className="text-center text-texto1 md:text-[15px] text-[8px] font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           R$ {patient.total_consultation_fee || "0,00"}
                         </td>
                         <td>
@@ -662,7 +694,7 @@ const DashBoard = () => {
                             {patient.payment_status === "pago" ? (
                               <VerifyGreenIcon />
                             ) : patient.payment_status === "parcial" ? (
-                              <span className="text-texto2 md:text-[15px] text-[8px] font-semibold font-['Open Sans'] tracking-tight rounded-[15px] border-2 border-aviso">
+                              <span className="text-texto2 md:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
                                 R${" "}
                                 {parseFloat(patient.payment_amount || 0)
                                   .toFixed(2)
@@ -710,7 +742,7 @@ const DashBoard = () => {
                     <tr>
                       <td
                         colSpan="9"
-                        className="text-center px-2 md:px-4 py-1 md:py-2"
+                        className="md:text-base text-[8px] text-center px-2 md:px-4 py-1 md:py-2"
                       >
                         Nenhum registro encontrado para este mês e ano.
                       </td>
@@ -721,11 +753,11 @@ const DashBoard = () => {
             </div>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] rounded-[15px] border-[3px] overflow-y-auto border-solid border-cinza6 bg-bg1 z-10">
+          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
             {isSearchBarOpen && (
-              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-screen z-20 "></div>
+              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
             )}
-            <h2 className="mt-6 text-primaria text-[25px] font-normal font-['Ubuntu']">
+            <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
               Pacientes não encontrados
             </h2>
             <table className="min-w-full bg-bg1 mt-2">
@@ -736,7 +768,7 @@ const DashBoard = () => {
                       key={event.id}
                       className="border-b border-b-cinza6 relative"
                     >
-                      <td className="px-4 py-2 flex items-center justify-between">
+                      <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
                         <span>{event.name}</span>
                         <button
                           className="cursor-pointer"
@@ -749,9 +781,7 @@ const DashBoard = () => {
                             <DropDownDashBoard
                               onVincular={() => handleVinculatePatient(event)}
                               onExcluir={() =>
-                                handleDeleteUnmatchedEvent(
-                                  event.google_event_id
-                                )
+                                openDeleteModal(event.google_event_id)
                               }
                             />
                           </div>
@@ -768,17 +798,23 @@ const DashBoard = () => {
                 )}
               </tbody>
             </table>
+            <DeletePatientModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={confirmDelete}
+            />
           </div>
 
           {isSearchBarOpen && (
             <SearchBarDashBoard
               patients={patients}
-              onSelectPatient={handleLinkPatient}
+              onConfirmPatient={confirmLinkPatient}
               onClose={() => setIsSearchBarOpen(false)}
             />
           )}
         </>
       )}
+
       {isBillingModalOpen && selectedPatient && (
         <BillingDashBoard
           onClose={closeBillingModal}
@@ -811,6 +847,42 @@ const DashBoard = () => {
           />
         )}
       </>
+
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
+          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64  mt-[10vh]">
+            <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
+              Você tem certeza que <br />
+              deseja <span className="text-primaria">vincular</span> este <br />
+              paciente à informação <br />
+              <span>
+                “
+                {selectedPatient?.Customer?.customer_name ||
+                  selectedPatient?.customer_name ||
+                  "Nome não disponível"}
+                ”
+              </span>
+              ?
+            </p>
+            <div className="flex justify-around mt-4">
+              <button
+                onClick={() => {
+                  setIsConfirmModalOpen(false);
+                }}
+                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
+              >
+                Não
+              </button>
+              <button
+                onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
+                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
+              >
+                Sim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

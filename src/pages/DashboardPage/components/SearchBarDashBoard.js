@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from "../../../icons/icons";
 import { fetchCustomers } from "../../../service/pagesService/pagesService";
 
-const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
+const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -18,7 +18,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
         setRemotePatients([]);
       }
     };
-  
+
     fetchRemotePatients();
   }, [searchTerm]);
 
@@ -27,18 +27,26 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
       setFilteredPatients([]);
       setIsDropdownVisible(false);
     } else {
+      // Filtro local
       const localFiltered = patients.filter((patient) =>
-        patient.customer?.customer_name
-          .toLowerCase()
-          .startsWith(searchTerm.toLowerCase())
+        patient?.Customer?.customer_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
-      const combinedResults = [
-        ...localFiltered,
-        ...remotePatients.filter(
-          (remotePatient) =>
-            !localFiltered.some((local) => local.id === remotePatient.id)
-        ),
-      ];
+
+      // Filtro remoto, garantindo que não haja duplicados
+      const remoteFiltered = remotePatients.filter(
+        (remotePatient) =>
+          !localFiltered.some(
+            (local) => local.Customer?.customer_id === remotePatient.customer_id
+          ) &&
+          remotePatient?.customer_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+      );
+
+      // Combinar os dois resultados
+      const combinedResults = [...localFiltered, ...remoteFiltered];
 
       setFilteredPatients(combinedResults);
       setIsDropdownVisible(true);
@@ -55,17 +63,17 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
   };
 
   return (
-    <div className="relative mx-auto -m-64 ml-72 w-[360px] z-30">
+    <div className="relative mx-auto max-w-[90%] md:-m-64 md:ml-2 md:top-2 -top-28 ml-2 md:w-[360px] z-30">
       <input
         type="text"
         placeholder={searchTerm ? "" : "Pesquisar paciente para vincular"}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={`h-[56px] w-full rounded-[15px] ${
-          searchTerm ? "rounded-b-none" : ""
-        } bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+        className={`h-[35px] md:h-[56px] md:w-full w-[207px] md:rounded-[15px] rounded-lg  ${
+          searchTerm ? "md:rounded-b-none rounded-b-none" : ""
+        } bg-clara3 pl-11 text-texto2/50 md:text-base text-[11px] focus:outline-none focus:ring-0 caret-primaria`}
       />
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 transform">
         {searchTerm.length > 0 ? (
           <div onClick={handleClearSearch} className="cursor-pointer">
             <ArrowLeftIcon />
@@ -86,7 +94,7 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
       {searchTerm.length > 0 &&
         filteredPatients.length === 0 &&
         isDropdownVisible && (
-          <p className="absolute top-full left-0 w-full px-4 py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-gray-500">
+          <p className="absolute top-full left-0 md:w-full w-[207px] md:px-4 md:py-2 bg-clara3 rounded-b-[15px] shadow-md text-center text-[8px] md:text-[12px] text-text2/50">
             Paciente não encontrado
           </p>
         )}
@@ -94,20 +102,19 @@ const SearchBarDashBoard = ({ patients, onSelectPatient, onClose }) => {
       {searchTerm && filteredPatients.length > 0 && (
         <ul
           ref={searchDropRef}
-          className="absolute top-full left-0 w-full bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
+          className="absolute top-full left-0 md:w-full w-[207px] bg-clara3 rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border"
         >
-          {filteredPatients.map((customer, patient) => (
+          {filteredPatients.map((customer) => (
             <li
-              key={customer.customer_id || patient.id}
-              className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6"
+              key={customer.customer_id || customer.id}
+              className="px-4 py-2 hover:bg-d_medio3 cursor-pointer border-b-[1px] border-cinza6 md:text-base text-[8px]"
               onClick={() => {
-                setSearchTerm(customer.Customer?.customer_name || "");
-                setFilteredPatients([]);
-                onSelectPatient(customer.customer_id || patient.id);
-                setIsDropdownVisible(false);
+                onConfirmPatient(customer);
               }}
             >
-              {customer?.customer_name || "Nome não disponível"}
+              {customer?.Customer?.customer_name ||
+                customer?.customer_name ||
+                "Nome não disponível"}
             </li>
           ))}
         </ul>
