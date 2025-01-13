@@ -45,6 +45,7 @@ module.exports = {
         F15: "15px",
         F17: "17px",
         F20: "20px",
+        F21: "21px",
         F25: "25px",
       },
       fontFamily:{
