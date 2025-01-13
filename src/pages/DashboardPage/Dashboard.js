@@ -250,7 +250,7 @@ const DashBoard = () => {
   };
 
   const openSearchBar = () => {
-    if (!selectedEvent) {
+    if (selectedEvent === null || selectedEvent === undefined) {
       return null;
     }
     setIsSearchBarOpen(true);
@@ -546,8 +546,7 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Pagamento confirmado com sucesso!");
-
+      showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
           p.customer_id === patient.customer_id
