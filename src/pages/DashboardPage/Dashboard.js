@@ -857,7 +857,11 @@ const DashBoard = () => {
               deseja <span className="text-primaria">vincular</span> este <br />
               paciente à informação <br />
               <span>
-                “{selectedPatient?.customer_name || "Nome não disponível"}”
+                “
+                {selectedPatient?.Customer?.customer_name ||
+                  selectedPatient?.customer_name ||
+                  "Nome não disponível"}
+                ”
               </span>
               ?
             </p>
@@ -880,14 +884,6 @@ const DashBoard = () => {
           </div>
         </div>
       )}
-      <div className="mb-4">
-        <button
-          onClick={showDeleteToast}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Test Toast
-        </button>
-      </div>
     </div>
   );
 };
