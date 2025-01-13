@@ -9,6 +9,7 @@ import { HamburguerIcon } from "../../icons/icons";
 import {
   ShowVinculateToast,
   showDeleteToast,
+  showConfirmPaymentToast,
 } from "./components/ToastDashBoard";
 import {
   CrossIcon,
@@ -504,8 +505,7 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      alert("Pagamento parcial salvo com sucesso!");
-
+      showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
@@ -888,7 +888,7 @@ const DashBoard = () => {
       )}
       <div className="mb-4">
         <button
-          onClick={showDeleteToast}
+          onClick={showConfirmPaymentToast}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Test Toast
