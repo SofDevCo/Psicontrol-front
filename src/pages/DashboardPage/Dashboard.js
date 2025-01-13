@@ -22,7 +22,6 @@ import BillingDashBoard from "./components/BillingDashBoard";
 import ModalPaymentDash from "./components/ModalPaymentDash";
 import FilterStatusDashBoard from "./components/FilterStatusDashBoard";
 import { Months } from "../../utils/Months/months";
-import { useOutletContext } from "react-router-dom";
 
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
@@ -39,7 +38,6 @@ const DashBoard = () => {
   const [eventToDelete, setEventToDelete] = useState(null);
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
-  const { setIsModalOpen } = useOutletContext();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -200,11 +198,9 @@ const DashBoard = () => {
       setIsSearchBarOpen(false);
       setIsConfirmModalOpen(false);
       setSelectedPatient(null);
-      setIsModalOpen(false);
       ShowVinculateToast();
     } else {
       setIsConfirmModalOpen(false);
-      setIsModalOpen(false);
     }
   };
 
@@ -251,7 +247,6 @@ const DashBoard = () => {
   const confirmLinkPatient = (patient) => {
     setSelectedPatient(patient);
     setIsConfirmModalOpen(true);
-    setIsModalOpen(true);
   };
 
   const openSearchBar = () => {
@@ -566,7 +561,7 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="top-0 w-full z-10 p-6">
+    <div className="top-0 w-full p-6">
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
@@ -761,7 +756,7 @@ const DashBoard = () => {
 
           <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
             {isSearchBarOpen && (
-              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-20 "></div>
+              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
             )}
             <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
               Pacientes não encontrados
@@ -855,7 +850,7 @@ const DashBoard = () => {
       </>
 
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-50">
+        <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64  mt-[10vh]">
             <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
@@ -870,7 +865,6 @@ const DashBoard = () => {
               <button
                 onClick={() => {
                   setIsConfirmModalOpen(false);
-                  setIsModalOpen(false);
                 }}
                 className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
               >
@@ -888,7 +882,7 @@ const DashBoard = () => {
       )}
       <div className="mb-4">
         <button
-          onClick={showConfirmPaymentToast}
+          onClick={showDeleteToast}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Test Toast

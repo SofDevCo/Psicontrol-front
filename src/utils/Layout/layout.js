@@ -5,22 +5,11 @@ import Sidebar from "./components/sidebar";
 
 const Layout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
 
   const toggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   // No início do componente Layout
   useEffect(() => {
@@ -42,15 +31,15 @@ const Layout = () => {
         ></div>
       )}
 
-      {(!isMobile || !isModalOpen) && (
-        <div className="relative z-20">
+     
+        <div className="relative">
           <TopBar onMenuClick={toggleSidebar} />
         </div>
-      )}
+   
 
-      <div className="main-content flex flex-col w-full h-full bg-clara4 z-10">
+      <div className="main-content flex flex-col w-full h-full bg-clara4 ">
         <main className="flex-1 overflow-auto">
-          <Outlet context={{ setIsModalOpen }} />
+          <Outlet />
         </main>
       </div>
     </div>

@@ -67,7 +67,7 @@ export const Months = ({
   };
 
   return (
-    <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 z-50">
+    <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 md:z-30">
       <button
         onClick={toggleModal}
         className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-between items-center"
