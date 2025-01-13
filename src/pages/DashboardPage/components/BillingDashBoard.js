@@ -19,7 +19,7 @@ const BillingDashBoard = ({
           </button>
         </div>
         <p
-          className="md:mb-10 mb-3 md:ml-8 w-[403px] text-text1 md:text-sm text-[10px]  font-openSans tracking-tight "
+          className="md:mb-10 mb-3 md:ml-8 w-[403px] text-texto1 md:text-sm text-[10px]  font-openSans tracking-tight "
           dangerouslySetInnerHTML={{ __html: message.replace(/\n/g, "<br />") }}
         ></p>
         <div className="w- border-b border-cinza6 mb-12"></div>
