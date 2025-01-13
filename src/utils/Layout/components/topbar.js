@@ -1,10 +1,9 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "../../../index.css";
 import BaseIcon from "./images/BaseIcon.png";
 
 const TopBar = ({ onMenuClick }) => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   const getPageTitle = () => {
@@ -63,7 +62,7 @@ const TopBar = ({ onMenuClick }) => {
   const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed flex justify-between w-full md:w-[calc(200vw-280px)] p-4 max-md:pt-12 md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px]">
+    <div className="fixed flex justify-between w-full md:w-[calc(200vw-280px)] p-4 max-md:pt-12 md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px] md:z-50">
       {/* Botão hambúrguer visível apenas em telas menores */}
 
       <button

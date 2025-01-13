@@ -6,8 +6,6 @@ module.exports = {
       colors: {
         destaque: "#33C1DB",
         primaria: "#0082BA",
-        "custom-white": "#DFEAF2",
-        "custom-gray": "#8BA3CB",
         bg1: "#F5F5F5",
         bg2: "#E6EFF5",
         bgM: "#33B8D1",
@@ -41,11 +39,22 @@ module.exports = {
         normal: "0.25px",
       },
       fontSize: {
+        F8: "8px",
+        F9: "9px",
+        F10: "10px",
         F15: "15px",
         F17: "17px",
         F20: "20px",
+        F21: "21px",
         F25: "25px",
-
+      },
+      fontFamily:{
+        ubuntu: ["ubuntu-regular", "helvetica"],
+        openSans: ["Open_sans-regular","helvetica" ]
+      },
+      borderRadius:{
+        B10: "10px",
+        B15: "15px",
       },
     },
   },

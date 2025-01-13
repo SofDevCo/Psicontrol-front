@@ -12,7 +12,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onOpenModal}
-            className="group w-[87px]  md:w-full flex text-center mt-1 gap-2  py-2 text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-full flex text-center mt-1 gap-2  py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <SendIcon />
             Enviar Cobrança
@@ -21,7 +21,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onPartialPayment}
-            className="group w-full flex text-center mt-1 gap-2  py-2  text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-full flex text-center mt-1 gap-2 py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <PartialIcon />
             Pagamento Parcial
@@ -31,7 +31,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onConfirmedPayment}
-            className="group w-full flex text-center mt-1 gap-1 py-2 text-sm text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group w-full flex text-center mt-1 md:gap-1 gap-2 py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <ConfirmPaymentIcon />
             Pagamento Confirmado

@@ -53,18 +53,21 @@ const IncomePage = () => {
       try {
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/income/expense`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: newExpense.name,
-            value: parseCurrency(newExpense.value) / 100,
-            date: formattedDate,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/income/expense`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: newExpense.name,
+              value: parseCurrency(newExpense.value) / 100,
+              date: formattedDate,
+            }),
+          }
+        );
 
         const responseData = await response.json();
         if (!response.ok) {
@@ -88,18 +91,21 @@ const IncomePage = () => {
       try {
         const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/income/revenue`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: newRevenue.name,
-            value: parseCurrency(newRevenue.value) / 100,
-            date: formattedDate,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/income/revenue`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: newRevenue.name,
+              value: parseCurrency(newRevenue.value) / 100,
+              date: formattedDate,
+            }),
+          }
+        );
 
         const responseData = await response.json();
         if (!response.ok) {
@@ -165,7 +171,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   async function deleteExpense(id) {
@@ -188,7 +194,7 @@ const IncomePage = () => {
         const data = await response.json();
       } else {
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   const handleDelete = (id, type) => {
@@ -437,25 +443,29 @@ const IncomePage = () => {
 
       <div className=" md:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex mb-6">
-          <Months
-            onMonthChange={handleMonthChange}
-            onYearChange={handleYearChange}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
-            className="z-50 "
-          />
+          <div className="w-[190px]">
+            <Months
+              onMonthChange={handleMonthChange}
+              onYearChange={handleYearChange}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              className="z-50 "
+            />
+          </div>
+
           <button
             className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria md:text-xs text-[10px] font-medium leading-tight"
             onClick={repeatLastMonthEntries}
           >
             <span className="hidden md:inline text-center">
-              REPETIR LANÇAMENTO DO<br />MÊS ANTERIOR
+              REPETIR LANÇAMENTO DO
+              <br />
+              MÊS ANTERIOR
             </span>
             <span className="inline w-auto md:hidden text-center text-[9px] leading-tight">
               REPETIR LANÇAMENTO <br />ANTERIOR
             </span>
           </button>
-
         </div>
 
 
@@ -477,6 +487,7 @@ const IncomePage = () => {
                     maxWidth: "200px",
                   }}
                 >
+               
                   {revenue.name}
                 </div>
                 <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
@@ -561,7 +572,9 @@ const IncomePage = () => {
                   type="text"
                   placeholder="Nome da despesa"
                   value={expense.name}
-                  onChange={(e) => updateAddingExpense(index, "name", e.target.value)}
+                  onChange={(e) =>
+                    updateAddingExpense(index, "name", e.target.value)
+                  }
                   onKeyDown={handleEnterPressExpenseName}
                   ref={expenseNameInputRef}
                   className="w-[140px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
@@ -570,7 +583,9 @@ const IncomePage = () => {
                   type="text"
                   placeholder="Valor da despesa"
                   value={formatCurrency(expense.value)}
-                  onChange={(e) => updateAddingExpense(index, "value", e.target.value)}
+                  onChange={(e) =>
+                    updateAddingExpense(index, "value", e.target.value)
+                  }
                   onKeyDown={handleEnterPressExpenseValue}
                   ref={expenseValueInputRef}
                   className="w-[118px] p-2 bg-neutral-100 text-gray-700 border border-cinza6 focus:border-cinza6 focus:outline focus:ring rounded-md"
