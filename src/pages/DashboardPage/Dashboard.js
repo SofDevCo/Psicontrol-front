@@ -766,6 +766,7 @@ const DashBoard = () => {
                     </tr>
                   )}
                 </tbody>
+
                 <tfoot>
                   <tr>
                     <td colSpan="9" className="relative">
@@ -780,6 +781,7 @@ const DashBoard = () => {
                               : "rotate-180 bottom-5"
                           }`}
                         >
+                          <div className="md:w-[452px] w-[263px]   h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
                         </button>
                       </div>

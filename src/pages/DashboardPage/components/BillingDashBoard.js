@@ -22,7 +22,7 @@ const BillingDashBoard = ({
           className="md:mb-10 mb-3 md:ml-8 w-[403px] text-texto1 md:text-sm text-[10px]  font-openSans tracking-tight "
           dangerouslySetInnerHTML={{ __html: message.replace(/\n/g, "<br />") }}
         ></p>
-        <div className="w- border-b border-cinza6 mb-12"></div>
+        <div className="border-b border-cinza6 mb-12"></div>
         <div className="flex justify-between md:ml-8 gap-4">
           <button
             onClick={onSendEmail}
