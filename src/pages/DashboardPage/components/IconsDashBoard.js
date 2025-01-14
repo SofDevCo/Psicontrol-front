@@ -328,6 +328,7 @@ const ArrowDownIcon = () => {
       viewBox="0 0 20 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="md:w-[20px] w-[10px]  md:h-[16px] h-[5px] "
     >
       <g filter="url(#filter0_d_1088_9813)">
         <path

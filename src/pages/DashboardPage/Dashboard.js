@@ -770,7 +770,7 @@ const DashBoard = () => {
                   <tr>
                     <td colSpan="9" className="relative">
                       <div
-                        className={`flex justify-center items-center relative w-full transition-all duration-300 mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
+                        className={`flex justify-center items-center relative w-full transition-all duration-300 md:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
                       >
                         <button
                           onClick={toggleTableSize}
@@ -889,7 +889,7 @@ const DashBoard = () => {
 
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
-          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64  mt-[10vh]">
+          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64 mt-[10vh]">
             <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
