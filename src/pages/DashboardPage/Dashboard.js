@@ -15,6 +15,7 @@ import {
   CrossIcon,
   VerifyGreenIcon,
   FilterIcon,
+  ArrowDownIcon,
 } from "./components/IconsDashBoard";
 import CardDashBoard from "./components/CardsDashBoard";
 import DropDownDashActions from "./components/DropDownDashActions";
@@ -46,6 +47,8 @@ const DashBoard = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [showUnmatchedPatients, setShowUnmatchedPatients] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
@@ -559,6 +562,15 @@ const DashBoard = () => {
     }
   };
 
+  const toggleTableSize = () => {
+    setIsTableExpanded(!isTableExpanded);
+    setShowUnmatchedPatients(!isTableExpanded);
+  };
+
+  useEffect(() => {
+    setIsTableExpanded(true)
+  }, []);
+
   return (
     <div className="top-0 w-full p-6">
       {loading ? (
@@ -606,8 +618,14 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-          <div className="flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10">
-            <div className="overflow-x-auto">
+          
+     
+          <div
+            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
+              isTableExpanded ? "h-full" : "h-[300px]"
+            }`}
+          >
+            <div className="overflow-x-auto  ">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
                   <tr>
@@ -749,61 +767,78 @@ const DashBoard = () => {
                     </tr>
                   )}
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td
+                      colSpan="9"
+                      className="flex justify-center text-center py-2 cursor-pointer"
+                      onClick={toggleTableSize}
+                    >
+                      <ArrowDownIcon
+                        className={`transform transition-transform ${
+                          isTableExpanded ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
 
-          <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
-            {isSearchBarOpen && (
-              <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
-            )}
-            <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
-              Pacientes não encontrados
-            </h2>
-            <table className="min-w-full bg-bg1 mt-2">
-              <tbody>
-                {unmatchedPatients.length > 0 ? (
-                  unmatchedPatients.map((event, index) => (
-                    <tr
-                      key={event.id}
-                      className="border-b border-b-cinza6 relative"
-                    >
-                      <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
-                        <span>{event.name}</span>
-                        <button
-                          className="cursor-pointer"
-                          onClick={() => toggleDropdown(index)}
-                        >
-                          <HamburguerIcon />
-                        </button>
-                        {isDropdownOpen && selectedEvent === index && (
-                          <div className="absolute right-0 shadow-lg rounded p-2 z-20">
-                            <DropDownDashBoard
-                              onVincular={() => handleVinculatePatient(event)}
-                              onExcluir={() =>
-                                openDeleteModal(event.google_event_id)
-                              }
-                            />
-                          </div>
-                        )}
+         {showUnmatchedPatients && (
+            <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
+              {isSearchBarOpen && (
+                <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
+              )}
+              <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
+                Pacientes não encontrados
+              </h2>
+              <table className="min-w-full bg-bg1 mt-2">
+                <tbody>
+                  {unmatchedPatients.length > 0 ? (
+                    unmatchedPatients.map((event, index) => (
+                      <tr
+                        key={event.id}
+                        className="border-b border-b-cinza6 relative"
+                      >
+                        <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
+                          <span>{event.name}</span>
+                          <button
+                            className="cursor-pointer"
+                            onClick={() => toggleDropdown(index)}
+                          >
+                            <HamburguerIcon />
+                          </button>
+                          {isDropdownOpen && selectedEvent === index && (
+                            <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                              <DropDownDashBoard
+                                onVincular={() => handleVinculatePatient(event)}
+                                onExcluir={() =>
+                                  openDeleteModal(event.google_event_id)
+                                }
+                              />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="text-center px-4 py-2">
+                        Nenhum paciente não encontrado
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center px-4 py-2">
-                      Nenhum paciente não encontrado
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-            <DeletePatientModal
-              isOpen={isDeleteModalOpen}
-              onClose={() => setIsDeleteModalOpen(false)}
-              onConfirm={confirmDelete}
-            />
-          </div>
+                  )}
+                </tbody>
+              </table>
+              <DeletePatientModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+              />
+            </div>
+          )}
 
           {isSearchBarOpen && (
             <SearchBarDashBoard
