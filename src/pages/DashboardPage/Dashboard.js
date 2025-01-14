@@ -770,16 +770,18 @@ const DashBoard = () => {
                   <tr>
                     <td colSpan="9" className="relative">
                       <div
-                        className={`flex justify-center items-center transition-all duration-300 ${
-                          isTableExpanded ? "translate-y-0" : "md:translate-y-[800px] translate-y-[730px]"
-                        }`}
-                        onClick={toggleTableSize}
+                        className={`flex justify-center items-center relative w-full transition-all duration-300 mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
                       >
-                        <ArrowDownIcon
-                          className={`cursor-pointer transform transition-transform duration-300 ${
-                            isTableExpanded ? "rotate-180" : "rotate-0" 
+                        <button
+                          onClick={toggleTableSize}
+                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${
+                            isTableExpanded
+                              ? "rotate-0 bottom-0"
+                              : "rotate-180 bottom-5"
                           }`}
-                        />
+                        >
+                          <ArrowDownIcon />
+                        </button>
                       </div>
                     </td>
                   </tr>
