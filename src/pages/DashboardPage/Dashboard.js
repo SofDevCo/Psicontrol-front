@@ -568,7 +568,7 @@ const DashBoard = () => {
   };
 
   useEffect(() => {
-    setIsTableExpanded(true)
+    setIsTableExpanded(true);
   }, []);
 
   return (
@@ -618,11 +618,10 @@ const DashBoard = () => {
               <FilterIcon />
             </div>
           </div>
-          
-     
+
           <div
             className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
-              isTableExpanded ? "h-full" : "h-[300px]"
+              isTableExpanded ? "h-auto" : "min-h-screen"
             }`}
           >
             <div className="overflow-x-auto  ">
@@ -769,16 +768,19 @@ const DashBoard = () => {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td
-                      colSpan="9"
-                      className="flex justify-center text-center py-2 cursor-pointer"
-                      onClick={toggleTableSize}
-                    >
-                      <ArrowDownIcon
-                        className={`transform transition-transform ${
-                          isTableExpanded ? "rotate-180" : "rotate-0"
+                    <td colSpan="9" className="relative">
+                      <div
+                        className={`flex justify-center items-center transition-all duration-300 ${
+                          isTableExpanded ? "translate-y-0" : "md:translate-y-[800px] translate-y-[730px]"
                         }`}
-                      />
+                        onClick={toggleTableSize}
+                      >
+                        <ArrowDownIcon
+                          className={`cursor-pointer transform transition-transform duration-300 ${
+                            isTableExpanded ? "rotate-180" : "rotate-0" 
+                          }`}
+                        />
+                      </div>
                     </td>
                   </tr>
                 </tfoot>
@@ -786,7 +788,7 @@ const DashBoard = () => {
             </div>
           </div>
 
-         {showUnmatchedPatients && (
+          {showUnmatchedPatients && (
             <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
               {isSearchBarOpen && (
                 <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
