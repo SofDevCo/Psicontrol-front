@@ -320,6 +320,62 @@ const CloseIconMessageModal = () => {
   );
 };
 
+const ArrowDownIcon = () => {
+  return (
+    <svg
+      width="20"
+      height="16"
+      viewBox="0 0 20 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_d_1088_9813)">
+        <path
+          d="M19.8398 1.32424C19.8398 1.15627 19.7734 0.984374 19.6445 0.855469C19.3867 0.597656 18.9648 0.597656 18.707 0.855469L9.88281 9.67969L1.1875 0.984374C0.929686 0.726562 0.507811 0.726562 0.249998 0.984374C-0.00781441 1.24219 -0.00781441 1.66406 0.249998 1.92188L9.41406 11.0898C9.67187 11.3477 10.0937 11.3477 10.3516 11.0898L19.6445 1.79688C19.7773 1.66406 19.8398 1.49611 19.8398 1.32424Z"
+          fill="#81A0AE"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_1088_9813"
+          x="-3.94336"
+          y="0.662109"
+          width="27.7832"
+          height="18.6211"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_1088_9813"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_1088_9813"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
 export {
   CrossIcon,
   VerifyGreenIcon,
@@ -331,4 +387,5 @@ export {
   VinculateIcon,
   CloseIconMessageModal,
   CloseIconPaymentModal,
+  ArrowDownIcon,
 };
