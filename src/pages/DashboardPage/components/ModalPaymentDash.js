@@ -9,19 +9,19 @@ const ModalPaymentDash = ({ onClose, onSave, totalAmount }) => {
     if (typeof value !== "string") {
       value = value?.toString() || "0";
     }
-    const numericValue = value.replace(/\D/g, "");
+    const numericValue = value.replace(/\D/g, ""); 
     if (!numericValue) return "R$ 00,00";
-    return (parseFloat(numericValue) / 100).toLocaleString("pt-BR", {
+    return parseFloat(numericValue/100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
+      minimumFractionDigits: 2,
     });
   };
 
   const parseCurrency = (value) => {
-    const numericValue = value.replace(/[^0-9]/g, "");
+    const numericValue = value.replace(/[^0-9,]/g, "").replace(",", ".");
     return parseFloat(numericValue) || 0;
   };
-
   const handleInputChange = (e) => {
     setPaymentAmount(formatCurrency(e.target.value));
   };
