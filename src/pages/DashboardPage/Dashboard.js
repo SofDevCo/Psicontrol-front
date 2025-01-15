@@ -690,8 +690,18 @@ const DashBoard = () => {
                                 .join(", ")
                             : "-"}
                         </td>
-                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
-                          {patient.num_consultations || "-"}
+                        <td className="relative text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 group">
+                          <span>{patient.num_consultations || "-"}</span>
+                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap md:hidden">
+                            Dias:{" "}
+                            {patient.consultation_days
+                              ? patient.consultation_days
+                                  .split(", ")
+                                  .map(Number)
+                                  .sort((a, b) => a - b)
+                                  .join(", ")
+                              : "Sem dias"}
+                          </div>
                         </td>
                         <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           R$ {patient.total_consultation_fee || "0,00"}
@@ -769,7 +779,7 @@ const DashBoard = () => {
 
                 <tfoot>
                   <tr>
-                    <td colSpan="9" className="relative">
+                    <td colSpan="8" className="relative py-3">
                       <div
                         className={`flex justify-center items-center relative w-full transition-all duration-300 md:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
                       >
@@ -781,7 +791,7 @@ const DashBoard = () => {
                               : "rotate-180 bottom-5"
                           }`}
                         >
-                          <div className="md:w-[452px] w-[263px]   h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
+                          <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
                         </button>
                       </div>
