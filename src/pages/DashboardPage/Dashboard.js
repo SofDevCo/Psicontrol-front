@@ -768,7 +768,7 @@ const DashBoard = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan="9"
+                        colSpan="8"
                         className="md:text-base text-[8px] text-center px-2 md:px-4 py-1 md:py-2"
                       >
                         Nenhum registro encontrado para este mês e ano.
