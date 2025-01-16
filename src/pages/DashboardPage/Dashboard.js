@@ -561,6 +561,37 @@ const DashBoard = () => {
       alert("Erro ao confirmar pagamento.");
     }
   };
+  const handleConfirmBillOfSale = async (patient) => {
+    if (!patient || !patient.customer_id) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: patient.customer_id,
+          month_and_year: `${selectedYear}-${selectedMonth}`,
+        }),
+      }
+    );
+
+    if (response) {
+      setFilteredPatients((prev) =>
+        prev.map((p) =>
+          p.customer_id === patient.customer_id
+            ? { ...p, bill_of_sale: true }
+            : p
+        )
+      );
+    }
+  };
 
   const toggleTableSize = () => {
     setIsTableExpanded(!isTableExpanded);
@@ -732,9 +763,14 @@ const DashBoard = () => {
                             )}{" "}
                           </div>
                         </td>
+
                         <td>
                           <div className="flex items-center justify-center text-center h-full">
-                            <CrossIcon />
+                            {patient.bill_of_sale ? (
+                              <VerifyGreenIcon />
+                            ) : (
+                              <CrossIcon />
+                            )}
                           </div>
                         </td>
 
@@ -747,6 +783,7 @@ const DashBoard = () => {
                           >
                             <HamburguerIcon />
                           </button>
+
                           {isDropdownOpenPatients === index && (
                             <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                               <DropDownDashActions
@@ -758,6 +795,9 @@ const DashBoard = () => {
                                 }
                                 onConfirmedPayment={() =>
                                   handleConfirmPayment(patient)
+                                }
+                                onConfirmedBillOfSale={() =>
+                                  handleConfirmBillOfSale(patient)
                                 }
                               />
                             </div>
