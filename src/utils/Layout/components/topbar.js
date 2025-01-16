@@ -62,7 +62,7 @@ const TopBar = ({ onMenuClick }) => {
   const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed flex justify-between w-full md:w-[calc(200vw-280px)] p-4 max-md:pt-12 md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px] md:z-40 z-30">
+    <div className="fixed flex justify-between items-center md:items-start w-full md:w-[calc(200vw-280px)] p-4 max-md:pt-12 md:drop-shadow-none drop-shadow-topbatShadow bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px] md:z-40 z-30">
       {/* Botão hambúrguer visível apenas em telas menores */}
 
       <button
@@ -86,12 +86,13 @@ const TopBar = ({ onMenuClick }) => {
         </svg>
       </button>
 
+    <div className="absolute left-1/2 transform -translate-x-1/2">
       <img
         src={BaseIcon}
         alt="Base Icon"
-        className="w-[55px] md:hidden opacity-100"
+        className="w-[55px] md:hidden opacity-100 mx-auto"
       />
-
+         </div>
       {/* Nome da página */}
       <h2
         className={`md:text-[28px] text-[15px] text-primaria font-semibold ${pageInfo.margin}`}
