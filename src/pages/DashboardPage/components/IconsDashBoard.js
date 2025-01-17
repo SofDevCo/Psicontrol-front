@@ -376,6 +376,23 @@ const ArrowDownIcon = () => {
     </svg>
   );
 };
+const BillOfSaleIcon = () => {
+  return (
+    <svg
+      width="24"
+      height="23"
+      viewBox="0 0 24 23"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="md:w-[24px] md:h-[23px] w-[15.42px] h-[14.78px] "
+    >
+      <path
+        d="M21.5 16L16.5 21L13 17.5L14.5 16L16.5 18L20 14.5L21.5 16ZM11.09 19H4V3H11V8H16V12.09C16.33 12.04 16.66 12 17 12C17.34 12 17.67 12.04 18 12.09V7L12 1H4C3.46957 1 2.96086 1.21071 2.58579 1.58579C2.21071 1.96086 2 2.46957 2 3V19C2 20.11 2.89 21 4 21H11.81C11.46 20.39 11.21 19.72 11.09 19Z"
+        fill="#0082BA"
+      />
+    </svg>
+  );
+};
 
 export {
   CrossIcon,
@@ -389,4 +406,5 @@ export {
   CloseIconMessageModal,
   CloseIconPaymentModal,
   ArrowDownIcon,
+  BillOfSaleIcon,
 };
