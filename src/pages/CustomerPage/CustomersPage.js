@@ -199,7 +199,7 @@ const CustomersPage = () => {
               placeholder={searchTerm ? "" : "Pesquisar pacientes"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`h-[35px] md:h-[56px] md:w-[360px] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} md:text-base bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+              className={`h-[35px] md:h-[56px] md:w-[360px] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs md:placeholder:text-base bg-clara3 md:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
             />
             <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
               {searchTerm.length > 0 ? (
