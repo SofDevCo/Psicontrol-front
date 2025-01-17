@@ -1,10 +1,11 @@
 import React from "react";
-import { ConfirmPaymentIcon, SendIcon, PartialIcon } from "./IconsDashBoard";
+import { ConfirmPaymentIcon, SendIcon, PartialIcon, BillOfSaleIcon } from "./IconsDashBoard";
 
 const DropDownDashActions = ({
   onOpenModal,
   onPartialPayment,
   onConfirmedPayment,
+  onConfirmedBillOfSale
 }) => {
   return (
     <nav className="absolute right-0 w-[151px] h-[131px] md:w-[234px] md:h-[204px] md:mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-l-md">
@@ -35,6 +36,16 @@ const DropDownDashActions = ({
           >
             <ConfirmPaymentIcon />
             Pagamento Confirmado
+          </button>
+        </li>
+
+        <li>
+          <button
+            onClick={onConfirmedBillOfSale}
+            className="group w-full flex text-center mt-1 md:gap-1 gap-2 py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+          >
+            <BillOfSaleIcon />
+            Recibo Emitido
           </button>
         </li>
       </ul>

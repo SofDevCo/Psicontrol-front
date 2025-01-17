@@ -160,7 +160,7 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-12 box-border w-full rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1  overflow-y-auto z-10">
+    <div className="relative mx-auto mt-36 box-border md:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
@@ -191,16 +191,15 @@ const CustomersPage = () => {
           </div>
         </div>
       )}
-
       <div className="relative w-full items-center pl-7 pt-6">
-        <div className="relative flex items-center gap-8 flex-col md:flex-row">
+        <div className="relative flex items-center md:gap-4 gap-1 w-full md:w-auto">
           <div className="relative">
             <input
               type="text"
               placeholder={searchTerm ? "" : "Pesquisar pacientes"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`h-[56px] md:w-[360px] rounded-[15px] ${searchTerm ? "rounded-b-none" : ""} bg-clara3 pl-11 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+              className={`h-[35px] md:h-[56px] md:w-[360px] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs md:placeholder:text-base bg-clara3 md:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
             />
             <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
               {searchTerm.length > 0 ? (
@@ -262,22 +261,27 @@ const CustomersPage = () => {
           </div>
           <button
             onClick={handleAddPatient}
-            className="flex h-[41px] w-[200px] items-center justify-center rounded-[10px] border-2 border-solid border-[#0082BA] bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex md:h-[41px] w-auto md:w-[200px] items-center justify-center md:rounded-[10px] md:border-2 md:border-solid md:border-[#0082BA] md:bg-bg1 text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria md:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
-            <span>Adicionar paciente</span>
+            <span className="hidden md:inline">Adicionar paciente</span>
           </button>
 
-          <button className="group whitespace-no-wrap flex gap-2 bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
-            <ArchiveIcon />
-            <Link to="/archived">Pacientes arquivados</Link>
+          <button className="group whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+            <Link
+              to="/archived"
+              className="group flex items-center gap-2 w-auto bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
+            >
+              <ArchiveIcon />
+              <span className="hidden md:inline">Pacientes arquivados</span>
+            </Link>
           </button>
         </div>
       </div>
 
-      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] md:text-lg text-sm  font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="left-[1305px] top-[275px] ml-[893.5px] flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="  ml-auto md:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] md:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -300,7 +304,7 @@ const CustomersPage = () => {
                   className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
                   <span
-                    className="text-xl text-texto1"
+                    className="md:text-xl text-sm text-texto1"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {customer.customer_name}
