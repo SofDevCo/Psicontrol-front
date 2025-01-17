@@ -192,7 +192,7 @@ const CustomersPage = () => {
         </div>
       )}
       <div className="relative w-full items-center pl-7 pt-6">
-        <div className="relative flex items-center md:gap-4 w-full md:w-auto">
+        <div className="relative flex items-center md:gap-4 gap-1 w-full md:w-auto">
           <div className="relative">
             <input
               type="text"
@@ -279,9 +279,9 @@ const CustomersPage = () => {
         </div>
       </div>
 
-      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] md:text-lg text-sm  font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="  ml-auto mr-4 flex h-[21px] w-[52px] font-['Ubuntu'] text-lg font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="  ml-auto md:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] md:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -304,7 +304,7 @@ const CustomersPage = () => {
                   className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
                   <span
-                    className="text-xl text-texto1"
+                    className="md:text-xl text-sm text-texto1"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {customer.customer_name}
