@@ -407,7 +407,7 @@ const CreateCustomerForm = ({
               Adicionar item
             </button>
           )}
-          <div className=" flex mt-[130px] space-x-4">
+          <div className=" flex mt-72 space-x-4">
             <div className="ml-[205px] px] border border-primaria rounded-[100px]  ">
               <button
                 className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
