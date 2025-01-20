@@ -149,6 +149,8 @@ const CreateCustomerForm = ({
       if (response.ok) {
         setCustomer({
           customer_name: "",
+          customer_second_name: "",
+          customer_calendar_name: "",
           customer_cpf_cnpj: "",
           customer_phone: "",
           customer_email: "",
@@ -157,6 +159,7 @@ const CreateCustomerForm = ({
           alternative_name: "",
           alternative_cpf_cnpj: "",
           customer_dob: "",
+          customer_personal_message: "",
         });
         setAdditionalAlternatives([]);
         onSubmit();
@@ -179,16 +182,15 @@ const CreateCustomerForm = ({
 
   return (
     <div className="max-w space-y-2 p-6">
-     
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
       >
         <div>
           <div className="space-y-4">
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -198,26 +200,54 @@ const CreateCustomerForm = ({
                   onChange={handleChange}
                   placeholder="Nome do paciente"
                   required
-                  className="w-[262px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-
               <div>
-                <label className="mb-1 ml-2 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Nascimento
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Sobronome
                 </label>
                 <input
                   type="text"
-                  value={customer.customer_dob || ""}
-                  onChange={(e) => handleManualDateChange(e.target.value)}
-                  placeholder="DD/MM/AAAA"
-                  className="w-[131px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  name="customer_second_name"
+                  value={customer.customer_second_name || ""}
+                  onChange={handleChange}
+                  placeholder="Sobrenome do paciente"
+                  required
+                  className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
+              </div>
+              <div className="flex gap-4">
+                <div>
+                  <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                    ID Paciente - Google Agenda
+                  </label>
+                  <input
+                    type="text"
+                    name="customer_calendar_name"
+                    valeu={customer.customer_calendar_name || ""}
+                    onChange={handleChange}
+                    placeholder="Nome utilizado no Google Agenda"
+                    className="w-[262px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 ml-2 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                    Nascimento
+                  </label>
+                  <input
+                    type="text"
+                    value={customer.customer_dob || ""}
+                    onChange={(e) => handleManualDateChange(e.target.value)}
+                    placeholder="DD/MM/AAAA"
+                    className="w-[131px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  />
+                </div>
               </div>
             </div>
 
             <div>
-              <label className="mb-1 ml-3  block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3  block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
               <input
@@ -232,7 +262,7 @@ const CreateCustomerForm = ({
 
             <div className="flex gap-4">
               <div>
-                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
                 <input
@@ -246,7 +276,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   CPF/CNPJ
                 </label>
                 <input
@@ -261,7 +291,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Valor
               </label>
               <input
@@ -280,7 +310,7 @@ const CreateCustomerForm = ({
         <div>
           <div className="space-y-4">
             <div>
-              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Nome
               </label>
               <input
@@ -295,7 +325,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="relative">
-              <label className="mb-1 ml-3 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <div className="flex">

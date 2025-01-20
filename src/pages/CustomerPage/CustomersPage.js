@@ -137,12 +137,15 @@ const CustomersPage = () => {
     setCustomer({
       customer_name: "",
       customer_cpf_cnpj: "",
+      customer_second_name: "",
+      customer_calendar_name: "",
       customer_phone: "",
       customer_email: "",
       consultation_fee: "",
       customer_dob: "",
       alternative_name: "",
       alternative_cpf_cnpj: "",
+      customer_personal_message: "",
     });
     setIsEditing(false);
     openModal();
@@ -163,7 +166,7 @@ const CustomersPage = () => {
     <div className="relative mx-auto mt-36 box-border md:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
         <div className="fixed inset-0 bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30">
-          <div className="fixed w-[1076px] h-auto mt-40 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+          <div className="fixed w-[1076px] h-auto mt-36 ml-[540px] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
             <div className="flex flex-wrap items-center gap-4">
               <h2 className="ml-[20px] text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                 Adicionar Paciente
@@ -307,7 +310,7 @@ const CustomersPage = () => {
                     className="md:text-xl text-sm text-texto1"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
-                    {customer.customer_name}
+                    {`${customer.customer_name} ${customer.customer_second_name}`}
                   </span>
                   <button
                     onClick={() => toggleDropdown(customer.customer_id)}
