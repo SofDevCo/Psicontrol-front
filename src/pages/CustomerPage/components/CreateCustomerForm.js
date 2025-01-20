@@ -247,6 +247,20 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
+              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                CPF/CNPJ
+              </label>
+              <input
+                type="text"
+                name="customer_cpf_cnpj"
+                value={customer.customer_cpf_cnpj || ""}
+                onChange={handleChange}
+                placeholder="XX.XXX.XXX/0001-XX"
+                className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+              />
+            </div>
+
+            <div>
               <label className="mb-1 ml-3  block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
@@ -274,18 +288,14 @@ const CreateCustomerForm = ({
                   className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-
               <div>
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  CPF/CNPJ
-                </label>
+                <label>Contato de mergencia</label>
                 <input
                   type="text"
-                  name="customer_cpf_cnpj"
-                  value={customer.customer_cpf_cnpj || ""}
+                  name="customer_phone"
                   onChange={handleChange}
-                  placeholder="XX.XXX.XXX/0001-XX"
-                  className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  placeholder="(00) 0 0000-0000"
+                  className="w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
             </div>
@@ -407,7 +417,7 @@ const CreateCustomerForm = ({
               Adicionar item
             </button>
           )}
-          <div className=" flex mt-72 space-x-4">
+          <div className=" flex mt-96 space-x-4">
             <div className="ml-[205px] px] border border-primaria rounded-[100px]  ">
               <button
                 className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
