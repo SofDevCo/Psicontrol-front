@@ -219,7 +219,7 @@ const CreateCustomerForm = ({
                   onChange={handleChange}
                   placeholder="Nome do paciente"
                   required
-                  className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div>
@@ -233,11 +233,11 @@ const CreateCustomerForm = ({
                   onChange={handleChange}
                   placeholder="Sobrenome do paciente"
                   required
-                  className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div className="flex gap-4">
-                <div>
+                <div className="w-full">
                   <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     ID Paciente - Google Agenda
                   </label>
@@ -247,7 +247,7 @@ const CreateCustomerForm = ({
                     valeu={customer.customer_calendar_name || ""}
                     onChange={handleChange}
                     placeholder="Nome utilizado no Google Agenda"
-                    className="w-[262px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
                 <div>
@@ -259,7 +259,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_dob || ""}
                     onChange={(e) => handleManualDateChange(e.target.value)}
                     placeholder="DD/MM/AAAA"
-                    className="w-[131px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
               </div>
@@ -275,7 +275,7 @@ const CreateCustomerForm = ({
                 value={customer.customer_cpf_cnpj || ""}
                 onChange={handleChange}
                 placeholder="XX.XXX.XXX/0001-XX"
-                className="w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
               />
             </div>
 
@@ -289,7 +289,7 @@ const CreateCustomerForm = ({
                 value={customer.customer_email || ""}
                 onChange={handleChange}
                 placeholder="e-mail.paciente@gmail.com"
-                className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
               />
             </div>
 
@@ -304,7 +304,7 @@ const CreateCustomerForm = ({
                   value={customer.customer_phone || ""}
                   onChange={handleChange}
                   placeholder="(00) 0 0000-0000"
-                  className="w-[213px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div>
@@ -322,7 +322,7 @@ const CreateCustomerForm = ({
                     value={customer.consultation_fee || ""}
                     onChange={handleChange}
                     placeholder="0.00"
-                    className="w-[181px] h-[50px] pl-12 bg-bg1 rounded-[15px] border-2 border-cinza6 text-texto2 shadow-sm focus:outline-none focus:ring"
+                    className="w-full h-[50px] pl-12 bg-bg1 rounded-[15px] border-2 border-cinza6 text-texto2 shadow-sm focus:outline-none focus:ring"
                   />
                 </div>
               </div>
@@ -343,7 +343,7 @@ const CreateCustomerForm = ({
                   value={customer.customer_emergency_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do contato"
-                  className="w-[257px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div>
@@ -356,7 +356,7 @@ const CreateCustomerForm = ({
                   value={customer.customer_emergency_relationship || ""}
                   onChange={handleChange}
                   placeholder="Vinculo"
-                  className="w-[137px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
             </div>
@@ -388,7 +388,7 @@ const CreateCustomerForm = ({
                 value={customer.alternative_name || ""}
                 onChange={handleChange}
                 placeholder="Nome do Paciente"
-                className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 disabled={customer.patient_status}
               />
             </div>
@@ -404,7 +404,7 @@ const CreateCustomerForm = ({
                   value={customer.alternative_cpf_cnpj || ""}
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
-                  className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
 
                 <button
@@ -432,7 +432,7 @@ const CreateCustomerForm = ({
                     )
                   }
                   placeholder={`Nome Alternativo ${index + 1}`}
-                  className="h-[50px] w-[418px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   disabled={customer.patient_status}
                 />
 
@@ -452,7 +452,7 @@ const CreateCustomerForm = ({
                       )
                     }
                     placeholder={`CPF/CNPJ Alternativo ${index + 1}`}
-                    className="w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                     disabled={customer.patient_status}
                   />
                   <button
