@@ -115,10 +115,26 @@ const CreateCustomerForm = ({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setCustomer((prevState) => ({
-      ...prevState,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    setCustomer((prevState) => {
+      if (name === "consultation_fee") {
+        let formattedValue = value.replace(/[^0-9]/g, "");
+
+        if (formattedValue.length > 0) {
+          formattedValue = (parseFloat(formattedValue) / 100).toFixed(2);
+        }
+
+        return {
+          ...prevState,
+          [name]: formattedValue,
+        };
+      }
+
+      return {
+        ...prevState,
+        [name]: type === "checkbox" ? checked : value,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -295,15 +311,20 @@ const CreateCustomerForm = ({
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Valor
                 </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  name="consultation_fee"
-                  value={customer.consultation_fee || ""}
-                  onChange={handleChange}
-                  placeholder="R$ 000,00"
-                  className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                />
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-texto2/50">
+                    R$
+                  </span>
+                  <input
+                    type="text"
+                    step="0.01"
+                    name="consultation_fee"
+                    value={customer.consultation_fee || ""}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                    className="w-[181px] h-[50px] pl-12 bg-bg1 rounded-[15px] border-2 border-cinza6 text-texto2 shadow-sm focus:outline-none focus:ring"
+                  />
+                </div>
               </div>
             </div>
 
@@ -456,13 +477,13 @@ const CreateCustomerForm = ({
             </button>
           )}
           <div className="absolute bottom-4 left-80 transform -translate-x-1/2 flex space-x-4">
-          <div className=" border border-primaria rounded-[100px]  ">
-            <button
-              className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
-              onClick={onClose}
-            >
-              Cancelar
-            </button>
+            <div className=" border border-primaria rounded-[100px]  ">
+              <button
+                className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
+                onClick={onClose}
+              >
+                Cancelar
+              </button>
             </div>
 
             <button
