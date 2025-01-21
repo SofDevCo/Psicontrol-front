@@ -159,6 +159,9 @@ const CreateCustomerForm = ({
           alternative_name: "",
           alternative_cpf_cnpj: "",
           customer_dob: "",
+          customer_emergency_contact: "",
+          customer_emergency_name: "",
+          customer_emergency_relationship: "",
           customer_personal_message: "",
         });
         setAdditionalAlternatives([]);
@@ -285,39 +288,74 @@ const CreateCustomerForm = ({
                   value={customer.customer_phone || ""}
                   onChange={handleChange}
                   placeholder="(00) 0 0000-0000"
-                  className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-[213px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div>
-                <label>Contato de mergencia</label>
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Valor
+                </label>
                 <input
-                  type="text"
-                  name="customer_phone"
+                  type="number"
+                  step="0.01"
+                  name="consultation_fee"
+                  value={customer.consultation_fee || ""}
                   onChange={handleChange}
-                  placeholder="(00) 0 0000-0000"
-                  className="w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  placeholder="R$ 000,00"
+                  className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
             </div>
 
+            <h2 className="text-primaria text-[25px] font-medium font-['Ubuntu']">
+              {" "}
+              Contato de Emergência
+            </h2>
+            <div className="flex gap-4">
+              <div>
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  name=" customer_emergency_name"
+                  value={customer.customer_emergency_name || ""}
+                  onChange={handleChange}
+                  placeholder="Nome do contato"
+                  className="w-[257px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                />
+              </div>
+              <div>
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Vinculo
+                </label>
+                <input
+                  type="text"
+                  name="customer_emergency_relationship"
+                  value={customer.customer_emergency_relationship || ""}
+                  onChange={handleChange}
+                  placeholder="Vinculo"
+                  className="w-[137px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                />
+              </div>
+            </div>
             <div>
               <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                Valor
+                Contato de emergência
               </label>
               <input
-                type="number"
-                step="0.01"
-                name="consultation_fee"
-                value={customer.consultation_fee || ""}
+                type="text"
+                name="customer_emergency_contact"
+                value={customer.customer_emergency_contact || ""}
                 onChange={handleChange}
-                placeholder="R$ 000,00"
-                className="w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                placeholder="(00) 0 0000-0000"
+                className="w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
               />
             </div>
           </div>
         </div>
 
-        <div>
+        <div className="relative">
           <div className="space-y-4">
             <div>
               <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
@@ -417,15 +455,13 @@ const CreateCustomerForm = ({
               Adicionar item
             </button>
           )}
-          <div className=" flex mt-96 space-x-4">
-            <div className="ml-[205px] px] border border-primaria rounded-[100px]  ">
-              <button
-                className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
-                onClick={onClose}
-              >
-                Cancelar
-              </button>
-            </div>
+          <div className="absolute bottom-4 left-80 transform -translate-x-1/2 flex space-x-4">
+            <button
+              className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
+              onClick={onClose}
+            >
+              Cancelar
+            </button>
 
             <button
               type="submit"
