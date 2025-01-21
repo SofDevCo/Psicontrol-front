@@ -456,12 +456,14 @@ const CreateCustomerForm = ({
             </button>
           )}
           <div className="absolute bottom-4 left-80 transform -translate-x-1/2 flex space-x-4">
+          <div className=" border border-primaria rounded-[100px]  ">
             <button
               className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
               onClick={onClose}
             >
               Cancelar
             </button>
+            </div>
 
             <button
               type="submit"
