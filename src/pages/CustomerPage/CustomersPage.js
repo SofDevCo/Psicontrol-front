@@ -37,6 +37,7 @@ const CustomersPage = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [isDropdownVisible] = useState(false);
+  
   const [customer, setCustomer] = useState({
     customer_name: "",
     customer_cpf_cnpj: "",
@@ -168,8 +169,8 @@ const CustomersPage = () => {
   return (
     <div className="relative mx-auto mt-36 box-border md:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-start bg-bgM bg-opacity-30 backdrop-blur-[6px] z-30 overflow-y-auto">
-          <div className="md:w-[1076px] max-w-[95%] h-auto mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+        <div className="fixed inset-0 flex justify-center items-start bg-[#82d4e3] backdrop-blur-[6px] z-30 overflow-y-auto">
+          <div className="md:w-[calc(100vw-800px)] max-w-[95%] h-auto mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
             <div className="flex flex-wrap items-center gap-4">
               <h2 className="ml-[20px] text-[20px] md:text-[25px] text-sm font-medium font-['Ubuntu'] text-primaria">
                 Adicionar Paciente
