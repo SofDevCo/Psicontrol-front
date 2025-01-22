@@ -90,6 +90,14 @@ const CreateCustomerForm = ({
     }
   };
 
+  const handleUsePatientData = () => {
+    setCustomer((prev) => ({
+      ...prev,
+      alternative_name: prev.customer_name,
+      alternative_cpf_cnpj: prev.customer_cpf_cnpj,
+    }));
+  };
+
   const handleAddAlternativeFields = () => {
     if (additionalAlternatives.length < 2) {
       setAdditionalAlternatives((prev) => [
@@ -207,6 +215,10 @@ const CreateCustomerForm = ({
       >
         <div>
           <div className="space-y-4">
+            <h2 className="text-lg font-medium text-primaria">
+              Adicionar Paciente
+            </h2>
+
             <div className="flex flex-col gap-4">
               <div>
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
@@ -222,6 +234,7 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
+
               <div>
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Sobronome
@@ -376,21 +389,36 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="relative flex flex-wrap gap-4 w-full">
-          <div className="space-y-4 w-full">
-            <div className="flex-1 md:w-[414px] ">
-              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                Nome
-              </label>
-              <input
-                type="text"
-                name="alternative_name"
-                value={customer.alternative_name || ""}
-                onChange={handleChange}
-                placeholder="Nome do Paciente"
-                className="h-[50px] w-full max-w-[414px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                disabled={customer.patient_status}
-              />
+        <div className="space-y-4 -mt-3">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium text-primaria">
+              Dados para Recibo
+            </h3>
+            <button
+              type="button"
+              onClick={handleUsePatientData}
+              className="hidden md:block w-auto h-[40px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
+            >
+              Usar dados do paciente
+            </button>
+          </div>
+
+          <div className="space-y-4 w-full ">
+            <div className="flex gap-4 items-start w-full">
+              <div className="w-full">
+                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Nome
+                </label>
+                <input
+                  type="text"
+                  name="alternative_name"
+                  value={customer.alternative_name || ""}
+                  onChange={handleChange}
+                  placeholder="Nome do Paciente"
+                  className="h-[50px] w-full max-w-[414px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  disabled={customer.patient_status}
+                />
+              </div>
             </div>
 
             <div className="relative w-[212px]">
