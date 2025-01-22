@@ -215,7 +215,7 @@ const CreateCustomerForm = ({
       >
         <div>
           <div className="space-y-4">
-            <h2 className="text-lg font-medium text-primaria">
+            <h2 className="text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
               Adicionar Paciente
             </h2>
 
@@ -389,15 +389,15 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="space-y-4 -mt-3">
+        <div className="space-y-4 -mt-5  h-full">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium text-primaria">
+            <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ">
               Dados para Recibo
             </h3>
             <button
               type="button"
               onClick={handleUsePatientData}
-              className="hidden md:block w-auto h-[40px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
+              className="hidden md:block w-auto h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight mr-20"
             >
               Usar dados do paciente
             </button>
@@ -504,23 +504,22 @@ const CreateCustomerForm = ({
               </div>
             ))}
           </div>
-
-          <div className="absolute bottom-4 left-80 transform -translate-x-1/2 flex space-x-4">
-            <div className=" border border-primaria rounded-[100px]  ">
+          <div className="flex flex-col items-end mt-6">
+            <div className="flex gap-4 mt-[600px]">
               <button
-                className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px]  text-primaria text-sm font-semibold"
+                type="button"
+                className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px] border border-primaria text-primaria text-sm font-semibold"
                 onClick={onClose}
               >
                 Cancelar
               </button>
+              <button
+                type="submit"
+                className="h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
+              >
+                Salvar
+              </button>
             </div>
-
-            <button
-              type="submit"
-              className="h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
-            >
-              Salvar
-            </button>
           </div>
         </div>
       </form>
