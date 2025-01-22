@@ -413,9 +413,9 @@ const IncomePage = () => {
     <div className="p-6">
       {isModalOpen && (
         <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
-          <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+          <div className="w-[90%] max-w-[335px] h-auto bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg">
             <div className="w-full text-center mx-auto mb-6">
-              <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+              <span className="text-[#5c5c5c] text-[18px] md:text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                 Você tem certeza que <br />
                 deseja
                 <span className="text-[#0082ba]"> excluir </span>
@@ -538,7 +538,7 @@ const IncomePage = () => {
 
           {/* Contêiner de Despesas */}
           <div className="flex-1 min-w-[300px]">
-            <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
               key={index}
@@ -594,7 +594,7 @@ const IncomePage = () => {
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
+              className="flex ml-4 items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px] whitespace-nowrap">
