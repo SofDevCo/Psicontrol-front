@@ -200,7 +200,7 @@ const CreateCustomerForm = ({
   };
 
   return (
-    <div className="max-w space-y-2 p-6">
+    <div className=" space-y-2 p-6">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
@@ -294,7 +294,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="flex gap-4">
-              <div>
+              <div className="flex-1 md:w-[213px]">
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
@@ -307,7 +307,7 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div>
+              <div className="md:w-[181px]">
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Valor
                 </label>
@@ -322,18 +322,18 @@ const CreateCustomerForm = ({
                     value={customer.consultation_fee || ""}
                     onChange={handleChange}
                     placeholder="0.00"
-                    className="w-full h-[50px] pl-12 bg-bg1 rounded-[15px] border-2 border-cinza6 text-texto2 shadow-sm focus:outline-none focus:ring"
+                    className="pl-10 w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
               </div>
             </div>
 
-            <h2 className="text-primaria text-[25px] font-medium font-['Ubuntu']">
+            <h2 className="text-primaria md:text-2xl text-sm font-medium font-['Ubuntu']">
               {" "}
               Contato de Emergência
             </h2>
             <div className="flex gap-4">
-              <div>
+              <div className="flex-1">
                 <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
@@ -376,9 +376,9 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="relative">
-          <div className="space-y-4">
-            <div>
+        <div className="relative flex flex-wrap gap-4 w-full">
+          <div className="space-y-4 w-full">
+            <div className="flex-1 md:w-[414px] ">
               <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Nome
               </label>
@@ -388,12 +388,12 @@ const CreateCustomerForm = ({
                 value={customer.alternative_name || ""}
                 onChange={handleChange}
                 placeholder="Nome do Paciente"
-                className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="h-[50px] w-full max-w-[414px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 disabled={customer.patient_status}
               />
             </div>
 
-            <div className="relative">
+            <div className="relative w-[212px]">
               <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
@@ -413,6 +413,16 @@ const CreateCustomerForm = ({
                   className="ml-2 flex items-center justify-center bg-bg1 p-1 hover:bg-bg1"
                 ></button>
               </div>
+              {additionalAlternatives.length < 1 && (
+                <button
+                  type="button"
+                  className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
+                  onClick={handleAddAlternativeFields}
+                >
+                  <AddIcon />
+                  Adicionar item
+                </button>
+              )}
             </div>
 
             {additionalAlternatives.map((alternative, index) => (
@@ -466,16 +476,7 @@ const CreateCustomerForm = ({
               </div>
             ))}
           </div>
-          {additionalAlternatives.length < 1 && (
-            <button
-              type="button"
-              className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
-              onClick={handleAddAlternativeFields}
-            >
-              <AddIcon />
-              Adicionar item
-            </button>
-          )}
+
           <div className="absolute bottom-4 left-80 transform -translate-x-1/2 flex space-x-4">
             <div className=" border border-primaria rounded-[100px]  ">
               <button
