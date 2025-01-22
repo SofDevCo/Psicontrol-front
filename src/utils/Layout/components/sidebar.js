@@ -89,7 +89,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 }`}
               >
                 <button
-                  onClick={handleProceed}
+                  onClick={() => {
+                    handleProceed();
+                    onToggle();
+                  }}
                   className={`group flex items-center w-full ${
                     location.pathname.startsWith("/create-event-form")
                       ? ""
@@ -128,6 +131,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               >
                 <Link
                   to="/income"
+                  onClick={onToggle}
                   className={`group flex items-center w-full ${
                     location.pathname === "/income"
                       ? ""
@@ -163,6 +167,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               >
                 <Link
                   to="/customers"
+                  onClick={onToggle}
                   className={`group flex items-center w-full ${
                     location.pathname === "/customers"
                       ? ""
@@ -197,6 +202,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
               >
                 <Link
                   to="/user"
+                  onClick={onToggle}
                   className={`group flex items-center w-full ${
                     location.pathname === "/user" ? "" : "hover:text-[#0082ba]"
                   }`}
