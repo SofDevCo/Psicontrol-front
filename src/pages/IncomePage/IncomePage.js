@@ -538,7 +538,7 @@ const IncomePage = () => {
 
           {/* Contêiner de Despesas */}
           <div className="flex-1 min-w-[300px]">
-            <h2 className="text-lg text-texto1 font-semibold mb-2">Despesas</h2>
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">Despesas</h2>
             {expenses.map((expense, index) => (
               <div
               key={index}
@@ -594,7 +594,7 @@ const IncomePage = () => {
             ))}
             <button
               onClick={toggleAddExpense}
-              className="flex items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
+              className="flex ml-4 items-center mt-4 active:drop-shadow-lg active:opacity-50 transition-shadow"
             >
               <AddIcon />
               <span className="text-primaria ml-[8px] whitespace-nowrap">
