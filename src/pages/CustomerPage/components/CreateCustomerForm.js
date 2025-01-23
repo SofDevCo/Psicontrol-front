@@ -245,7 +245,6 @@ const CreateCustomerForm = ({
                   value={customer.customer_second_name || ""}
                   onChange={handleChange}
                   placeholder="Sobrenome do paciente"
-                  required
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
@@ -259,6 +258,7 @@ const CreateCustomerForm = ({
                     name="customer_calendar_name"
                     valeu={customer.customer_calendar_name || ""}
                     onChange={handleChange}
+                    required
                     placeholder="Nome utilizado no Google Agenda"
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
@@ -352,7 +352,7 @@ const CreateCustomerForm = ({
                 </label>
                 <input
                   type="text"
-                  name=" customer_emergency_name"
+                  name="customer_emergency_name"
                   value={customer.customer_emergency_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do contato"
