@@ -257,7 +257,7 @@ const CreateCustomerForm = ({
                   <input
                     type="text"
                     name="customer_calendar_name"
-                    valeu={customer.customer_calendar_name || ""}
+                    value={customer.customer_calendar_name || ""}
                     onChange={handleChange}
                     required
                     placeholder="Nome utilizado no Google Agenda"
