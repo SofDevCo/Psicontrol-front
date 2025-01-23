@@ -216,13 +216,13 @@ const CreateCustomerForm = ({
       >
         <div>
           <div className="space-y-4">
-            <h2 className="text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
+            <h2 className="text-sm md:text-[25px] font-medium font-ubuntu text-primaria">
               Adicionar Paciente
             </h2>
 
             <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -237,7 +237,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Sobronome
                 </label>
                 <input
@@ -250,8 +250,8 @@ const CreateCustomerForm = ({
                 />
               </div>
               <div className="flex gap-4">
-                <div className="w-full">
-                  <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <div>
+                  <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
                     ID Paciente - Google Agenda
                   </label>
                   <input
@@ -264,8 +264,8 @@ const CreateCustomerForm = ({
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
-                <div>
-                  <label className="mb-1 ml-2 block ext-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <div className="flex-1">
+                  <label className="mb-1 ml-2 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Nascimento
                   </label>
                   <input
@@ -280,7 +280,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <input
@@ -294,7 +294,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 ml-3  block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3  block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
               <input
@@ -309,7 +309,7 @@ const CreateCustomerForm = ({
 
             <div className="flex gap-4">
               <div className="flex-1 md:w-[213px]">
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
                 <input
@@ -321,8 +321,8 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div className="md:w-[181px]">
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <div className="w-36 md:w-[181px]">
+                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Valor
                 </label>
                 <div className="relative">
@@ -342,13 +342,12 @@ const CreateCustomerForm = ({
               </div>
             </div>
 
-            <h2 className="text-primaria md:text-2xl text-sm font-medium font-['Ubuntu']">
-              {" "}
+            <h2 className="text-primaria  md:text-2xl text-sm font-medium font-ubuntu">
               Contato de Emergência
             </h2>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:gap-4 gap-3">
               <div className="flex-1">
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -360,45 +359,47 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div>
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Vinculo
-                </label>
-                <input
-                  type="text"
-                  name="customer_emergency_relationship"
-                  value={customer.customer_emergency_relationship || ""}
-                  onChange={handleChange}
-                  placeholder="Vinculo"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                />
+              <div className="flex flex-1 sm:flex-row sm:gap-4 sm:items-start gap-2">
+                <div className="flex-1">
+                  <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                    Vinculo
+                  </label>
+                  <input
+                    type="text"
+                    name="customer_emergency_relationship"
+                    value={customer.customer_emergency_relationship || ""}
+                    onChange={handleChange}
+                    placeholder="Vinculo"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex-1 sm:w-auto">
+                  <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                    Telefone
+                  </label>
+                  <input
+                    type="text"
+                    name="customer_emergency_contact"
+                    value={customer.customer_emergency_contact || ""}
+                    onChange={handleChange}
+                    placeholder="(00) 0 0000-0000"
+                    className="w-full sm:w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                Contato de emergência
-              </label>
-              <input
-                type="text"
-                name="customer_emergency_contact"
-                value={customer.customer_emergency_contact || ""}
-                onChange={handleChange}
-                placeholder="(00) 0 0000-0000"
-                className="w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-              />
             </div>
           </div>
         </div>
 
-        <div className="space-y-4 -mt-5  h-full">
+        <div className="space-y-4 -mt-5 h-full">
           <div className="flex justify-between items-center">
-            <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ">
+            <h3 className="text-primaria text-[20px] md:text-[25px] md:mt-0 mt-4 font-medium font-ubuntu ">
               Dados para Recibo
             </h3>
             <button
               type="button"
               onClick={handleUsePatientData}
-              className="hidden md:block w-auto h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight mr-20"
+              className="hidden md:block w-auto h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight mr-20"
             >
               Usar dados do paciente
             </button>
@@ -407,7 +408,7 @@ const CreateCustomerForm = ({
           <div className="space-y-4 w-full ">
             <div className="flex gap-4 items-start w-full">
               <div className="w-full">
-                <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -423,7 +424,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="relative w-[212px]">
-              <label className="mb-1 ml-3 block text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <div className="flex">
@@ -445,7 +446,7 @@ const CreateCustomerForm = ({
               {additionalAlternatives.length < 1 && (
                 <button
                   type="button"
-                  className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-['Ubuntu'] tracking-tight"
+                  className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-ubuntu tracking-tight"
                   onClick={handleAddAlternativeFields}
                 >
                   <AddIcon />
@@ -456,51 +457,57 @@ const CreateCustomerForm = ({
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
-                <label className="mb-1.5 mt-1.5 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Nome Alternativo {index + 1}
-                </label>
-                <input
-                  type="text"
-                  name="alternative_name"
-                  value={alternative.alternative_name || ""}
-                  onChange={(e) =>
-                    handleAlternativeChange(
-                      index,
-                      "alternative_name",
-                      e.target.value
-                    )
-                  }
-                  placeholder={`Nome Alternativo ${index + 1}`}
-                  className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                  disabled={customer.patient_status}
-                />
+                <div className="flex gap-4 items-start w-full">
+                  <div className="w-full">
+                    <label className="mb-1.5 mt-1.5 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                      Nome Alternativo {index + 1}
+                    </label>
+                    <input
+                      type="text"
+                      name="alternative_name"
+                      value={alternative.alternative_name || ""}
+                      onChange={(e) =>
+                        handleAlternativeChange(
+                          index,
+                          "alternative_name",
+                          e.target.value
+                        )
+                      }
+                      placeholder={`Nome Alternativo ${index + 1}`}
+                      className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                      disabled={customer.patient_status}
+                    />
+                  </div>
+                </div>
 
-                <label className="mb-1.5 mt-4 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  CPF Alternativo {index + 1}
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="alternative_cpf"
-                    value={alternative.alternative_cpf_cnpj || ""}
-                    onChange={(e) =>
-                      handleAlternativeChange(
-                        index,
-                        "alternative_cpf",
-                        e.target.value
-                      )
-                    }
-                    placeholder={`CPF/CNPJ Alternativo ${index + 1}`}
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
-                    disabled={customer.patient_status}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteAlternativeCPF(index)}
-                    className="absolute ml-2 p-1 items-center justify-center  bg-bg1 hover:bg-bg1"
-                  >
-                    <Trash />
-                  </button>
+                <div className="rleative w-[212px]">
+                  <label className="mb-1.5 mt-4 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
+                    CPF Alternativo {index + 1}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="alternative_cpf"
+                      value={alternative.alternative_cpf_cnpj || ""}
+                      onChange={(e) =>
+                        handleAlternativeChange(
+                          index,
+                          "alternative_cpf",
+                          e.target.value
+                        )
+                      }
+                      placeholder={`CPF/CNPJ Alternativo ${index + 1}`}
+                      className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                      disabled={customer.patient_status}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteAlternativeCPF(index)}
+                      className="absolute ml-2 p-1 items-center justify-center  bg-bg1 hover:bg-bg1"
+                    >
+                      <Trash />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
