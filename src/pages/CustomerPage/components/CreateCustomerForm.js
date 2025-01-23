@@ -149,11 +149,12 @@ const CreateCustomerForm = ({
     e.preventDefault();
 
     if (
-      !startDate ||
-      startDate.getFullYear() < 1900 ||
-      startDate.getFullYear() > new Date().getFullYear()
+      startDate &&
+      (isNaN(new Date(startDate)) ||
+        startDate.getFullYear() < 1900 ||
+        startDate.getFullYear() > new Date().getFullYear())
     ) {
-      showErrorToast("Data de nascimento válida");
+      showErrorToast("Data de nascimento inválida");
       return;
     }
 
