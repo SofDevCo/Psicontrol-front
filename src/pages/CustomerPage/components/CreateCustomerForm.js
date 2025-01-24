@@ -258,8 +258,8 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div className="flex gap-4">
-                <div>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1">
                   <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
                     ID Paciente - Google Agenda
                   </label>
@@ -273,7 +273,7 @@ const CreateCustomerForm = ({
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm md:placeholder:text-base"
                   />
                 </div>
-                <div className="md:w-full w-">
+                <div className="flex-1">
                   <label className="mb-1 ml-2 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Nascimento
                   </label>
@@ -316,7 +316,7 @@ const CreateCustomerForm = ({
               />
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               <div className="flex-1 md:w-[213px]">
                 <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
@@ -330,7 +330,7 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div className="w-36 md:w-[181px]">
+              <div className="w-full md:w-[181px]">
                 <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Valor
                 </label>
@@ -382,7 +382,7 @@ const CreateCustomerForm = ({
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
-                <div className="flex-1 sm:w-auto">
+                <div className="flex-1">
                   <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Telefone
                   </label>
@@ -392,7 +392,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_emergency_contact || ""}
                     onChange={handleChange}
                     placeholder="(00) 0 0000-0000"
-                    className="w-full sm:w-[210.79px] h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full  h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
               </div>
@@ -414,9 +414,9 @@ const CreateCustomerForm = ({
             </button>
           </div>
 
-          <div className="space-y-4 w-full ">
-            <div className="flex gap-4 items-start w-full">
-              <div className="w-full">
+          <div className="space-y-4">
+            <div className="flex gap-4 items-start">
+              <div className="w-full md:w-[418px]">
                 <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
@@ -432,11 +432,11 @@ const CreateCustomerForm = ({
               </div>
             </div>
 
-            <div className="relative w-[212px]">
+            <div className="relative">
               <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
-              <div className="flex">
+              <div className="max-w-[151px] md:max-w-[212px]">
                 <input
                   type="text"
                   name="alternative_cpf_cnpj"
