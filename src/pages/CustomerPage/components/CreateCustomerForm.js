@@ -7,7 +7,8 @@ import {
   isValidDate,
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
-import { AddIcon, Trash } from "../../../icons/icons";
+import { Trash } from "../../../icons/icons";
+import { AddIcon, CloseIconRegisterModal } from "./IconsRegisterCard";
 import "../../../index.css";
 import { showErrorToast } from "../../../utils/notification/toastify";
 import { showEditToast } from "../components/notiificationCustomerPage";
@@ -216,13 +217,21 @@ const CreateCustomerForm = ({
       >
         <div>
           <div className="space-y-4">
-            <h2 className="text-sm md:text-[25px] font-medium font-ubuntu text-primaria">
-              Adicionar Paciente
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm md:text-[25px] font-medium font-ubuntu text-primaria">
+                Adicionar Paciente
+              </h2>
+              <button
+                onClick={onClose}
+                className="block md:hidden text-primaria"
+              >
+                <CloseIconRegisterModal />
+              </button>
+            </div>
 
             <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 ml-3 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 md:ml-3 ml-2 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -260,11 +269,11 @@ const CreateCustomerForm = ({
                     value={customer.customer_calendar_name || ""}
                     onChange={handleChange}
                     required
-                    placeholder="Nome utilizado no Google Agenda"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    placeholder="Google Agenda"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm md:placeholder:text-base"
                   />
                 </div>
-                <div className="flex-1">
+                <div className="md:w-full w-">
                   <label className="mb-1 ml-2 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Nascimento
                   </label>
@@ -273,7 +282,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_dob || ""}
                     onChange={(e) => handleManualDateChange(e.target.value)}
                     placeholder="DD/MM/AAAA"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm md:placeholder:text-base "
                   />
                 </div>
               </div>
@@ -391,9 +400,9 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="space-y-4 -mt-5 h-full">
+        <div className="md:-space-y-1 space-y-4 md:-mt-5 h-full">
           <div className="flex justify-between items-center">
-            <h3 className="text-primaria text-[20px] md:text-[25px] md:mt-0 mt-4 font-medium font-ubuntu ">
+            <h3 className="text-primaria text-sm md:text-[25px] md:mt-0 mt-4  font-medium font-ubuntu">
               Dados para Recibo
             </h3>
             <button
@@ -401,7 +410,7 @@ const CreateCustomerForm = ({
               onClick={handleUsePatientData}
               className="hidden md:block w-auto h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight mr-20"
             >
-              Usar dados do paciente
+              Usar dados do <br /> paciente
             </button>
           </div>
 
@@ -446,7 +455,7 @@ const CreateCustomerForm = ({
               {additionalAlternatives.length < 1 && (
                 <button
                   type="button"
-                  className="group h-4 justify-center items-start gap-2 mt-5 inline-flex hw-[97px] text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-ubuntu tracking-tight"
+                  className="group h-4 justify-center items-start gap-2 mt-5 inline-flex  text-[#0082ba] hover:text-primaria/50 bg-bg1 hover:bg-bg1 text-sm font-medium font-ubuntu tracking-tight underline"
                   onClick={handleAddAlternativeFields}
                 >
                   <AddIcon />
@@ -513,17 +522,17 @@ const CreateCustomerForm = ({
             ))}
           </div>
           <div className="flex flex-col items-end mt-6">
-            <div className="flex gap-4 mt-[600px]">
+            <div className="flex gap-4 md:mt-[600px] mt-6">
               <button
                 type="button"
-                className="h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px] border border-primaria text-primaria text-sm font-semibold"
+                className="hidden md:table-cell h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px] border border-primaria text-primaria text-sm font-semibold"
                 onClick={onClose}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
+                className="md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
               >
                 Salvar
               </button>
