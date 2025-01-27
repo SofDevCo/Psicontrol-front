@@ -46,7 +46,11 @@ const ProfileCustomerPage = () => {
       }
       const data = await response.json();
       setCustomer(data);
-      setCustomerMessage(data.customer_personal_message || []);
+      setSavedMessages(
+        Array.isArray(data.customer_personal_message)
+          ? data.customer_personal_message
+          : [data.customer_personal_message] 
+      );
     };
 
     handleFetchCustomerProfile();
@@ -90,9 +94,9 @@ const ProfileCustomerPage = () => {
         ? prevMessages.map((msg, idx) => (idx === editingIndex ? message : msg))
         : [...prevMessages, message]
     );
-    setCustomerMessage(""); 
+    setCustomerMessage("");
     setIsEditingMessage(false);
-    setEditingIndex(null); 
+    setEditingIndex(null);
   };
 
   const handleEditMessage = (index) => {
@@ -295,17 +299,25 @@ const ProfileCustomerPage = () => {
             />
           ) : (
             <ul className="mt-4 list-disc list-inside text-F17 text-texto1">
-              {savedMessages.map((msg, index) => (
-                <li
-                  key={index}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditMessage(index);
-                  }}
-                >
-                  {msg}
+              {Array.isArray(savedMessages) &&
+                savedMessages.map((msg, index) => (
+                  <li
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditMessage(index);
+                    }}
+                    className="whitespace-pre-wrap"
+                  >
+                    {msg}
+                  </li>
+                ))}
+              {(!Array.isArray(savedMessages) ||
+                savedMessages.length === 0) && (
+                <li className="text-texto2 italic">
+                  Nenhuma anotação disponível.
                 </li>
-              ))}
+              )}
             </ul>
           )}
         </div>
