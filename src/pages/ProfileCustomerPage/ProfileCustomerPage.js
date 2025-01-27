@@ -29,7 +29,6 @@ const ProfileCustomerPage = () => {
 
   const dropdownRef = useRef();
 
-  
   const toggleDropdown = (customer_id) => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
@@ -170,8 +169,9 @@ const ProfileCustomerPage = () => {
             <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
               <strong>Idade:</strong>{" "}
               <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
-                {" "}
-                {customer.age || "Não informado"} anos{" "}
+                {customer.customer_dob && customer.age
+                  ? `${customer.age} anos`
+                  : "Não informado"}
               </label>
             </p>
             <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
@@ -222,8 +222,8 @@ const ProfileCustomerPage = () => {
               <h2 className="ml-6 text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
                 Editar Paciente
               </h2>
-              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">+
-                Dados para recibo
+              <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">
+                 Dados para recibo
               </h3>
               <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
                 <button
