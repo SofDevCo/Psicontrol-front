@@ -20,11 +20,14 @@ const ProfileCustomerPage = () => {
   const [error, setError] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingMessage, setIsEditingMessage] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [originalCustomer, setOriginalCustomer] = useState(null);
   const [customerMessage, setCustomerMessage] = useState("");
+  const [savedMessages, setSavedMessages] = useState([]);
 
   const { customerId } = useParams();
 
@@ -43,7 +46,7 @@ const ProfileCustomerPage = () => {
       }
       const data = await response.json();
       setCustomer(data);
-      setCustomerMessage(data.customer_personal_message || "");
+      setCustomerMessage(data.customer_personal_message || []);
     };
 
     handleFetchCustomerProfile();
@@ -82,7 +85,26 @@ const ProfileCustomerPage = () => {
 
     const updatedCustomer = await response.json();
     setCustomer(updatedCustomer);
-    setCustomerMessage(updatedCustomer.customer_personal_message);
+    setSavedMessages((prevMessages) =>
+      editingIndex !== null
+        ? prevMessages.map((msg, idx) => (idx === editingIndex ? message : msg))
+        : [...prevMessages, message]
+    );
+    setCustomerMessage(""); 
+    setIsEditingMessage(false);
+    setEditingIndex(null); 
+  };
+
+  const handleEditMessage = (index) => {
+    console.log(
+      "Mensagem sendo editada:",
+      savedMessages[index],
+      "Índice:",
+      index
+    );
+    setCustomerMessage(savedMessages[index]);
+    setIsEditingMessage(true);
+    setEditingIndex(index);
   };
 
   const handleDeleteCustomer = async () => {
@@ -241,22 +263,51 @@ const ProfileCustomerPage = () => {
           </div>
         </div>
 
-        <div className=" md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4">
+        <div
+          className=" md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-B15 text-F15 mt-4"
+          onClick={() => !isEditingMessage && setIsEditingMessage(true)}
+        >
           <h3 className="text-primaria text-F25 font-medium font-['Ubuntu']">
             Anotações
           </h3>
-          <textarea
-            value={customerMessage}
-            onChange={(e) => setCustomerMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault(); 
-                handleSaveMessage(customerMessage); 
-              }
-            }}
-            className="w-full mt-2 p-3 border border-cinza6  bg-bg1 rounded-B15 text-F17 font-normal text-gray-700"
-            placeholder="Clique aqui para adicionar anotações."
-          />
+
+          {isEditingMessage ? (
+            <textarea
+              value={customerMessage}
+              onChange={(e) => setCustomerMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSaveMessage(customerMessage);
+                } else if (e.key === "Enter" && e.shiftKey) {
+                  e.preventDefault();
+                  setCustomerMessage((prevMessage) => `${prevMessage}\n`);
+                }
+              }}
+              className="w-full h-[333px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
+              placeholder="Clique aqui para adicionar anotações."
+              autoFocus
+              onBlur={() => {
+                setIsEditingMessage(false);
+                setCustomerMessage("");
+                setEditingIndex(null);
+              }}
+            />
+          ) : (
+            <ul className="mt-4 list-disc list-inside text-F17 text-texto1">
+              {savedMessages.map((msg, index) => (
+                <li
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditMessage(index);
+                  }}
+                >
+                  {msg}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {isEditing && (
