@@ -546,7 +546,7 @@ const IncomePage = () => {
             >
             
                 <div
-                  className="flex-1 text-gray-700 cursor-default overflow-hidden"
+                  className="flex-1 text-gray-700 pl-4 cursor-default overflow-hidden"
                   style={{
                     wordBreak: "break-word",
                     whiteSpace: "normal",
@@ -567,7 +567,7 @@ const IncomePage = () => {
               </div>
             ))}
             {isAddingExpense.map((expense, index) => (
-              <div className="flex items-center mb-2 mt-2 gap-4" key={index}>
+              <div className="flex items-center gap-4 ml-4 mt-2" key={index}>
                 <input
                   type="text"
                   placeholder="Nome da despesa"
