@@ -5,6 +5,7 @@ import DeletePatientModal from "./components/DeletePatientModal";
 import {
   fetchCustomers,
   sendWhatsAppMessage,
+  sendEmailMessage,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
@@ -401,28 +402,18 @@ const DashBoard = () => {
 
     setLoading(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/message/send-email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          total_consultation_fee: customer.total_consultation_fee,
-          selected_month: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await sendEmailMessage(
+      customerId,
+      customer.total_consultation_fee,
+      selectedYear,
+      selectedMonth
     );
 
     setLoading(false);
 
-    if (response.ok) {
-      const data = await response.json();
-      const mailtoLink = data.mailtoLink;
-      setBillingMessage(data.user_message);
+    if (response) {
+      const mailtoLink = response.mailtoLink;
+      setBillingMessage(response.user_message);
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
@@ -433,8 +424,7 @@ const DashBoard = () => {
       alert("Abrindo cliente de email...");
       window.open(mailtoLink, "_blank");
     } else {
-      const errorData = await response.json();
-      alert(`Erro: ${errorData.error}`);
+      alert("Erro: Não foi possível enviar o email.");
     }
   };
 

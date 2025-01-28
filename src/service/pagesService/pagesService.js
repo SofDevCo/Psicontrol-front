@@ -113,5 +113,32 @@ export const sendWhatsAppMessage = async (
   return response.json();
 };
 
+export const sendEmailMessage = async (
+  customerId,
+  totalConsultationFee,
+  selectedYear,
+  selectedMonth
+) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/message/send-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        total_consultation_fee: totalConsultationFee,
+        selected_month: `${selectedYear}-${selectedMonth}`,
+      }),
+    }
+  );
 
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Erro ao enviar e-mail.");
+  }
 
+  return response.json();
+};
