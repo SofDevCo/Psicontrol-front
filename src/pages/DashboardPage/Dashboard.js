@@ -6,6 +6,9 @@ import {
   fetchCustomers,
   sendWhatsAppMessage,
   sendEmailMessage,
+  confirmBillOfSale,
+  confirmPayment,
+  savePartialPayment
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
@@ -465,23 +468,14 @@ const DashBoard = () => {
 
     const { customer_id } = selectedPatientForPartialPayment;
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/update-partial-payment`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-          payment_amount: parseFloat(paymentAmount),
-        }),
-      }
+    const response = await savePartialPayment(
+      customer_id,
+      selectedYear,
+      selectedMonth,
+      paymentAmount
     );
 
-    if (response.ok) {
+    if (response) {
       showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
@@ -496,8 +490,6 @@ const DashBoard = () => {
       );
 
       setIsPartialPaymentModalOpen(false);
-    } else {
-      alert("Erro ao salvar pagamento parcial.");
     }
   };
 
@@ -512,22 +504,13 @@ const DashBoard = () => {
       return;
     }
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/confirm-payment`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: patient.customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await confirmPayment(
+      patient.customer_id,
+      selectedYear,
+      selectedMonth
     );
 
-    if (response.ok) {
+    if (response) {
       showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -536,29 +519,19 @@ const DashBoard = () => {
             : p
         )
       );
-    } else {
-      alert("Erro ao confirmar pagamento.");
     }
   };
+
   const handleConfirmBillOfSale = async (patient) => {
     if (!patient || !patient.customer_id) {
       alert("Paciente não encontrado.");
       return;
     }
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: patient.customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await confirmBillOfSale(
+      patient.customer_id,
+      selectedYear,
+      selectedMonth
     );
 
     if (response) {

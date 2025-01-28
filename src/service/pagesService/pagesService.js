@@ -142,3 +142,86 @@ export const sendEmailMessage = async (
 
   return response.json();
 };
+
+export const confirmPayment = async (
+  customerId,
+  selectedYear,
+  selectedMonth
+) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/dashboard/confirm-payment`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        month_and_year: `${selectedYear}-${selectedMonth}`,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao confirmar pagamento.");
+  }
+
+  return response.json();
+};
+
+export const confirmBillOfSale = async (
+  customerId,
+  selectedYear,
+  selectedMonth
+) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        month_and_year: `${selectedYear}-${selectedMonth}`,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao confirmar nota fiscal.");
+  }
+
+  return response.json();
+};
+
+export const savePartialPayment = async (
+  customerId,
+  selectedYear,
+  selectedMonth,
+  paymentAmount
+) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/dashboard/update-partial-payment`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        month_and_year: `${selectedYear}-${selectedMonth}`,
+        payment_amount: parseFloat(paymentAmount),
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao salvar pagamento parcial.");
+  }
+
+  return response.json();
+};
