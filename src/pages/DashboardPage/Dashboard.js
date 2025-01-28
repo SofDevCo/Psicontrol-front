@@ -343,10 +343,6 @@ const DashBoard = () => {
     fetchBillingRecords(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
-  const openBillingModal = () => {
-    setIsBillingModalOpen(true);
-  };
-
   const closeBillingModal = () => {
     setIsBillingModalOpen(false);
   };
@@ -476,8 +472,8 @@ const DashBoard = () => {
 
   const confirmDelete = () => {
     if (eventToDelete) {
-      handleDeleteUnmatchedEvent(eventToDelete); // Chama a função de deletar
-      setIsDeleteModalOpen(false); // Fecha o modal
+      handleDeleteUnmatchedEvent(eventToDelete);
+      setIsDeleteModalOpen(false);
     }
   };
 
