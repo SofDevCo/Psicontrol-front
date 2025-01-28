@@ -78,3 +78,40 @@ export const fetchCustomers = async () => {
 
   return response.json();
 };
+
+export const sendWhatsAppMessage = async (
+  customerId,
+  selectedYear,
+  selectedMonth
+) => {
+  if (!customerId) {
+    alert("ID do cliente não encontrado.");
+  }
+
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/message/send-whatsapp`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        selected_month: `${selectedYear}-${selectedMonth}`,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.error || "Erro ao enviar a mensagem pelo WhatsApp."
+    );
+  }
+
+  return response.json();
+};
+
+
+

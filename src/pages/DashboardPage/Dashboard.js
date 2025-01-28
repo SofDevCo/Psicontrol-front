@@ -2,7 +2,10 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
-import { fetchCustomers } from "../../service/pagesService/pagesService";
+import {
+  fetchCustomers,
+  sendWhatsAppMessage,
+} from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
@@ -357,24 +360,15 @@ const DashBoard = () => {
 
     setLoading(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/message/send-whatsapp`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          selected_month: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const data = await sendWhatsAppMessage(
+      customerId,
+      selectedYear,
+      selectedMonth
     );
 
     setLoading(false);
-    if (response.ok) {
-      const data = await response.json();
+
+    if (data?.success) {
       const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
 
@@ -393,8 +387,7 @@ const DashBoard = () => {
         window.open(whatsappLink, "_blank");
       }
     } else {
-      const errorData = await response.json();
-      alert(`Erro: ${errorData.error}`);
+      alert(`Erro: ${data.error || "Erro ao enviar mensagem pelo WhatsApp"}`);
     }
   };
 
