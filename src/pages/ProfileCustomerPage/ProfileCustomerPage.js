@@ -98,10 +98,10 @@ const ProfileCustomerPage = () => {
     setEditingIndex(null);
   };
 
-  const handleEditMessage = (index) => {
-    setCustomerMessage(savedMessages[index]);
+  const handleEditMessage = () => {
+    setCustomerMessage(savedMessages.join("\n"));
     setIsEditingMessage(true);
-    setEditingIndex(index);
+    setEditingIndex(null);
   };
 
   const handleDeleteCustomer = async () => {
@@ -262,7 +262,13 @@ const ProfileCustomerPage = () => {
 
         <div
           className=" md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-B15 text-F15 mt-4"
-          onClick={() => !isEditingMessage && setIsEditingMessage(true)}
+          onClick={() => {
+            if (!isEditingMessage) {
+              setCustomerMessage(savedMessages.join("\n"));
+              setIsEditingMessage(true);
+              setEditingIndex(null);
+            }
+          }}
         >
           <h3 className="text-primaria text-F25 font-medium font-['Ubuntu']">
             Anotações
