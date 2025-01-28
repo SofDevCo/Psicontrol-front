@@ -249,13 +249,6 @@ const ProfileCustomerPage = () => {
                   {customer.alternative_cpf_cnpj || "Não informado"}{" "}
                 </label>
               </p>
-              <p className="mt-3 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal">
-                <strong>E-mail:</strong>{" "}
-                <label className="text-texto2 text-17 font-normal font-['Open Sans'] tracking-normal">
-                  {" "}
-                  {customer.customer_email || "Não informado"}{" "}
-                </label>
-              </p>
             </div>
           </div>
         </div>
