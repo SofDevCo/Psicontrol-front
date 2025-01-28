@@ -49,7 +49,7 @@ const ProfileCustomerPage = () => {
       setSavedMessages(
         Array.isArray(data.customer_personal_message)
           ? data.customer_personal_message
-          : [data.customer_personal_message] 
+          : [data.customer_personal_message]
       );
     };
 
@@ -70,6 +70,8 @@ const ProfileCustomerPage = () => {
   };
 
   const handleSaveMessage = async (message) => {
+    const lines = message.split("\n").filter((line) => line.trim() !== "");
+
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/message`,
       {
@@ -78,7 +80,7 @@ const ProfileCustomerPage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
-        body: JSON.stringify({ customer_personal_message: message }),
+        body: JSON.stringify({ customer_personal_message: lines }),
       }
     );
 
@@ -89,23 +91,14 @@ const ProfileCustomerPage = () => {
 
     const updatedCustomer = await response.json();
     setCustomer(updatedCustomer);
-    setSavedMessages((prevMessages) =>
-      editingIndex !== null
-        ? prevMessages.map((msg, idx) => (idx === editingIndex ? message : msg))
-        : [...prevMessages, message]
-    );
+    setSavedMessages(lines);
+
     setCustomerMessage("");
     setIsEditingMessage(false);
     setEditingIndex(null);
   };
 
   const handleEditMessage = (index) => {
-    console.log(
-      "Mensagem sendo editada:",
-      savedMessages[index],
-      "Índice:",
-      index
-    );
     setCustomerMessage(savedMessages[index]);
     setIsEditingMessage(true);
     setEditingIndex(index);
@@ -299,21 +292,19 @@ const ProfileCustomerPage = () => {
             />
           ) : (
             <ul className="mt-4 list-disc list-inside text-F17 text-texto1">
-              {Array.isArray(savedMessages) &&
-                savedMessages.map((msg, index) => (
-                  <li
-                    key={index}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditMessage(index);
-                    }}
-                    className="whitespace-pre-wrap"
-                  >
-                    {msg}
-                  </li>
-                ))}
-              {(!Array.isArray(savedMessages) ||
-                savedMessages.length === 0) && (
+              {savedMessages.map((msg, index) => (
+                <li
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditMessage(index);
+                  }}
+                  className="whitespace-pre-wrap"
+                >
+                  {msg}
+                </li>
+              ))}
+              {savedMessages.length === 0 && (
                 <li className="text-texto2 italic">
                   Nenhuma anotação disponível.
                 </li>
