@@ -14,6 +14,7 @@ import {
   showDeleteProfileToast,
   showArchiveProfileToast,
 } from "../ProfileCustomerPage/components/notificationProfilePage";
+import PaymentControlCard from "./components/PaymentControlCard";
 
 const ProfileCustomerPage = () => {
   const [customer, setCustomer] = useState(null);
@@ -369,6 +370,8 @@ const ProfileCustomerPage = () => {
           </div>
         )}
       </div>
+       ~
+      <PaymentControlCard billingRecords={customer?.billingRecords} />
     </div>
   );
 };
