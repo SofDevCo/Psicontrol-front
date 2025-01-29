@@ -26,18 +26,11 @@ const ProfileCustomerPage = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
-  const [originalCustomer, setOriginalCustomer] = useState(null);
   const [customerMessage, setCustomerMessage] = useState("");
   const [savedMessages, setSavedMessages] = useState([]);
-  const [billingRecords, setBillingRecords] = useState([]);
 
   const { customerId } = useParams();
-
   const dropdownRef = useRef();
-
-  const toggleDropdown = (customer_id) => {
-    setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
-  };
 
   useEffect(() => {
     const handleFetchCustomerProfile = async () => {
@@ -53,18 +46,13 @@ const ProfileCustomerPage = () => {
           ? data.customer_personal_message
           : [data.customer_personal_message]
       );
-      setBillingRecords(data.billingRecords || []);
     };
 
     handleFetchCustomerProfile();
   }, [customerId]);
 
-  const updateBillingRecords = (updatedRecords) => {
-    setBillingRecords(updatedRecords);
-    setCustomer((prev) => ({
-      ...prev,
-      billingRecords: updatedRecords,
-    }));
+  const toggleDropdown = (customer_id) => {
+    setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
 
   if (error) {
@@ -152,8 +140,8 @@ const ProfileCustomerPage = () => {
     if (response.ok) {
       const profileResponse = await fetchCustomerProfile(customerId);
       if (profileResponse.ok) {
-        const profileData = await profileResponse.json();
-        setCustomer(profileData);
+        const updatedProfile = await profileResponse.json();
+        setCustomer(await updatedProfile.json());
       }
       setIsEditing(false);
     } else {
@@ -170,12 +158,10 @@ const ProfileCustomerPage = () => {
     }));
   };
   const openModal = () => {
-    setOriginalCustomer(customer);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
-    setCustomer(originalCustomer);
     setIsEditing(false);
   };
 
@@ -381,10 +367,8 @@ const ProfileCustomerPage = () => {
         )}
       </div>
       <PaymentControlCard
-        key={billingRecords.length}
-        billingRecords={billingRecords}
+        billingRecords={customer.billingRecords}
         customerId={customerId}
-        updateBillingRecords={updateBillingRecords}
       />
     </div>
   );

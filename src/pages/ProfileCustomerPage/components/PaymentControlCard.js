@@ -28,14 +28,6 @@ const PaymentControlCard = ({
   const [selectedYear] = useState(new Date().getFullYear());
   const [selectedMonth] = useState(new Date().getMonth() + 1);
   const [loading, setLoading] = useState(false);
-  const [updatedBillingRecords, setUpdatedBillingRecords] =
-    useState(billingRecords);
-
-  useEffect(() => {
-    if (billingRecords && billingRecords.length > 0) {
-      setUpdatedBillingRecords([...billingRecords]);
-    }
-  }, [billingRecords]);
 
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
@@ -48,27 +40,16 @@ const PaymentControlCard = ({
     }
 
     setLoading(true);
-
     const response = await fetchCustomerProfile(customerId);
-
     setLoading(false);
 
     if (!response.ok) {
-      alert(`Erro ao buscar os dados do cliente.`);
+      alert("Erro ao buscar os dados do cliente.");
       return;
     }
 
     const updatedData = await response.json();
-
-    if (!updatedData || !updatedData.billingRecords) {
-      alert("Erro: Dados de cobrança não encontrados.");
-      setLoading(false);
-      return;
-    }
-    setUpdatedBillingRecords(updatedData.billingRecords);
-    if (typeof updateBillingRecords === "function") {
-      updateBillingRecords(updatedData.billingRecords);
-    }
+    updateBillingRecords(updatedData.billingRecords);
   };
 
   const handleOpenModalForBilling = async (billingRecord) => {
@@ -232,7 +213,7 @@ const PaymentControlCard = ({
             </tr>
           </thead>
           <tbody>
-            {updatedBillingRecords.map((item, index) => (
+            {billingRecords.map((item, index) => (
               <tr
                 key={index}
                 className="relative text-center border-t border-gray-300"
