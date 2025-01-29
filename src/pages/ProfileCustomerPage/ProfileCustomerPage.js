@@ -29,6 +29,7 @@ const ProfileCustomerPage = () => {
   const [originalCustomer, setOriginalCustomer] = useState(null);
   const [customerMessage, setCustomerMessage] = useState("");
   const [savedMessages, setSavedMessages] = useState([]);
+  const [billingRecords, setBillingRecords] = useState([]);
 
   const { customerId } = useParams();
 
@@ -52,10 +53,19 @@ const ProfileCustomerPage = () => {
           ? data.customer_personal_message
           : [data.customer_personal_message]
       );
+      setBillingRecords(data.billingRecords || []);
     };
 
     handleFetchCustomerProfile();
   }, [customerId]);
+
+  const updateBillingRecords = (updatedRecords) => {
+    setBillingRecords(updatedRecords);
+    setCustomer((prev) => ({
+      ...prev,
+      billingRecords: updatedRecords,
+    }));
+  };
 
   if (error) {
     return <div>{error}</div>;
@@ -370,8 +380,12 @@ const ProfileCustomerPage = () => {
           </div>
         )}
       </div>
-       ~
-      <PaymentControlCard billingRecords={customer?.billingRecords} />
+      <PaymentControlCard
+        key={billingRecords.length}
+        billingRecords={billingRecords}
+        customerId={customerId}
+        updateBillingRecords={updateBillingRecords}
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   VerifyGreenIcon,
@@ -10,12 +10,17 @@ import {
   confirmBillOfSale,
   confirmPayment,
   savePartialPayment,
+  fetchCustomerProfile,
 } from "../../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../../icons/icons";
 import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
 
-const PaymentControlCard = ({ billingRecords }) => {
+const PaymentControlCard = ({
+  billingRecords,
+  customerId,
+  updateBillingRecords,
+}) => {
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -23,9 +28,47 @@ const PaymentControlCard = ({ billingRecords }) => {
   const [selectedYear] = useState(new Date().getFullYear());
   const [selectedMonth] = useState(new Date().getMonth() + 1);
   const [loading, setLoading] = useState(false);
+  const [updatedBillingRecords, setUpdatedBillingRecords] =
+    useState(billingRecords);
+
+  useEffect(() => {
+    if (billingRecords && billingRecords.length > 0) {
+      setUpdatedBillingRecords([...billingRecords]);
+    }
+  }, [billingRecords]);
 
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
+  };
+
+  const handleUpdateBillingStatus = async () => {
+    if (!customerId) {
+      alert("Erro: ID do cliente não encontrado.");
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await fetchCustomerProfile(customerId);
+
+    setLoading(false);
+
+    if (!response.ok) {
+      alert(`Erro ao buscar os dados do cliente.`);
+      return;
+    }
+
+    const updatedData = await response.json();
+
+    if (!updatedData || !updatedData.billingRecords) {
+      alert("Erro: Dados de cobrança não encontrados.");
+      setLoading(false);
+      return;
+    }
+    setUpdatedBillingRecords(updatedData.billingRecords);
+    if (typeof updateBillingRecords === "function") {
+      updateBillingRecords(updatedData.billingRecords);
+    }
   };
 
   const handleOpenModalForBilling = async (billingRecord) => {
@@ -49,31 +92,24 @@ const PaymentControlCard = ({ billingRecords }) => {
       selectedMonth
     );
 
-     if (whatsappResponse.error || emailResponse.error) {
-    alert(
-      `Erro: ${whatsappResponse.error ? whatsappResponse.error : ""} ${
-        emailResponse.error ? emailResponse.error : ""
-      }`
-    );
-    return;
-  } if (whatsappResponse.error || emailResponse.error) {
-    alert(
-      `Erro: ${whatsappResponse.error ? whatsappResponse.error : ""} ${
-        emailResponse.error ? emailResponse.error : ""
-      }`
-    );
-    return;
-  }
+    if (whatsappResponse.error || emailResponse.error) {
+      alert(
+        `Erro: ${whatsappResponse.error ? whatsappResponse.error : ""} ${
+          emailResponse.error ? emailResponse.error : ""
+        }`
+      );
+      return;
+    }
 
-  setBillingMessage(whatsappResponse.user_message); 
-  setSelectedPatient({
-    ...billingRecord,
-    whatsappLink: whatsappResponse.whatsappLink,
-    mailtoLink: emailResponse.mailtoLink,
-  });
+    setBillingMessage(whatsappResponse.user_message);
+    setSelectedPatient({
+      ...billingRecord,
+      whatsappLink: whatsappResponse.whatsappLink,
+      mailtoLink: emailResponse.mailtoLink,
+    });
 
-  setIsBillingModalOpen(true);
-};
+    setIsBillingModalOpen(true);
+  };
 
   const handleSendWhatsApp = async () => {
     if (!selectedPatient || !selectedPatient.customer_id) {
@@ -81,29 +117,23 @@ const PaymentControlCard = ({ billingRecords }) => {
       return;
     }
 
-    if (!selectedPatient.whatsappLink) {
-      alert("Erro: Link do WhatsApp não encontrado.");
-      return;
-    }
-
     alert("Redirecionando para o WhatsApp...");
     window.open(selectedPatient.whatsappLink, "_blank");
+
+    await handleUpdateBillingStatus();
     setIsBillingModalOpen(false);
   };
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
     if (!selectedPatient || !selectedPatient.customer_id) {
       alert("ID do cliente não encontrado.");
       return;
     }
-  
-    if (!selectedPatient.mailtoLink) {
-      alert("Erro: Link de e-mail não encontrado.");
-      return;
-    }
-  
+
     alert("Abrindo cliente de e-mail...");
     window.open(selectedPatient.mailtoLink, "_blank");
+
+    await handleUpdateBillingStatus();
     setIsBillingModalOpen(false);
   };
 
@@ -113,8 +143,6 @@ const PaymentControlCard = ({ billingRecords }) => {
   };
 
   const handleConfirmPayment = async (billingRecord) => {
-    console.log("Dados recebidos em handleConfirmPayment:", billingRecord);
-
     if (!billingRecord || !billingRecord.customer_id) {
       alert("ID do cliente não encontrado.");
       return;
@@ -129,11 +157,10 @@ const PaymentControlCard = ({ billingRecords }) => {
     if (response) {
       alert("Pagamento confirmado!");
     }
+    await handleUpdateBillingStatus();
   };
 
   const handleConfirmBillOfSale = async (billingRecord) => {
-    console.log("Dados recebidos em handleConfirmBillOfSale:", billingRecord);
-
     if (!billingRecord || !billingRecord.customer_id) {
       alert("ID do cliente não encontrado.");
       return;
@@ -148,11 +175,10 @@ const PaymentControlCard = ({ billingRecords }) => {
     if (response) {
       alert("Nota fiscal confirmada!");
     }
+    await handleUpdateBillingStatus();
   };
 
   const handleOpenPartialPayment = async (billingRecord) => {
-    console.log("Dados recebidos em handleOpenPartialPayment:", billingRecord);
-
     if (!billingRecord || !billingRecord.customer_id) {
       alert("ID do cliente não encontrado.");
       return;
@@ -206,7 +232,7 @@ const PaymentControlCard = ({ billingRecords }) => {
             </tr>
           </thead>
           <tbody>
-            {billingRecords.map((item, index) => (
+            {updatedBillingRecords.map((item, index) => (
               <tr
                 key={index}
                 className="relative text-center border-t border-gray-300"
