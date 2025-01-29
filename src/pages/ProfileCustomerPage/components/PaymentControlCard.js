@@ -1,6 +1,167 @@
 import React from "react";
+import { useState } from "react";
+import {
+  VerifyGreenIcon,
+  CrossIcon,
+} from "../../DashboardPage/components/IconsDashBoard";
+import {
+  sendEmailMessage,
+  sendWhatsAppMessage,
+  confirmBillOfSale,
+  confirmPayment,
+  savePartialPayment,
+} from "../../../service/pagesService/pagesService";
+import { HamburguerIcon } from "../../../icons/icons";
+import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
+import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
 
 const PaymentControlCard = ({ billingRecords }) => {
+  const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [billingMessage, setBillingMessage] = useState("");
+  const [selectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth] = useState(new Date().getMonth() + 1);
+  const [loading, setLoading] = useState(false);
+
+  const toggleDropdownPatients = (index) => {
+    setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
+  };
+
+  const handleOpenModalForBilling = async (billingRecord) => {
+    if (!billingRecord || !billingRecord.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    setLoading(true);
+
+    const whatsappResponse = await sendWhatsAppMessage(
+      billingRecord.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    const emailResponse = await sendEmailMessage(
+      billingRecord.customer_id,
+      billingRecord.total_consultation_fee || 0,
+      selectedYear,
+      selectedMonth
+    );
+
+     if (whatsappResponse.error || emailResponse.error) {
+    alert(
+      `Erro: ${whatsappResponse.error ? whatsappResponse.error : ""} ${
+        emailResponse.error ? emailResponse.error : ""
+      }`
+    );
+    return;
+  } if (whatsappResponse.error || emailResponse.error) {
+    alert(
+      `Erro: ${whatsappResponse.error ? whatsappResponse.error : ""} ${
+        emailResponse.error ? emailResponse.error : ""
+      }`
+    );
+    return;
+  }
+
+  setBillingMessage(whatsappResponse.user_message); 
+  setSelectedPatient({
+    ...billingRecord,
+    whatsappLink: whatsappResponse.whatsappLink,
+    mailtoLink: emailResponse.mailtoLink,
+  });
+
+  setIsBillingModalOpen(true);
+};
+
+  const handleSendWhatsApp = async () => {
+    if (!selectedPatient || !selectedPatient.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    if (!selectedPatient.whatsappLink) {
+      alert("Erro: Link do WhatsApp não encontrado.");
+      return;
+    }
+
+    alert("Redirecionando para o WhatsApp...");
+    window.open(selectedPatient.whatsappLink, "_blank");
+    setIsBillingModalOpen(false);
+  };
+
+  const handleSendEmail = () => {
+    if (!selectedPatient || !selectedPatient.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+  
+    if (!selectedPatient.mailtoLink) {
+      alert("Erro: Link de e-mail não encontrado.");
+      return;
+    }
+  
+    alert("Abrindo cliente de e-mail...");
+    window.open(selectedPatient.mailtoLink, "_blank");
+    setIsBillingModalOpen(false);
+  };
+
+  const closeBillingModal = () => {
+    setIsBillingModalOpen(false);
+    setSelectedPatient(null);
+  };
+
+  const handleConfirmPayment = async (billingRecord) => {
+    console.log("Dados recebidos em handleConfirmPayment:", billingRecord);
+
+    if (!billingRecord || !billingRecord.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    const response = await confirmPayment(
+      billingRecord.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    if (response) {
+      alert("Pagamento confirmado!");
+    }
+  };
+
+  const handleConfirmBillOfSale = async (billingRecord) => {
+    console.log("Dados recebidos em handleConfirmBillOfSale:", billingRecord);
+
+    if (!billingRecord || !billingRecord.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    const response = await confirmBillOfSale(
+      billingRecord.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    if (response) {
+      alert("Nota fiscal confirmada!");
+    }
+  };
+
+  const handleOpenPartialPayment = async (billingRecord) => {
+    console.log("Dados recebidos em handleOpenPartialPayment:", billingRecord);
+
+    if (!billingRecord || !billingRecord.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    setSelectedPatient(billingRecord);
+    setIsBillingModalOpen(true);
+  };
+
   if (!billingRecords || billingRecords.length === 0) {
     return (
       <p className="text-center text-texto2 italic py-4">
@@ -74,12 +235,68 @@ const PaymentControlCard = ({ billingRecords }) => {
                 <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                   R$ {item.total_consultation_fee || "0,00"}
                 </td>
-                
+                <td>
+                  <div className="flex items-center justify-center text-center h-full">
+                    {item.sending_invoice ? <VerifyGreenIcon /> : <CrossIcon />}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex items-center justify-center text-center h-full">
+                    {" "}
+                    {item.payment_status === "pago" ? (
+                      <VerifyGreenIcon />
+                    ) : item.payment_status === "parcial" ? (
+                      <span className="text-texto2 md:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                        R${" "}
+                        {parseFloat(item.payment_amount || 0)
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </span>
+                    ) : (
+                      <CrossIcon />
+                    )}{" "}
+                  </div>
+                </td>
+                <td>
+                  <div className="flex items-center justify-center text-center h-full">
+                    {item.bill_of_sale ? <VerifyGreenIcon /> : <CrossIcon />}
+                  </div>
+                </td>
+
+                <td className="text-center px-2 md:px-4 py-1 md:py-2">
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => toggleDropdownPatients(index)}
+                  >
+                    <HamburguerIcon />
+                  </button>
+
+                  {isDropdownOpenPatients === index && (
+                    <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                      <DropDownDashActions
+                        onOpenModal={() => handleOpenModalForBilling(item)}
+                        onPartialPayment={() => handleOpenPartialPayment(item)}
+                        onConfirmedPayment={() => handleConfirmPayment(item)}
+                        onConfirmedBillOfSale={() =>
+                          handleConfirmBillOfSale(item)
+                        }
+                      />
+                    </div>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {isBillingModalOpen && selectedPatient && (
+        <BillingDashBoard
+          onClose={closeBillingModal}
+          onSendWhatsApp={() => handleSendWhatsApp(selectedPatient)}
+          onSendEmail={() => handleSendEmail(selectedPatient)}
+          message={billingMessage}
+        />
+      )}
     </div>
   );
 };

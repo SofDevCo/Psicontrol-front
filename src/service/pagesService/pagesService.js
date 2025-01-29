@@ -88,6 +88,8 @@ export const sendWhatsAppMessage = async (
     alert("ID do cliente não encontrado.");
   }
 
+  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
+
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/message/send-whatsapp`,
     {
@@ -98,16 +100,16 @@ export const sendWhatsAppMessage = async (
       },
       body: JSON.stringify({
         customer_id: customerId,
-        selected_month: `${selectedYear}-${selectedMonth}`,
+        selected_month: formattedMonth,
       }),
     }
   );
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(
-      errorData.error || "Erro ao enviar a mensagem pelo WhatsApp."
-    );
+    return {
+      error: errorData.error || "Erro ao enviar a mensagem pelo WhatsApp.",
+    };
   }
 
   return response.json();
@@ -119,6 +121,8 @@ export const sendEmailMessage = async (
   selectedYear,
   selectedMonth
 ) => {
+  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
+
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/message/send-email`,
     {
@@ -130,14 +134,14 @@ export const sendEmailMessage = async (
       body: JSON.stringify({
         customer_id: customerId,
         total_consultation_fee: totalConsultationFee,
-        selected_month: `${selectedYear}-${selectedMonth}`,
+        selected_month: formattedMonth,
       }),
     }
   );
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || "Erro ao enviar e-mail.");
+    return { error: errorData.error || "Erro ao enviar e-mail." };
   }
 
   return response.json();
