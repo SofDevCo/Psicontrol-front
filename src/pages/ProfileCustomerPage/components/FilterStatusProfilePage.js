@@ -1,8 +1,16 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
+import { useState, useRef } from "react";
+import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 
 const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const filterRef = useRef(null);
+
+  useOutsideClick(filterRef, () => setIsOpen(false));
+
+  const toggleDropdown = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   const handleCheckboxChange = (status) => {
     if (selectedStatus.includes(status)) {
@@ -11,18 +19,22 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
       onChangeStatus([...selectedStatus, status]);
     }
   };
+
   return (
     <div className="relative flex items-center z-30">
       <div className="flex mr-16 gap-2 md:mt-0">
         <button
           type="button"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={toggleDropdown}
           className="group md:text-left text-primaria active:text-primaria/50 w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] md:tracking-[0.15px] tracking-tight  leading-normal underline "
         >
           Filtrar dados
         </button>
         {isOpen && (
-          <div className="absolute w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-5 ">
+          <div
+            ref={filterRef}
+            className="absolute top-full right-0 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-5 "
+          >
             <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
               Pagamentos
             </p>
@@ -90,9 +102,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 Realizada
               </label>
             </div>
-            <p>
-              Recibos
-            </p>
+            <p>Recibos</p>
             <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-1 mt-2">
               <input
                 type="checkbox"
