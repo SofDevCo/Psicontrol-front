@@ -28,6 +28,7 @@ const ProfileCustomerPage = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [customerMessage, setCustomerMessage] = useState("");
   const [savedMessages, setSavedMessages] = useState([]);
+  const [billingRecords, setBillingRecords] = useState([]);
 
   const { customerId } = useParams();
   const dropdownRef = useRef();
@@ -46,6 +47,7 @@ const ProfileCustomerPage = () => {
           ? data.customer_personal_message
           : [data.customer_personal_message]
       );
+      setBillingRecords(data.billingRecords || []);
     };
 
     handleFetchCustomerProfile();
@@ -163,6 +165,10 @@ const ProfileCustomerPage = () => {
 
   const handleCancelEdit = () => {
     setIsEditing(false);
+  };
+
+  const updateBillingRecords = (newRecords) => {
+    setBillingRecords(newRecords);
   };
 
   return (
@@ -366,10 +372,15 @@ const ProfileCustomerPage = () => {
           </div>
         )}
       </div>
-      <PaymentControlCard
-        billingRecords={customer.billingRecords}
-        customerId={customerId}
-      />
+      {billingRecords && billingRecords.length > 0 ? (
+        <PaymentControlCard
+          billingRecords={billingRecords}
+          customerId={customerId}
+          updateBillingRecords={updateBillingRecords}
+        />
+      ) : (
+        <p>Carregando registros de cobrança...</p>
+      )}
     </div>
   );
 };
