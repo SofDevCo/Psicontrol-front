@@ -152,6 +152,8 @@ export const confirmPayment = async (
   selectedYear,
   selectedMonth
 ) => {
+  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
+
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/dashboard/confirm-payment`,
     {
@@ -162,13 +164,14 @@ export const confirmPayment = async (
       },
       body: JSON.stringify({
         customer_id: customerId,
-        month_and_year: `${selectedYear}-${selectedMonth}`,
+        month_and_year: formattedMonth,
       }),
     }
   );
 
   if (!response.ok) {
-    throw new Error("Erro ao confirmar pagamento.");
+    const errorData = await response.json();
+    return { error: errorData.error || "Erro ao enviar e-mail." };
   }
 
   return response.json();
@@ -179,6 +182,8 @@ export const confirmBillOfSale = async (
   selectedYear,
   selectedMonth
 ) => {
+  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
+
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
     {
@@ -189,13 +194,14 @@ export const confirmBillOfSale = async (
       },
       body: JSON.stringify({
         customer_id: customerId,
-        month_and_year: `${selectedYear}-${selectedMonth}`,
+        month_and_year: formattedMonth,
       }),
     }
   );
 
   if (!response.ok) {
-    throw new Error("Erro ao confirmar nota fiscal.");
+    const errorData = await response.json();
+    return { error: errorData.error || "Erro ao enviar e-mail." };
   }
 
   return response.json();
@@ -207,6 +213,7 @@ export const savePartialPayment = async (
   selectedMonth,
   paymentAmount
 ) => {
+  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/dashboard/update-partial-payment`,
     {
@@ -217,14 +224,15 @@ export const savePartialPayment = async (
       },
       body: JSON.stringify({
         customer_id: customerId,
-        month_and_year: `${selectedYear}-${selectedMonth}`,
+        month_and_year: formattedMonth,
         payment_amount: parseFloat(paymentAmount),
       }),
     }
   );
 
   if (!response.ok) {
-    throw new Error("Erro ao salvar pagamento parcial.");
+    const errorData = await response.json();
+    return { error: errorData.error || "Erro ao enviar e-mail." };
   }
 
   return response.json();
