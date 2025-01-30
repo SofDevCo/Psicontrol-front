@@ -15,6 +15,7 @@ import {
 import { HamburguerIcon } from "../../../icons/icons";
 import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
+import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
 
 const PaymentControlCard = ({
   billingRecords,
@@ -22,6 +23,12 @@ const PaymentControlCard = ({
   updateBillingRecords,
 }) => {
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] =
+    useState(false);
+  const [
+    selectedPatientForPartialPayment,
+    setSelectedPatientForPartialPayment,
+  ] = useState(null);
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [billingMessage, setBillingMessage] = useState("");
@@ -49,7 +56,9 @@ const PaymentControlCard = ({
     }
 
     const updatedData = await response.json();
-    updateBillingRecords(updatedData.billingRecords);
+    if (typeof updateBillingRecords === "function") {
+      updateBillingRecords(updatedData.billingRecords);
+    }
   };
 
   const handleOpenModalForBilling = async (billingRecord) => {
@@ -159,14 +168,42 @@ const PaymentControlCard = ({
     await handleUpdateBillingStatus();
   };
 
-  const handleOpenPartialPayment = async (billingRecord) => {
-    if (!billingRecord || !billingRecord.customer_id) {
-      alert("ID do cliente não encontrado.");
+  const handleSavePartialPayment = async (paymentAmount) => {
+    if (!selectedPatientForPartialPayment) return;
+
+    const { customer_id } = selectedPatientForPartialPayment;
+
+    const response = await savePartialPayment(
+      customer_id,
+      selectedYear,
+      selectedMonth,
+      paymentAmount
+    );
+
+    if (!response) {
+      alert("Erro ao salvar pagamento parcial.");
       return;
     }
 
-    setSelectedPatient(billingRecord);
-    setIsBillingModalOpen(true);
+    alert("Pagamento parcial salvo com sucesso!");
+
+    if (typeof updateBillingRecords === "function") {
+      updateBillingRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          record.customer_id === customer_id
+            ? { ...record, payment_amount: parseFloat(paymentAmount), payment_status: "parcial" }
+            : record
+        )
+      );
+    } else {
+      console.error("Erro: updateBillingRecords não é uma função.");
+    }
+    setIsPartialPaymentModalOpen(false);
+  };
+
+  const handleOpenPartialPayment = (patient) => {
+    setSelectedPatientForPartialPayment(patient);
+    setIsPartialPaymentModalOpen(true);
   };
 
   if (!billingRecords || billingRecords.length === 0) {
@@ -304,6 +341,17 @@ const PaymentControlCard = ({
           message={billingMessage}
         />
       )}
+      <>
+        {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
+          <ModalPaymentDash
+            onClose={() => setIsPartialPaymentModalOpen(false)}
+            onSave={handleSavePartialPayment}
+            totalAmount={
+              selectedPatientForPartialPayment.total_consultation_fee
+            }
+          />
+        )}
+      </>
     </div>
   );
 };
