@@ -33,7 +33,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
         {isOpen && (
           <div
             ref={filterRef}
-            className="absolute top-full right-0 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-5 "
+            className="fixed -ml-9 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-5 "
           >
             <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
               Pagamentos

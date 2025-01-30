@@ -263,7 +263,7 @@ const PaymentControlCard = ({
             Controle de pagamento
           </p>
 
-          <div className="group flex justify-end items-end mr-14 md:mt-0 md:mb-2 mt-16 z-10">
+          <div className="group flex justify-end items-end mr-14 md:mt-0 md:mb-2 mt-16 z-[40]">
             <FilterStatusProfilePage
               selectedStatus={selectedStatus}
               onChangeStatus={setSelectedStatus}
