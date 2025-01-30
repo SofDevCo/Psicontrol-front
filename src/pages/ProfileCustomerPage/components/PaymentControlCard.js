@@ -41,6 +41,21 @@ const PaymentControlCard = ({
     useState(billingRecords);
   const [loading, setLoading] = useState(false);
 
+  const monthsInRangeShort = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
+
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
   };
@@ -309,7 +324,9 @@ const PaymentControlCard = ({
                   className="relative text-center border-t border-gray-300"
                 >
                   <td className="text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2">
-                    {item.month}
+                    {item.month
+                      ? `${monthsInRangeShort[parseInt(item.month.split("-")[1], 10) - 1]}/${String(selectedYear).slice(-2)}`
+                      : "Mês inválido"}
                   </td>
                   <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                     R${" "}
