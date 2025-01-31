@@ -93,20 +93,21 @@ const PaymentControlCard = ({
       alert("ID do cliente não encontrado.");
       return;
     }
+    const [year, month] = billingRecord.month.split("-");
 
     setLoading(true);
 
     const whatsappResponse = await sendWhatsAppMessage(
       billingRecord.customer_id,
-      selectedYear,
-      selectedMonth
+      parseInt(year),
+      parseInt(month)
     );
 
     const emailResponse = await sendEmailMessage(
       billingRecord.customer_id,
       billingRecord.total_consultation_fee || 0,
-      selectedYear,
-      selectedMonth
+      parseInt(year),
+      parseInt(month)
     );
 
     if (whatsappResponse.error || emailResponse.error) {
@@ -164,11 +165,12 @@ const PaymentControlCard = ({
       alert("ID do cliente não encontrado.");
       return;
     }
+    const [year, month] = billingRecord.month.split("-");
 
     const response = await confirmPayment(
       billingRecord.customer_id,
-      selectedYear,
-      selectedMonth
+      parseInt(year),
+      parseInt(month)
     );
 
     if (response) {
@@ -183,10 +185,12 @@ const PaymentControlCard = ({
       return;
     }
 
+    const [year, month] = billingRecord.month.split("-");
+
     const response = await confirmBillOfSale(
       billingRecord.customer_id,
-      selectedYear,
-      selectedMonth
+      parseInt(year),
+      parseInt(month)
     );
 
     if (response) {
@@ -217,7 +221,8 @@ const PaymentControlCard = ({
     if (typeof updateBillingRecords === "function") {
       updateBillingRecords((prevRecords) =>
         prevRecords.map((record) =>
-          record.customer_id === customer_id
+          record.customer_id === customer_id &&
+          record.month === selectedPatientForPartialPayment.month
             ? {
                 ...record,
                 payment_amount: parseFloat(paymentAmount),
