@@ -273,6 +273,10 @@ const PaymentControlCard = ({
     setIsTableExpanded(!isTableExpanded);
   };
 
+    useEffect(() => {
+      setIsTableExpanded(true);
+    }, []);
+
   if (!billingRecords || billingRecords.length === 0) {
     return (
       <p className="text-center text-texto2 italic py-4">
