@@ -195,7 +195,7 @@ const ProfileCustomerPage = () => {
           <h2 className="text-F25 font-medium font-['Ubuntu'] mb-4 text-primaria ml-5">
             Conta do paciente
           </h2>
-          <div className="grid grid-cols-2 ">
+          <div className="">
             <div className="ml-5">
               <div className="flex items-center max-w-auto">
                 <div className="bg-primaria text-white h-10 w-10 rounded-full flex items-center justify-center transform translate-y-4">
@@ -236,7 +236,7 @@ const ProfileCustomerPage = () => {
                 </label>
               </p>
             </div>
-            <div className="mt-2 mr-2">
+            <div className="mt-5 ml-20">
               <h3 className="text-F20 font-bold">Dados para recibo</h3>
               <p className="mt-4 text-texto1 text-F17 ">
                 <strong>Nome:</strong>{" "}
