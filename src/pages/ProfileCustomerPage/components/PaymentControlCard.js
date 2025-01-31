@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import {
   VerifyGreenIcon,
@@ -18,6 +18,7 @@ import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
 import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
 import FilterStatusProfilePage from "./FilterStatusProfilePage";
+import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 
 const PaymentControlCard = ({
   billingRecords,
@@ -55,6 +56,11 @@ const PaymentControlCard = ({
     "Nov",
     "Dez",
   ];
+
+
+  const outSideClickRef = useRef(null);
+
+  useOutsideClick(outSideClickRef, () =>  setIsDropdownOpenPatients(false));
 
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
@@ -392,7 +398,9 @@ const PaymentControlCard = ({
                     </button>
 
                     {isDropdownOpenPatients === index && (
-                      <div className="fixed -mt-28 -ml-20 shadow-lg rounded z-20">
+                      <div
+                      ref={outSideClickRef}
+                      className="absolute -mt-23 ml-40 shadow-lg rounded z-20">
                         <DropDownDashActions
                           onOpenModal={() => handleOpenModalForBilling(item)}
                           onPartialPayment={() =>
