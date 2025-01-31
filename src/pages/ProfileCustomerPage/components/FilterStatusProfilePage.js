@@ -33,9 +33,9 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
         {isOpen && (
           <div
             ref={filterRef}
-            className="absolute top-6 -right-1 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-md shadow-md p-2 z-[9999] "
+            className="absolute top-6 -right-1 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-md shadow-md p-4 z-[9999] "
           >
-            <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
+            <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline mt-1">
               Pagamentos
             </p>
             <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight mt-1">
@@ -50,7 +50,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 Não confirmados
               </label>
             </div>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-2">
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-2">
               <input
                 type="checkbox"
                 id="pago"
@@ -62,7 +62,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 Confirmados
               </label>
             </div>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tights md:mt-0 mt-1">
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tights md:mt-0 mt-1">
               <input
                 type="checkbox"
                 id="parcial"
@@ -70,7 +70,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 onChange={() => handleCheckboxChange("parcial")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
-              <label className="ml-2" htmlFor="parcial">
+              <label className="ml-2 mt-0" htmlFor="parcial">
                 Parciais
               </label>
             </div>
@@ -78,7 +78,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
             <p className="md:mt-4 mt-2 md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline ">
               Cobrança
             </p>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-1 mt-2">
+            <div className="flex items-center md:w-automd:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-1 mt-2">
               <input
                 type="checkbox"
                 id="nao-realizada"
@@ -90,7 +90,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 Não Realizada
               </label>
             </div>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-1">
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-1">
               <input
                 type="checkbox"
                 id="realizada"
@@ -98,12 +98,14 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 onChange={() => handleCheckboxChange("realizada")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none mt-1 border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
-              <label className="ml-2" htmlFor="realizada">
+              <label className="ml-2 mt-1" htmlFor="realizada">
                 Realizada
               </label>
             </div>
-            <p>Recibos</p>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-1 mt-2">
+            <p className="md:mt-4 mt-2 md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline ">
+              Recibos
+            </p>
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-1 mt-2">
               <input
                 type="checkbox"
                 id="nao-emitidos"
@@ -112,10 +114,10 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
               <label className="ml-2" htmlFor="nao-emitidos">
-                Não Realizada
+                Não Emitidos
               </label>
             </div>
-            <div className="md:w-[124px] text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-1">
+            <div className="flex items-center md:w-auto text-texto2 md:text-[15px] text-[10px] font-normal font-['Open Sans'] tracking-tight md:mt-0 mt-1">
               <input
                 type="checkbox"
                 id="emitidos"
@@ -123,7 +125,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 onChange={() => handleCheckboxChange("emitidos")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none mt-1 border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
-              <label className="ml-2" htmlFor="emitidos">
+              <label className="ml-2 mt-1" htmlFor="emitidos">
                 Emitidos
               </label>
             </div>
