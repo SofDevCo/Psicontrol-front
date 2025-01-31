@@ -344,7 +344,11 @@ const PaymentControlCard = ({
                   >
                     <td className="text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2">
                       {item.month
-                        ? `${monthsInRangeShort[parseInt(item.month.split("-")[1], 10) - 1]}/${String(selectedYear).slice(-2)}`
+                        ? (() => {
+                            const [year, month] = item.month.split("-");
+                            const monthIndex = parseInt(month, 10) - 1;
+                            return `${monthsInRangeShort[monthIndex]}/${String(year).slice(-2)}`;
+                          })()
                         : "Mês inválido"}
                     </td>
                     <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
