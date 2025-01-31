@@ -7,57 +7,65 @@ const TopBar = ({ onMenuClick }) => {
   const location = useLocation();
 
   const getPageTitle = () => {
+    if (location.pathname.startsWith("/customers")) {
+      return {
+        title: "Pacientes",
+        margin: "",
+      };
+    }
+    
     switch (location.pathname) {
       case "/create-event-form":
         return { title: "Página Inicial", margin: "" };
-      // case "/create-event-form":
-      //   return { 
-      //     title: (
-      //       <>
-      //         <span className="hidden md:inline">Página Inicial</span>
-      //         <span className="block md:hidden">Página<br />Inicial</span>
-      //       </>
-      //     ), 
-      //     margin: "" 
-      //   };
+
       case "/customers":
         return {
           title: "Pacientes",
-          margin: ""
+          margin: "",
         }; // Nome simples, sem alteração
       case "/income":
         return {
           title: (
             <>
               <span className="hidden md:inline">Receitas e Despesas</span>
-              <span className="block md:hidden">Receitas<br />e Despesas</span>
+              <span className="block md:hidden">
+                Receitas
+                <br />e Despesas
+              </span>
             </>
           ),
-          margin: ""
+          margin: "",
         };
       case "/user":
         return {
           title: (
             <>
               <span className="hidden md:inline">Minhas Configurações</span>
-              <span className="block md:hidden">Minhas<br />Configurações</span>
+              <span className="block md:hidden">
+                Minhas
+                <br />
+                Configurações
+              </span>
             </>
           ),
-          margin: ""
+          margin: "",
         };
       default:
         return {
           title: (
             <>
               <span className="hidden md:inline">Página Não Encontrada</span>
-              <span className="block md:hidden">Página<br />Não Encontrada</span>
+              <span className="block md:hidden">
+                Página
+                <br />
+                Não Encontrada
+              </span>
             </>
           ),
-          margin: ""
+          margin: "",
         };
     }
   };
-
 
   const pageInfo = getPageTitle();
 

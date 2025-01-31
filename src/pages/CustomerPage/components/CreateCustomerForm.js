@@ -401,14 +401,14 @@ const CreateCustomerForm = ({
         </div>
 
         <div className="md:-space-y-1 space-y-4 md:-mt-5 h-full">
-          <div className="flex  items-center lg:space-x-5">
-            <h3 className="text-primaria text-sm md:text-[25px] md:mt-0 mt-4 font-medium font-ubuntu whitespace-nowrap">
+          <div className="flex  items-center  max-w-[600px] 2xl:gap-4">
+            <h3 className="text-primaria text-sm md:text-[25px] md:mt-0 mt-4 font-medium font-ubuntu ">
               Dados para Recibo
             </h3>
             <button
               type="button"
               onClick={handleUsePatientData}
-              className="hidden md:block w-[181px] h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight mr-20 whitespace-nowrap"
+              className="hidden md:block w-[181px] h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight whitespace-nowrap"
             >
               Usar dados do <br /> paciente
             </button>
@@ -521,7 +521,7 @@ const CreateCustomerForm = ({
               </div>
             ))}
           </div>
-          <div className="flex flex-col items-end mt-6">
+          <div className="flex flex-col items-end 2xl:items-start 2xl:ml-40  mt-6">
             <div className="flex gap-4 md:mt-[600px] mt-6">
               <button
                 type="button"

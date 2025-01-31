@@ -2,7 +2,14 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
-import { fetchCustomers } from "../../service/pagesService/pagesService";
+import {
+  fetchCustomers,
+  sendWhatsAppMessage,
+  sendEmailMessage,
+  confirmBillOfSale,
+  confirmPayment,
+  savePartialPayment
+} from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import { HamburguerIcon } from "../../icons/icons";
@@ -343,10 +350,6 @@ const DashBoard = () => {
     fetchBillingRecords(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
-  const openBillingModal = () => {
-    setIsBillingModalOpen(true);
-  };
-
   const closeBillingModal = () => {
     setIsBillingModalOpen(false);
   };
@@ -361,24 +364,15 @@ const DashBoard = () => {
 
     setLoading(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/message/send-whatsapp`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          selected_month: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const data = await sendWhatsAppMessage(
+      customerId,
+      selectedYear,
+      selectedMonth
     );
 
     setLoading(false);
-    if (response.ok) {
-      const data = await response.json();
+
+    if (data?.success) {
       const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
 
@@ -397,8 +391,7 @@ const DashBoard = () => {
         window.open(whatsappLink, "_blank");
       }
     } else {
-      const errorData = await response.json();
-      alert(`Erro: ${errorData.error}`);
+      alert(`Erro: ${data.error || "Erro ao enviar mensagem pelo WhatsApp"}`);
     }
   };
 
@@ -412,28 +405,18 @@ const DashBoard = () => {
 
     setLoading(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/message/send-email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          total_consultation_fee: customer.total_consultation_fee,
-          selected_month: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await sendEmailMessage(
+      customerId,
+      customer.total_consultation_fee,
+      selectedYear,
+      selectedMonth
     );
 
     setLoading(false);
 
-    if (response.ok) {
-      const data = await response.json();
-      const mailtoLink = data.mailtoLink;
-      setBillingMessage(data.user_message);
+    if (response) {
+      const mailtoLink = response.mailtoLink;
+      setBillingMessage(response.user_message);
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
@@ -444,8 +427,7 @@ const DashBoard = () => {
       alert("Abrindo cliente de email...");
       window.open(mailtoLink, "_blank");
     } else {
-      const errorData = await response.json();
-      alert(`Erro: ${errorData.error}`);
+      alert("Erro: Não foi possível enviar o email.");
     }
   };
 
@@ -476,8 +458,8 @@ const DashBoard = () => {
 
   const confirmDelete = () => {
     if (eventToDelete) {
-      handleDeleteUnmatchedEvent(eventToDelete); // Chama a função de deletar
-      setIsDeleteModalOpen(false); // Fecha o modal
+      handleDeleteUnmatchedEvent(eventToDelete);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -486,23 +468,14 @@ const DashBoard = () => {
 
     const { customer_id } = selectedPatientForPartialPayment;
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/update-partial-payment`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-          payment_amount: parseFloat(paymentAmount),
-        }),
-      }
+    const response = await savePartialPayment(
+      customer_id,
+      selectedYear,
+      selectedMonth,
+      paymentAmount
     );
 
-    if (response.ok) {
+    if (response) {
       showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
@@ -517,8 +490,6 @@ const DashBoard = () => {
       );
 
       setIsPartialPaymentModalOpen(false);
-    } else {
-      alert("Erro ao salvar pagamento parcial.");
     }
   };
 
@@ -533,22 +504,13 @@ const DashBoard = () => {
       return;
     }
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/confirm-payment`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: patient.customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await confirmPayment(
+      patient.customer_id,
+      selectedYear,
+      selectedMonth
     );
 
-    if (response.ok) {
+    if (response) {
       showConfirmPaymentToast();
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -557,29 +519,19 @@ const DashBoard = () => {
             : p
         )
       );
-    } else {
-      alert("Erro ao confirmar pagamento.");
     }
   };
+
   const handleConfirmBillOfSale = async (patient) => {
     if (!patient || !patient.customer_id) {
       alert("Paciente não encontrado.");
       return;
     }
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-        body: JSON.stringify({
-          customer_id: patient.customer_id,
-          month_and_year: `${selectedYear}-${selectedMonth}`,
-        }),
-      }
+    const response = await confirmBillOfSale(
+      patient.customer_id,
+      selectedYear,
+      selectedMonth
     );
 
     if (response) {
