@@ -508,10 +508,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-                ...patient,
-                payment_amount: parseFloat(paymentAmount),
-                payment_status: "parcial",
-              }
+              ...patient,
+              payment_amount: parseFloat(paymentAmount),
+              payment_status: "parcial",
+            }
             : patient
         )
       );
@@ -610,50 +610,96 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center gap-1 mt-32 ">
-            <div className="flex w-full justify-center gap-2">
-              <Months
-                onMonthChange={handleMonthChange}
-                onYearChange={handleYearChange}
-                selectedMonth={selectedMonth}
-                selectedYear={selectedYear}
-                className="z-50"
-              />
-              <CardDashBoard
-                title="Nº de Consultas"
-                value={totalConsultations}
-                isCurrency={false}
-              />
-              <CardDashBoard
-                title="Receita Total"
-                value={totalRevenue.toFixed(2).replace(".", ",")}
-                isCurrency={true}
-              />
-              <CardDashBoard
-                title="Receita líquida"
-                value={netRevenue.toFixed(2).replace(".", ",")}
-                isCurrency={true}
-              />
-              <CardDashBoard
-                title="Hora líquida"
-                value={netTime.toFixed(2).replace(".", ",")}
-                isCurrency={true}
-              />
-            </div>
+          <div className="flex justify-center gap-1 mt-32">
+            <div className="w-full">
+              <div className="md:hidden flex flex-col w-full">
+                <div className="w-full flex justify-center mb-8">
+                  <Months
+                    onMonthChange={handleMonthChange}
+                    onYearChange={handleYearChange}
+                    selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
+                    className="z-50"
+                  />
+                </div>
 
-            <div className="group md:mt-20 md:mb-2 mt-16 z-10">
-              <FilterStatusDashBoard
-                selectedStatus={selectedStatus}
-                onChangeStatus={setSelectedStatus}
-              />
-              <FilterIcon />
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  <CardDashBoard
+                    title="Nº de Consultas"
+                    value={totalConsultations}
+                    isCurrency={false}
+                  />
+                  <CardDashBoard
+                    title="Receita Total"
+                    value={totalRevenue.toFixed(2).replace(".", ",")}
+                    isCurrency={true}
+                  />
+                  <CardDashBoard
+                    title="Receita líquida"
+                    value={netRevenue.toFixed(2).replace(".", ",")}
+                    isCurrency={true}
+                  />
+                  <CardDashBoard
+                    title="Hora líquida"
+                    value={netTime.toFixed(2).replace(".", ",")}
+                    isCurrency={true}
+                  />
+                </div>
+
+                <div className="flex justify-end px-4 mb-4">
+                  <div className="group z-10">
+                    <FilterStatusDashBoard
+                      selectedStatus={selectedStatus}
+                      onChangeStatus={setSelectedStatus}
+                    />
+                    <FilterIcon />
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden md:flex justify-center gap-2">
+                <Months
+                  onMonthChange={handleMonthChange}
+                  onYearChange={handleYearChange}
+                  selectedMonth={selectedMonth}
+                  selectedYear={selectedYear}
+                  className="z-50"
+                />
+                <CardDashBoard
+                  title="Nº de Consultas"
+                  value={totalConsultations}
+                  isCurrency={false}
+                />
+                <CardDashBoard
+                  title="Receita Total"
+                  value={totalRevenue.toFixed(2).replace(".", ",")}
+                  isCurrency={true}
+                />
+                <CardDashBoard
+                  title="Receita líquida"
+                  value={netRevenue.toFixed(2).replace(".", ",")}
+                  isCurrency={true}
+                />
+                <CardDashBoard
+                  title="Hora líquida"
+                  value={netTime.toFixed(2).replace(".", ",")}
+                  isCurrency={true}
+                />
+
+                <div className="group md:mt-20 md:mb-2 z-10">
+                  <FilterStatusDashBoard
+                    selectedStatus={selectedStatus}
+                    onChangeStatus={setSelectedStatus}
+                  />
+                  <FilterIcon />
+                </div>
+              </div>
             </div>
           </div>
 
           <div
-            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
-              isTableExpanded ? "h-auto" : "min-h-screen"
-            }`}
+            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
+              }`}
           >
             <div className="overflow-x-auto  ">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
@@ -715,10 +761,10 @@ const DashBoard = () => {
                         <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
                             : "-"}
                         </td>
                         <td className="relative text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 group">
@@ -727,10 +773,10 @@ const DashBoard = () => {
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                  .split(", ")
-                                  .map(Number)
-                                  .sort((a, b) => a - b)
-                                  .join(", ")
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
@@ -825,11 +871,10 @@ const DashBoard = () => {
                       >
                         <button
                           onClick={toggleTableSize}
-                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${
-                            isTableExpanded
-                              ? "rotate-0 bottom-0"
-                              : "rotate-180 bottom-5"
-                          }`}
+                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
+                            ? "rotate-0 bottom-0"
+                            : "rotate-180 bottom-5"
+                            }`}
                         >
                           <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
