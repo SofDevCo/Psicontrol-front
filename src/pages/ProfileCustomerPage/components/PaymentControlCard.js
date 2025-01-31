@@ -4,6 +4,7 @@ import {
   VerifyGreenIcon,
   CrossIcon,
   FilterIcon,
+  ArrowDownIcon,
 } from "../../DashboardPage/components/IconsDashBoard";
 import {
   sendEmailMessage,
@@ -26,6 +27,7 @@ const PaymentControlCard = ({
   updateBillingRecords,
 }) => {
   const [isDropdownOpenPatients, setIsDropdownOpenPatients] = useState(null);
+  const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] =
     useState(false);
   const [
@@ -57,10 +59,9 @@ const PaymentControlCard = ({
     "Dez",
   ];
 
-
   const outSideClickRef = useRef(null);
 
-  useOutsideClick(outSideClickRef, () =>  setIsDropdownOpenPatients(false));
+  useOutsideClick(outSideClickRef, () => setIsDropdownOpenPatients(false));
 
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
@@ -268,6 +269,10 @@ const PaymentControlCard = ({
     filteredBillingRecords();
   }, [selectedStatus, billingRecords]);
 
+  const toggleTableSize = () => {
+    setIsTableExpanded(!isTableExpanded);
+  };
+
   if (!billingRecords || billingRecords.length === 0) {
     return (
       <p className="text-center text-texto2 italic py-4">
@@ -278,7 +283,7 @@ const PaymentControlCard = ({
 
   return (
     <>
-      <div className="flex  md:mt-10 md:auto md:mx-auto justify-center box-border w-full h-[443px] md:rounded-B15 rounded-B10 md:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
+      <div className="flex  md:mt-10 md:auto md:mx-auto justify-center box-border w-full h-auto md:rounded-B15 rounded-B10 md:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
         <div className="">
           <div className="flex justify-between items-center p-6">
             <p className="text-F25 text-primaria font-medium font-ubuntu">
@@ -293,7 +298,7 @@ const PaymentControlCard = ({
               <FilterIcon />
             </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-1 text-left overflow-x-auto ">
+          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto ">
             <thead>
               <tr>
                 <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
@@ -399,8 +404,9 @@ const PaymentControlCard = ({
 
                     {isDropdownOpenPatients === index && (
                       <div
-                      ref={outSideClickRef}
-                      className="absolute -mt-23 ml-40 shadow-lg rounded z-20">
+                        ref={outSideClickRef}
+                        className="absolute -mt-23 ml-40 shadow-lg rounded z-20"
+                      >
                         <DropDownDashActions
                           onOpenModal={() => handleOpenModalForBilling(item)}
                           onPartialPayment={() =>
@@ -417,6 +423,27 @@ const PaymentControlCard = ({
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="8" className="relative py-3">
+                  <div
+                    className={`flex justify-center items-center relative w-full transition-all duration-300 md:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
+                  >
+                    <button
+                      onClick={toggleTableSize}
+                      className={`absolute transform  cursor-pointer transition-transform duration-300 ${
+                        isTableExpanded
+                          ? "rotate-0 bottom-0"
+                          : "rotate-180 bottom-5"
+                      }`}
+                    >
+                      <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
+                      <ArrowDownIcon />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
         {isBillingModalOpen && selectedPatient && (
