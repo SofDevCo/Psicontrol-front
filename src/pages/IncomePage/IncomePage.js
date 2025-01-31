@@ -495,7 +495,7 @@ const IncomePage = () => {
                 </div>
                 <button
                   onClick={() => openModal(revenue.id, "revenue")}
-                  className="active:opacity-50 text-blue-500 hover:text-blue-700"
+                  className="ml-2 w-11 h-11 flex items-center justify-center active:opacity-50 text-blue-500 hover:text-blue-700"
                 >
                   <Trash />
                 </button>
@@ -560,7 +560,7 @@ const IncomePage = () => {
                 </div>
                 <button
                   onClick={() => openModal(expense.id, "expense")}
-                  className="active:opacity-50 text-blue-500 hover:text-blue-700"
+                  className="ml-2 w-11 h-11 flex items-center justify-center active:opacity-50 text-blue-500 hover:text-blue-700"
                 >
                   <Trash />
                 </button>
