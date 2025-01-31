@@ -272,14 +272,14 @@ const PaymentControlCard = ({
 
   return (
     <>
-      <div className="flex  md:mt-10 md:auto md:mx-auto justify-center box-border w-full h-[443px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ">
-        <div className="overflow-x-auto ">
+      <div className="flex  md:mt-10 md:auto md:mx-auto justify-center box-border w-full h-[443px] md:rounded-B15 rounded-B10 md:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
+        <div className="">
           <div className="flex justify-between items-center p-6">
             <p className="text-F25 text-primaria font-medium font-ubuntu">
               Controle de pagamento
             </p>
 
-            <div className="group flex items-center gap-2">
+            <div className="group relative flex items-center gap-2">
               <FilterStatusProfilePage
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -287,7 +287,7 @@ const PaymentControlCard = ({
               <FilterIcon />
             </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-1 text-left ">
+          <table className="table-fixed w-full bg-bg1 mt-1 text-left overflow-x-auto ">
             <thead>
               <tr>
                 <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
@@ -392,7 +392,7 @@ const PaymentControlCard = ({
                     </button>
 
                     {isDropdownOpenPatients === index && (
-                      <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                      <div className="fixed -mt-28 -ml-20 shadow-lg rounded z-20">
                         <DropDownDashActions
                           onOpenModal={() => handleOpenModalForBilling(item)}
                           onPartialPayment={() =>

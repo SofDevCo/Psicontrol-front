@@ -26,14 +26,14 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
         <button
           type="button"
           onClick={toggleDropdown}
-          className="group md:text-left text-primaria active:text-primaria/50 w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] md:tracking-[0.15px] tracking-tight  leading-normal underline "
+          className="group md:text-left text-primaria active:text-primaria/50 w-[85px] md:text-sm text-[10px] font-medium font-['Ubuntu-Medium', Helvetica] md:tracking-[0.15px] tracking-tight  leading-normal underline  "
         >
           Filtrar dados
         </button>
         {isOpen && (
           <div
             ref={filterRef}
-            className="fixed -ml-9  w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 -mt-20 "
+            className="absolute top-6 -right-1 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-md shadow-md p-2 z-[9999] "
           >
             <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
               Pagamentos
