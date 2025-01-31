@@ -8,7 +8,7 @@ const DropDownDashActions = ({
   onConfirmedBillOfSale
 }) => {
   return (
-    <nav className="absolute right-0 w-[151px] h-[131px] md:w-[234px] md:h-[204px] md:mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-l-md">
+    <nav className="absolute right-0 w-[151px] h-[131px] md:w-[234px] md:h-[204px] md:mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-md">
       <ul className="w-[210px] h-auto mx-auto md:mt-8">
         <li>
           <button
