@@ -273,46 +273,48 @@ const PaymentControlCard = ({
   return (
     <>
       <div className="flex  md:mt-10 md:auto md:mx-auto justify-center box-border w-full h-[443px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ">
-        <div className="overflow-x-auto  ">
-          <p className="text-F25 text-primaria font-medium font-ubuntu">
-            Controle de pagamento
-          </p>
+        <div className="overflow-x-auto ">
+          <div className="flex justify-between items-center p-6">
+            <p className="text-F25 text-primaria font-medium font-ubuntu">
+              Controle de pagamento
+            </p>
 
-          <div className="group flex justify-end items-end mr-14 md:mt-0 md:mb-2 mt-16 z-[40]">
-            <FilterStatusProfilePage
-              selectedStatus={selectedStatus}
-              onChangeStatus={setSelectedStatus}
-            />
-            <FilterIcon />
+            <div className="group flex items-center gap-2">
+              <FilterStatusProfilePage
+                selectedStatus={selectedStatus}
+                onChangeStatus={setSelectedStatus}
+              />
+              <FilterIcon />
+            </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-5 text-left">
+          <table className="table-fixed w-full bg-bg1 mt-1 text-left ">
             <thead>
               <tr>
-                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                   Mês
                 </th>
-                <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                   Valor Consulta
                 </th>
-                <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                   Dias
                 </th>
-                <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                   Nº de consultas
                 </th>
-                <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
                   Total
                 </th>
-                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                   Cobrança
                 </th>
-                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
                   Pagamento
                 </th>
-                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
                   NF
                 </th>
-                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-texto1 md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
                   Ações
                 </th>
               </tr>

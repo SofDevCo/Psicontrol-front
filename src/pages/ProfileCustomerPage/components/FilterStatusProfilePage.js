@@ -22,7 +22,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
 
   return (
     <div className="relative flex items-center z-30">
-      <div className="flex mr-16 gap-2 md:mt-0">
+      <div className="flex mr-14 mb-5 gap-2 md:mt-0">
         <button
           type="button"
           onClick={toggleDropdown}
@@ -33,7 +33,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
         {isOpen && (
           <div
             ref={filterRef}
-            className="fixed -ml-9 w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 mt-5 "
+            className="fixed -ml-9  w-[151px] h-[271px] md:w-[211px] md:h-[355px] bg-clara4 border border-cinza6 rounded-l-md shadow-md p-2 -mt-20 "
           >
             <p className="md:w-[93px] text-texto2 md:text-[17px] text-[10px] font-normal font-['Open Sans'] tracking-tight underline">
               Pagamentos
