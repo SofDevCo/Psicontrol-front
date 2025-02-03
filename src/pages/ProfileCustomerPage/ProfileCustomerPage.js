@@ -41,6 +41,7 @@ const ProfileCustomerPage = () => {
         return;
       }
       const data = await response.json();
+      console.log("Dados do paciente:", data);
       setCustomer(data);
       setSavedMessages(
         Array.isArray(data.customer_personal_message)
@@ -49,6 +50,7 @@ const ProfileCustomerPage = () => {
       );
       setBillingRecords(data.billingRecords || []);
     };
+    
 
     handleFetchCustomerProfile();
   }, [customerId]);
@@ -143,7 +145,8 @@ const ProfileCustomerPage = () => {
       const profileResponse = await fetchCustomerProfile(customerId);
       if (profileResponse.ok) {
         const updatedProfile = await profileResponse.json();
-        setCustomer(await updatedProfile.json());
+        console.log("Perfil atualizado:", updatedProfile);
+        setCustomer(updatedProfile);
       }
       setIsEditing(false);
     } else {
@@ -152,13 +155,7 @@ const ProfileCustomerPage = () => {
     }
   };
 
-  const handleUsePatientData = () => {
-    setCustomer((prev) => ({
-      ...prev,
-      alternative_name: prev.customer_name,
-      alternative_cpf_cnpj: prev.customer_cpf_cnpj,
-    }));
-  };
+
   const openModal = () => {
     setIsEditing(true);
   };
@@ -316,25 +313,8 @@ const ProfileCustomerPage = () => {
         </div>
 
         {isEditing && (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM bg-opacity-30 backdrop-blur-[6px]  p-4">
-            <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-60 mb-32">
-              <div className="flex flex-wrap items-center mt-[20px] gap-4">
-                <h2 className="ml-6 text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
-                  Editar Paciente
-                </h2>
-                <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">
-                  Dados para recibo
-                </h3>
-                <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
-                  <button
-                    onClick={handleUsePatientData}
-                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
-                  >
-                    Usar dados do <br /> paciente
-                  </button>
-                </div>
-              </div>
-
+          <div className="fixed inset-0 flex justify-center items-start bg-[#82d4e3] backdrop-blur-[6px] z-30 overflow-y-auto">
+            <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
               <CreateCustomerForm
                 onClose={handleCancelEdit}
                 onSubmit={() => handleEditCustomer(customer)}
