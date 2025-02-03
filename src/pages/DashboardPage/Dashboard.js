@@ -562,7 +562,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center gap-1 mt-32">
+          <div className="flex justify-center gap-1 mt-16 md:mt-32">
             <div className="w-full">
               <div className="md:hidden flex flex-col w-full">
                 <div className="w-full flex justify-center mb-8">
@@ -598,7 +598,7 @@ const DashBoard = () => {
                   />
                 </div>
 
-                <div className="flex justify-end px-4 mb-4">
+                <div className="flex justify-end pr-0 pl-4 mb-1">
                   <div className="group z-10">
                     <FilterStatusDashBoard
                       selectedStatus={selectedStatus}
