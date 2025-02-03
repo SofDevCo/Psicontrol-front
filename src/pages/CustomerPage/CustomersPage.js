@@ -93,13 +93,6 @@ const CustomersPage = () => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
 
-  const handleUsePatientData = () => {
-    setCustomer((prev) => ({
-      ...prev,
-      alternative_name: prev.customer_name,
-      alternative_cpf_cnpj: prev.customer_cpf_cnpj,
-    }));
-  };
 
   const handleDeleteConfirmation = (customerId) => {
     setCustomerToDelete(customerId);
