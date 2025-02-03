@@ -165,7 +165,7 @@ const ProfileCustomerPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-8 mt-36">
+    <div className="container mx-auto px-8 mt-24">
       <div className="flex justify-center items-start gap-4">
         <div className="relative md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4">
           <button
