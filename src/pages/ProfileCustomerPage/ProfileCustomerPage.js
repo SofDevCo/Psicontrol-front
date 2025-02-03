@@ -273,7 +273,7 @@ const ProfileCustomerPage = () => {
                   setCustomerMessage((prevMessage) => `${prevMessage}\n`);
                 }
               }}
-              className="w-full h-[333px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
+              className="w-full h-[304px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
               placeholder="Clique aqui para adicionar anotações."
               autoFocus
               onBlur={(e) => {
@@ -309,10 +309,9 @@ const ProfileCustomerPage = () => {
             <button
               id="salvar-btn"
               type="submit"
-              className="flex justify-between items-end md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold mt-2"
+              className="flex justify-end items-start md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold mt-2 ml-auto"
               onClick={() => {
                 handleSaveMessage(customerMessage);
-                console.log("salvando: ", handleSaveMessage);
                 setIsEditingMessage(false);
               }}
             >
