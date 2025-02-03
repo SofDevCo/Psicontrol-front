@@ -309,8 +309,8 @@ const ProfileCustomerPage = () => {
         </div>
 
         {isEditing && (
-          <div className="fixed inset-0 flex justify-center items-start bg-[#82d4e3] backdrop-blur-[6px] z-30 overflow-y-auto">
-            <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+          <div className="fixed inset-0 flex justify-center items-start bg-[#33b8d1]/30 backdrop-blur-[6px] z-30 overflow-y-auto">
+            <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mt-32 mb-8 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
               <CreateCustomerForm
                 onClose={handleCancelEdit}
                 onSubmit={() => handleEditCustomer(customer)}
