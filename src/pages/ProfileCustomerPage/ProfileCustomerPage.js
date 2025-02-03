@@ -41,7 +41,6 @@ const ProfileCustomerPage = () => {
         return;
       }
       const data = await response.json();
-      console.log("Dados do paciente:", data);
       setCustomer(data);
       setSavedMessages(
         Array.isArray(data.customer_personal_message)
@@ -50,7 +49,6 @@ const ProfileCustomerPage = () => {
       );
       setBillingRecords(data.billingRecords || []);
     };
-    
 
     handleFetchCustomerProfile();
   }, [customerId]);
@@ -145,7 +143,6 @@ const ProfileCustomerPage = () => {
       const profileResponse = await fetchCustomerProfile(customerId);
       if (profileResponse.ok) {
         const updatedProfile = await profileResponse.json();
-        console.log("Perfil atualizado:", updatedProfile);
         setCustomer(updatedProfile);
       }
       setIsEditing(false);
@@ -154,7 +151,6 @@ const ProfileCustomerPage = () => {
       showErrorToast(errorData.message || "Erro ao atualizar o cliente.");
     }
   };
-
 
   const openModal = () => {
     setIsEditing(true);
