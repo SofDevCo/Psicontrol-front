@@ -268,10 +268,7 @@ const ProfileCustomerPage = () => {
               value={customerMessage}
               onChange={(e) => setCustomerMessage(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSaveMessage(customerMessage);
-                } else if (e.key === "Enter" && e.shiftKey) {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   setCustomerMessage((prevMessage) => `${prevMessage}\n`);
                 }
@@ -279,10 +276,12 @@ const ProfileCustomerPage = () => {
               className="w-full h-[333px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
               placeholder="Clique aqui para adicionar anotações."
               autoFocus
-              onBlur={() => {
-                setIsEditingMessage(false);
-                setCustomerMessage("");
-                setEditingIndex(null);
+              onBlur={(e) => {
+                if (!e.relatedTarget || e.relatedTarget.id !== "salvar-btn") {
+                  setIsEditingMessage(false);
+                  setCustomerMessage("");
+                  setEditingIndex(null);
+                }
               }}
             />
           ) : (
@@ -305,6 +304,20 @@ const ProfileCustomerPage = () => {
                 </li>
               )}
             </ul>
+          )}
+          {isEditingMessage && (
+            <button
+              id="salvar-btn"
+              type="submit"
+              className="flex justify-between items-end md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold mt-2"
+              onClick={() => {
+                handleSaveMessage(customerMessage);
+                console.log("salvando: ", handleSaveMessage);
+                setIsEditingMessage(false);
+              }}
+            >
+              Salvar
+            </button>
           )}
         </div>
 
