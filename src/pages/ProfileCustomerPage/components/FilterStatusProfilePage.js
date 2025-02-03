@@ -21,7 +21,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
   };
 
   return (
-    <div className="relative flex items-center z-30">
+    <div className="relative flex items-center z-20">
       <div className="flex mr-14 mb-5 gap-2 md:mt-0">
         <button
           type="button"
