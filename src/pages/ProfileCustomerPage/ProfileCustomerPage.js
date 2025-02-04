@@ -252,7 +252,7 @@ const ProfileCustomerPage = () => {
         </div>
 
         <div
-          className=" md:w-[calc(47vw)] max-w-[95%] w-[calc(90vw)] h-[449px] bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4"
+          className=" md:w-[calc(47vw)] max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4"
           onClick={() => {
             if (!isEditingMessage) {
               setCustomerMessage(savedMessages.join("\n"));
@@ -261,7 +261,7 @@ const ProfileCustomerPage = () => {
             }
           }}
         >
-          <h3 className="text-primaria text-F25 font-medium font-['Ubuntu']">
+          <h3 className="text-primaria md:text-F25 text-sm font-medium font-['Ubuntu']">
             Anotações
           </h3>
 
@@ -275,7 +275,7 @@ const ProfileCustomerPage = () => {
                   setCustomerMessage((prevMessage) => `${prevMessage}\n`);
                 }
               }}
-              className="w-full h-[304px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
+              className="w-full h-[304px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl md:text-F17 text-xs font-normal text-texto2"
               placeholder="Clique aqui para adicionar anotações."
               autoFocus
               onBlur={(e) => {
@@ -287,7 +287,7 @@ const ProfileCustomerPage = () => {
               }}
             />
           ) : (
-            <ul className="mt-4 list-disc list-inside text-F17 text-texto1">
+            <ul className="mt-4 list-disc list-inside md:text-F17 text-sm text-texto1">
               {savedMessages.map((msg, index) => (
                 <li
                   key={index}
