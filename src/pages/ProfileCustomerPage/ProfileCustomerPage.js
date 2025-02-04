@@ -167,7 +167,7 @@ const ProfileCustomerPage = () => {
   return (
     <div className="container mx-auto px-8 mt-24 ">
       <div className="flex md:flex-nowrap flex-wrap  justify-center items-start gap-4">
-        <div className="relative md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-[15px] text-F15 mt-4">
+        <div className="relative md:w-[calc(47vw)] max-w-[95%]  w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-[15px] text-F15 mt-4">
           <button
             onClick={() => toggleDropdown(customer.customer_id)}
             className="absolute top-4 right-4 bg-bg1 hover:bg-bg1"
@@ -185,62 +185,64 @@ const ProfileCustomerPage = () => {
               onArchive={handleArchviveCustomer}
             />
           )}
-          <h2 className="text-F25 font-medium font-['Ubuntu'] mb-4 text-primaria ml-5">
+          <h2 className="md:text-F25 text-sm font-medium mb-4 text-primaria md:ml-5">
             Conta do paciente
           </h2>
-          <div className="">
-            <div className="ml-5">
+          <div>
+            <div className="md:ml-5">
               <div className="flex items-center max-w-auto">
-                <div className="bg-primaria text-white h-10 w-10 rounded-full flex items-center justify-center transform translate-y-4">
+                <div className="bg-primaria text-white md:h-10 h-6 md:w-10 w-6 md:text-F20 text-xs rounded-full flex items-center justify-center transform translate-y-4">
                   {customer && customer.customer_name
                     ? customer.customer_name.charAt(0)
                     : ""}
                 </div>
-                <h3 className="ml-6 text-F20 font-medium font-['Ubuntu'] tracking-normal">
+                <h3 className="ml-6 md:text-F20 text-xs font-medium tracking-normal">
                   {customer.customer_name}
                 </h3>
               </div>
-              <p className="mt-4 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-4 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>CPF/CNPJ:</strong>
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking- ">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking- ">
                   {" "}
                   {customer.customer_cpf_cnpj || "Não informado"}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>Idade:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
                   {customer.customer_dob && customer.age
                     ? `${customer.age} anos`
                     : "Não informado"}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>E-mail:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
                   {customer.customer_email || "Não informado"}{" "}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong className="texto">Telefone:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.customer_phone || "Não informado"}{" "}
                 </label>
               </p>
             </div>
-            <div className="mt-5 ml-20">
-              <h3 className="text-F20 font-bold">Dados para recibo</h3>
-              <p className="mt-4 text-texto1 text-F17 ">
+            <div className="md:mt- mt-10 md:ml-20 ml-12">
+              <h3 className="md:text-F20 text-xs font-bold">
+                Dados para recibo
+              </h3>
+              <p className="md:mt-4 mt-2 text-texto1 md:text-F17 text-sm">
                 <strong>Nome:</strong>{" "}
-                <label className="text-texto2 text-17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.alternative_name || "Não informado"}{" "}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                 <strong>CPF/CNPJ:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.alternative_cpf_cnpj || "Não informado"}{" "}
                 </label>
