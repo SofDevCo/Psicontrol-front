@@ -166,8 +166,8 @@ const ProfileCustomerPage = () => {
 
   return (
     <div className="container mx-auto px-8 mt-24 ">
-      <div className="flex md:flex-nowrap flex-wrap  justify-center items-start gap-4">
-        <div className="relative md:w-[calc(47vw)] max-w-[95%]  w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-[15px] text-F15 mt-4">
+      <div className="flex md:flex-nowrap flex-wrap  justify-center items-start gap-6">
+        <div className="relative md:md:w-[48%] max-w-[95%]  w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-[15px] text-F15 mt-4">
           <button
             onClick={() => toggleDropdown(customer.customer_id)}
             className="absolute top-4 right-4 bg-bg1 hover:bg-bg1"
@@ -252,7 +252,7 @@ const ProfileCustomerPage = () => {
         </div>
 
         <div
-          className=" md:w-[calc(47vw)] max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4"
+          className="relative md:md:w-[48%] mx-auto px-4 max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4"
           onClick={() => {
             if (!isEditingMessage) {
               setCustomerMessage(savedMessages.join("\n"));
