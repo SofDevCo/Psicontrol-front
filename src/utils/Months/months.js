@@ -70,12 +70,12 @@ export const Months = ({
     <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 z-30">
       <button
         onClick={toggleModal}
-        className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-between items-center"
+        className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-center items-center"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
           <span className="text-texto4 md:text-[21px] text-[15px] md:font-medium md:font-['Ubuntu'] font-semibold  font-['Inter'] md:tracking-tight tracking-wider">
-            <span className="block md:hidden">{`${monthsInRangeShort[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
+            <span className="block md:hidden">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
             <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
         </div>
