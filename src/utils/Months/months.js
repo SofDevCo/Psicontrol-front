@@ -74,7 +74,7 @@ export const Months = ({
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
-          <span className="text-texto4 md:text-[21px] text-[15px] md:font-medium md:font-['Ubuntu'] font-semibold  font-['Inter'] md:tracking-tight tracking-wider">
+          <span className="text-neutral-100 text-sm md:text-lg font-semibold font-['Inter'] tracking-wider">
             <span className="block md:hidden">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
             <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
