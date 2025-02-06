@@ -198,6 +198,7 @@ const ProfileCustomerPage = () => {
                 </div>
                 <h3 className="ml-6 md:text-F20 text-xs font-medium tracking-normal">
                   {customer.customer_name}
+                  {customer.customer_second_name}
                 </h3>
               </div>
               <p className="mt-4 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
@@ -252,7 +253,7 @@ const ProfileCustomerPage = () => {
         </div>
 
         <div
-          className="relative md:md:w-[48%] mx-auto px-4 max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4"
+          className="relative md:md:w-[48%] mx-auto px-4 max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4 overflow-auto"
           onClick={() => {
             if (!isEditingMessage) {
               setCustomerMessage(savedMessages.join("\n"));
