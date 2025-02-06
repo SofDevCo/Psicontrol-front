@@ -340,7 +340,7 @@ const PaymentControlCard = ({
             </thead>
             <tbody>
               {filteredBillingRecords
-                .sort((a, b) => new Date(a.month) - new Date(b.month))
+                .sort((a, b) => new Date(b.month) - new Date(a.month))
                 .slice(0, isTableExpanded ? filteredBillingRecords.length : 4)
                 .map((item, index) => (
                   <tr
