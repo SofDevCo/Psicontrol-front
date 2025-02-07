@@ -1,7 +1,7 @@
 const FilterIcon = () => {
     return (
       <svg
-        className="w-[15px] h-[15px] md:w-[25px] md:h-[22px] top-[3px] md:-ml-14 md:-mt-2 -ml-7 -mt-2 "
+        className="w-[15px] h-[15px] md:w-[25px] md:h-[22px] top-[3px] md:-ml-14 -ml-7 mt-1 md:mt-1 "
         viewBox="0 0 25 25"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
