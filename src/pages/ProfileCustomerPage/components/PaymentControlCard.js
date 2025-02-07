@@ -291,7 +291,7 @@ const PaymentControlCard = ({
 
   return (
     <>
-      <div className="flex md:mt-10 mt-5 ml-2 md:auto md:mx-auto justify-between box-border md:w-full w-[calc(90vw-40px)] h-auto mb-8 md:rounded-B15 rounded-B10 md:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
+      <div className="flex md:mt-10 mt-5 ml-2 tablet:ml-9 md:auto md:mx-auto justify-between box-border md:w-full w-[calc(90vw-40px)] tablet:w-[89.9%] h-auto mb-8 md:rounded-B15 rounded-B10 md:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
         <div>
           <div className="flex justify-between items-center p-6">
             <p className="md:text-F25 text-sm text-primaria font-medium font-ubuntu">
