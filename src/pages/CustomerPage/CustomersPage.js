@@ -93,7 +93,6 @@ const CustomersPage = () => {
     setActiveDropdown((prev) => (prev === customer_id ? null : customer_id));
   };
 
-
   const handleDeleteConfirmation = (customerId) => {
     setCustomerToDelete(customerId);
     setIsConfirmModalOpen(true);
@@ -176,14 +175,14 @@ const CustomersPage = () => {
         </div>
       )}
       <div className="relative w-full items-center pl-7 pt-6">
-        <div className="relative flex items-center md:gap-4 gap-1 w-full md:w-auto">
+        <div className="relative flex items-center md:gap-4 gap-1 w-full md:w-auto tablet:w-auto">
           <div className="relative">
             <input
               type="text"
               placeholder={searchTerm ? "" : "Pesquisar pacientes"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`h-[35px] md:h-[56px] md:w-[360px] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs md:placeholder:text-base bg-clara3 md:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+              className={`h-[35px] md:h-[56px] md:w-[360px] tablet:w-[calc(95vw-300px)] sm:w-[calc(95vw-260px)] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs md:placeholder:text-base bg-clara3 md:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
             />
             <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
               {searchTerm.length > 0 ? (
@@ -245,19 +244,23 @@ const CustomersPage = () => {
           </div>
           <button
             onClick={handleAddPatient}
-            className="flex md:h-[41px] w-auto md:w-[200px] items-center justify-center md:rounded-[10px] md:border-2 md:border-solid md:border-[#0082BA] md:bg-bg1 text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria md:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex md:h-[41px] tablet:h-[41px] w-auto md:w-[200px] tablet:w-[100px] tablet:ml-3 items-center justify-center md:rounded-[10px] tablet:rounded-[10px] md:border-2 tablet:border-2 md:border-solid tablet:border-solid md:border-primaria tablet:border-primaria md:bg-bg1 tablet:bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria md:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
-            <span className="hidden md:inline">Adicionar paciente</span>
+            <span className="hidden sm:hidden md:inline tablet:inline ">
+              Adicionar paciente
+            </span>
           </button>
 
-          <button className="group whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+          <button className="group tablet:ml-3 whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
             <Link
               to="/archived"
-              className="group flex items-center gap-2 w-auto bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
+              className="group flex items-center gap-2  w-auto tablet:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
             >
               <ArchiveIcon />
-              <span className="hidden md:inline">Pacientes arquivados</span>
+              <span className="hidden md:inline tablet:inline">
+                Pacientes arquivados
+              </span>
             </Link>
           </button>
         </div>
