@@ -434,7 +434,7 @@ const PaymentControlCard = ({
                       {isDropdownOpenPatients === index && (
                         <div
                           ref={outSideClickRef}
-                          className="absolute -mt-23 ml-40 shadow-lg rounded z-20"
+                          className="absolute -mt-23 ml-10 shadow-lg rounded z-20"
                         >
                           <DropDownDashActions
                             onOpenModal={() => handleOpenModalForBilling(item)}
