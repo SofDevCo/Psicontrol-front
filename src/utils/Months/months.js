@@ -70,7 +70,7 @@ export const Months = ({
     <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 z-30">
       <button
         onClick={toggleModal}
-        className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-between items-center"
+        className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-center items-center"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
