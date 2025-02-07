@@ -19,12 +19,12 @@ module.exports = {
         texto3: "#808080",
         texto4: "#F5F5F5",
         d_medio3: "#63BDD1",
-        aviso:"#ffd200"
+        aviso: "#ffd200",
       },
       boxShadow: {
         default: "0px 4px 4px rgba(0, 0, 0, 0.2)",
-        innerShadow:"inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
-        dropShadow:"0px 4px 4px rgba(0, 0, 0, 0.2)",
+        innerShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
+        dropShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
       },
       dropShadow: {
         addShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -48,13 +48,18 @@ module.exports = {
         F21: "21px",
         F25: "25px",
       },
-      fontFamily:{
+      fontFamily: {
         ubuntu: ["ubuntu-regular", "helvetica"],
-        openSans: ["Open_sans-regular","helvetica" ]
+        openSans: ["Open_sans-regular", "helvetica"],
       },
-      borderRadius:{
+      borderRadius: {
         B10: "10px",
         B15: "15px",
+      },
+      screens: {
+        sm: "480px",
+        tablet: "768px",
+        md: "1024px",
       },
     },
   },

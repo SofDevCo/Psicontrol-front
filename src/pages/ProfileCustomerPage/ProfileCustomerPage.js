@@ -143,7 +143,7 @@ const ProfileCustomerPage = () => {
       const profileResponse = await fetchCustomerProfile(customerId);
       if (profileResponse.ok) {
         const updatedProfile = await profileResponse.json();
-        setCustomer(await updatedProfile.json());
+        setCustomer(updatedProfile);
       }
       setIsEditing(false);
     } else {
@@ -152,13 +152,6 @@ const ProfileCustomerPage = () => {
     }
   };
 
-  const handleUsePatientData = () => {
-    setCustomer((prev) => ({
-      ...prev,
-      alternative_name: prev.customer_name,
-      alternative_cpf_cnpj: prev.customer_cpf_cnpj,
-    }));
-  };
   const openModal = () => {
     setIsEditing(true);
   };
@@ -172,9 +165,9 @@ const ProfileCustomerPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-8 mt-36">
-      <div className="flex justify-center items-start gap-4">
-        <div className="relative md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[15px] text-F15 mt-4">
+    <div className="container mx-auto px-8 mt-24 ">
+      <div className="flex md:flex-nowrap flex-wrap  justify-center items-start gap-6">
+        <div className="relative md:md:w-[48%] tablet:w-[90%] max-w-[95%]  w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-[15px] text-F15 mt-4">
           <button
             onClick={() => toggleDropdown(customer.customer_id)}
             className="absolute top-4 right-4 bg-bg1 hover:bg-bg1"
@@ -192,62 +185,65 @@ const ProfileCustomerPage = () => {
               onArchive={handleArchviveCustomer}
             />
           )}
-          <h2 className="text-F25 font-medium font-['Ubuntu'] mb-4 text-primaria ml-5">
+          <h2 className="md:text-F25 text-sm font-medium mb-4 text-primaria md:ml-5">
             Conta do paciente
           </h2>
-          <div className="">
-            <div className="ml-5">
+          <div>
+            <div className="md:ml-5">
               <div className="flex items-center max-w-auto">
-                <div className="bg-primaria text-white h-10 w-10 rounded-full flex items-center justify-center transform translate-y-4">
+                <div className="bg-primaria text-white md:h-10 h-6 md:w-10 w-6 md:text-F20 text-xs rounded-full flex items-center justify-center transform translate-y-4">
                   {customer && customer.customer_name
                     ? customer.customer_name.charAt(0)
                     : ""}
                 </div>
-                <h3 className="ml-6 text-F20 font-medium font-['Ubuntu'] tracking-normal">
+                <h3 className="ml-6 md:text-F20 text-xs font-medium tracking-normal">
                   {customer.customer_name}
+                  {customer.customer_second_name}
                 </h3>
               </div>
-              <p className="mt-4 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-4 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>CPF/CNPJ:</strong>
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking- ">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking- ">
                   {" "}
                   {customer.customer_cpf_cnpj || "Não informado"}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>Idade:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
                   {customer.customer_dob && customer.age
                     ? `${customer.age} anos`
                     : "Não informado"}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong>E-mail:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
                   {customer.customer_email || "Não informado"}{" "}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-17 font-normal font-['Open Sans'] tracking-normal ml-16">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal md:ml-16 ml-12">
                 <strong className="texto">Telefone:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.customer_phone || "Não informado"}{" "}
                 </label>
               </p>
             </div>
-            <div className="mt-5 ml-20">
-              <h3 className="text-F20 font-bold">Dados para recibo</h3>
-              <p className="mt-4 text-texto1 text-F17 ">
+            <div className="md:mt- mt-10 md:ml-20 ml-12">
+              <h3 className="md:text-F20 text-xs font-bold">
+                Dados para recibo
+              </h3>
+              <p className="md:mt-4 mt-2 text-texto1 md:text-F17 text-sm">
                 <strong>Nome:</strong>{" "}
-                <label className="text-texto2 text-17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.alternative_name || "Não informado"}{" "}
                 </label>
               </p>
-              <p className="mt-2 text-texto1 text-F17 font-normal font-['Open Sans'] tracking-normal">
+              <p className="mt-2 text-texto1 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                 <strong>CPF/CNPJ:</strong>{" "}
-                <label className="text-texto2 text-F17 font-normal font-['Open Sans'] tracking-normal">
+                <label className="text-texto2 md:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
                   {" "}
                   {customer.alternative_cpf_cnpj || "Não informado"}{" "}
                 </label>
@@ -257,7 +253,7 @@ const ProfileCustomerPage = () => {
         </div>
 
         <div
-          className=" md:w-[calc(47vw)] max-w-[95%] h-[449px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-B15 text-F15 mt-4"
+          className="relative md:md:w-[48%] tablet:w-[90%] mx-auto px-4 max-w-[95%] w-[calc(90vw)] md:h-[449px] h-auto bg-bg1 shadow p-6 md:border-2 border border-cinza6 rounded-B15 text-F15 md:mt-4 overflow-auto"
           onClick={() => {
             if (!isEditingMessage) {
               setCustomerMessage(savedMessages.join("\n"));
@@ -266,7 +262,7 @@ const ProfileCustomerPage = () => {
             }
           }}
         >
-          <h3 className="text-primaria text-F25 font-medium font-['Ubuntu']">
+          <h3 className="text-primaria md:text-F25 text-sm font-medium font-['Ubuntu']">
             Anotações
           </h3>
 
@@ -275,25 +271,24 @@ const ProfileCustomerPage = () => {
               value={customerMessage}
               onChange={(e) => setCustomerMessage(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSaveMessage(customerMessage);
-                } else if (e.key === "Enter" && e.shiftKey) {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   setCustomerMessage((prevMessage) => `${prevMessage}\n`);
                 }
               }}
-              className="w-full h-[333px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl text-F17 font-normal text-texto2"
+              className="w-full h-[304px] mt-2 p-3 border  border-cinza6  bg-bg1 rounded-2xl md:text-F17 text-xs font-normal text-texto2"
               placeholder="Clique aqui para adicionar anotações."
               autoFocus
-              onBlur={() => {
-                setIsEditingMessage(false);
-                setCustomerMessage("");
-                setEditingIndex(null);
+              onBlur={(e) => {
+                if (!e.relatedTarget || e.relatedTarget.id !== "salvar-btn") {
+                  setIsEditingMessage(false);
+                  setCustomerMessage("");
+                  setEditingIndex(null);
+                }
               }}
             />
           ) : (
-            <ul className="mt-4 list-disc list-inside text-F17 text-texto1">
+            <ul className="mt-4 list-disc list-inside md:text-F17 text-sm text-texto1">
               {savedMessages.map((msg, index) => (
                 <li
                   key={index}
@@ -313,28 +308,24 @@ const ProfileCustomerPage = () => {
               )}
             </ul>
           )}
+          {isEditingMessage && (
+            <button
+              id="salvar-btn"
+              type="submit"
+              className="flex justify-end items-start md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold mt-2 ml-auto"
+              onClick={() => {
+                handleSaveMessage(customerMessage);
+                setIsEditingMessage(false);
+              }}
+            >
+              Salvar
+            </button>
+          )}
         </div>
 
         {isEditing && (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-bgM bg-opacity-30 backdrop-blur-[6px]  p-4">
-            <div className="relative w-full max-w-[90%] md:max-w-[1070px] h-auto max-h-[90vh] rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg ml-60 mb-32">
-              <div className="flex flex-wrap items-center mt-[20px] gap-4">
-                <h2 className="ml-6 text-[20px] md:text-[25px] font-medium font-['Ubuntu'] text-primaria">
-                  Editar Paciente
-                </h2>
-                <h3 className="text-primaria text-[20px] md:text-[25px] font-medium font-['Ubuntu'] ml-[290px]">
-                  Dados para recibo
-                </h3>
-                <div className="ml-[20px] border-2 border-primaria rounded-[10px] w-full md:w-auto">
-                  <button
-                    onClick={handleUsePatientData}
-                    className="w-full md:w-[181px] h-[58px] bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-['Ubuntu'] tracking-tight"
-                  >
-                    Usar dados do <br /> paciente
-                  </button>
-                </div>
-              </div>
-
+          <div className="fixed inset-0 flex justify-center items-start bg-[#33b8d1]/30 backdrop-blur-[6px] z-30 overflow-y-auto">
+            <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mt-32 mb-8 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
               <CreateCustomerForm
                 onClose={handleCancelEdit}
                 onSubmit={() => handleEditCustomer(customer)}

@@ -21,8 +21,8 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
   };
 
   return (
-    <div className="relative flex items-center z-30">
-      <div className="flex mr-14 mb-5 gap-2 md:mt-0">
+    <div className="relative flex items-center z-20 mt-6">
+      <div className="flex md:mr-14 mr-2 mb-5 gap-2 md:mt-0">
         <button
           type="button"
           onClick={toggleDropdown}

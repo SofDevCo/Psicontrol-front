@@ -1,6 +1,6 @@
 export const deleteCustomer = async (customerId) => {
   const response = await fetch(
-    `${process.env.REACT_APP_API_URL}/events/customers/${customerId}`,
+    `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/delete`,
     {
       method: "PUT",
       headers: {

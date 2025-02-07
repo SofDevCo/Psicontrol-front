@@ -219,7 +219,7 @@ const CreateCustomerForm = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm md:text-[25px] font-medium font-ubuntu text-primaria">
-                Adicionar Paciente
+                {isEditing ? "Editar Paciente" : "Adicionar Paciente"}
               </h2>
               <button
                 onClick={onClose}
