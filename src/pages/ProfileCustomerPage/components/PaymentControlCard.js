@@ -3,9 +3,9 @@ import { useState } from "react";
 import {
   VerifyGreenIcon,
   CrossIcon,
-  FilterIcon,
   ArrowDownIcon,
 } from "../../DashboardPage/components/IconsDashBoard";
+import {FilterIcon} from "../components/ProfilePageIcons"
 import {
   sendEmailMessage,
   sendWhatsAppMessage,
