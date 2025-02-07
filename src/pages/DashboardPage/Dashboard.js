@@ -562,7 +562,7 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center gap-1 mt-32">
+          <div className="flex justify-center gap-1 mt-16 md:mt-32">
             <div className="w-full">
               <div className="md:hidden flex flex-col w-full">
                 <div className="w-full flex justify-center mb-8">
@@ -598,7 +598,7 @@ const DashBoard = () => {
                   />
                 </div>
 
-                <div className="flex justify-end px-4 mb-4">
+                <div className="flex justify-end pr-0 pl-4 mb-1">
                   <div className="group z-10">
                     <FilterStatusDashBoard
                       selectedStatus={selectedStatus}
@@ -690,7 +690,7 @@ const DashBoard = () => {
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
-                        <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2 z-10">
+                        <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 z-10 text-center">
                           <div className="flex flex-col justify-center leading-tight ">
                             <span>
                               {patient.Customer?.customer_name?.split(" ")[0] ||
