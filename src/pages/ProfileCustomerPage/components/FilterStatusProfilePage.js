@@ -4,6 +4,7 @@ import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 
 const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(selectedStatus || []);
   const filterRef = useRef(null);
 
   useOutsideClick(filterRef, () => setIsOpen(false));
@@ -13,11 +14,16 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
   };
 
   const handleCheckboxChange = (status) => {
-    if (selectedStatus.includes(status)) {
-      onChangeStatus(selectedStatus.filter((item) => item !== status));
-    } else {
-      onChangeStatus([...selectedStatus, status]);
-    }
+    setSelectedFilter((prev) =>
+      prev.includes(status)
+        ? prev.filter((item) => item !== status)
+        : [...prev, status]
+    );
+  };
+
+  const apllyFIlter = () => {
+    onChangeStatus(selectedFilter);
+    setIsOpen(false);
   };
 
   return (
@@ -42,7 +48,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="aberto"
-                checked={selectedStatus.includes("aberto")}
+                checked={selectedFilter.includes("aberto")}
                 onChange={() => handleCheckboxChange("aberto")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -54,7 +60,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="pago"
-                checked={selectedStatus.includes("pago")}
+                checked={selectedFilter.includes("pago")}
                 onChange={() => handleCheckboxChange("pago")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -66,7 +72,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="parcial"
-                checked={selectedStatus.includes("parcial")}
+                checked={selectedFilter.includes("parcial")}
                 onChange={() => handleCheckboxChange("parcial")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -82,7 +88,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="nao-realizada"
-                checked={selectedStatus.includes("nao-realizada")}
+                checked={selectedFilter.includes("nao-realizada")}
                 onChange={() => handleCheckboxChange("nao-realizada")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -94,7 +100,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="realizada"
-                checked={selectedStatus.includes("realizada")}
+                checked={selectedFilter.includes("realizada")}
                 onChange={() => handleCheckboxChange("realizada")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none mt-1 border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -109,7 +115,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="nao-emitidos"
-                checked={selectedStatus.includes("nao-emitidos")}
+                checked={selectedFilter.includes("nao-emitidos")}
                 onChange={() => handleCheckboxChange("nao-emitidos")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -121,7 +127,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
               <input
                 type="checkbox"
                 id="emitidos"
-                checked={selectedStatus.includes("emitidos")}
+                checked={selectedFilter.includes("emitidos")}
                 onChange={() => handleCheckboxChange("emitidos")}
                 className="w-[11.45px] h-[11.44px] md:w-[16px] md:h-[16px] appearance-none mt-1 border-2 border-primaria rounded-sm bg-white checked:bg-primaria checked:border-primaria inline-flex cursor-pointer relative checked:after:content-['✔'] checked:after:text-white checked:after:absolute checked:after:top-[-4px] checked:after:left-[0px] checked:after:font-bold"
               />
@@ -129,6 +135,13 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
                 Emitidos
               </label>
             </div>
+            <button
+              type="submit"
+              onClick={apllyFIlter}
+              className="flex mt-3 mx-auto md:h-6 px-6 py-0.5 bg-primaria rounded-[100px] text-white text-sm font-semibold  shadow-[0px_1px_2px_0px_rgba(0,0,0,0.30)]"
+            >
+              Filtrar
+            </button>
           </div>
         )}
       </div>
