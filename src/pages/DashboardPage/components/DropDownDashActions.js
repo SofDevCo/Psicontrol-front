@@ -47,7 +47,7 @@ const DropDownDashActions = ({
         <li>
           <button
             onClick={onConfirmedBillOfSale}
-            className="group w-full flex text-center mt-1 md:gap-1 gap-2 py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2"
+            className="group w-full flex text-center mt-1 md:gap-1 gap-1 py-2 text-texto2 active:text-texto2/50 md:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2"
           >
             <BillOfSaleIcon />
             Recibo Emitido
