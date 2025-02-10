@@ -8,7 +8,7 @@ import {
   sendEmailMessage,
   confirmBillOfSale,
   confirmPayment,
-  savePartialPayment
+  savePartialPayment,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
@@ -178,14 +178,13 @@ const DashBoard = () => {
       return null;
     }
 
-    const event = unmatchedPatients[selectedEvent];
+    const group = unmatchedPatients[selectedEvent];
 
-    if (!customer_id) {
+    if (!customer_id || !group) {
       return null;
     }
-    if (!event) {
-      return null;
-    }
+
+    const eventIdToLink = group.events[0].google_event_id;
 
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/linkCustomerToEvent`,
@@ -196,14 +195,13 @@ const DashBoard = () => {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
         body: JSON.stringify({
-          eventId: event.customers_id,
+          eventId: eventIdToLink,
           customer_id: customer_id,
         }),
       }
     );
 
     if (response.ok) {
-      fetchUnmatchedPatients();
       fetchUnmatchedPatients();
       setIsSearchBarOpen(false);
       setIsConfirmModalOpen(false);
@@ -240,16 +238,13 @@ const DashBoard = () => {
     }
   };
 
-  const handleVinculatePatient = async () => {
-    if (selectedEvent === null || selectedEvent === undefined) {
-      return null;
-    }
-    const event = unmatchedPatients[selectedEvent];
-    if (!event) {
-      return null;
-    }
-    if (!patients || patients.length === 0) {
-      await fetchPatientData();
+  const handleVinculatePatient = async (group) => {
+    const groupIndex = unmatchedPatients.indexOf(group);
+    if (groupIndex !== -1) {
+      setSelectedEvent(groupIndex);
+      if (!patients || patients.length === 0) {
+        await fetchPatientData();
+      }
     }
     openSearchBar();
   };
@@ -481,10 +476,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-              ...patient,
-              payment_amount: parseFloat(paymentAmount),
-              payment_status: "parcial",
-            }
+                ...patient,
+                payment_amount: parseFloat(paymentAmount),
+                payment_status: "parcial",
+              }
             : patient
         )
       );
@@ -650,8 +645,9 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
-              }`}
+            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
+              isTableExpanded ? "h-auto" : "min-h-screen"
+            }`}
           >
             <div className="overflow-x-auto  ">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
@@ -713,10 +709,10 @@ const DashBoard = () => {
                         <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                              .split(", ")
-                              .map(Number)
-                              .sort((a, b) => a - b)
-                              .join(", ")
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
                             : "-"}
                         </td>
                         <td className="relative text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 group">
@@ -725,10 +721,10 @@ const DashBoard = () => {
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
+                                  .split(", ")
+                                  .map(Number)
+                                  .sort((a, b) => a - b)
+                                  .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
@@ -823,10 +819,11 @@ const DashBoard = () => {
                       >
                         <button
                           onClick={toggleTableSize}
-                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
-                            ? "rotate-0 bottom-0"
-                            : "rotate-180 bottom-5"
-                            }`}
+                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${
+                            isTableExpanded
+                              ? "rotate-0 bottom-0"
+                              : "rotate-180 bottom-5"
+                          }`}
                         >
                           <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
@@ -856,7 +853,7 @@ const DashBoard = () => {
                         className="border-b border-b-cinza6 relative"
                       >
                         <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
-                          <span>{event.name}</span>
+                          <span>{event.event_name}</span>
                           <button
                             className="cursor-pointer"
                             onClick={() => toggleDropdown(index)}
