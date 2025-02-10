@@ -138,7 +138,7 @@ const FilterStatusProfilePage = ({ selectedStatus, onChangeStatus }) => {
             <button
               type="submit"
               onClick={apllyFIlter}
-              className="flex mt-3 mx-auto md:h-6 px-6 py-0.5 bg-primaria rounded-[100px] text-white text-sm font-semibold  shadow-[0px_1px_2px_0px_rgba(0,0,0,0.30)]"
+              className="flex mt-3 mx-auto md:h-6 h-[17.16px] px-6 md:py-0.5 py-1 bg-primaria rounded-[100px] text-white md:text-sm text-[8px] font-semibold  shadow-[0px_1px_2px_0px_rgba(0,0,0,0.30)]"
             >
               Filtrar
             </button>
