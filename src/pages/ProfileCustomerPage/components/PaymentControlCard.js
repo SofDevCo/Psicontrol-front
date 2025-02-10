@@ -345,7 +345,7 @@ const PaymentControlCard = ({
                 .map((item, index) => (
                   <tr
                     key={index}
-                    className="relative text-center border-b border-b-cinza6"
+                    className="relative text-center"
                   >
                     <td className="text-texto1 md:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 md:px-auto py-2">
                       {item.month
