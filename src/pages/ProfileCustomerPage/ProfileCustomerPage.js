@@ -91,10 +91,12 @@ const ProfileCustomerPage = () => {
     }
 
     const updatedCustomer = await response.json();
-    setCustomer(updatedCustomer);
+    setCustomer((prevCustomer) => ({
+      ...prevCustomer,
+      customer_personal_message: updatedCustomer.customer_personal_message,
+    }));
     setSavedMessages(lines);
 
-    setCustomerMessage("");
     setIsEditingMessage(false);
     setEditingIndex(null);
   };
