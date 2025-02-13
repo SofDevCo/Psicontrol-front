@@ -430,10 +430,11 @@ const DashBoard = () => {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
       {
-        method: "DELETE",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
+        body: JSON.stringify({status:"cancelado"})
       }
     );
 
@@ -864,9 +865,13 @@ const DashBoard = () => {
                             <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                               <DropDownDashBoard
                                 onVincular={() => handleVinculatePatient(event)}
-                                onExcluir={() =>
-                                  openDeleteModal(event.google_event_id)
-                                }
+                                onExcluir={() => {
+                                  if (event.events.length > 0) {
+                                    openDeleteModal(
+                                      event.events[0].google_event_id
+                                    );
+                                  }
+                                }}
                               />
                             </div>
                           )}
