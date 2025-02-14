@@ -13,6 +13,7 @@ import "../../../index.css";
 import { showErrorToast } from "../../../utils/notification/toastify";
 import { showEditToast } from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
+import EditConsultationFeeModal from "./EditConsultationFeeModal";
 import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
 import { showSuccessToast } from "../components/notiificationCustomerPage";
 
@@ -27,6 +28,7 @@ const CreateCustomerForm = ({
   isEditing,
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
@@ -159,15 +161,21 @@ const CreateCustomerForm = ({
       return;
     }
 
-    const formattedCustomer = {
-      ...customer,
-      customer_dob: startDate ? formatDateIso(startDate) : "",
-    };
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmSubmit = async (updateOption) => {
+    setIsConfirmModalOpen(false);
 
     try {
       const response = await createOrUpdateCustomer(
-        customer,
-        additionalAlternatives,
+        {
+          ...customer,
+          consultation_fee: customer.consultation_fee,
+          update_from: updateOption,
+          additionalAlternatives,
+        },
+        [],
         customer.customer_id
       );
       const data = await response.json();
@@ -540,6 +548,11 @@ const CreateCustomerForm = ({
           </div>
         </div>
       </form>
+      <EditConsultationFeeModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmSubmit}
+      />
     </div>
   );
 };
