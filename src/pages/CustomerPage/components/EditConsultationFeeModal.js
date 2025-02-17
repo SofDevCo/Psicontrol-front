@@ -26,7 +26,7 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
           </label>
 
           <label
-            className={`flex items-center  justify-center space-x-2 cursor-pointer md:ml-7 ml-[9.5px] md:text-[15px] text-sm ${updateOption === "next" ? "text-texto3" : "text-texto3/50"}`}
+            className={`flex items-center  justify-center space-x-2 cursor-pointer md:ml-6 ml-[9.5px] md:text-[15px] text-sm ${updateOption === "next" ? "text-texto3" : "text-texto3/50"}`}
           >
             <input
               type="radio"
