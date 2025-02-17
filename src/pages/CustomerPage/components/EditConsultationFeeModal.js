@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 
-const EditConsultationFeeModal = ({ isOpen, onClose, onConfirm }) => {
+const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
   const [updateOption, setUpdateOption] = useState("current");
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm md:z-30 z-50 ">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] border border-gray-300">
-        <h2 className="text-lg font-semibold text-gray-800 text-center mb-4">
-          Confirmar Alteração
-        </h2>
-        <p className="text-gray-600 text-center mb-4">
-          Deseja modificar o valor da consulta a partir de qual mês?
+    <div className="absolute top-0 left-0 w-full h-[1200px] flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm z-50 overflow-x">
+      <div className="bg-white rounded-lg  p-6 h-[338px] w-[475px] mt-28 ml-28 ">
+        <p className="text-texto2 text-[21px] text-center mb-4 mt-12">
+          Houve uma alteração no valor de <br /> atendimento.
         </p>
 
         <div className="flex flex-col space-y-2">
-          <label className="flex items-center space-x-2 cursor-pointer">
+          <label
+            className={`flex items-center justify-center space-x-2 cursor-pointer ${updateOption === "current" ? "text-texto3" : "text-texto3/50"}`}
+          >
             <input
               type="radio"
               value="current"
@@ -26,7 +25,9 @@ const EditConsultationFeeModal = ({ isOpen, onClose, onConfirm }) => {
             <span>Modificar a partir do mês atual</span>
           </label>
 
-          <label className="flex items-center space-x-2 cursor-pointer">
+          <label
+            className={`flex items-center  justify-center space-x-2 cursor-pointer ml-7 ${updateOption === "next" ? "text-texto3" : "text-texto3/50"}`}
+          >
             <input
               type="radio"
               value="next"
@@ -39,16 +40,10 @@ const EditConsultationFeeModal = ({ isOpen, onClose, onConfirm }) => {
 
         <div className="flex justify-center space-x-4 mt-4">
           <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+            onClick={() => onConfirm(updateOption)}
+            className="md:h-10 px-6 py-2.5 bg-primaria rounded-[100px] text-texto4 text-sm font-semibold tracking-tight shadow-buttom"
           >
-            Cancelar
-          </button>
-          <button
-            onClick={() => onConfirm(updateOption)} 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Confirmar
+            OK
           </button>
         </div>
       </div>
