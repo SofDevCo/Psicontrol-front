@@ -7,14 +7,14 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
 
   return (
     <div className="absolute top-0 left-0 w-full h-[1200px] flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm z-50 overflow-x">
-      <div className="bg-white rounded-lg  p-6 h-[338px] w-[475px] mt-28 ml-28 ">
-        <p className="text-texto2 text-[21px] text-center mb-4 mt-12">
+      <div className="bg-white rounded-lg  p-6 md:h-[338px] h-auto md:w-[475px] w-[280px] md:mt-28 mt-32 md:ml-28 ">
+        <p className="text-texto2 md:text-[21px] text-sm text-center md:mb-4 mb-6 md:mt-12">
           Houve uma alteração no valor de <br /> atendimento.
         </p>
 
         <div className="flex flex-col space-y-2">
           <label
-            className={`flex items-center justify-center space-x-2 cursor-pointer ${updateOption === "current" ? "text-texto3" : "text-texto3/50"}`}
+            className={`flex items-center justify-center space-x-2 cursor-pointer md:text-[15px] text-sm ${updateOption === "current" ? "text-texto3" : "text-texto3/50"}`}
           >
             <input
               type="radio"
@@ -26,7 +26,7 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
           </label>
 
           <label
-            className={`flex items-center  justify-center space-x-2 cursor-pointer ml-7 ${updateOption === "next" ? "text-texto3" : "text-texto3/50"}`}
+            className={`flex items-center  justify-center space-x-2 cursor-pointer md:ml-7 ml-[9.5px] md:text-[15px] text-sm ${updateOption === "next" ? "text-texto3" : "text-texto3/50"}`}
           >
             <input
               type="radio"
