@@ -14,14 +14,14 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
 
         <div className="flex flex-col space-y-2">
           <label
-            className={`flex items-center justify-center space-x-2 cursor-pointer md:text-[15px] text-sm ${updateOption === "current" ? "text-texto3" : "text-texto3/50"}`}
+            className={`flex items-center justify-center space-x-2 cursor-pointer md:text-[15px] text-sm ${updateOption === "current_month" ? "text-texto3" : "text-texto3/50"}`}
           >
             <input
               type="radio"
-              value="current"
-              checked={updateOption === "current"}
-              onChange={() => setUpdateOption("current")}
-            />
+              value="current_month"
+              checked={updateOption === "current_month"}
+              onChange={() => setUpdateOption("current_month")}
+              />
             <span>Modificar a partir do mês atual</span>
           </label>
 
