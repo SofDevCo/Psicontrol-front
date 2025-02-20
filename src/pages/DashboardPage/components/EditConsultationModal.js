@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const EditConsultationModal = ({
   isOpen,
@@ -7,35 +7,52 @@ const EditConsultationModal = ({
   onRemoveDay,
   onAddDay,
 }) => {
+  const [days, setDays] = useState([]);
   const [newDay, setNewDay] = useState("");
+
+  useEffect(() => {
+    if (patient && patient.consultation_days) {
+      setDays(patient.consultation_days.split(", "));
+    } else {
+      setDays([]);
+    }
+  }, [patient]);
 
   if (!isOpen || !patient) return null;
 
-  const handleAddDay = () => {
-    if (newDay.trim() && !patient.consultation_days.includes(newDay)) {
-      onAddDay(patient.customer_id, newDay.trim());
+  const handleAddDayLocal = () => {
+    const dayTrimmed = newDay.trim();
+    if (dayTrimmed && !days.includes(dayTrimmed)) {
+      setDays((prev) => [...prev, dayTrimmed]);
+
+      onAddDay(patient.customer_id, dayTrimmed);
+
       setNewDay("");
     }
+  };
+
+  const handleRemoveDayLocal = (dayToRemove) => {
+    setDays((prev) => prev.filter((d) => d !== dayToRemove));
+
+    onRemoveDay(patient.customer_id, dayToRemove);
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-bold mb-4">
-          Editar Consultas - {patient?.customer_name}
+          Editar Consultas - {patient.customer_name}
         </h2>
         <div className="flex flex-wrap gap-2 mb-4">
-          {(patient.consultation_days
-            ? patient.consultation_days.split(", ")
-            : []
-          ).map((day, index) => (
+          {/* Agora renderiza a partir de 'days' */}
+          {days.map((day, index) => (
             <div
               key={index}
               className="flex items-center bg-gray-200 px-3 py-1 rounded-full"
             >
               <span className="mr-2">{day}</span>
               <button
-                onClick={() => onRemoveDay(patient.customer_id, day)}
+                onClick={() => handleRemoveDayLocal(day)}
                 className="text-red-500 font-bold"
               >
                 ×
@@ -52,7 +69,7 @@ const EditConsultationModal = ({
             className="border px-3 py-1 rounded w-full"
           />
           <button
-            onClick={handleAddDay}
+            onClick={handleAddDayLocal}
             className="bg-blue-500 text-white px-3 py-1 rounded"
           >
             +
