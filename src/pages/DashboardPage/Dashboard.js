@@ -9,9 +9,12 @@ import {
   confirmBillOfSale,
   confirmPayment,
   savePartialPayment,
+  AddDay,
+  RemoveDay,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
+import EditConsultationModal from "./components/EditConsultationModal"
 import { HamburguerIcon } from "../../icons/icons";
 import {
   ShowVinculateToast,
@@ -59,20 +62,14 @@ const DashBoard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
-  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] =
-    useState(false);
-  const [
-    selectedPatientForPartialPayment,
-    setSelectedPatientForPartialPayment,
-  ] = useState(null);
+  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] = useState(false);
+  const [selectedPatientForPartialPayment,setSelectedPatientForPartialPayment,] = useState(null);
   const calendarIdsParam = searchParams.get("calendarIds");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
-  const selectedCalendarIds = useMemo(
-    () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
-    [calendarIdsParam]
-  );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedPatientForEdit, setSelectedPatientForEdit] = useState(null);
+  const selectedCalendarIds = useMemo( () => (calendarIdsParam ? calendarIdsParam.split(",") : []), [calendarIdsParam] );
 
   const dropdownRef = useRef();
 
@@ -434,7 +431,7 @@ const DashBoard = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
-        body: JSON.stringify({status:"cancelado"})
+        body: JSON.stringify({ status: "cancelado" }),
       }
     );
 
@@ -549,6 +546,43 @@ const DashBoard = () => {
   useEffect(() => {
     setIsTableExpanded(true);
   }, []);
+
+  const handleRemoveDay = async (customerId, day) => {
+    const response = await RemoveDay(customerId, day);
+    if (response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customerId
+            ? {
+                ...p,
+                consultation_days: p.consultation_days
+                  .split(",")
+                  .filter((d) => d !== day)
+                  .join(","),
+              }
+            : p
+        )
+      );
+    }
+  };
+
+  const handleAddDay = async (customerId, day) => {
+    const response = await AddDay(customerId, day);
+    if (response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customerId
+            ? { ...p, consultation_days: `${p.consultation_days}, ${day}` }
+            : p
+        )
+      );
+    }
+  };
+
+  const handleEditConsultation = (patient) => {
+    setSelectedPatientForEdit(patient);
+    setIsEditModalOpen(true);
+  };
 
   return (
     <div className="top-0 w-full p-6">
@@ -794,6 +828,9 @@ const DashBoard = () => {
                                 onConfirmedBillOfSale={() =>
                                   handleConfirmBillOfSale(patient)
                                 }
+                                onEditConsultationFee={() =>
+                                  handleEditConsultation(patient)
+                                }
                               />
                             </div>
                           )}
@@ -937,6 +974,16 @@ const DashBoard = () => {
           />
         )}
       </>
+
+      {isEditModalOpen && selectedPatientForEdit && (
+        <EditConsultationModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          patient={selectedPatientForEdit}
+          onRemoveDay={handleRemoveDay}
+          onAddDay={handleAddDay}
+        />
+      )}
 
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
