@@ -11,6 +11,8 @@ const EditConsultationModal = ({
   const [newDay, setNewDay] = useState("");
 
   useEffect(() => {
+    console.log("Modal recebeu o patient:", patient);
+
     if (patient && patient.consultation_days) {
       setDays(patient.consultation_days.split(", "));
     } else {
@@ -41,10 +43,9 @@ const EditConsultationModal = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-bold mb-4">
-          Editar Consultas - {patient.customer_name}
+          Editar Consultas - {patient.Customer?.customer_name || "Sem nome"}
         </h2>
         <div className="flex flex-wrap gap-2 mb-4">
-          {/* Agora renderiza a partir de 'days' */}
           {days.map((day, index) => (
             <div
               key={index}
