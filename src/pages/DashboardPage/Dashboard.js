@@ -14,7 +14,7 @@ import {
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
-import EditConsultationModal from "./components/EditConsultationModal"
+import EditConsultationModal from "./components/EditConsultationModal";
 import { HamburguerIcon } from "../../icons/icons";
 import {
   ShowVinculateToast,
@@ -62,14 +62,21 @@ const DashBoard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
-  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] = useState(false);
-  const [selectedPatientForPartialPayment,setSelectedPatientForPartialPayment,] = useState(null);
+  const [isPartialPaymentModalOpen, setIsPartialPaymentModalOpen] =
+    useState(false);
+  const [
+    selectedPatientForPartialPayment,
+    setSelectedPatientForPartialPayment,
+  ] = useState(null);
   const calendarIdsParam = searchParams.get("calendarIds");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPatientForEdit, setSelectedPatientForEdit] = useState(null);
-  const selectedCalendarIds = useMemo( () => (calendarIdsParam ? calendarIdsParam.split(",") : []), [calendarIdsParam] );
+  const selectedCalendarIds = useMemo(
+    () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
+    [calendarIdsParam]
+  );
 
   const dropdownRef = useRef();
 
@@ -572,10 +579,18 @@ const DashBoard = () => {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
           p.customer_id === customerId
-            ? { ...p, consultation_days: `${p.consultation_days}, ${day}` }
+            ? {
+                ...p,
+                consultation_days: p.consultation_days
+                  ? `${p.consultation_days}, ${day}`
+                  : day,
+              }
             : p
         )
       );
+    } else {
+      const data = await response.json();
+      alert(data.error || "Erro ao adicionar dia.");
     }
   };
 
@@ -975,7 +990,7 @@ const DashBoard = () => {
         )}
       </>
 
-      {isEditModalOpen && selectedPatientForEdit && (
+      {isEditModalOpen && selectedPatientForEdit?.consultation_days && (
         <EditConsultationModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
