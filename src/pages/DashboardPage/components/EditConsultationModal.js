@@ -3,6 +3,7 @@ import {
   EditIcon,
   CloseMiniIcon,
   AddConsultationIcon,
+  CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
 
 const EditConsultationModal = ({
@@ -64,8 +65,13 @@ const EditConsultationModal = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-bgM bg-opacity-50 z-30">
       <div className="bg-neutral-100 w-[437px] p-6 rounded-lg shadow-lg border border-cinza6">
+        <div className="flex justify-end">
+          <button onClick={onClose}>
+            <CloseIconEdit />
+          </button>
+        </div>
         <h1 className="text-center text-primaria text-[21px] font-medium tracking-tight mb-7">
           Editar Consultas
         </h1>
@@ -80,23 +86,29 @@ const EditConsultationModal = ({
           <span className="text-texto1 text-[15px] font-semibold tracking-tight">
             Dias de consulta
           </span>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {tempDays.map((day, index) => (
-              <div
-                key={index}
-                className="relative flex flex-col items-center w-[43px] h-auto p-2 rounded-[15px] border-2 border-cinza6"
-              >
-                <span className="mb-1">{day}</span>
-                {isEditing && (
-                  <button
-                    onClick={() => handleRemoveDayLocal(day)}
-                    className="absolute -bottom-5"
+          <div className="mt-2">
+            {!isEditing ? (
+              <span>{tempDays.join(", ") || "Nenhum dia cadastrado"}</span>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {tempDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col items-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6"
                   >
-                    <CloseMiniIcon />
-                  </button>
-                )}
+                    <span className="mb-1">{day}</span>
+                    {isEditing && (
+                      <button
+                        onClick={() => handleRemoveDayLocal(day)}
+                        className="absolute -bottom-5"
+                      >
+                        <CloseMiniIcon />
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
           {isEditing && (
             <div className="flex items-center mt-4">
@@ -106,11 +118,11 @@ const EditConsultationModal = ({
                   value={newDay}
                   onChange={(e) => setNewDay(e.target.value)}
                   onKeyDown={handleAddDayLocal}
-                  className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-auto appearance-none mr-2"
+                  className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-11 appearance-none mr-2 bg-bg1"
                 />
               )}
               <div
-                className="flex items-center justify-center w-[43px] h-auto p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
+                className="flex items-center justify-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
                 onClick={() => setIsAdding(true)}
               >
                 <AddConsultationIcon />
@@ -125,9 +137,10 @@ const EditConsultationModal = ({
           }}
           className="mt-4"
         >
-          {isEditing ? <CloseMiniIcon /> : <EditIcon />}
+          {!isEditing && <EditIcon />}
         </button>
-        <div className="mt-4 flex justify-end">
+
+        <div className="flex justify-end">
           <button
             onClick={handleSaveChanges}
             className="px-4 py-2  bg-primaria md:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
