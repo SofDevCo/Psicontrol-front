@@ -22,7 +22,6 @@ const AddIcon = () => {
   );
 };
 
-
 const CloseIconRegisterModal = () => {
   return (
     <svg
@@ -79,4 +78,180 @@ const CloseIconRegisterModal = () => {
   );
 };
 
-export { AddIcon, CloseIconRegisterModal };
+const EditIcon = () => {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_d_4655_11530)">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M21.883 2.96652C21.9729 3.10166 22.013 3.2634 21.9964 3.42441C21.9799 3.58543 21.9077 3.73585 21.7921 3.85028L13.0921 12.4649C13.0031 12.553 12.8921 12.6161 12.7704 12.6477L9.14672 13.5848C9.02694 13.6158 8.90107 13.6152 8.7816 13.583C8.66214 13.5509 8.55323 13.4884 8.4657 13.4017C8.37817 13.315 8.31505 13.2072 8.28261 13.0889C8.25018 12.9706 8.24955 12.8459 8.28079 12.7273L9.22716 9.13977C9.25546 9.03233 9.3075 8.93246 9.37952 8.84736L18.1117 0.205563C18.2448 0.0739343 18.4252 0 18.6133 0C18.8014 0 18.9818 0.0739343 19.1149 0.205563L21.7921 2.85593C21.8252 2.89045 21.8556 2.92742 21.883 2.96652ZM20.2865 3.35264L18.6133 1.69663L10.5521 9.67959L9.9606 11.9223L12.2253 11.3365L20.2865 3.35264Z"
+          fill="#0082BA"
+        />
+      </g>
+      <g filter="url(#filter1_d_4655_11530)">
+        <path
+          d="M20.1663 13.9724C20.425 11.7831 20.5076 9.57688 20.4133 7.3746C20.4111 7.3227 20.4198 7.2709 20.4389 7.2225C20.4579 7.1741 20.4869 7.13016 20.524 7.09345L21.4553 6.17126C21.4807 6.14591 21.513 6.12839 21.5483 6.12078C21.5835 6.11318 21.6203 6.11582 21.6541 6.12839C21.6878 6.14096 21.7172 6.16293 21.7387 6.19164C21.7602 6.22036 21.7729 6.25461 21.7752 6.29028C21.9499 8.9062 21.8834 11.5325 21.5764 14.1364C21.3531 16.0314 19.8162 17.5168 17.9111 17.7277C14.6039 18.0902 11.2663 18.0902 7.95907 17.7277C6.05497 17.5168 4.51712 16.0314 4.29377 14.1364C3.90208 10.8144 3.90208 7.4586 4.29377 4.13662C4.51712 2.24163 6.05402 0.75619 7.95907 0.545323C10.4693 0.270772 12.9982 0.204 15.5196 0.345702C15.5557 0.348268 15.5903 0.361021 15.6193 0.382451C15.6483 0.403881 15.6705 0.43309 15.6832 0.466619C15.696 0.500147 15.6987 0.536591 15.6912 0.571634C15.6837 0.606677 15.6662 0.638851 15.6408 0.664346L14.701 1.59403C14.6643 1.63044 14.6204 1.65896 14.572 1.67783C14.5237 1.69669 14.4719 1.7055 14.4199 1.70369C12.3159 1.63232 10.2095 1.71219 8.11711 1.94267C7.5057 2.00968 6.93495 2.27886 6.49707 2.70671C6.05919 3.13456 5.77974 3.69611 5.70387 4.30063C5.32424 7.51359 5.32424 10.7594 5.70387 13.9724C5.77974 14.5769 6.05919 15.1385 6.49707 15.5663C6.93495 15.9942 7.5057 16.2633 8.11711 16.3304C11.2922 16.6818 14.578 16.6818 17.754 16.3304C18.3654 16.2633 18.9362 15.9942 19.3741 15.5663C19.8119 15.1385 20.0904 14.5769 20.1663 13.9724Z"
+          fill="#0082BA"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_4655_11530"
+          x="4.25781"
+          y="0"
+          width="21.7422"
+          height="21.6074"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_4655_11530"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_4655_11530"
+            result="shape"
+          />
+        </filter>
+        <filter
+          id="filter1_d_4655_11530"
+          x="0"
+          y="0.273438"
+          width="25.8711"
+          height="25.7266"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_4655_11530"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_4655_11530"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
+const CloseMiniIcon = () => {
+  return (
+    <svg
+      viewBox="0 0 17 17"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-[17x] h-[17px]"
+    >
+      <g filter="url(#filter0_d_4703_11537)">
+        <path
+          d="M5 8L12 1M12 8L5 1"
+          stroke="#0082BA"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          shape-rendering="crispEdges"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_4703_11537"
+          x="0.5"
+          y="0.5"
+          width="16"
+          height="16"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_4703_11537"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_4703_11537"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
+const AddConsultationIcon = () => {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7 1V13M13 7H1"
+        stroke="#0082BA"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
+export { AddIcon, CloseIconRegisterModal, EditIcon, CloseMiniIcon, AddConsultationIcon };
