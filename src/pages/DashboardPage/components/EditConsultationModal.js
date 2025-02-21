@@ -16,14 +16,18 @@ const EditConsultationModal = ({
   const [newDay, setNewDay] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [tempDays, setTempDays] = useState([]);
 
   useEffect(() => {
     console.log("Modal recebeu o patient:", patient);
 
     if (patient && patient.consultation_days) {
-      setDays(patient.consultation_days.split(", "));
+      const daysArray = patient.consultation_days.split(", ");
+      setDays(daysArray);
+      setTempDays(daysArray);
     } else {
       setDays([]);
+      setTempDays([]);
     }
   }, [patient]);
 
@@ -32,9 +36,8 @@ const EditConsultationModal = ({
   const handleAddDayLocal = (event) => {
     if (event.key === "Enter") {
       const dayTrimmed = newDay.trim();
-      if (dayTrimmed && !days.includes(dayTrimmed)) {
-        setDays((prev) => [...prev, dayTrimmed]);
-        onAddDay(patient.customer_id, dayTrimmed);
+      if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
+        setTempDays((prev) => [...prev, dayTrimmed]);
         setNewDay("");
         setIsAdding(false);
       }
@@ -42,8 +45,22 @@ const EditConsultationModal = ({
   };
 
   const handleRemoveDayLocal = (dayToRemove) => {
-    setDays((prev) => prev.filter((d) => d !== dayToRemove));
-    onRemoveDay(patient.customer_id, dayToRemove);
+    setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
+  };
+
+  const handleSaveChanges = () => {
+    setDays(tempDays);
+    tempDays.forEach((day) => {
+      if (!days.includes(day)) {
+        onAddDay(patient.customer_id, day);
+      }
+    });
+    days.forEach((day) => {
+      if (!tempDays.includes(day)) {
+        onRemoveDay(patient.customer_id, day);
+      }
+    });
+    setIsEditing(false);
   };
 
   return (
@@ -64,7 +81,7 @@ const EditConsultationModal = ({
             Dias de consulta
           </span>
           <div className="flex flex-wrap gap-2 mt-2">
-            {days.map((day, index) => (
+            {tempDays.map((day, index) => (
               <div
                 key={index}
                 className="relative flex flex-col items-center w-[43px] h-auto p-2 rounded-[15px] border-2 border-cinza6"
@@ -86,7 +103,6 @@ const EditConsultationModal = ({
               {isAdding && (
                 <input
                   type="text"
-                  placeholder="Novo dia"
                   value={newDay}
                   onChange={(e) => setNewDay(e.target.value)}
                   onKeyDown={handleAddDayLocal}
@@ -112,8 +128,11 @@ const EditConsultationModal = ({
           {isEditing ? <CloseMiniIcon /> : <EditIcon />}
         </button>
         <div className="mt-4 flex justify-end">
-          <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">
-            Fechar
+          <button
+            onClick={handleSaveChanges}
+            className="px-4 py-2  bg-primaria md:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+          >
+            Salvar
           </button>
         </div>
       </div>
