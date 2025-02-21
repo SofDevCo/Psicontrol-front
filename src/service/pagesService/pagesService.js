@@ -237,3 +237,35 @@ export const savePartialPayment = async (
 
   return response.json();
 };
+
+export const AddDay = async (customerId, day) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/add-day`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({ customerId, day }),
+    }
+  );
+
+  return response;
+};
+
+export const RemoveDay = async (customerId, day) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/remove-day`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({ customerId, day }),
+    }
+  );
+
+  return response;
+};

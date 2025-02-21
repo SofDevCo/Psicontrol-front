@@ -11,7 +11,7 @@ export const ShowVinculateToast = () => {
   overlay.style.left = "0";
   overlay.style.width = "100vw";
   overlay.style.height = "100vh";
-  overlay.style.zIndex =isMobile ? "100 " : "30";
+  overlay.style.zIndex = isMobile ? "100 " : "30";
   overlay.style.backdropFilter = "blur(6px)";
   overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
   document.body.appendChild(overlay);
