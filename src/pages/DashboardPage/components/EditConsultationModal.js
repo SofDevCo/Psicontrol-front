@@ -66,7 +66,7 @@ const EditConsultationModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-bgM bg-opacity-50 z-30">
-      <div className="bg-neutral-100 w-[437px] p-6 rounded-lg shadow-lg border border-cinza6">
+      <div className="bg-neutral-100 md:w-[437px] w-[325px] p-6 rounded-lg shadow-lg border border-cinza6">
         <div className="flex justify-end">
           <button onClick={onClose}>
             <CloseIconEdit />
