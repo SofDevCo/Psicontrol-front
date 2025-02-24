@@ -161,7 +161,7 @@ const CustomersPage = () => {
   return (
     <div className="relative mx-auto mt-36 box-border md:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-start bg-[#82d4e3] backdrop-blur-[6px] z-30 overflow-y-auto">
+        <div className="fixed inset-0 flex justify-center items-start bg-bgM/30 backdrop-blur-[6px] z-30 overflow-y-auto">
           <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mb-8 mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
             <CreateCustomerForm
               onClose={closeModal}
