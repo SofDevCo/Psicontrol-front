@@ -353,7 +353,7 @@ const DashBoard = () => {
     setIsBillingModalOpen(false);
   };
 
-  const handleSendWhatsApp = async (customer, openModalOnly = false) => {
+  const handleSendWhatsApp = async (customer) => {
     const customerId = customer?.customer_id;
 
     if (!customerId) {
@@ -372,8 +372,8 @@ const DashBoard = () => {
     setLoading(false);
 
     if (data?.success) {
-      const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
+      setIsBillingModalOpen(true);
 
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
@@ -383,14 +383,12 @@ const DashBoard = () => {
         )
       );
 
-      if (openModalOnly) {
-        setIsBillingModalOpen(true);
-      } else {
-        alert("Redirecionando para o WhatsApp...");
-        window.open(whatsappLink, "_blank");
+      if (!data.whatsappLink && !data.mailtoLink) {
+        alert("O cliente não possui telefone ou e-mail cadastrado.");
+        setIsBillingModalOpen(false);
       }
     } else {
-      alert(`Erro: ${data.error || "Erro ao enviar mensagem pelo WhatsApp"}`);
+      alert(`Erro: ${data.error || "Erro ao processar a cobrança."}`);
     }
   };
 
