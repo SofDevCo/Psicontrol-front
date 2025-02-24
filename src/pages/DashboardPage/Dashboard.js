@@ -552,8 +552,8 @@ const DashBoard = () => {
     setIsTableExpanded(true);
   }, []);
 
-  const handleRemoveDay = async (customerId, day) => {
-    const response = await RemoveDay(customerId, day);
+  const handleRemoveDay = async (customerId, daysToRemove) => {
+    const response = await RemoveDay(customerId, daysToRemove);
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -562,7 +562,7 @@ const DashBoard = () => {
                 ...p,
                 consultation_days: p.consultation_days
                   .split(",")
-                  .filter((d) => d !== day)
+                  .filter((d) => !daysToRemove.includes(d))
                   .join(","),
               }
             : p
@@ -595,6 +595,16 @@ const DashBoard = () => {
   const handleEditConsultation = (patient) => {
     setSelectedPatientForEdit(patient);
     setIsEditModalOpen(true);
+  };
+
+  const updatePatientDays = (customerId, newDays) => {
+    setPatients((prevPatients) =>
+      prevPatients.map((p) =>
+        p.customer_id === customerId
+          ? { ...p, consultation_days: newDays.join(", ") }
+          : p
+      )
+    );
   };
 
   return (
@@ -995,6 +1005,7 @@ const DashBoard = () => {
           patient={selectedPatientForEdit}
           onRemoveDay={handleRemoveDay}
           onAddDay={handleAddDay}
+          onUpdatePatient={updatePatientDays}
         />
       )}
 
