@@ -3,7 +3,6 @@ import { registerLocale } from "react-datepicker";
 import {
   formatDateBrazilian,
   parseISODate,
-  formatDateIso,
   isValidDate,
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
@@ -29,6 +28,7 @@ const CreateCustomerForm = ({
 }) => {
   const [additionalAlternatives, setAdditionalAlternatives] = useState([]);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [originalConsultationFee, setOriginalConsultationFee] = useState("");
   const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
@@ -161,7 +161,12 @@ const CreateCustomerForm = ({
       return;
     }
 
-    setIsConfirmModalOpen(true);
+    if (isEditing && customer.consultation_fee !== originalConsultationFee) {
+      setIsConfirmModalOpen(true);
+      return;
+    }
+
+    await handleConfirmSubmit("current_month");
   };
 
   const handleConfirmSubmit = async (updateOption) => {
