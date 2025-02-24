@@ -12,6 +12,7 @@ const EditConsultationModal = ({
   patient,
   onRemoveDay,
   onAddDay,
+  onUpdatePatient,
 }) => {
   const [days, setDays] = useState([]);
   const [newDay, setNewDay] = useState("");
@@ -49,19 +50,23 @@ const EditConsultationModal = ({
     setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     setDays(tempDays);
-    tempDays.forEach((day) => {
-      if (!days.includes(day)) {
-        onAddDay(patient.customer_id, day);
-      }
-    });
-    days.forEach((day) => {
-      if (!tempDays.includes(day)) {
-        onRemoveDay(patient.customer_id, day);
-      }
-    });
+    const daysToRemove = days.filter((day) => !tempDays.includes(day));
+    const daysToAdd = tempDays.filter((day) => !days.includes(day));
+
+    if (daysToRemove.length > 0) {
+      await onRemoveDay(patient.customer_id, daysToRemove);
+    }
+    if (daysToAdd.length > 0) {
+      await Promise.all(
+        daysToAdd.map((day) => onAddDay(patient.customer_id, day))
+      );
+    }
+
+    onUpdatePatient(patient.customer_id, tempDays);
     setIsEditing(false);
+    onClose();
   };
 
   return (

@@ -268,33 +268,35 @@ const DashBoard = () => {
 
   const fetchBillingRecords = async (month, year) => {
     setLoading(true);
-
+  
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
-          )}`,
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
       }
     );
-
+  
     if (response.ok) {
       const data = await response.json();
+  
       setPatients(data.billingRecords || []);
+      setFilteredPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
       setNetRevenue(parseFloat(data.netRevenue || 0));
-      setNetTime(parseFloat(data.netTime) || 0);
-      setFilteredPatients(data.billingRecords || []);
-    } else if (response.status === 404) {
+      setNetTime(parseFloat(data.netTime || 0));
+    } else {
       setPatients([]);
       setFilteredPatients([]);
       setTotalConsultations(0);
       setTotalRevenue(0);
-    } else {
-      setError("Erro ao buscar registros de faturamento.");
+      setNetRevenue(0);
+      setNetTime(0);
+      if (response.status !== 404) {
+        setError("Erro ao buscar registros de faturamento.");
+      }
     }
     setLoading(false);
   };
@@ -353,7 +355,7 @@ const DashBoard = () => {
     setIsBillingModalOpen(false);
   };
 
-  const handleSendWhatsApp = async (customer, openModalOnly = false) => {
+  const handleSendWhatsApp = async (customer) => {
     const customerId = customer?.customer_id;
 
     if (!customerId) {
@@ -372,8 +374,8 @@ const DashBoard = () => {
     setLoading(false);
 
     if (data?.success) {
-      const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
+      setIsBillingModalOpen(true);
 
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
@@ -383,14 +385,12 @@ const DashBoard = () => {
         )
       );
 
-      if (openModalOnly) {
-        setIsBillingModalOpen(true);
-      } else {
-        alert("Redirecionando para o WhatsApp...");
-        window.open(whatsappLink, "_blank");
+      if (!data.whatsappLink && !data.mailtoLink) {
+        alert("O cliente não possui telefone ou e-mail cadastrado.");
+        setIsBillingModalOpen(false);
       }
     } else {
-      alert(`Erro: ${data.error || "Erro ao enviar mensagem pelo WhatsApp"}`);
+      alert(`Erro: ${data.error || "Erro ao processar a cobrança."}`);
     }
   };
 
@@ -554,8 +554,8 @@ const DashBoard = () => {
     setIsTableExpanded(true);
   }, []);
 
-  const handleRemoveDay = async (customerId, day) => {
-    const response = await RemoveDay(customerId, day);
+  const handleRemoveDay = async (customerId, daysToRemove) => {
+    const response = await RemoveDay(customerId, daysToRemove);
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -564,7 +564,7 @@ const DashBoard = () => {
                 ...p,
                 consultation_days: p.consultation_days
                   .split(",")
-                  .filter((d) => d !== day)
+                  .filter((d) => !daysToRemove.includes(d))
                   .join(","),
               }
             : p
@@ -597,6 +597,16 @@ const DashBoard = () => {
   const handleEditConsultation = (patient) => {
     setSelectedPatientForEdit(patient);
     setIsEditModalOpen(true);
+  };
+
+  const updatePatientDays = (customerId, newDays) => {
+    setPatients((prevPatients) =>
+      prevPatients.map((p) =>
+        p.customer_id === customerId
+          ? { ...p, consultation_days: newDays.join(", ") }
+          : p
+      )
+    );
   };
 
   return (
@@ -997,6 +1007,7 @@ const DashBoard = () => {
           patient={selectedPatientForEdit}
           onRemoveDay={handleRemoveDay}
           onAddDay={handleAddDay}
+          onUpdatePatient={updatePatientDays}
         />
       )}
 

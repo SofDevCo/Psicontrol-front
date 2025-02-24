@@ -254,7 +254,7 @@ export const AddDay = async (customerId, day) => {
   return response;
 };
 
-export const RemoveDay = async (customerId, day) => {
+export const RemoveDay = async (customerId, days) => {
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/remove-day`,
     {
@@ -263,7 +263,7 @@ export const RemoveDay = async (customerId, day) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
       },
-      body: JSON.stringify({ customerId, day }),
+      body: JSON.stringify({ customerId, days }),
     }
   );
 
