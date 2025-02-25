@@ -268,7 +268,7 @@ const DashBoard = () => {
 
   const fetchBillingRecords = async (month, year) => {
     setLoading(true);
-  
+
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
       {
@@ -277,10 +277,10 @@ const DashBoard = () => {
         },
       }
     );
-  
+
     if (response.ok) {
       const data = await response.json();
-  
+
       setPatients(data.billingRecords || []);
       setFilteredPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
@@ -375,6 +375,12 @@ const DashBoard = () => {
 
     if (data?.success) {
       setBillingMessage(data.user_message);
+
+      setSelectedPatient((prev) => ({
+        ...prev,
+        whatsappLink: data.whatsappLink,
+      }));
+
       setIsBillingModalOpen(true);
 
       setPatients((prevPatients) =>
@@ -972,7 +978,12 @@ const DashBoard = () => {
           onClose={closeBillingModal}
           onSendWhatsApp={() => {
             if (selectedPatient && selectedPatient.customer_id) {
-              handleSendWhatsApp(selectedPatient);
+              if (selectedPatient.whatsappLink) {
+                alert("Redirecionando para o WhatsApp...");
+                window.open(selectedPatient.whatsappLink, "_blank");
+              } else {
+                alert("Erro: Link do WhatsApp não encontrado.");
+              }
             } else {
               alert("Paciente não encontrado ou sem ID.");
             }
