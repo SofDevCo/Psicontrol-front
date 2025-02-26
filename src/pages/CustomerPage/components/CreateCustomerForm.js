@@ -43,6 +43,22 @@ const CreateCustomerForm = ({
     }
   }, [isEditing, selectedPatient, setCustomer]);
 
+  useEffect(() => {
+    if (isEditing && selectedPatient) {
+      setOriginalConsultationFee(selectedPatient.consultation_fee || "");
+    }
+  }, [isEditing, selectedPatient]);
+
+  const isConsultationFeeChanged = () => {
+    const formattedOriginal = parseFloat(
+      originalConsultationFee || "0"
+    ).toFixed(2);
+    const formattedCurrent = parseFloat(
+      customer.consultation_fee || "0"
+    ).toFixed(2);
+    return formattedOriginal !== formattedCurrent;
+  };
+
   const handleManualDateChange = (value) => {
     let formattedValue = value.replace(/\D/g, "");
 
@@ -161,7 +177,7 @@ const CreateCustomerForm = ({
       return;
     }
 
-    if (isEditing && customer.consultation_fee !== originalConsultationFee) {
+    if (isEditing && isConsultationFeeChanged()) {
       setIsConfirmModalOpen(true);
       return;
     }
