@@ -389,7 +389,7 @@ const DashBoard = () => {
       setBillingMessage(data.message);
       setIsBillingModalOpen(true);
     } else {
-      alert(`Erro: ${data?.message || "Erro ao processar a cobrança."}`);
+      alert(`Email e Telefone não cadastrados.`);
     }
   };
 
