@@ -5,7 +5,7 @@ import {
   CrossIcon,
   ArrowDownIcon,
 } from "../../DashboardPage/components/IconsDashBoard";
-import {FilterIcon} from "../components/ProfilePageIcons"
+import { FilterIcon } from "../components/ProfilePageIcons";
 import {
   sendEmailMessage,
   sendWhatsAppMessage,
@@ -119,7 +119,12 @@ const PaymentControlCard = ({
       return;
     }
 
-    setBillingMessage(whatsappResponse.user_message);
+    const mensagemRecebida =
+      whatsappResponse?.user_message ||
+      whatsappResponse?.message ||
+      "Nenhuma mensagem recebida.";
+    console.log("Mensagem recebida da API (Ajustada):", mensagemRecebida);
+    setBillingMessage(mensagemRecebida);
     setSelectedPatient({
       ...billingRecord,
       whatsappLink: whatsappResponse.whatsappLink,
@@ -343,10 +348,7 @@ const PaymentControlCard = ({
                 .sort((a, b) => new Date(b.month) - new Date(a.month))
                 .slice(0, isTableExpanded ? filteredBillingRecords.length : 4)
                 .map((item, index) => (
-                  <tr
-                    key={index}
-                    className="relative text-center"
-                  >
+                  <tr key={index} className="relative text-center">
                     <td className="text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-auto py-2">
                       {item.month
                         ? (() => {
@@ -372,18 +374,18 @@ const PaymentControlCard = ({
                         : "-"}
                     </td>
                     <td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-                          <span>{item.num_consultations}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
-                            Dias:{" "}
-                            {item.consultation_days
-                              ? item.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
-                              : "Sem dias"}
-                          </div>
-                        </td>
+                      <span>{item.num_consultations}</span>
+                      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                        Dias:{" "}
+                        {item.consultation_days
+                          ? item.consultation_days
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
+                          : "Sem dias"}
+                      </div>
+                    </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       R$ {item.total_consultation_fee || "0,00"}
                     </td>
