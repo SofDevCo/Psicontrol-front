@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
-  const [updateOption, setUpdateOption] = useState("current");
+  const [updateOption, setUpdateOption] = useState(null);
 
   if (!isOpen) return null;
 
@@ -21,7 +21,7 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
               value="current_month"
               checked={updateOption === "current_month"}
               onChange={() => setUpdateOption("current_month")}
-              />
+            />
             <span>Modificar a partir do mês atual</span>
           </label>
 
@@ -40,7 +40,13 @@ const EditConsultationFeeModal = ({ isOpen, onConfirm }) => {
 
         <div className="flex justify-center space-x-4 mt-4">
           <button
-            onClick={() => onConfirm(updateOption)}
+            onClick={() => {
+              if (!updateOption) {
+                alert("Por favor, selecione uma opção antes de continuar.");
+                return;
+              }
+              onConfirm(updateOption);
+            }}
             className="lg:h-10 px-6 py-2.5 bg-primaria rounded-[100px] text-texto4 text-sm font-semibold tracking-tight shadow-buttom"
           >
             OK
