@@ -70,19 +70,19 @@ export const Months = ({
     <div className="flex-1 drop-shadow-monthsShadow active:drop-shadow-addShadow active:opacity-50 ml-3 relative top-3 z-30">
       <button
         onClick={toggleModal}
-        className="w-full md:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-center items-center"
+        className="w-full lg:h-[46px] h-[26px] px-3 bg-primaria rounded-[10px] shadow flex justify-center items-center"
       >
         <div className="flex items-center gap-2">
           <VerifyIcon />
-          <span className="text-neutral-100 text-sm md:text-lg font-semibold font-['Inter'] tracking-wider">
-            <span className="block md:hidden">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
-            <span className="hidden md:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
+          <span className="text-neutral-100 text-sm lg:text-lg font-semibold font-['Inter'] tracking-wider">
+            <span className="block lg:hidden">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
+            <span className="hidden lg:block">{`${monthsInRange[selectedMonth - 1]}/${selectedYear.toString().slice(-2)}`}</span>
           </span>
         </div>
         <SetaIcon />
       </button>
       {isModalOpen && (
-        <div className="w-[213px] h-[277px] md:w-full flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute z-50">
+        <div className="w-[213px] h-[277px] lg:w-full flex flex-col items-center mt-2 bg-neutral-100 shadow-lg rounded-2xl border border-[#81a0ae] p-2 absolute z-50">
           <div className="flex items-center justify-between w-full px-5 py-1 mb-2 border-b border-[#cac4d0]">
             <button
               onClick={() => setShowingMonths(true)}
@@ -112,10 +112,10 @@ export const Months = ({
                     }`}
                   >
                     {selectedMonth - 1 === index && <CheckIcon />}
-                    <span className="block md:hidden  ">
+                    <span className="block lg:hidden  ">
                       {monthsInRange[index]}
                     </span>
-                    <span className="hidden md:block ">{month}</span>
+                    <span className="hidden lg:block ">{month}</span>
                   </button>
                 ))
               : getYearsRange().map((year) => (

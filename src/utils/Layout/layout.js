@@ -26,7 +26,7 @@ const Layout = () => {
 
       {isSidebarOpen && (
         <div
-          className="absolute inset-0 bg-[#BDE3ED] bg-opacity-40 backdrop-blur-md z-20 pointer-events-auto md:hidden"
+          className="absolute inset-0 bg-[#BDE3ED] bg-opacity-40 backdrop-blur-md z-20 pointer-events-auto lg:hidden"
           onClick={toggleSidebar} 
         ></div>
       )}

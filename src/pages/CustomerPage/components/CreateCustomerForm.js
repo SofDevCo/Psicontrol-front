@@ -226,17 +226,17 @@ const CreateCustomerForm = ({
     <div className=" space-y-2 p-6">
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-6 md:grid-cols-2 w-full"
+        className="grid grid-cols-1 gap-6 lg:grid-cols-2 w-full"
       >
         <div>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm md:text-[25px] font-medium font-ubuntu text-primaria">
+              <h2 className="text-sm lg:text-[25px] font-medium font-ubuntu text-primaria">
                 {isEditing ? "Editar Paciente" : "Adicionar Paciente"}
               </h2>
               <button
                 onClick={onClose}
-                className="block md:hidden text-primaria"
+                className="block lg:hidden text-primaria"
               >
                 <CloseIconRegisterModal />
               </button>
@@ -244,7 +244,7 @@ const CreateCustomerForm = ({
 
             <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 md:ml-3 ml-2 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 lg:ml-3 ml-2 block  text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -259,7 +259,7 @@ const CreateCustomerForm = ({
               </div>
 
               <div>
-                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Sobronome
                 </label>
                 <input
@@ -273,7 +273,7 @@ const CreateCustomerForm = ({
               </div>
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1">
-                  <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
+                  <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
                     ID Paciente - Google Agenda
                   </label>
                   <input
@@ -283,11 +283,11 @@ const CreateCustomerForm = ({
                     onChange={handleChange}
                     required
                     placeholder="Google Agenda"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm md:placeholder:text-base"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base"
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="mb-1 ml-2 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  <label className="mb-1 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Nascimento
                   </label>
                   <input
@@ -295,14 +295,14 @@ const CreateCustomerForm = ({
                     value={customer.customer_dob || ""}
                     onChange={(e) => handleManualDateChange(e.target.value)}
                     placeholder="DD/MM/AAAA"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm md:placeholder:text-base "
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base "
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="mb-1 ml-3 block  text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block  text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
               <input
@@ -316,7 +316,7 @@ const CreateCustomerForm = ({
             </div>
 
             <div>
-              <label className="mb-1 ml-3  block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3  block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 Email
               </label>
               <input
@@ -330,8 +330,8 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <div className="flex-1 md:w-[213px]">
-                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <div className="flex-1 lg:w-[213px]">
+                <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Telefone
                 </label>
                 <input
@@ -343,8 +343,8 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div className="w-full md:w-[181px]">
-                <label className="mb-1 ml-3 block text-xs md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <div className="w-full lg:w-[181px]">
+                <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Valor
                 </label>
                 <div className="relative">
@@ -364,12 +364,12 @@ const CreateCustomerForm = ({
               </div>
             </div>
 
-            <h2 className="text-primaria  md:text-2xl text-sm font-medium font-ubuntu">
+            <h2 className="text-primaria  lg:text-2xl text-sm font-medium font-ubuntu">
               Contato de Emergência
             </h2>
             <div className="flex flex-col sm:gap-4 gap-3">
               <div className="flex-1">
-                <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -383,7 +383,7 @@ const CreateCustomerForm = ({
               </div>
               <div className="flex flex-1 sm:flex-row sm:gap-4 sm:items-start gap-2">
                 <div className="flex-1">
-                  <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Vinculo
                   </label>
                   <input
@@ -396,7 +396,7 @@ const CreateCustomerForm = ({
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Telefone
                   </label>
                   <input
@@ -413,15 +413,15 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="md:-space-y-1 space-y-4 md:-mt-5 h-full">
+        <div className="lg:-space-y-1 space-y-4 lg:-mt-5 h-full">
           <div className="flex  items-center  max-w-[600px] 2xl:gap-4">
-            <h3 className="text-primaria text-sm md:text-[25px] md:mt-0 mt-4 font-medium font-ubuntu ">
+            <h3 className="text-primaria text-sm lg:text-[25px] lg:mt-0 mt-4 font-medium font-ubuntu ">
               Dados para Recibo
             </h3>
             <button
               type="button"
               onClick={handleUsePatientData}
-              className="hidden md:block w-[181px] h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight whitespace-nowrap"
+              className="hidden lg:block w-[181px] h-[58px] px-4 border-2 border-primaria bg-bg1 hover:bg-bg1 rounded-[10px] text-center text-primaria text-sm font-medium font-ubuntu tracking-tight whitespace-nowrap"
             >
               Usar dados do <br /> paciente
             </button>
@@ -429,8 +429,8 @@ const CreateCustomerForm = ({
 
           <div className="space-y-4">
             <div className="flex gap-4 items-start">
-              <div className="w-full md:w-[418px]">
-                <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <div className="w-full lg:w-[418px]">
+                <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
                 </label>
                 <input
@@ -446,10 +446,10 @@ const CreateCustomerForm = ({
             </div>
 
             <div className="relative">
-              <label className="mb-1 ml-3 block text-sm md:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+              <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                 CPF/CNPJ
               </label>
-              <div className="max-w-[151px] md:max-w-[212px]">
+              <div className="max-w-[151px] lg:max-w-[212px]">
                 <input
                   type="text"
                   name="alternative_cpf_cnpj"
@@ -535,17 +535,17 @@ const CreateCustomerForm = ({
             ))}
           </div>
           <div className="flex flex-col items-end 2xl:items-start 2xl:ml-40  mt-6">
-            <div className="flex gap-4 md:mt-[600px] mt-6">
+            <div className="flex gap-4 lg:mt-[600px] mt-6">
               <button
                 type="button"
-                className="hidden md:table-cell h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px] border border-primaria text-primaria text-sm font-semibold"
+                className="hidden lg:table-cell h-[39px] px-6 py-2.5 bg-bg1 hover:bg-bg1 rounded-[100px] border border-primaria text-primaria text-sm font-semibold"
                 onClick={onClose}
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="md:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
+                className="lg:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
               >
                 Salvar
               </button>

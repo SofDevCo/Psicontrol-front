@@ -249,9 +249,9 @@ const UserPage = () => {
     <div className="flex flex-col p-6 overflow-y-auto overflow-x-hidden ">
  
       <>
-        <div className="relative md:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] md:mt-28 mt-28 mb-3">
+        <div className="relative lg:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-[#0082ba] md:text-[25px] text-[16px] font-medium font-['Ubuntu']">
+            <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
               Meus dados
             </h2>
             <button
@@ -264,10 +264,10 @@ const UserPage = () => {
           </div>
 
           {/* Ajuste no layout para ser responsivo */}
-          <div className="flex flex-col md:flex-row justify-between">
+          <div className="flex flex-col lg:flex-row justify-between">
             {/* Primeira coluna */}
-            <div className="flex md:w-[360px] w-full mb-6 md:mb-0">
-              <div className="md:w-10 md:h-10 w-7 h-7 md:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
+            <div className="flex lg:w-[360px] w-full mb-6 lg:mb-0">
+              <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
                 {userData.photoUrl ? (
                   <img
                     src={userData.photoUrl}
@@ -311,7 +311,7 @@ const UserPage = () => {
             </div>
 
             {/* Segunda coluna */}
-            <div className="md:w-[316px] w-full mx-[44px]">
+            <div className="lg:w-[316px] w-full mx-[44px]">
               <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                 Dados para recibo
               </div>
@@ -349,20 +349,20 @@ const UserPage = () => {
 
 
 
-        <div className="md:flex flex-1 md:mx-auto w-auto md:space-x-4 items-start">
+        <div className="lg:flex flex-1 lg:mx-auto w-auto lg:space-x-4 items-start">
           {/* Box "Minhas agendas" */}
-          <div className="md:w-[540px] w-auto md:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+          <div className="lg:w-[540px] w-auto lg:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex justify-between">
-              <h3 className="text-[#0082ba] md:w-[200px] w-[200px] text-[20px] font-medium">
+              <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
                 Minhas agendas
               </h3>
               <button
                 onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center md:ml-[0px] ml-[80px]">
-                <span className="relative md:w-32 w-[100px] drop-shadow-editShadow -mt-1">
+                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]">
+                <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
                   Trocar de conta
                 </span>
-                <span className="md:ml-1 ml-2">
+                <span className="lg:ml-1 ml-2">
                   <RefreshIcon />
                 </span>
               </button>
@@ -487,10 +487,10 @@ const UserPage = () => {
           </div>
 
 
-          <div className="md:relative md:my-0 my-[10px]">
-            <div className="md:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+          <div className="lg:relative lg:my-0 my-[10px]">
+            <div className="lg:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex  justify-between items-center mb-4">
-                <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
+                <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                   Mensagem de cobrança
                 </h3>
                 {isEditingMessage ? (
@@ -538,15 +538,15 @@ const UserPage = () => {
 
         {isEditing && (
           <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
-            <div className="w-[90%] md:mt-0 mt-28 md:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 md:p-8 overflow-y-auto">
-              <div className="flex flex-col md:flex-row gap-6 md:ml-9">
-                <div className="space-y-6 mr-0 md:mr-20">
-                  <h2 className="text-lg md:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+            <div className="w-[90%] lg:mt-0 mt-28 lg:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto">
+              <div className="flex flex-col lg:flex-row gap-6 lg:ml-9">
+                <div className="space-y-6 mr-0 lg:mr-20">
+                  <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
                     Editar meus dados
                   </h2>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       Nome
                     </label>
                     <input
@@ -555,12 +555,12 @@ const UserPage = () => {
                       value={userData.user_name || ""}
                       onChange={handleChange}
                       placeholder="Nome do psicólogo"
-                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       E-mail
                     </label>
                     <input
@@ -569,13 +569,13 @@ const UserPage = () => {
                       value={userData.user_email || ""}
                       onChange={handleChange}
                       placeholder="e-mail.psicologo@gmail.com"
-                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
 
-                  <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex flex-col lg:flex-row gap-4">
                     <div>
-                      <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                         Telefone
                       </label>
                       <input
@@ -584,12 +584,12 @@ const UserPage = () => {
                         value={userData.user_phone || ""}
                         onChange={handleChange}
                         placeholder="(00) 0 0000-0000"
-                        className="w-full md:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                         CPF/CNPJ
                       </label>
                       <input
@@ -598,13 +598,13 @@ const UserPage = () => {
                         value={userData.user_cpf || ""}
                         onChange={handleChange}
                         placeholder="XX.XXX.XXX/0001-XX"
-                        className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       CRP
                     </label>
                     <input
@@ -613,18 +613,18 @@ const UserPage = () => {
                       value={userData.crp_number || ""}
                       onChange={handleChange}
                       placeholder="XX/XXXXX"
-                      className="w-full md:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <h2 className="text-lg md:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                  <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
                     Dados para recibo
                   </h2>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       Nome/Clínica
                     </label>
                     <input
@@ -635,12 +635,12 @@ const UserPage = () => {
                         setUserData({ ...userData, clinic_name: e.target.value })
                       }
                       placeholder="Nome/Clínica"
-                      className="w-full md:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       CPF/CNPJ
                     </label>
                     <input
@@ -649,16 +649,16 @@ const UserPage = () => {
                       value={userData.clinic_cpf_cnpj || ""}
                       onChange={handleChange}
                       placeholder="XX.XXX.XXX/0001-XX"
-                      className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm md:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                       Importar logotipo
                     </label>
                     <div className="flex items-center gap-2">
-                      <div className="w-full md:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
+                      <div className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
                         <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
                           {fileName}
                         </span>
