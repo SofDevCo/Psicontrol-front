@@ -28,7 +28,7 @@ const CloseIconRegisterModal = () => {
       viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="md:w-[15px] w-[13px] md:h-[15px]  h-[12.94px]"
+      className="lg:w-[15px] w-[13px] lg:h-[15px]  h-[12.94px]"
     >
       <g filter="url(#filter0_i_2137_7953)">
         <path

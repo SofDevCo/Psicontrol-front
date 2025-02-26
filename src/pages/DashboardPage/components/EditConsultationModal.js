@@ -71,7 +71,7 @@ const EditConsultationModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-bgM bg-opacity-50 z-30">
-      <div className="bg-neutral-100 md:w-[437px] w-[325px] p-6 rounded-lg shadow-lg border border-cinza6">
+      <div className="bg-neutral-100 lg:w-[437px] w-[325px] p-6 rounded-lg shadow-lg border border-cinza6">
         <div className="flex justify-end">
           <button onClick={onClose}>
             <CloseIconEdit />
@@ -148,7 +148,7 @@ const EditConsultationModal = ({
         <div className="flex justify-end">
           <button
             onClick={handleSaveChanges}
-            className="px-4 py-2  bg-primaria md:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+            className="px-4 py-2  bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
           >
             Salvar
           </button>

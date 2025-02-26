@@ -27,8 +27,8 @@ const TopBar = ({ onMenuClick }) => {
         return {
           title: (
             <>
-              <span className="hidden md:inline">Receitas e Despesas</span>
-              <span className="block md:hidden">
+              <span className="hidden lg:inline">Receitas e Despesas</span>
+              <span className="block lg:hidden">
                 Receitas
                 <br />e Despesas
               </span>
@@ -40,8 +40,8 @@ const TopBar = ({ onMenuClick }) => {
         return {
           title: (
             <>
-              <span className="hidden md:inline">Minhas Configurações</span>
-              <span className="block md:hidden">
+              <span className="hidden lg:inline">Minhas Configurações</span>
+              <span className="block lg:hidden">
                 Minhas
                 <br />
                 Configurações
@@ -54,8 +54,8 @@ const TopBar = ({ onMenuClick }) => {
         return {
           title: (
             <>
-              <span className="hidden md:inline">Página Não Encontrada</span>
-              <span className="block md:hidden">
+              <span className="hidden lg:inline">Página Não Encontrada</span>
+              <span className="block lg:hidden">
                 Página
                 <br />
                 Não Encontrada
@@ -70,11 +70,11 @@ const TopBar = ({ onMenuClick }) => {
   const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed flex justify-between items-center w-full  p-4 max-md:pt-12 bg-bg1 items-center md:rounded-b-[0px] rounded-b-[35px] md:z-40 z-40">
+    <div className="fixed flex justify-between items-center w-full  p-4 max-lg:pt-12 bg-bg1 items-center lg:rounded-b-[0px] rounded-b-[35px] lg:z-40 z-40">
       {/* Botão hambúrguer visível apenas em telas menores */}
 
       <button
-        className="md:hidden md:p-5 "
+        className="lg:hidden lg:p-5 "
         onClick={onMenuClick}
         aria-label="Abrir menu"
       >
@@ -98,12 +98,12 @@ const TopBar = ({ onMenuClick }) => {
         <img
           src={BaseIcon}
           alt="Base Icon"
-          className="w-[55px] md:hidden opacity-100 mx-auto"
+          className="w-[55px] lg:hidden opacity-100 mx-auto"
         />
       </div>
       {/* Nome da página */}
       <h2
-        className={`md:text-[28px] text-[15px] text-primaria font-semibold ${pageInfo.margin}`}
+        className={`lg:text-[28px] text-[15px] text-primaria font-semibold ${pageInfo.margin}`}
       >
         {pageInfo.title}
       </h2>
