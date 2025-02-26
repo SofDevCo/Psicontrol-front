@@ -364,25 +364,20 @@ const DashBoard = () => {
     }
 
     setLoading(true);
-
     const data = await sendWhatsAppMessage(
       customerId,
       selectedYear,
       selectedMonth
     );
-
     setLoading(false);
 
     if (data?.success) {
       setBillingMessage(data.user_message);
-
       setSelectedPatient((prev) => ({
         ...prev,
         whatsappLink: data.whatsappLink,
       }));
-
       setIsBillingModalOpen(true);
-
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
@@ -390,13 +385,11 @@ const DashBoard = () => {
             : patient
         )
       );
-
-      if (!data.whatsappLink && !data.mailtoLink) {
-        alert("O cliente não possui telefone ou e-mail cadastrado.");
-        setIsBillingModalOpen(false);
-      }
+    } else if (!data.success && data.showModal) {
+      setBillingMessage(data.message);
+      setIsBillingModalOpen(true);
     } else {
-      alert(`Erro: ${data.error || "Erro ao processar a cobrança."}`);
+      alert(`Erro: ${data?.message || "Erro ao processar a cobrança."}`);
     }
   };
 
@@ -419,9 +412,9 @@ const DashBoard = () => {
 
     setLoading(false);
 
-    if (response) {
-      const mailtoLink = response.mailtoLink;
+    if (response?.showModal) {
       setBillingMessage(response.user_message);
+      setIsBillingModalOpen(true);
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
@@ -429,10 +422,10 @@ const DashBoard = () => {
             : patient
         )
       );
-      alert("Abrindo cliente de email...");
-      window.open(mailtoLink, "_blank");
+    } else if (response?.mailtoLink) {
+      window.open(response.mailtoLink, "_blank");
     } else {
-      alert("Erro: Não foi possível enviar o email.");
+      alert(`Erro: ${response?.error || "Erro ao processar a cobrança."}`);
     }
   };
 
@@ -977,19 +970,14 @@ const DashBoard = () => {
         <BillingDashBoard
           onClose={closeBillingModal}
           onSendWhatsApp={() => {
-            if (selectedPatient && selectedPatient.customer_id) {
-              if (selectedPatient.whatsappLink) {
-                alert("Redirecionando para o WhatsApp...");
-                window.open(selectedPatient.whatsappLink, "_blank");
-              } else {
-                alert("Erro: Link do WhatsApp não encontrado.");
-              }
+            if (selectedPatient?.whatsappLink) {
+              window.open(selectedPatient.whatsappLink, "_blank");
             } else {
-              alert("Paciente não encontrado ou sem ID.");
+              alert("Erro: Telefone não cadastrado.");
             }
           }}
           onSendEmail={() => {
-            if (selectedPatient && selectedPatient.customer_id) {
+            if (selectedPatient?.customer_id) {
               handleSendEmail(selectedPatient);
             } else {
               alert("Paciente não encontrado ou sem ID.");
