@@ -415,7 +415,7 @@ const IncomePage = () => {
         <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
           <div className="w-[90%] max-w-[335px] h-auto bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg">
             <div className="w-full text-center mx-auto mb-6">
-              <span className="text-[#5c5c5c] text-[18px] md:text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+              <span className="text-[#5c5c5c] text-[18px] lg:text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                 Você tem certeza que <br />
                 deseja
                 <span className="text-[#0082ba]"> excluir </span>
@@ -441,7 +441,7 @@ const IncomePage = () => {
         </div>
       )}
 
-      <div className=" md:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
+      <div className=" lg:w-[727px] w-auto mx-auto h-auto my-[150px] bg-neutral-100 rounded-[15px] border-2 border-cinza6 p-4 shadow-md">
         <div className="flex mb-6">
           <div className="w-[190px]">
             <Months
@@ -454,15 +454,15 @@ const IncomePage = () => {
           </div>
 
           <button
-            className="md:w-[200px] md:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] md:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria md:text-xs text-[10px] font-medium leading-tight"
+            className="lg:w-[200px] lg:h-[57.69px] w-[157px] h-[41px] shadow bg-neutral-100 drop-shadow-lastMonthShadow active:shadow-innerShadow active:opacity-75 rounded-[10px] lg:ml-[50px] ml-[50px] border-2 font-['Ubuntu'] flex items-center justify-center border-primaria mt-[5px] text-primaria lg:text-xs text-[10px] font-medium leading-tight"
             onClick={repeatLastMonthEntries}
           >
-            <span className="hidden md:inline text-center">
+            <span className="hidden lg:inline text-center">
               REPETIR LANÇAMENTO DO
               <br />
               MÊS ANTERIOR
             </span>
-            <span className="inline w-auto md:hidden text-center text-[9px] leading-tight">
+            <span className="inline w-auto lg:hidden text-center text-[9px] leading-tight">
               REPETIR LANÇAMENTO <br />ANTERIOR
             </span>
           </button>
@@ -542,7 +542,7 @@ const IncomePage = () => {
             {expenses.map((expense, index) => (
               <div
               key={index}
-              className="flex items-center mt-2 gap-4 w-full max-w-[390px] md:max-w-[300px]"
+              className="flex items-center mt-2 gap-4 w-full max-w-[390px] lg:max-w-[300px]"
             >
             
                 <div
@@ -605,7 +605,7 @@ const IncomePage = () => {
         </div>
 
 
-        <div className="flex md:mr-[38px] mr-[10px] justify-end mt-4">
+        <div className="flex lg:mr-[38px] mr-[10px] justify-end mt-4">
           <button
             onClick={handleCancel}
             className="px-4 py-2 border w-[108px] h-[39px] item-center border-primaria text-primaria rounded-[100px] mr-2 "

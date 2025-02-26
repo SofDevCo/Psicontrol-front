@@ -47,13 +47,13 @@ const Sidebar = ({ isOpen, onToggle }) => {
   return (
     <>
       <aside
-        className={`max-md:fixed top-0  z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:flex-shrink-0`}
+        className={`max-lg:fixed top-0  z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0 lg:flex-shrink-0`}
       >
         <div>
           {/* Botão Hambúrguer para Fechar */}
           <button
-            className="md:hidden p-5"
+            className="lg:hidden p-5"
             onClick={onToggle} // Usando a função passada como prop
             aria-label="Fechar menu"
           >
@@ -76,10 +76,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
           <img
             src={logo}
             alt="Logo"
-            className="md:w-[155px] md:h-[95px] w-[1px] h-[1px] md:opacity-100 opacity-0  z-50 ml-[22px] md:mt-[18px]"
+            className="lg:w-[155px] lg:h-[95px] w-[1px] h-[1px] lg:opacity-100 opacity-0  z-50 ml-[22px] lg:mt-[18px]"
           />
           <nav className="text-right">
-            <ul className="md:mt-[70px] mt-[53px] ml-[11px]">
+            <ul className="lg:mt-[70px] mt-[53px] ml-[11px]">
               {/* Página Inicial */}
               <li
                 className={`mb-[27px] -mx-8 ${

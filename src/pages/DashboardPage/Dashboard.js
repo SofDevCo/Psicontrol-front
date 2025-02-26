@@ -611,9 +611,9 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center gap-1 mt-16 md:mt-32">
+          <div className="flex justify-center gap-1 mt-16 lg:mt-32">
             <div className="w-full">
-              <div className="md:hidden flex flex-col w-full">
+              <div className="lg:hidden flex flex-col w-full">
                 <div className="w-full flex justify-center mb-8">
                   <Months
                     onMonthChange={handleMonthChange}
@@ -658,7 +658,7 @@ const DashBoard = () => {
                 </div>
               </div>
 
-              <div className="hidden md:flex justify-center gap-2">
+              <div className="hidden lg:flex justify-center gap-2">
                 <Months
                   onMonthChange={handleMonthChange}
                   onYearChange={handleYearChange}
@@ -687,7 +687,7 @@ const DashBoard = () => {
                   isCurrency={true}
                 />
 
-                <div className="group md:mt-20 md:mb-2 z-10">
+                <div className="group lg:mt-20 lg:mb-2 z-10">
                   <FilterStatusDashBoard
                     selectedStatus={selectedStatus}
                     onChangeStatus={setSelectedStatus}
@@ -699,7 +699,7 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
               isTableExpanded ? "h-auto" : "min-h-screen"
             }`}
           >
@@ -707,31 +707,31 @@ const DashBoard = () => {
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
                   <tr>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Paciente
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Valor Consulta
                     </th>
-                    <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle hidden lg:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Dias
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Nº de consultas
                     </th>
-                    <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className=" text-center lg:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                       Total
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                       Cobrança
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                       Pagamento
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                       NF
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Ações
                     </th>
                   </tr>
@@ -740,7 +740,7 @@ const DashBoard = () => {
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
-                        <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 z-10 text-center">
+                        <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
                           <div className="flex flex-col justify-center leading-tight ">
                             <span>
                               {patient.Customer?.customer_name?.split(" ")[0] ||
@@ -754,13 +754,13 @@ const DashBoard = () => {
                             </span>
                           </div>
                         </td>
-                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           R${" "}
                           {parseFloat(patient.consultation_fee)
                             .toFixed(2)
                             .replace(".", ",")}
                         </td>
-                        <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
                                 .split(", ")
@@ -769,9 +769,9 @@ const DashBoard = () => {
                                 .join(", ")
                             : "-"}
                         </td>
-                        <td className="relative text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 group">
+                        <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
                           <span>{patient.num_consultations || "-"}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap md:hidden">
+                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
@@ -782,7 +782,7 @@ const DashBoard = () => {
                               : "Sem dias"}
                           </div>
                         </td>
-                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           R$ {patient.total_consultation_fee || "0,00"}
                         </td>
                         <td>
@@ -800,7 +800,7 @@ const DashBoard = () => {
                             {patient.payment_status === "pago" ? (
                               <VerifyGreenIcon />
                             ) : patient.payment_status === "parcial" ? (
-                              <span className="text-texto2 md:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                              <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
                                 R${" "}
                                 {parseFloat(patient.payment_amount || 0)
                                   .toFixed(2)
@@ -822,7 +822,7 @@ const DashBoard = () => {
                           </div>
                         </td>
 
-                        <td className="text-center px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
                           <button
                             className="cursor-pointer"
                             onClick={() =>
@@ -860,7 +860,7 @@ const DashBoard = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="md:text-base text-[8px] text-center px-2 md:px-4 py-1 md:py-2"
+                        className="lg:text-base text-[8px] text-center px-2 lg:px-4 py-1 lg:py-2"
                       >
                         Nenhum registro encontrado para este mês e ano.
                       </td>
@@ -872,7 +872,7 @@ const DashBoard = () => {
                   <tr>
                     <td colSpan="8" className="relative py-3">
                       <div
-                        className={`flex justify-center items-center relative w-full transition-all duration-300 md:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
+                        className={`flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
                       >
                         <button
                           onClick={toggleTableSize}
@@ -882,7 +882,7 @@ const DashBoard = () => {
                               : "rotate-180 bottom-5"
                           }`}
                         >
-                          <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
+                          <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
                         </button>
                       </div>
@@ -894,11 +894,11 @@ const DashBoard = () => {
           </div>
 
           {showUnmatchedPatients && (
-            <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
+            <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] lg:h-[263px] lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
               {isSearchBarOpen && (
                 <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
               )}
-              <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
+              <h2 className="mt-6 text-primaria lg:text-F25 text-sm font-normal font-ubuntu px-4">
                 Pacientes não encontrados
               </h2>
               <table className="min-w-full bg-bg1 mt-2">
@@ -909,7 +909,7 @@ const DashBoard = () => {
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
                       >
-                        <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
+                        <td className="px-4 py-2 flex items-center justify-between  lg:text-F15 text-F8">
                           <span>{event.event_name}</span>
                           <button
                             className="cursor-pointer"
@@ -1007,8 +1007,8 @@ const DashBoard = () => {
 
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
-          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64 mt-[10vh]">
-            <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
+          <div className="bg-bg1 p-6 rounded-lg lg:w-[335px] w-auto lg:h-[228px] border border-cinza6 text-center lg:mt-64 lg:ml-64 mt-[10vh]">
+            <p className="lg:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
               paciente à informação <br />
@@ -1026,13 +1026,13 @@ const DashBoard = () => {
                 onClick={() => {
                   setIsConfirmModalOpen(false);
                 }}
-                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
+                className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm border border-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
               >
                 Não
               </button>
               <button
                 onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
-                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
+                className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm bg-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
               >
                 Sim
               </button>

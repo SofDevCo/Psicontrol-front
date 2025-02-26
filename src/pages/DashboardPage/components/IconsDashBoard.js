@@ -3,7 +3,7 @@ import "../../../index.css";
 const CrossIcon = () => {
   return (
     <svg
-      className="w-[9px] h-[9px] md:w-[18px] md:h-[18px]"
+      className="w-[9px] h-[9px] lg:w-[18px] lg:h-[18px]"
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ const CrossIcon = () => {
 const VerifyGreenIcon = () => {
   return (
     <svg
-      className="w-[9px] h-[9px] md:w-[18px] md:h-[18px]"
+      className="w-[9px] h-[9px] lg:w-[18px] lg:h-[18px]"
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ const VerifyGreenIcon = () => {
 const FilterIcon = () => {
   return (
     <svg
-      className="w-[15px] h-[15px] md:w-[25px] md:h-[22px] top-[3px] md:-ml-14 md:-mt-6 -ml-7 -mt-4"
+      className="w-[15px] h-[15px] lg:w-[25px] lg:h-[22px] top-[3px] lg:-ml-14 lg:-mt-6 -ml-7 -mt-4"
       viewBox="0 0 25 25"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ const FilterIcon = () => {
 const SendIcon = () => {
   return (
     <svg
-      className="w-[13px] h-[13px] md:w-[20px] md:h-[20px] md:mr-[6px] ml-1"
+      className="w-[13px] h-[13px] lg:w-[20px] lg:h-[20px] lg:mr-[6px] ml-1"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +136,7 @@ const SendIcon = () => {
 const PartialIcon = () => {
   return (
     <svg
-      className="w-[13px] h-[13px] md:w-[21px] md:h-[20px] md:mr-[6px] md:ml-[3px] ml-1"
+      className="w-[13px] h-[13px] lg:w-[21px] lg:h-[20px] lg:mr-[6px] lg:ml-[3px] ml-1"
       viewBox="0 0 21 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@ const PartialIcon = () => {
 const ConfirmPaymentIcon = () => {
   return (
     <svg
-      className="w-[14px] h-[14px] md:w-[24px] md:h-[24px] md:mr-[10px] ml-1"
+      className="w-[14px] h-[14px] lg:w-[24px] lg:h-[24px] lg:mr-[10px] ml-1"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -170,7 +170,7 @@ const ConfirmPaymentIcon = () => {
 const VinculateIcon = () => {
   return (
     <svg
-      className="w-[10px] md:w-[23px] h-[10px] md:h-[23px] md:mr-[10px] ml-1 "
+      className="w-[10px] lg:w-[23px] h-[10px] lg:h-[23px] lg:mr-[10px] ml-1 "
       viewBox="0 0 23 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +194,7 @@ const VinculateIcon = () => {
 const TrashIconDash = () => {
   return (
     <svg
-      className="w-[9px] md:w-[15px] h-[11px] md:h-[20px] md:mr-[2px] -mr-0"
+      className="w-[9px] lg:w-[15px] h-[11px] lg:h-[20px] lg:mr-[2px] -mr-0"
       viewBox="0 0 15 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +213,7 @@ const CloseIconPaymentModal = () => {
       viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="md:w-[15px] w-[9.44px] md:h-[15px]  h-[9.44px] mb-6"
+      className="lg:w-[15px] w-[9.44px] lg:h-[15px]  h-[9.44px] mb-6"
     >
       <g filter="url(#filter0_i_2137_7953)">
         <path
@@ -269,7 +269,7 @@ const CloseIconMessageModal = () => {
       viewBox="0 0 23 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="md:w-[15px] md:h-[15px] w-[9.44px] h-[9.44px] md:mt-0 mb-4"
+      className="lg:w-[15px] lg:h-[15px] w-[9.44px] h-[9.44px] lg:mt-0 mb-4"
     >
       <g filter="url(#filter0_d_1666_7005)">
         <path
@@ -328,7 +328,7 @@ const ArrowDownIcon = () => {
       viewBox="0 0 20 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="md:w-[20px] w-[10px]  md:h-[16px] h-[5px] "
+      className="lg:w-[20px] w-[10px]  lg:h-[16px] h-[5px] "
     >
       <g filter="url(#filter0_d_1088_9813)">
         <path
@@ -382,7 +382,7 @@ const BillOfSaleIcon = () => {
       viewBox="0 0 24 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="md:w-[24px] md:h-[23px] w-[15.42px] h-[14.78px] md:mr-2  "
+      className="lg:w-[24px] lg:h-[23px] w-[15.42px] h-[14.78px] lg:mr-2  "
     >
       <path
         d="M21.5 16L16.5 21L13 17.5L14.5 16L16.5 18L20 14.5L21.5 16ZM11.09 19H4V3H11V8H16V12.09C16.33 12.04 16.66 12 17 12C17.34 12 17.67 12.04 18 12.09V7L12 1H4C3.46957 1 2.96086 1.21071 2.58579 1.58579C2.21071 1.96086 2 2.46957 2 3V19C2 20.11 2.89 21 4 21H11.81C11.46 20.39 11.21 19.72 11.09 19Z"
