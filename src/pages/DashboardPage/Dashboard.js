@@ -412,17 +412,12 @@ const DashBoard = () => {
 
     setLoading(false);
 
-    if (response?.showModal) {
-      setBillingMessage(response.user_message);
-      setIsBillingModalOpen(true);
-      setPatients((prevPatients) =>
-        prevPatients.map((patient) =>
-          patient.customer_id === customerId
-            ? { ...patient, sending_invoice: true }
-            : patient
-        )
-      );
-    } else if (response?.mailtoLink) {
+    if (!response || response.message === "E-mail não cadastrado.") {
+      alert("Erro: E-mail não cadastrado.");
+      return;
+    }
+
+    if (response?.mailtoLink) {
       window.open(response.mailtoLink, "_blank");
     } else {
       alert(`Erro: ${response?.error || "Erro ao processar a cobrança."}`);
