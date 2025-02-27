@@ -314,7 +314,15 @@ const DashBoard = () => {
           (selectedStatus.includes("nao-realizada") &&
             !patient.sending_invoice);
 
-        return matchesPaymentStatus || matchesInvoiceStatus;
+        const matchesBillofSaleStatus =
+          (selectedStatus.includes("nao-emitidos") && !patient.bill_of_sale) ||
+          (selectedStatus.includes("emitidos") && patient.bill_of_sale);
+
+        return (
+          matchesPaymentStatus ||
+          matchesInvoiceStatus ||
+          matchesBillofSaleStatus
+        );
       });
 
       setFilteredPatients(filtered);
