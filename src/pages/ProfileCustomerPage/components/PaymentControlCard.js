@@ -509,6 +509,7 @@ const PaymentControlCard = ({
               selectedMonth={selectedMonthForEdit}
               selectedYear={selectedYearForEdit}
               customerId={selectedCustomerForEdit}
+              updateBillingRecords={updateBillingRecords}
             />
           )}
         <>

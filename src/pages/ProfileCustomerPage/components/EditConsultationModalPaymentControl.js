@@ -13,6 +13,7 @@ const EditConsultationModalPaymentControl = ({
   selectedMonth,
   selectedYear,
   customerId,
+  updateBillingRecords,
 }) => {
   const [days, setDays] = useState([]);
   const [newDay, setNewDay] = useState("");
@@ -80,6 +81,19 @@ const EditConsultationModalPaymentControl = ({
       await Promise.all(
         daysToAdd.map((day) =>
           AddDay(customerId, day, selectedMonth, selectedYear)
+        )
+      );
+    }
+
+    setDays(tempDays);
+
+    if (updateBillingRecords) {
+      updateBillingRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          record.customer_id === customerId &&
+          record.month === `${selectedYear}-${selectedMonth}`
+            ? { ...record, consultation_days: tempDays.join(", ") }
+            : record
         )
       );
     }
