@@ -1,0 +1,169 @@
+import React, { useState, useEffect } from "react";
+import {
+  EditIcon,
+  CloseMiniIcon,
+  AddConsultationIcon,
+  CloseIconEdit,
+} from "../../CustomerPage/components/IconsRegisterCard";
+import { AddDay, RemoveDay } from "../../../service/pagesService/pagesService"; 
+
+const EditConsultationModalPaymentControl = ({
+  isOpen,
+  onClose,
+  selectedMonth,
+  selectedYear,
+  customerId,
+}) => {
+  const [days, setDays] = useState([]);
+  const [newDay, setNewDay] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [tempDays, setTempDays] = useState([]);
+
+  useEffect(() => {
+    if (!selectedMonth || !selectedYear || !customerId) return;
+
+    const fetchDaysForMonth = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${selectedMonth}&year=${selectedYear}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok && data.billingRecords.length > 0) {
+        const daysArray = data.billingRecords
+          .filter((record) => record.customer_id === customerId)
+          .flatMap((record) =>
+            record.consultation_days ? record.consultation_days.split(", ") : []
+          );
+
+        setDays(daysArray);
+        setTempDays(daysArray);
+      } else {
+        setDays([]);
+        setTempDays([]);
+      }
+    };
+
+    fetchDaysForMonth();
+  }, [selectedMonth, selectedYear, customerId]);
+
+  if (!isOpen || !customerId) return null;
+
+  const handleAddDayLocal = (event) => {
+    if (event.key === "Enter") {
+      const dayTrimmed = newDay.trim();
+      if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
+        setTempDays((prev) => [...prev, dayTrimmed]);
+        setNewDay("");
+        setIsAdding(false);
+      }
+    }
+  };
+
+  const handleRemoveDayLocal = (dayToRemove) => {
+    setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
+  };
+
+  const handleSaveChanges = async () => {
+    setDays(tempDays);
+    const daysToRemove = days.filter((day) => !tempDays.includes(day));
+    const daysToAdd = tempDays.filter((day) => !days.includes(day));
+
+    if (daysToRemove.length > 0) {
+      await RemoveDay(customerId, daysToRemove);
+    }
+    if (daysToAdd.length > 0) {
+      await Promise.all(daysToAdd.map((day) => AddDay(customerId, day)));
+    }
+
+    setIsEditing(false);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-bgM bg-opacity-50 z-30">
+      <div className="bg-neutral-100 lg:w-[437px] w-[325px] p-6 rounded-lg shadow-lg border border-cinza6">
+        <div className="flex justify-end">
+          <button onClick={onClose}>
+            <CloseIconEdit />
+          </button>
+        </div>
+        <h1 className="text-center text-primaria text-[21px] font-medium tracking-tight mb-7">
+          Editar Consultas - {selectedMonth}/{selectedYear}
+        </h1>
+        <div className="mt-4">
+          <span className="text-texto1 text-[15px] font-semibold tracking-tight">
+            Dias de consulta
+          </span>
+          <div className="mt-2">
+            {!isEditing ? (
+              <span>{tempDays.join(", ") || "Nenhum dia cadastrado"}</span>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {tempDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col items-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6"
+                  >
+                    <span className="mb-1">{day}</span>
+                    {isEditing && (
+                      <button
+                        onClick={() => handleRemoveDayLocal(day)}
+                        className="absolute -bottom-5"
+                      >
+                        <CloseMiniIcon />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {isEditing && (
+            <div className="flex items-center mt-4">
+              {isAdding && (
+                <input
+                  type="text"
+                  value={newDay}
+                  onChange={(e) => setNewDay(e.target.value)}
+                  onKeyDown={handleAddDayLocal}
+                  className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-11 appearance-none mr-2 bg-bg1"
+                />
+              )}
+              <div
+                className="flex items-center justify-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
+                onClick={() => setIsAdding(true)}
+              >
+                <AddConsultationIcon />
+              </div>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => {
+            setIsEditing(!isEditing);
+            if (!isEditing) setIsAdding(false);
+          }}
+          className="mt-4"
+        >
+          {!isEditing && <EditIcon />}
+        </button>
+
+        <div className="flex justify-end">
+          <button
+            onClick={handleSaveChanges}
+            className="px-4 py-2 bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+          >
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditConsultationModalPaymentControl;
