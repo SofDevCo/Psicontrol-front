@@ -7,6 +7,8 @@ const BillingDashBoard = ({
   onSendWhatsApp,
   message,
 }) => {
+  const safeMessage = message || "";
+
   return (
     <div className="fixed inset-0 bg-bgM/30 bg-opacity-50 backdrop-blur-sm flex justify-center items-start z-30">
       <div className="bg-bg1 rounded-B15 p-6 lg:w-[477px] w-[280px] lg:h-[521px] h-[386px] border border-cinza6 lg:border-[3px] lg:mt-64 lg:ml-64  mt-[18vh]">
@@ -19,8 +21,10 @@ const BillingDashBoard = ({
           </button>
         </div>
         <p
-          className="lg:mb-10 mb-3 lg:ml-8 w-[403px] text-texto1 lg:text-sm text-[10px]  font-openSans tracking-tight "
-          dangerouslySetInnerHTML={{ __html: message.replace(/\n/g, "<br />") }}
+          className="lg:mb-10 mb-3 lg:ml-8 w-[403px] text-texto1 lg:text-sm text-[10px] font-openSans tracking-tight "
+          dangerouslySetInnerHTML={{
+            __html: safeMessage.replace(/\n/g, "<br />"),
+          }}
         ></p>
         <div className="border-b border-cinza6 mb-12"></div>
         <div className="flex justify-between lg:ml-8 gap-4">
@@ -40,7 +44,6 @@ const BillingDashBoard = ({
       </div>
     </div>
   );
-  
 };
 
 export default BillingDashBoard;

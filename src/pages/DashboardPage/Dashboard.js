@@ -268,7 +268,7 @@ const DashBoard = () => {
 
   const fetchBillingRecords = async (month, year) => {
     setLoading(true);
-  
+
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
       {
@@ -277,10 +277,10 @@ const DashBoard = () => {
         },
       }
     );
-  
+
     if (response.ok) {
       const data = await response.json();
-  
+
       setPatients(data.billingRecords || []);
       setFilteredPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
@@ -314,7 +314,15 @@ const DashBoard = () => {
           (selectedStatus.includes("nao-realizada") &&
             !patient.sending_invoice);
 
-        return matchesPaymentStatus || matchesInvoiceStatus;
+        const matchesBillofSaleStatus =
+          (selectedStatus.includes("nao-emitidos") && !patient.bill_of_sale) ||
+          (selectedStatus.includes("emitidos") && patient.bill_of_sale);
+
+        return (
+          matchesPaymentStatus ||
+          matchesInvoiceStatus ||
+          matchesBillofSaleStatus
+        );
       });
 
       setFilteredPatients(filtered);
@@ -364,19 +372,20 @@ const DashBoard = () => {
     }
 
     setLoading(true);
-
     const data = await sendWhatsAppMessage(
       customerId,
       selectedYear,
       selectedMonth
     );
-
     setLoading(false);
 
     if (data?.success) {
       setBillingMessage(data.user_message);
+      setSelectedPatient((prev) => ({
+        ...prev,
+        whatsappLink: data.whatsappLink,
+      }));
       setIsBillingModalOpen(true);
-
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customerId
@@ -384,13 +393,11 @@ const DashBoard = () => {
             : patient
         )
       );
-
-      if (!data.whatsappLink && !data.mailtoLink) {
-        alert("O cliente não possui telefone ou e-mail cadastrado.");
-        setIsBillingModalOpen(false);
-      }
+    } else if (!data.success && data.showModal) {
+      setBillingMessage(data.message);
+      setIsBillingModalOpen(true);
     } else {
-      alert(`Erro: ${data.error || "Erro ao processar a cobrança."}`);
+      alert(`Email e Telefone não cadastrados.`);
     }
   };
 
@@ -413,20 +420,15 @@ const DashBoard = () => {
 
     setLoading(false);
 
-    if (response) {
-      const mailtoLink = response.mailtoLink;
-      setBillingMessage(response.user_message);
-      setPatients((prevPatients) =>
-        prevPatients.map((patient) =>
-          patient.customer_id === customerId
-            ? { ...patient, sending_invoice: true }
-            : patient
-        )
-      );
-      alert("Abrindo cliente de email...");
-      window.open(mailtoLink, "_blank");
+    if (!response || response.message === "E-mail não cadastrado.") {
+      alert("Erro: E-mail não cadastrado.");
+      return;
+    }
+
+    if (response?.mailtoLink) {
+      window.open(response.mailtoLink, "_blank");
     } else {
-      alert("Erro: Não foi possível enviar o email.");
+      alert(`Erro: ${response?.error || "Erro ao processar a cobrança."}`);
     }
   };
 
@@ -555,7 +557,20 @@ const DashBoard = () => {
   }, []);
 
   const handleRemoveDay = async (customerId, daysToRemove) => {
-    const response = await RemoveDay(customerId, daysToRemove);
+    if (!selectedPatientForEdit || !selectedPatientForEdit.month_and_year) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const [yearFromPatient, monthFromPatient] =
+      selectedPatientForEdit.month_and_year.split("-");
+
+    const response = await RemoveDay(
+      customerId,
+      daysToRemove,
+      monthFromPatient,
+      yearFromPatient
+    );
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -574,7 +589,20 @@ const DashBoard = () => {
   };
 
   const handleAddDay = async (customerId, day) => {
-    const response = await AddDay(customerId, day);
+    if (!selectedPatientForEdit || !selectedPatientForEdit.month_and_year) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const [yearFromPatient, monthFromPatient] =
+      selectedPatientForEdit.month_and_year.split("-");
+
+    const response = await AddDay(
+      customerId,
+      day,
+      monthFromPatient,
+      yearFromPatient
+    );
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -971,14 +999,14 @@ const DashBoard = () => {
         <BillingDashBoard
           onClose={closeBillingModal}
           onSendWhatsApp={() => {
-            if (selectedPatient && selectedPatient.customer_id) {
-              handleSendWhatsApp(selectedPatient);
+            if (selectedPatient?.whatsappLink) {
+              window.open(selectedPatient.whatsappLink, "_blank");
             } else {
-              alert("Paciente não encontrado ou sem ID.");
+              alert("Erro: Telefone não cadastrado.");
             }
           }}
           onSendEmail={() => {
-            if (selectedPatient && selectedPatient.customer_id) {
+            if (selectedPatient?.customer_id) {
               handleSendEmail(selectedPatient);
             } else {
               alert("Paciente não encontrado ou sem ID.");
@@ -1000,11 +1028,13 @@ const DashBoard = () => {
         )}
       </>
 
-      {isEditModalOpen && selectedPatientForEdit?.consultation_days && (
+      {isEditModalOpen && selectedPatientForEdit && (
         <EditConsultationModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           patient={selectedPatientForEdit}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
           onRemoveDay={handleRemoveDay}
           onAddDay={handleAddDay}
           onUpdatePatient={updatePatientDays}

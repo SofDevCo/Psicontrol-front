@@ -5,16 +5,15 @@ import {
   AddConsultationIcon,
   CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
+import { AddDay, RemoveDay } from "../../../service/pagesService/pagesService";
 
-const EditConsultationModal = ({
+const EditConsultationModalPaymentControl = ({
   isOpen,
   onClose,
-  patient,
   selectedMonth,
   selectedYear,
-  onRemoveDay,
-  onAddDay,
-  onUpdatePatient,
+  customerId,
+  updateBillingRecords,
 }) => {
   const [days, setDays] = useState([]);
   const [newDay, setNewDay] = useState("");
@@ -23,17 +22,37 @@ const EditConsultationModal = ({
   const [tempDays, setTempDays] = useState([]);
 
   useEffect(() => {
-    if (patient && patient.consultation_days) {
-      const daysArray = patient.consultation_days.split(", ");
-      setDays(daysArray);
-      setTempDays(daysArray);
-    } else {
-      setDays([]);
-      setTempDays([]);
-    }
-  }, [patient, selectedMonth, selectedYear]);
+    if (!selectedMonth || !selectedYear || !customerId) return;
 
-  if (!isOpen || !patient) return null;
+    const fetchDaysForMonth = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${selectedMonth}&year=${selectedYear}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok && data.billingRecords.length > 0) {
+        const daysArray = data.billingRecords
+          .filter((record) => record.customer_id === customerId)
+          .flatMap((record) =>
+            record.consultation_days ? record.consultation_days.split(", ") : []
+          );
+
+        setDays(daysArray);
+        setTempDays(daysArray);
+      } else {
+        setDays([]);
+        setTempDays([]);
+      }
+    };
+
+    fetchDaysForMonth();
+  }, [selectedMonth, selectedYear, customerId]);
+
+  if (!isOpen || !customerId) return null;
 
   const handleAddDayLocal = (event) => {
     if (event.key === "Enter") {
@@ -51,32 +70,34 @@ const EditConsultationModal = ({
   };
 
   const handleSaveChanges = async () => {
-    if (!patient || !selectedMonth || !selectedYear) {
-      alert("Erro: Paciente, mês ou ano não disponível.");
-      return;
-    }
-
     setDays(tempDays);
     const daysToRemove = days.filter((day) => !tempDays.includes(day));
     const daysToAdd = tempDays.filter((day) => !days.includes(day));
 
     if (daysToRemove.length > 0) {
-      await onRemoveDay(
-        patient.customer_id,
-        daysToRemove,
-        selectedMonth,
-        selectedYear
-      );
+      await RemoveDay(customerId, daysToRemove, selectedMonth, selectedYear);
     }
     if (daysToAdd.length > 0) {
       await Promise.all(
         daysToAdd.map((day) =>
-          onAddDay(patient.customer_id, day, selectedMonth, selectedYear)
+          AddDay(customerId, day, selectedMonth, selectedYear)
         )
       );
     }
 
-    onUpdatePatient(patient.customer_id, tempDays);
+    setDays(tempDays);
+
+    if (updateBillingRecords) {
+      updateBillingRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          record.customer_id === customerId &&
+          record.month === `${selectedYear}-${selectedMonth}`
+            ? { ...record, consultation_days: tempDays.join(", ") }
+            : record
+        )
+      );
+    }
+
     setIsEditing(false);
     onClose();
   };
@@ -90,15 +111,8 @@ const EditConsultationModal = ({
           </button>
         </div>
         <h1 className="text-center text-primaria text-[21px] font-medium tracking-tight mb-7">
-          Editar Consultas
+          Editar Consultas - {selectedMonth}/{selectedYear}
         </h1>
-        <span className="text-texto1 text-[15px] font-semibold tracking-tight">
-          Paciente:
-        </span>
-        <br />
-        <span className="text-texto1 text-[15px] font-normal tracking-tight">
-          {patient.Customer?.customer_name || "Sem nome"}
-        </span>
         <div className="mt-4">
           <span className="text-texto1 text-[15px] font-semibold tracking-tight">
             Dias de consulta
@@ -160,7 +174,7 @@ const EditConsultationModal = ({
         <div className="flex justify-end">
           <button
             onClick={handleSaveChanges}
-            className="px-4 py-2  bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+            className="px-4 py-2 bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
           >
             Salvar
           </button>
@@ -170,4 +184,4 @@ const EditConsultationModal = ({
   );
 };
 
-export default EditConsultationModal;
+export default EditConsultationModalPaymentControl;

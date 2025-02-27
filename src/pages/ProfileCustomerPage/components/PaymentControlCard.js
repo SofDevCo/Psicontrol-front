@@ -5,7 +5,7 @@ import {
   CrossIcon,
   ArrowDownIcon,
 } from "../../DashboardPage/components/IconsDashBoard";
-import {FilterIcon} from "../components/ProfilePageIcons"
+import { FilterIcon } from "../components/ProfilePageIcons";
 import {
   sendEmailMessage,
   sendWhatsAppMessage,
@@ -19,6 +19,7 @@ import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
 import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
 import FilterStatusProfilePage from "./FilterStatusProfilePage";
+import EditConsultationModalPaymentControl from "./EditConsultationModalPaymentControl";
 import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 
 const PaymentControlCard = ({
@@ -37,8 +38,10 @@ const PaymentControlCard = ({
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [billingMessage, setBillingMessage] = useState("");
-  const [selectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth] = useState(new Date().getMonth() + 1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedMonthForEdit, setSelectedMonthForEdit] = useState(null);
+  const [selectedYearForEdit, setSelectedYearForEdit] = useState(null);
+  const [selectedCustomerForEdit, setSelectedCustomerForEdit] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredBillingRecords, setFilteredBillingRecords] =
     useState(billingRecords);
@@ -119,7 +122,12 @@ const PaymentControlCard = ({
       return;
     }
 
-    setBillingMessage(whatsappResponse.user_message);
+    const mensagemRecebida =
+      whatsappResponse?.user_message ||
+      whatsappResponse?.message ||
+      "Nenhuma mensagem recebida.";
+    console.log("Mensagem recebida da API (Ajustada):", mensagemRecebida);
+    setBillingMessage(mensagemRecebida);
     setSelectedPatient({
       ...billingRecord,
       whatsappLink: whatsappResponse.whatsappLink,
@@ -204,10 +212,12 @@ const PaymentControlCard = ({
 
     const { customer_id } = selectedPatientForPartialPayment;
 
+    const [year, month] = selectedPatientForPartialPayment.month.split("-");
+
     const response = await savePartialPayment(
       customer_id,
-      selectedYear,
-      selectedMonth,
+      parseInt(year, 10),
+      parseInt(month, 10),
       paymentAmount
     );
 
@@ -250,7 +260,7 @@ const PaymentControlCard = ({
         if (selectedStatus.length === 0) return true;
 
         const matchesPaymentStatus =
-          (selectedStatus.includes("abertor") && !record.payment_status) ||
+          (selectedStatus.includes("aberto") && !record.payment_status) ||
           selectedStatus.includes(record.payment_status);
 
         const matchesInvoiceStatus =
@@ -288,6 +298,14 @@ const PaymentControlCard = ({
       </p>
     );
   }
+
+  const handleEditConsultation = (billingRecord) => {
+    const [year, month] = billingRecord.month.split("-");
+    setSelectedMonthForEdit(month);
+    setSelectedYearForEdit(year);
+    setSelectedCustomerForEdit(billingRecord.customer_id);
+    setIsEditModalOpen(true);
+  };
 
   return (
     <>
@@ -343,10 +361,7 @@ const PaymentControlCard = ({
                 .sort((a, b) => new Date(b.month) - new Date(a.month))
                 .slice(0, isTableExpanded ? filteredBillingRecords.length : 4)
                 .map((item, index) => (
-                  <tr
-                    key={index}
-                    className="relative text-center"
-                  >
+                  <tr key={index} className="relative text-center">
                     <td className="text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-auto py-2">
                       {item.month
                         ? (() => {
@@ -372,18 +387,18 @@ const PaymentControlCard = ({
                         : "-"}
                     </td>
                     <td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-                          <span>{item.num_consultations}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
-                            Dias:{" "}
-                            {item.consultation_days
-                              ? item.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
-                              : "Sem dias"}
-                          </div>
-                        </td>
+                      <span>{item.num_consultations}</span>
+                      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                        Dias:{" "}
+                        {item.consultation_days
+                          ? item.consultation_days
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
+                          : "Sem dias"}
+                      </div>
+                    </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       R$ {item.total_consultation_fee || "0,00"}
                     </td>
@@ -447,6 +462,9 @@ const PaymentControlCard = ({
                             onConfirmedBillOfSale={() =>
                               handleConfirmBillOfSale(item)
                             }
+                            onEditConsultationFee={() =>
+                              handleEditConsultation(item)
+                            }
                           />
                         </div>
                       )}
@@ -481,6 +499,19 @@ const PaymentControlCard = ({
             message={billingMessage}
           />
         )}
+        {isEditModalOpen &&
+          selectedMonthForEdit &&
+          selectedYearForEdit &&
+          selectedCustomerForEdit && (
+            <EditConsultationModalPaymentControl
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              selectedMonth={selectedMonthForEdit}
+              selectedYear={selectedYearForEdit}
+              customerId={selectedCustomerForEdit}
+              updateBillingRecords={updateBillingRecords}
+            />
+          )}
         <>
           {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
             <ModalPaymentDash

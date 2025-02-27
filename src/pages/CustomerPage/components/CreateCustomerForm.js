@@ -43,6 +43,22 @@ const CreateCustomerForm = ({
     }
   }, [isEditing, selectedPatient, setCustomer]);
 
+  useEffect(() => {
+    if (isEditing && selectedPatient) {
+      setOriginalConsultationFee(selectedPatient.consultation_fee || "");
+    }
+  }, [isEditing, selectedPatient]);
+
+  const isConsultationFeeChanged = () => {
+    const formattedOriginal = parseFloat(
+      originalConsultationFee || "0"
+    ).toFixed(2);
+    const formattedCurrent = parseFloat(
+      customer.consultation_fee || "0"
+    ).toFixed(2);
+    return formattedOriginal !== formattedCurrent;
+  };
+
   const handleManualDateChange = (value) => {
     let formattedValue = value.replace(/\D/g, "");
 
@@ -161,7 +177,7 @@ const CreateCustomerForm = ({
       return;
     }
 
-    if (isEditing && customer.consultation_fee !== originalConsultationFee) {
+    if (isEditing && isConsultationFeeChanged()) {
       setIsConfirmModalOpen(true);
       return;
     }
@@ -172,54 +188,58 @@ const CreateCustomerForm = ({
   const handleConfirmSubmit = async (updateOption) => {
     setIsConfirmModalOpen(false);
 
-    try {
-      const response = await createOrUpdateCustomer(
-        {
-          ...customer,
-          consultation_fee: customer.consultation_fee,
-          update_from: updateOption,
-          additionalAlternatives,
-        },
-        [],
-        customer.customer_id
-      );
-      const data = await response.json();
+    const response = await createOrUpdateCustomer(
+      {
+        ...customer,
+        consultation_fee: customer.consultation_fee,
+        update_from: updateOption,
+        additionalAlternatives,
+      },
+      [],
+      customer.customer_id
+    );
 
-      if (response.ok) {
-        setCustomer({
-          customer_name: "",
-          customer_second_name: "",
-          customer_calendar_name: "",
-          customer_cpf_cnpj: "",
-          customer_phone: "",
-          customer_email: "",
-          consultation_fee: "",
-          patient_status: true,
-          alternative_name: "",
-          alternative_cpf_cnpj: "",
-          customer_dob: "",
-          customer_emergency_contact: "",
-          customer_emergency_name: "",
-          customer_emergency_relationship: "",
-          customer_personal_message: "",
-        });
-        setAdditionalAlternatives([]);
-        onSubmit();
-        onClose();
+    const data = await response.json();
 
-        if (customer.customer_id) {
-          showEditToast();
-        } else {
-          showSuccessToast();
-        }
-
-        setStartDate(null);
-      } else {
-        showErrorToast(data.message || "Erro ao processar a solicitação!");
-      }
-    } catch (error) {
-      showErrorToast("Erro ao processar a solicitação!");
+    if (data.error) {
+      showErrorToast(data.message || "Erro ao atualizar consulta.");
+      return;
     }
+
+    if (!response.ok) {
+      showErrorToast(data.message || "Erro ao processar a solicitação!");
+      return;
+    }
+
+    setCustomer({
+      customer_name: "",
+      customer_second_name: "",
+      customer_calendar_name: "",
+      customer_cpf_cnpj: "",
+      customer_phone: "",
+      customer_email: "",
+      consultation_fee: "",
+      patient_status: true,
+      alternative_name: "",
+      alternative_cpf_cnpj: "",
+      customer_dob: "",
+      customer_emergency_contact: "",
+      customer_emergency_name: "",
+      customer_emergency_relationship: "",
+      customer_personal_message: "",
+    });
+
+    setAdditionalAlternatives([]);
+    onSubmit();
+    onClose();
+
+    if (customer.customer_id) {
+      showEditToast();
+    } else {
+      showSuccessToast();
+    }
+
+    setStartDate(null);
   };
 
   return (
