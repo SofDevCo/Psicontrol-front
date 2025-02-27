@@ -19,6 +19,7 @@ import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
 import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
 import FilterStatusProfilePage from "./FilterStatusProfilePage";
+import EditConsultationModalPaymentControl from "./EditConsultationModalPaymentControl";
 import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 
 const PaymentControlCard = ({
@@ -37,8 +38,10 @@ const PaymentControlCard = ({
   const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [billingMessage, setBillingMessage] = useState("");
-  const [selectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth] = useState(new Date().getMonth() + 1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedMonthForEdit, setSelectedMonthForEdit] = useState(null);
+  const [selectedYearForEdit, setSelectedYearForEdit] = useState(null);
+  const [selectedCustomerForEdit, setSelectedCustomerForEdit] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredBillingRecords, setFilteredBillingRecords] =
     useState(billingRecords);
@@ -296,6 +299,14 @@ const PaymentControlCard = ({
     );
   }
 
+  const handleEditConsultation = (billingRecord) => {
+    const [year, month] = billingRecord.month.split("-");
+    setSelectedMonthForEdit(month);
+    setSelectedYearForEdit(year);
+    setSelectedCustomerForEdit(billingRecord.customer_id);
+    setIsEditModalOpen(true);
+  };
+
   return (
     <>
       <div className="flex lg:mt-10 mt-5 ml-2 md:ml-9 lg:auto lg:mx-auto justify-between box-border lg:w-full w-[calc(90vw-40px)] md:w-[89.9%] h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
@@ -451,6 +462,9 @@ const PaymentControlCard = ({
                             onConfirmedBillOfSale={() =>
                               handleConfirmBillOfSale(item)
                             }
+                            onEditConsultationFee={() =>
+                              handleEditConsultation(item)
+                            }
                           />
                         </div>
                       )}
@@ -485,6 +499,18 @@ const PaymentControlCard = ({
             message={billingMessage}
           />
         )}
+        {isEditModalOpen &&
+          selectedMonthForEdit &&
+          selectedYearForEdit &&
+          selectedCustomerForEdit && (
+            <EditConsultationModalPaymentControl
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              selectedMonth={selectedMonthForEdit}
+              selectedYear={selectedYearForEdit}
+              customerId={selectedCustomerForEdit}
+            />
+          )}
         <>
           {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
             <ModalPaymentDash
