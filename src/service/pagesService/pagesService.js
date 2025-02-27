@@ -238,7 +238,7 @@ export const savePartialPayment = async (
   return response.json();
 };
 
-export const AddDay = async (customerId, day) => {
+export const AddDay = async (customerId, day, month, year) => {
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/add-day`,
     {
@@ -247,14 +247,14 @@ export const AddDay = async (customerId, day) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
       },
-      body: JSON.stringify({ customerId, day }),
+      body: JSON.stringify({ customerId, day, month, year }),
     }
   );
 
   return response;
 };
 
-export const RemoveDay = async (customerId, days) => {
+export const RemoveDay = async (customerId, days, month, year) => {
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/remove-day`,
     {
@@ -263,7 +263,7 @@ export const RemoveDay = async (customerId, days) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
       },
-      body: JSON.stringify({ customerId, days }),
+      body: JSON.stringify({ customerId, days, month, year }),
     }
   );
 

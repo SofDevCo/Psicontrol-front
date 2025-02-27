@@ -10,6 +10,8 @@ const EditConsultationModal = ({
   isOpen,
   onClose,
   patient,
+  selectedMonth,
+  selectedYear,
   onRemoveDay,
   onAddDay,
   onUpdatePatient,
@@ -21,8 +23,6 @@ const EditConsultationModal = ({
   const [tempDays, setTempDays] = useState([]);
 
   useEffect(() => {
-    console.log("Modal recebeu o patient:", patient);
-
     if (patient && patient.consultation_days) {
       const daysArray = patient.consultation_days.split(", ");
       setDays(daysArray);
@@ -31,7 +31,7 @@ const EditConsultationModal = ({
       setDays([]);
       setTempDays([]);
     }
-  }, [patient]);
+  }, [patient, selectedMonth, selectedYear]);
 
   if (!isOpen || !patient) return null;
 
@@ -51,16 +51,28 @@ const EditConsultationModal = ({
   };
 
   const handleSaveChanges = async () => {
+    if (!patient || !selectedMonth || !selectedYear) {
+      alert("Erro: Paciente, mês ou ano não disponível.");
+      return;
+    }
+
     setDays(tempDays);
     const daysToRemove = days.filter((day) => !tempDays.includes(day));
     const daysToAdd = tempDays.filter((day) => !days.includes(day));
 
     if (daysToRemove.length > 0) {
-      await onRemoveDay(patient.customer_id, daysToRemove);
+      await onRemoveDay(
+        patient.customer_id,
+        daysToRemove,
+        selectedMonth,
+        selectedYear
+      );
     }
     if (daysToAdd.length > 0) {
       await Promise.all(
-        daysToAdd.map((day) => onAddDay(patient.customer_id, day))
+        daysToAdd.map((day) =>
+          onAddDay(patient.customer_id, day, selectedMonth, selectedYear)
+        )
       );
     }
 

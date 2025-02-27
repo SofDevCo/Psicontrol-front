@@ -5,7 +5,7 @@ import {
   AddConsultationIcon,
   CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
-import { AddDay, RemoveDay } from "../../../service/pagesService/pagesService"; 
+import { AddDay, RemoveDay } from "../../../service/pagesService/pagesService";
 
 const EditConsultationModalPaymentControl = ({
   isOpen,
@@ -74,10 +74,14 @@ const EditConsultationModalPaymentControl = ({
     const daysToAdd = tempDays.filter((day) => !days.includes(day));
 
     if (daysToRemove.length > 0) {
-      await RemoveDay(customerId, daysToRemove);
+      await RemoveDay(customerId, daysToRemove, selectedMonth, selectedYear);
     }
     if (daysToAdd.length > 0) {
-      await Promise.all(daysToAdd.map((day) => AddDay(customerId, day)));
+      await Promise.all(
+        daysToAdd.map((day) =>
+          AddDay(customerId, day, selectedMonth, selectedYear)
+        )
+      );
     }
 
     setIsEditing(false);

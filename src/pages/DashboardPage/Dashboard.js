@@ -557,7 +557,20 @@ const DashBoard = () => {
   }, []);
 
   const handleRemoveDay = async (customerId, daysToRemove) => {
-    const response = await RemoveDay(customerId, daysToRemove);
+    if (!selectedPatientForEdit || !selectedPatientForEdit.month_and_year) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const [yearFromPatient, monthFromPatient] =
+      selectedPatientForEdit.month_and_year.split("-");
+
+    const response = await RemoveDay(
+      customerId,
+      daysToRemove,
+      monthFromPatient,
+      yearFromPatient
+    );
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -576,7 +589,20 @@ const DashBoard = () => {
   };
 
   const handleAddDay = async (customerId, day) => {
-    const response = await AddDay(customerId, day);
+    if (!selectedPatientForEdit || !selectedPatientForEdit.month_and_year) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const [yearFromPatient, monthFromPatient] =
+      selectedPatientForEdit.month_and_year.split("-");
+
+    const response = await AddDay(
+      customerId,
+      day,
+      monthFromPatient,
+      yearFromPatient
+    );
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -1002,11 +1028,13 @@ const DashBoard = () => {
         )}
       </>
 
-      {isEditModalOpen && selectedPatientForEdit?.consultation_days && (
+      {isEditModalOpen && selectedPatientForEdit && (
         <EditConsultationModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           patient={selectedPatientForEdit}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
           onRemoveDay={handleRemoveDay}
           onAddDay={handleAddDay}
           onUpdatePatient={updatePatientDays}
