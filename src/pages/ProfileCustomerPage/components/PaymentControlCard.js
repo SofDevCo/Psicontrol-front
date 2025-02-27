@@ -209,10 +209,12 @@ const PaymentControlCard = ({
 
     const { customer_id } = selectedPatientForPartialPayment;
 
+    const [year, month] = selectedPatientForPartialPayment.month.split("-");
+
     const response = await savePartialPayment(
       customer_id,
-      selectedYear,
-      selectedMonth,
+      parseInt(year, 10),
+      parseInt(month, 10),
       paymentAmount
     );
 
@@ -255,7 +257,7 @@ const PaymentControlCard = ({
         if (selectedStatus.length === 0) return true;
 
         const matchesPaymentStatus =
-          (selectedStatus.includes("abertor") && !record.payment_status) ||
+          (selectedStatus.includes("aberto") && !record.payment_status) ||
           selectedStatus.includes(record.payment_status);
 
         const matchesInvoiceStatus =
