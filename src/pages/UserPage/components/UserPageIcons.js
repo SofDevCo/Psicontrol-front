@@ -4,7 +4,7 @@ const VariableIcon = () => {
       viewBox="0 0 30 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-[30px] h-[26px]"
+      className="lg:w-[30px] w-[21px] lg:h-[26px] h-[19px]"
     >
       <g filter="url(#filter0_d_3918_12537)">
         <path

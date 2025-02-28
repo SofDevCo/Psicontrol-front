@@ -276,9 +276,7 @@ const UserPage = () => {
             </button>
           </div>
 
-          {/* Ajuste no layout para ser responsivo */}
           <div className="flex flex-col lg:flex-row justify-between">
-            {/* Primeira coluna */}
             <div className="flex lg:w-[360px] w-full mb-6 lg:mb-0">
               <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
                 {userData.photoUrl ? (
@@ -324,7 +322,6 @@ const UserPage = () => {
               </div>
             </div>
 
-            {/* Segunda coluna */}
             <div className="lg:w-[316px] w-full mx-[44px]">
               <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                 Dados para recibo
@@ -360,15 +357,16 @@ const UserPage = () => {
           </div>
         </div>
 
-        <div className="md:flex flex-1 md:mx-auto w-auto md:space-x-4 items-start">
-          <div className="md:w-[540px] w-auto md:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+        <div className="lg:flex flex-1 lg:mx-auto w-auto lg:space-x-4 items-start">
+          <div className="lg:w-[540px] w-auto lg:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex justify-between">
               <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
                 Minhas agendas
               </h3>
               <button
                 onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]">
+                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
+              >
                 <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
                   Trocar de conta
                 </span>
@@ -500,13 +498,13 @@ const UserPage = () => {
                 <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                   Mensagem de cobrança
                 </h3>
-                <div className="flex items-center mt-3">
+                <div className="flex items-center">
                   <button
                     onClick={() =>
                       isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
                     }
                     disabled={!isEditingMessage}
-                    className={`flex items-center ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                    className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
                   >
                     <VariableIcon />
                   </button>
