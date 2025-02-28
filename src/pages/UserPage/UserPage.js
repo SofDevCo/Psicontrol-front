@@ -494,40 +494,40 @@ const UserPage = () => {
 
           <div className="md:relative md:my-0 my-[10px]">
             <div className="md:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-              <div className="flex  justify-between items-center mb-4">
-                <h3 className="text-[#0082ba] md:text-[20px] text-[15px] font-medium">
+              <div className="flex items-center mb-4 gap-32">
+                <h3 className="text-[#0082ba] md:text-[25px] text-[15px] font-medium flex-nowrap">
                   Mensagem de cobrança
                 </h3>
-                <div className="relative">
+                <div className="flex items-center mt-3">
                   <button
                     onClick={() =>
                       isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
                     }
                     disabled={!isEditingMessage}
-                    className={`p-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                    className={`flex items-center ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
                   >
                     <VariableIcon />
                   </button>
                   {isEditingMessage && isDropdownOpen && (
                     <VariableDropdown onSelectVariable={handleSelectVariable} />
                   )}
-                </div>
 
-                {isEditingMessage ? (
-                  <button
-                    onClick={saveMessage}
-                    className="text-[#0082ba] text-sm"
-                  >
-                    <CheckMessage />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setIsEditingMessage(true)}
-                    className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
-                  >
-                    <EditIcon />
-                  </button>
-                )}
+                  {isEditingMessage ? (
+                    <button
+                      onClick={saveMessage}
+                      className="text-[#0082ba] text-sm flex items-center "
+                    >
+                      <CheckMessage />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingMessage(true)}
+                      className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                    >
+                      <EditIcon />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {isEditingMessage ? (
