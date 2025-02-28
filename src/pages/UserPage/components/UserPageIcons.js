@@ -1,11 +1,10 @@
 const VariableIcon = () => {
   return (
     <svg
-      width="30"
-      height="26"
       viewBox="0 0 30 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="w-[30px] h-[26px]"
     >
       <g filter="url(#filter0_d_3918_12537)">
         <path
