@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { CheckMessage, EditIcon, RefreshIcon } from "../../icons/icons";
 import { showAlteredToast } from "./components/toastUserPage";
+import { VariableIcon } from "./components/UserPageIcons";
+import VariableDropdown from "./components/VariableDropdown";
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -23,6 +25,7 @@ const UserPage = () => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [activeCalendarId, setActiveCalendarId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -37,7 +40,10 @@ const UserPage = () => {
       );
 
       if (!response.ok) {
-        console.error("Erro ao buscar os dados do usuário:", await response.text());
+        console.error(
+          "Erro ao buscar os dados do usuário:",
+          await response.text()
+        );
         return;
       }
 
@@ -245,9 +251,16 @@ const UserPage = () => {
     closeConfirmationModal();
   };
 
+  const handleSelectVariable = (variable) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      user_message: (prevData.user_message || "") + " " + variable,
+    }));
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div className="flex flex-col p-6 overflow-y-auto overflow-x-hidden ">
- 
       <>
         <div className="relative lg:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
           <div className="flex justify-between items-center mb-6">
@@ -263,9 +276,7 @@ const UserPage = () => {
             </button>
           </div>
 
-          {/* Ajuste no layout para ser responsivo */}
           <div className="flex flex-col lg:flex-row justify-between">
-            {/* Primeira coluna */}
             <div className="flex lg:w-[360px] w-full mb-6 lg:mb-0">
               <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
                 {userData.photoUrl ? (
@@ -296,12 +307,13 @@ const UserPage = () => {
                   <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                 </div>
                 <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
-                  <span className="mr-1 whitespace-nowrap self-start">E-mail:</span>
+                  <span className="mr-1 whitespace-nowrap self-start">
+                    E-mail:
+                  </span>
                   <span className="text-[#5c5c5c] break-all">
                     {userData.user_email}
                   </span>
                 </div>
-
 
                 <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                   <span>Telefone: </span>
@@ -310,7 +322,6 @@ const UserPage = () => {
               </div>
             </div>
 
-            {/* Segunda coluna */}
             <div className="lg:w-[316px] w-full mx-[44px]">
               <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                 Dados para recibo
@@ -336,7 +347,7 @@ const UserPage = () => {
                     ? userData.image instanceof File
                       ? userData.image.name
                       : typeof userData.image === "string" &&
-                        userData.image.includes("/")
+                          userData.image.includes("/")
                         ? userData.image.split("/").pop()
                         : userData.image
                     : "(Imagem não carregada)"}
@@ -346,11 +357,7 @@ const UserPage = () => {
           </div>
         </div>
 
-
-
-
         <div className="lg:flex flex-1 lg:mx-auto w-auto lg:space-x-4 items-start">
-          {/* Box "Minhas agendas" */}
           <div className="lg:w-[540px] w-auto lg:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
             <div className="flex justify-between">
               <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
@@ -358,7 +365,8 @@ const UserPage = () => {
               </h3>
               <button
                 onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]">
+                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
+              >
                 <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
                   Trocar de conta
                 </span>
@@ -373,7 +381,6 @@ const UserPage = () => {
               <span className="text-[#5c5c5c]">E-mail:</span>{" "}
               {userData.user_email}
             </p>
-
 
             <div className="mt-6 ml-10">
               <h4 className="text-[#232323] text-lg font-medium">
@@ -392,10 +399,11 @@ const UserPage = () => {
                       onChange={() =>
                         openConfirmationModal(calendar.calendar_id)
                       }
-                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
-                        ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                        : "bg-white border-gray-300 opacity-50"
-                        }`}
+                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
+                        selectedCalendars.has(calendar.calendar_id)
+                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                          : "bg-white border-gray-300 opacity-50"
+                      }`}
                       style={{
                         boxShadow: selectedCalendars.has(calendar.calendar_id)
                           ? "inset 0 0 0 3px white"
@@ -403,10 +411,11 @@ const UserPage = () => {
                       }}
                     />
                     <span
-                      className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
-                        ? "text-[#5c5c5c]"
-                        : "text-gray-500 opacity-50"
-                        }`}
+                      className={`font-medium ${
+                        selectedCalendars.has(calendar.calendar_id)
+                          ? "text-[#5c5c5c]"
+                          : "text-gray-500 opacity-50"
+                      }`}
                     >
                       {calendar.calendar_name}
                     </span>
@@ -447,9 +456,6 @@ const UserPage = () => {
               </div>
             )}
 
-
-
-            {/* Modal de Confirmação */}
             {isConfirmationModalOpen && (
               <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
                 <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
@@ -486,28 +492,42 @@ const UserPage = () => {
             )}
           </div>
 
-
           <div className="lg:relative lg:my-0 my-[10px]">
             <div className="lg:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex  justify-between items-center mb-4">
                 <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                   Mensagem de cobrança
                 </h3>
-                {isEditingMessage ? (
+                <div className="flex items-center">
                   <button
-                    onClick={saveMessage}
-                    className="text-[#0082ba] text-sm"
+                    onClick={() =>
+                      isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
+                    }
+                    disabled={!isEditingMessage}
+                    className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
                   >
-                    <CheckMessage />
+                    <VariableIcon />
                   </button>
-                ) : (
-                  <button
-                    onClick={() => setIsEditingMessage(true)}
-                    className="text-[#0082ba] drop-shadow-editShadow text-sm underline"
-                  >
-                    <EditIcon />
-                  </button>
-                )}
+                  {isEditingMessage && isDropdownOpen && (
+                    <VariableDropdown onSelectVariable={handleSelectVariable} />
+                  )}
+
+                  {isEditingMessage ? (
+                    <button
+                      onClick={saveMessage}
+                      className="text-[#0082ba] text-sm flex items-center "
+                    >
+                      <CheckMessage />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditingMessage(true)}
+                      className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                    >
+                      <EditIcon />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {isEditingMessage ? (
@@ -632,7 +652,10 @@ const UserPage = () => {
                       id="clinic_name"
                       value={userData.clinic_name || ""}
                       onChange={(e) =>
-                        setUserData({ ...userData, clinic_name: e.target.value })
+                        setUserData({
+                          ...userData,
+                          clinic_name: e.target.value,
+                        })
                       }
                       placeholder="Nome/Clínica"
                       className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
@@ -708,10 +731,8 @@ const UserPage = () => {
             </div>
           </div>
         )}
-
-
       </>
-    </div >
+    </div>
   );
 };
 
