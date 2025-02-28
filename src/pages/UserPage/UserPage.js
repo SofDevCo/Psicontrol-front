@@ -499,10 +499,16 @@ const UserPage = () => {
                   Mensagem de cobrança
                 </h3>
                 <div className="relative">
-                  <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                  <button
+                    onClick={() =>
+                      isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
+                    }
+                    disabled={!isEditingMessage}
+                    className={`p-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                  >
                     <VariableIcon />
                   </button>
-                  {isDropdownOpen && (
+                  {isEditingMessage && isDropdownOpen && (
                     <VariableDropdown onSelectVariable={handleSelectVariable} />
                   )}
                 </div>
