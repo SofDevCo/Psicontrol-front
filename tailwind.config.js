@@ -23,6 +23,7 @@ module.exports = {
       },
       boxShadow: {
         default: "0px 4px 4px rgba(0, 0, 0, 0.2)",
+        buttom: "0 1px 3px 1px rbg(0,0,0,0.15)",
         innerShadow: "inset 0px 4px 4px rgba(0, 0, 0, 0.25)",
         dropShadow: "0px 4px 4px rgba(0, 0, 0, 0.2)",
       },
@@ -58,8 +59,9 @@ module.exports = {
       },
       screens: {
         sm: "480px",
-        tablet: "768px",
-        md: "1024px",
+        md: "768px",
+        lg: "1100px",
+        xl: "1280px",
       },
     },
   },

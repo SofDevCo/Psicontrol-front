@@ -4,13 +4,15 @@ import { SuccessIcon } from "../../../icons/icons";
 
 export const showEditToast = () => {
   const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
   overlay.style.position = "fixed";
   overlay.style.top = "0";
   overlay.style.left = "0";
   overlay.style.width = "100vw";
   overlay.style.height = "100vh";
   overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
-  overlay.style.zIndex = "30"; 
+  overlay.style.zIndex = isMobile ? "100 " : "30";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
@@ -23,14 +25,14 @@ export const showEditToast = () => {
         justifyContent: "center",
       }}
     >
-      <div style={{ marginBottom: "10px"}}>
+      <div style={{ marginBottom: "10px" }}>
         <SuccessIcon style={{ fontSize: "40px", color: "#0091D0" }} />
       </div>
       <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
         <span
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -40,7 +42,7 @@ export const showEditToast = () => {
         <span
           style={{
             color: "#0082BA",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -51,7 +53,7 @@ export const showEditToast = () => {
         <div
           style={{
             color: "#4F4F4F",
-            fontSize: "21px",
+            fontSize: isMobile ? "16px " : "21px",
             fontWeight: "500",
             letterSpacing: "-0.5px",
           }}
@@ -62,8 +64,8 @@ export const showEditToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -73,8 +75,8 @@ export const showEditToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft:"96px",
-        marginTop:"150px",
+        marginLeft: "96px",
+        marginTop: "150px",
       },
       position: "top-center",
       autoClose: 3000,
@@ -90,15 +92,208 @@ export const showEditToast = () => {
 };
 
 export const showArchiveToast = () => {
-
   const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
   overlay.style.position = "fixed";
   overlay.style.top = "0";
   overlay.style.left = "0";
   overlay.style.width = "100vw";
   overlay.style.height = "100vh";
   overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
-  overlay.style.zIndex = "30"; 
+  overlay.style.zIndex = isMobile ? "100 " : "30";
+  overlay.style.backdropFilter = "blur(6px)";
+  document.body.appendChild(overlay);
+
+  toast.success(
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ marginBottom: "10px" }}>
+        <SuccessIcon style={{ fontSize: "40px", color: "#0091D0" }} />
+      </div>
+      <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
+        <span
+          style={{
+            color: "#4F4F4F",
+            fontSize: isMobile ? "16px " : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          Paciente
+        </span>
+        <span
+          style={{
+            color: "#0082BA",
+            fontSize: isMobile ? "16px " : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          {" "}
+          arquivado
+        </span>
+        <div
+          style={{
+            color: "#4F4F4F",
+            fontSize: isMobile ? "16px " : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          com sucesso!
+        </div>
+      </div>
+    </div>,
+    {
+      style: {
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
+        backgroundColor: "#F5F5F5",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "8px",
+        border: "1px solid #81A0AE",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        marginLeft: "96px",
+        marginTop: "150px",
+      },
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      icon: false,
+      onClose: () => document.body.removeChild(overlay),
+    }
+  );
+};
+
+export const showDeleteToast = () => {
+  const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
+  overlay.style.zIndex = isMobile ? "100 " : "30";
+  overlay.style.backdropFilter = "blur(6px)";
+  document.body.appendChild(overlay);
+
+  toast.success(
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ marginBottom: "10px" }}>
+        <SuccessIcon style={{ fontSize: "40px", color: "#0091D0" }} />
+      </div>
+      <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <span
+            style={{
+              color: "#4F4F4F",
+              fontSize: isMobile ? "16px " : "21px",
+              fontWeight: "500",
+              letterSpacing: "-0.5px",
+            }}
+          >
+            Paciente
+          </span>
+          <span
+            style={{
+              color: "#0082BA",
+              fontSize: isMobile ? "16px " : "21px",
+              fontWeight: "500",
+              letterSpacing: "-0.5px",
+              marginLeft: "5px",
+            }}
+          >
+            excluído
+          </span>
+          <span
+            style={{
+              color: "#4F4F4F",
+              fontSize: isMobile ? "16px " : "21px",
+              fontWeight: "500",
+              letterSpacing: "-0.5px",
+              marginLeft: "5px",
+            }}
+          >
+            com
+          </span>
+        </div>
+        <div
+          style={{
+            color: "#4F4F4F",
+            fontSize: isMobile ? "16px " : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          sucesso!
+        </div>
+      </div>
+    </div>,
+    {
+      style: {
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
+        backgroundColor: "#F5F5F5",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "8px",
+        border: "1px solid #81A0AE",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        marginLeft: "96px",
+        marginTop: "150px",
+      },
+
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      icon: false,
+      onClose: () => document.body.removeChild(overlay),
+    }
+  );
+};
+
+export const showSuccessToast = () => {
+  const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
+  overlay.style.zIndex = isMobile ? "100 " : "30";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
@@ -134,7 +329,7 @@ export const showArchiveToast = () => {
           }}
         >
           {" "}
-          arquivado
+          adicionado
         </span>
         <div
           style={{
@@ -150,8 +345,8 @@ export const showArchiveToast = () => {
     </div>,
     {
       style: {
-        height: "207px",
-        width: "360px",
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
         backgroundColor: "#F5F5F5",
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         borderRadius: "8px",
@@ -161,8 +356,8 @@ export const showArchiveToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft:"96px",
-        marginTop:"150px",
+        marginLeft: "96px",
+        marginTop: "150px",
       },
       position: "top-center",
       autoClose: 3000,
@@ -176,196 +371,3 @@ export const showArchiveToast = () => {
     }
   );
 };
-
-export const showDeleteToast = () => {
-  const overlay = document.createElement("div");
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100vw";
-  overlay.style.height = "100vh";
-  overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
-  overlay.style.zIndex = "30"; 
-  overlay.style.backdropFilter = "blur(6px)";
-  document.body.appendChild(overlay);
-  
-    toast.success(
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <SuccessIcon style={{ fontSize: "40px", color: "#0091D0" }} />
-        </div>
-        <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <span
-              style={{
-                color: "#4F4F4F",
-                fontSize: "21px",
-                fontWeight: "500",
-                letterSpacing: "-0.5px",
-              }}
-            >
-              Paciente
-            </span>
-            <span
-              style={{
-                color: "#0082BA",
-                fontSize: "21px",
-                fontWeight: "500",
-                letterSpacing: "-0.5px",
-                marginLeft: "5px",
-              }}
-            >
-              excluído
-            </span>
-            <span
-              style={{
-                color: "#4F4F4F",
-                fontSize: "21px",
-                fontWeight: "500",
-                letterSpacing: "-0.5px",
-                marginLeft: "5px",
-              }}
-            >
-              com
-            </span>
-          </div>
-          <div
-            style={{
-              color: "#4F4F4F",
-              fontSize: "21px",
-              fontWeight: "500",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            sucesso!
-          </div>
-        </div>
-      </div>,
-      {
-        style: {
-          height: "207px",
-          width: "360px",
-          backgroundColor: "#F5F5F5",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-          borderRadius: "8px",
-          border: "1px solid #81A0AE",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          marginLeft:"96px",
-          marginTop:"150px",
-        
-        },
-
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        icon: false,
-        onClose: () => document.body.removeChild(overlay),
-      },
-
-    );
-  };
-
-  export const showSuccessToast = () => {
-    const overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
-    overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
-    overlay.style.zIndex = "30"; 
-    overlay.style.backdropFilter = "blur(6px)";
-    document.body.appendChild(overlay);
-
-    toast.success(
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <SuccessIcon style={{ fontSize: "40px", color: "#0091D0" }} />
-        </div>
-        <div style={{ textAlign: "center", fontFamily: "Ubuntu" }}>
-          <span
-            style={{
-              color: "#4F4F4F",
-              fontSize: "21px",
-              fontWeight: "500",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            Paciente
-          </span>
-          <span
-            style={{
-              color: "#0082BA",
-              fontSize: "21px",
-              fontWeight: "500",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            {" "}
-            adicionado
-          </span>
-          <div
-            style={{
-              color: "#4F4F4F",
-              fontSize: "21px",
-              fontWeight: "500",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            com sucesso!
-          </div>
-        </div>
-      </div>,
-      {
-        style: {
-          height: "207px",
-          width: "360px",
-          backgroundColor: "#F5F5F5",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-          borderRadius: "8px",
-          border: "1px solid #81A0AE",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          marginLeft:"96px",
-          marginTop:"150px",
-        },
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        icon: false,
-        onClose: () => document.body.removeChild(overlay),
-      }
-    );
-  };
-  
-  
-  

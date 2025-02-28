@@ -35,10 +35,10 @@ const ModalPaymentDash = ({ onClose, onSave, totalAmount }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm md:z-30 z-50 ">
-      <div className="bg-white rounded-lg shadow-lg p-6 md:w-[445px] w-[280px] md:h-[280px] h-44 border border-cinza6 md:mt-40 md:ml-64 mt-[18vh]">
-        <div className="flex justify-between items-center md:mb-4">
-          <h2 className="flex justify-center text-center md:text-F21 text-sm text-primaria font-medium font-ubuntu md:ml-[78px] ml-8 md:mt-5  tracking-tight ">
+    <div className="fixed inset-0 flex items-start justify-center bg-bgM bg-opacity-30 backdrop-blur-sm lg:z-30 z-50 ">
+      <div className="bg-white rounded-lg shadow-lg p-6 lg:w-[445px] w-[280px] lg:h-[280px] h-44 border border-cinza6 lg:mt-40 lg:ml-64 mt-[18vh]">
+        <div className="flex justify-between items-center lg:mb-4">
+          <h2 className="flex justify-center text-center lg:text-F21 text-sm text-primaria font-medium font-ubuntu lg:ml-[78px] ml-8 lg:mt-5  tracking-tight ">
             Pagamento de Valor Parcial
           </h2>
           <button onClick={onClose}>
@@ -46,14 +46,14 @@ const ModalPaymentDash = ({ onClose, onSave, totalAmount }) => {
           </button>
         </div>
 
-        <div className="flex md:ml-8  md:mb-12 mb-4 ml-2">
+        <div className="flex lg:ml-8  lg:mb-12 mb-4 ml-2">
           <div className="mr-4">
-            <label className="block text-texto1 text-center md:text-F15 text-xs font-normal font-openSans tracking-tight">
+            <label className="block text-texto1 text-center lg:text-F15 text-xs font-normal font-openSans tracking-tight">
               Valor Total
             </label>
             <input
               type="text"
-              className="md:w-[159.85px] w-[100.58px] md:h-[42.21px] h-[26.54px]  md:text-lg text-xs text-center text-texto2 border-2 border-cinza6 rounded-B15 px-3 py-2 mt-1"
+              className="lg:w-[159.85px] w-[100.58px] lg:h-[42.21px] h-[26.54px]  lg:text-lg text-xs text-center text-texto2 border-2 border-cinza6 rounded-B15 px-3 py-2 mt-1"
               value={`R$ ${totalAmount.toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
               })}`}
@@ -61,23 +61,23 @@ const ModalPaymentDash = ({ onClose, onSave, totalAmount }) => {
             />
           </div>
           <div>
-            <label className="block text-texto1 md:text-F15 text-xs text-center font-normal font-openSans tracking-tight">
+            <label className="block text-texto1 lg:text-F15 text-xs text-center font-normal font-openSans tracking-tight">
               Valor Pago
             </label>
             <input
               type="text"
               placeholder="R$ 00,00"
-              className="md:w-[159.85px] w-[100.58px] md:h-[42.21px] h-[26.54px]  md:text-lg text-xs text-center text-texto2 border-2 border-cinza6 rounded-B15 px-3 py-2 mt-1"
+              className="lg:w-[159.85px] w-[100.58px] lg:h-[42.21px] h-[26.54px]  lg:text-lg text-xs text-center text-texto2 border-2 border-cinza6 rounded-B15 px-3 py-2 mt-1"
               value={paymentAmount}
               onChange={handleInputChange}
             />
           </div>
         </div>
 
-        <div className="flex justify-center md:ml-36 mr-0 items-center">
+        <div className="flex justify-center lg:ml-36 mr-0 items-center">
           <button
             onClick={handleSave}
-            className="px-4 py-2 md:mr-36 bg-primaria md:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+            className="px-4 py-2 lg:mr-36 bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
           >
             Salvar
           </button>

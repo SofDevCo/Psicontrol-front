@@ -8,10 +8,13 @@ import {
   sendEmailMessage,
   confirmBillOfSale,
   confirmPayment,
-  savePartialPayment
+  savePartialPayment,
+  AddDay,
+  RemoveDay,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
+import EditConsultationModal from "./components/EditConsultationModal";
 import { HamburguerIcon } from "../../icons/icons";
 import {
   ShowVinculateToast,
@@ -68,7 +71,8 @@ const DashBoard = () => {
   const calendarIdsParam = searchParams.get("calendarIds");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedPatientForEdit, setSelectedPatientForEdit] = useState(null);
   const selectedCalendarIds = useMemo(
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
     [calendarIdsParam]
@@ -178,14 +182,13 @@ const DashBoard = () => {
       return null;
     }
 
-    const event = unmatchedPatients[selectedEvent];
+    const group = unmatchedPatients[selectedEvent];
 
-    if (!customer_id) {
+    if (!customer_id || !group) {
       return null;
     }
-    if (!event) {
-      return null;
-    }
+
+    const eventIdToLink = group.events[0].google_event_id;
 
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/linkCustomerToEvent`,
@@ -196,14 +199,13 @@ const DashBoard = () => {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
         body: JSON.stringify({
-          eventId: event.customers_id,
+          eventId: eventIdToLink,
           customer_id: customer_id,
         }),
       }
     );
 
     if (response.ok) {
-      fetchUnmatchedPatients();
       fetchUnmatchedPatients();
       setIsSearchBarOpen(false);
       setIsConfirmModalOpen(false);
@@ -240,16 +242,13 @@ const DashBoard = () => {
     }
   };
 
-  const handleVinculatePatient = async () => {
-    if (selectedEvent === null || selectedEvent === undefined) {
-      return null;
-    }
-    const event = unmatchedPatients[selectedEvent];
-    if (!event) {
-      return null;
-    }
-    if (!patients || patients.length === 0) {
-      await fetchPatientData();
+  const handleVinculatePatient = async (group) => {
+    const groupIndex = unmatchedPatients.indexOf(group);
+    if (groupIndex !== -1) {
+      setSelectedEvent(groupIndex);
+      if (!patients || patients.length === 0) {
+        await fetchPatientData();
+      }
     }
     openSearchBar();
   };
@@ -269,33 +268,35 @@ const DashBoard = () => {
 
   const fetchBillingRecords = async (month, year) => {
     setLoading(true);
-
+  
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "authentication_token"
-          )}`,
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
       }
     );
-
+  
     if (response.ok) {
       const data = await response.json();
+  
       setPatients(data.billingRecords || []);
+      setFilteredPatients(data.billingRecords || []);
       setTotalConsultations(data.totalConsultations || 0);
       setTotalRevenue(parseFloat(data.totalRevenue || 0));
       setNetRevenue(parseFloat(data.netRevenue || 0));
-      setNetTime(parseFloat(data.netTime) || 0);
-      setFilteredPatients(data.billingRecords || []);
-    } else if (response.status === 404) {
+      setNetTime(parseFloat(data.netTime || 0));
+    } else {
       setPatients([]);
       setFilteredPatients([]);
       setTotalConsultations(0);
       setTotalRevenue(0);
-    } else {
-      setError("Erro ao buscar registros de faturamento.");
+      setNetRevenue(0);
+      setNetTime(0);
+      if (response.status !== 404) {
+        setError("Erro ao buscar registros de faturamento.");
+      }
     }
     setLoading(false);
   };
@@ -354,7 +355,7 @@ const DashBoard = () => {
     setIsBillingModalOpen(false);
   };
 
-  const handleSendWhatsApp = async (customer, openModalOnly = false) => {
+  const handleSendWhatsApp = async (customer) => {
     const customerId = customer?.customer_id;
 
     if (!customerId) {
@@ -373,8 +374,8 @@ const DashBoard = () => {
     setLoading(false);
 
     if (data?.success) {
-      const whatsappLink = data.whatsappLink;
       setBillingMessage(data.user_message);
+      setIsBillingModalOpen(true);
 
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
@@ -384,14 +385,12 @@ const DashBoard = () => {
         )
       );
 
-      if (openModalOnly) {
-        setIsBillingModalOpen(true);
-      } else {
-        alert("Redirecionando para o WhatsApp...");
-        window.open(whatsappLink, "_blank");
+      if (!data.whatsappLink && !data.mailtoLink) {
+        alert("O cliente não possui telefone ou e-mail cadastrado.");
+        setIsBillingModalOpen(false);
       }
     } else {
-      alert(`Erro: ${data.error || "Erro ao enviar mensagem pelo WhatsApp"}`);
+      alert(`Erro: ${data.error || "Erro ao processar a cobrança."}`);
     }
   };
 
@@ -435,10 +434,11 @@ const DashBoard = () => {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/unmatched-patients/${google_event_id}`,
       {
-        method: "DELETE",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
+        body: JSON.stringify({ status: "cancelado" }),
       }
     );
 
@@ -481,10 +481,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-              ...patient,
-              payment_amount: parseFloat(paymentAmount),
-              payment_status: "parcial",
-            }
+                ...patient,
+                payment_amount: parseFloat(paymentAmount),
+                payment_status: "parcial",
+              }
             : patient
         )
       );
@@ -554,6 +554,61 @@ const DashBoard = () => {
     setIsTableExpanded(true);
   }, []);
 
+  const handleRemoveDay = async (customerId, daysToRemove) => {
+    const response = await RemoveDay(customerId, daysToRemove);
+    if (response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customerId
+            ? {
+                ...p,
+                consultation_days: p.consultation_days
+                  .split(",")
+                  .filter((d) => !daysToRemove.includes(d))
+                  .join(","),
+              }
+            : p
+        )
+      );
+    }
+  };
+
+  const handleAddDay = async (customerId, day) => {
+    const response = await AddDay(customerId, day);
+    if (response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customerId
+            ? {
+                ...p,
+                consultation_days: p.consultation_days
+                  ? `${p.consultation_days}, ${day}`
+                  : day,
+              }
+            : p
+        )
+      );
+    } else {
+      const data = await response.json();
+      alert(data.error || "Erro ao adicionar dia.");
+    }
+  };
+
+  const handleEditConsultation = (patient) => {
+    setSelectedPatientForEdit(patient);
+    setIsEditModalOpen(true);
+  };
+
+  const updatePatientDays = (customerId, newDays) => {
+    setPatients((prevPatients) =>
+      prevPatients.map((p) =>
+        p.customer_id === customerId
+          ? { ...p, consultation_days: newDays.join(", ") }
+          : p
+      )
+    );
+  };
+
   return (
     <div className="top-0 w-full p-6">
       {loading ? (
@@ -562,9 +617,9 @@ const DashBoard = () => {
         <p>{error}</p>
       ) : (
         <>
-          <div className="flex justify-center gap-1 mt-16 md:mt-32">
+          <div className="flex justify-center gap-1 mt-16 lg:mt-32">
             <div className="w-full">
-              <div className="md:hidden flex flex-col w-full">
+              <div className="lg:hidden flex flex-col w-full">
                 <div className="w-full flex justify-center mb-8">
                   <Months
                     onMonthChange={handleMonthChange}
@@ -609,7 +664,7 @@ const DashBoard = () => {
                 </div>
               </div>
 
-              <div className="hidden md:flex justify-center gap-2">
+              <div className="hidden lg:flex justify-center gap-2">
                 <Months
                   onMonthChange={handleMonthChange}
                   onYearChange={handleYearChange}
@@ -638,7 +693,7 @@ const DashBoard = () => {
                   isCurrency={true}
                 />
 
-                <div className="group md:mt-20 md:mb-2 z-10">
+                <div className="group lg:mt-20 lg:mb-2 z-10">
                   <FilterStatusDashBoard
                     selectedStatus={selectedStatus}
                     onChangeStatus={setSelectedStatus}
@@ -650,38 +705,39 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 md:mt-0 md:auto md:mx-auto justify-center box-border w-full md:rounded-B15 rounded-B10 md:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
-              }`}
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
+              isTableExpanded ? "h-auto" : "min-h-screen"
+            }`}
           >
             <div className="overflow-x-auto  ">
               <table className="table-fixed w-full bg-bg1 mt-5 text-left">
                 <thead>
                   <tr>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Paciente
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Valor Consulta
                     </th>
-                    <th className="text-center align-middle hidden md:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle hidden lg:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Dias
                     </th>
-                    <th className="text-center align-middle md:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Nº de consultas
                     </th>
-                    <th className=" text-center md:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className=" text-center lg:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                       Total
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                       Cobrança
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-3 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                       Pagamento
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-5 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                       NF
                     </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria md:text-lg text-F8 font-medium tracking-tight px-2 md:px-4 py-1 md:py-2">
+                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       Ações
                     </th>
                   </tr>
@@ -690,7 +746,7 @@ const DashBoard = () => {
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((patient, index) => (
                       <tr key={index} className="relative">
-                        <td className=" text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 z-10 text-center">
+                        <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
                           <div className="flex flex-col justify-center leading-tight ">
                             <span>
                               {patient.Customer?.customer_name?.split(" ")[0] ||
@@ -704,35 +760,35 @@ const DashBoard = () => {
                             </span>
                           </div>
                         </td>
-                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           R${" "}
                           {parseFloat(patient.consultation_fee)
                             .toFixed(2)
                             .replace(".", ",")}
                         </td>
-                        <td className="hidden md:table-cell text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                              .split(", ")
-                              .map(Number)
-                              .sort((a, b) => a - b)
-                              .join(", ")
-                            : "-"}
-                        </td>
-                        <td className="relative text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2 group">
-                          <span>{patient.num_consultations || "-"}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap md:hidden">
-                            Dias:{" "}
-                            {patient.consultation_days
-                              ? patient.consultation_days
                                 .split(", ")
                                 .map(Number)
                                 .sort((a, b) => a - b)
                                 .join(", ")
+                            : "-"}
+                        </td>
+                        <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
+                          <span>{patient.num_consultations || "-"}</span>
+                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                            Dias:{" "}
+                            {patient.consultation_days
+                              ? patient.consultation_days
+                                  .split(", ")
+                                  .map(Number)
+                                  .sort((a, b) => a - b)
+                                  .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
-                        <td className="text-center text-texto1 md:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           R$ {patient.total_consultation_fee || "0,00"}
                         </td>
                         <td>
@@ -750,7 +806,7 @@ const DashBoard = () => {
                             {patient.payment_status === "pago" ? (
                               <VerifyGreenIcon />
                             ) : patient.payment_status === "parcial" ? (
-                              <span className="text-texto2 md:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                              <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
                                 R${" "}
                                 {parseFloat(patient.payment_amount || 0)
                                   .toFixed(2)
@@ -772,7 +828,7 @@ const DashBoard = () => {
                           </div>
                         </td>
 
-                        <td className="text-center px-2 md:px-4 py-1 md:py-2">
+                        <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
                           <button
                             className="cursor-pointer"
                             onClick={() =>
@@ -797,6 +853,9 @@ const DashBoard = () => {
                                 onConfirmedBillOfSale={() =>
                                   handleConfirmBillOfSale(patient)
                                 }
+                                onEditConsultationFee={() =>
+                                  handleEditConsultation(patient)
+                                }
                               />
                             </div>
                           )}
@@ -807,7 +866,7 @@ const DashBoard = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="md:text-base text-[8px] text-center px-2 md:px-4 py-1 md:py-2"
+                        className="lg:text-base text-[8px] text-center px-2 lg:px-4 py-1 lg:py-2"
                       >
                         Nenhum registro encontrado para este mês e ano.
                       </td>
@@ -819,16 +878,17 @@ const DashBoard = () => {
                   <tr>
                     <td colSpan="8" className="relative py-3">
                       <div
-                        className={`flex justify-center items-center relative w-full transition-all duration-300 md:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
+                        className={`flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
                       >
                         <button
                           onClick={toggleTableSize}
-                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
-                            ? "rotate-0 bottom-0"
-                            : "rotate-180 bottom-5"
-                            }`}
+                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${
+                            isTableExpanded
+                              ? "rotate-0 bottom-0"
+                              : "rotate-180 bottom-5"
+                          }`}
                         >
-                          <div className="md:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
+                          <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                           <ArrowDownIcon />
                         </button>
                       </div>
@@ -840,11 +900,11 @@ const DashBoard = () => {
           </div>
 
           {showUnmatchedPatients && (
-            <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] md:h-[263px] md:rounded-B15 rounded-B10 md:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
+            <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] lg:h-[263px] lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
               {isSearchBarOpen && (
                 <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
               )}
-              <h2 className="mt-6 text-primaria md:text-F25 text-sm font-normal font-ubuntu px-4">
+              <h2 className="mt-6 text-primaria lg:text-F25 text-sm font-normal font-ubuntu px-4">
                 Pacientes não encontrados
               </h2>
               <table className="min-w-full bg-bg1 mt-2">
@@ -855,8 +915,8 @@ const DashBoard = () => {
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
                       >
-                        <td className="px-4 py-2 flex items-center justify-between  md:text-F15 text-F8">
-                          <span>{event.name}</span>
+                        <td className="px-4 py-2 flex items-center justify-between  lg:text-F15 text-F8">
+                          <span>{event.event_name}</span>
                           <button
                             className="cursor-pointer"
                             onClick={() => toggleDropdown(index)}
@@ -867,9 +927,13 @@ const DashBoard = () => {
                             <div className="absolute right-0 shadow-lg rounded p-2 z-20">
                               <DropDownDashBoard
                                 onVincular={() => handleVinculatePatient(event)}
-                                onExcluir={() =>
-                                  openDeleteModal(event.google_event_id)
-                                }
+                                onExcluir={() => {
+                                  if (event.events.length > 0) {
+                                    openDeleteModal(
+                                      event.events[0].google_event_id
+                                    );
+                                  }
+                                }}
                               />
                             </div>
                           )}
@@ -936,10 +1000,21 @@ const DashBoard = () => {
         )}
       </>
 
+      {isEditModalOpen && selectedPatientForEdit?.consultation_days && (
+        <EditConsultationModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          patient={selectedPatientForEdit}
+          onRemoveDay={handleRemoveDay}
+          onAddDay={handleAddDay}
+          onUpdatePatient={updatePatientDays}
+        />
+      )}
+
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-start justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
-          <div className="bg-bg1 p-6 rounded-lg md:w-[335px] w-auto md:h-[228px] border border-cinza6 text-center md:mt-64 md:ml-64 mt-[10vh]">
-            <p className="md:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
+          <div className="bg-bg1 p-6 rounded-lg lg:w-[335px] w-auto lg:h-[228px] border border-cinza6 text-center lg:mt-64 lg:ml-64 mt-[10vh]">
+            <p className="lg:text-[21px] text-[12px] mb-4 text-texto2 font-medium font-ubuntu leading-6 tracking-tight">
               Você tem certeza que <br />
               deseja <span className="text-primaria">vincular</span> este <br />
               paciente à informação <br />
@@ -957,13 +1032,13 @@ const DashBoard = () => {
                 onClick={() => {
                   setIsConfirmModalOpen(false);
                 }}
-                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm border border-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
+                className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm border border-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-primaria"
               >
                 Não
               </button>
               <button
                 onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
-                className="w-[50px] md:w-[74px] md:h-[40px] md:text-sm bg-primaria md:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
+                className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm bg-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
               >
                 Sim
               </button>

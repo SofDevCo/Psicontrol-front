@@ -159,10 +159,10 @@ const CustomersPage = () => {
   };
 
   return (
-    <div className="relative mx-auto mt-36 box-border md:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
+    <div className="relative mx-auto mt-36 box-border lg:w-[calc(95vw-280px)] max-w-[95%] rounded-[15px] border-[3px] border-solid border-cinza6 bg-bg1 z-10">
       {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-start bg-[#82d4e3] backdrop-blur-[6px] z-30 overflow-y-auto">
-          <div className="w-full max-w-[90%] md:max-w-[60%] h-auto mb-8 mt-32 md:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
+        <div className="fixed inset-0 flex justify-center items-start bg-bgM/30 backdrop-blur-[6px] z-30 overflow-y-auto">
+          <div className="w-full max-w-[90%] lg:max-w-[60%] h-auto mb-8 mt-32 lg:ml-64 rounded-[25px] bg-bg1 border-2 border-cinza6 p-8 shadow-lg z-30">
             <CreateCustomerForm
               onClose={closeModal}
               onSubmit={HandlefetchCustomers}
@@ -175,14 +175,14 @@ const CustomersPage = () => {
         </div>
       )}
       <div className="relative w-full items-center pl-7 pt-6">
-        <div className="relative flex items-center md:gap-4 gap-1 w-full md:w-auto tablet:w-auto">
+        <div className="relative flex items-center lg:gap-4 gap-1 w-full lg:w-auto md:w-auto">
           <div className="relative">
             <input
               type="text"
               placeholder={searchTerm ? "" : "Pesquisar pacientes"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`h-[35px] md:h-[56px] md:w-[360px] tablet:w-[calc(95vw-300px)] sm:w-[calc(95vw-260px)] w-[calc(125vw-260px)] md:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs md:placeholder:text-base bg-clara3 md:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
+              className={`h-[35px] lg:h-[56px] lg:w-[360px] md:w-[calc(95vw-300px)] sm:w-[calc(95vw-260px)] w-[calc(125vw-260px)] lg:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs lg:placeholder:text-base bg-clara3 lg:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
             />
             <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
               {searchTerm.length > 0 ? (
@@ -244,21 +244,21 @@ const CustomersPage = () => {
           </div>
           <button
             onClick={handleAddPatient}
-            className="flex md:h-[41px] tablet:h-[41px] w-auto md:w-[200px] tablet:w-[100px] tablet:ml-3 items-center justify-center md:rounded-[10px] tablet:rounded-[10px] md:border-2 tablet:border-2 md:border-solid tablet:border-solid md:border-primaria tablet:border-primaria md:bg-bg1 tablet:bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria md:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex lg:h-[41px] md:h-[41px] w-auto lg:w-[200px] md:w-[100px] md:ml-3 items-center justify-center lg:rounded-[10px] md:rounded-[10px] lg:border-2 md:border-2 lg:border-solid md:border-solid lg:border-primaria md:border-primaria lg:bg-bg1 md:bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria lg:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
-            <span className="hidden sm:hidden md:inline tablet:inline ">
+            <span className="hidden sm:hidden lg:inline md:inline ">
               Adicionar paciente
             </span>
           </button>
 
-          <button className="group tablet:ml-3 whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+          <button className="group md:ml-3 whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
             <Link
               to="/archived"
-              className="group flex items-center gap-2  w-auto tablet:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
+              className="group flex items-center gap-2  w-auto md:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
             >
               <ArchiveIcon />
-              <span className="hidden md:inline tablet:inline">
+              <span className="hidden lg:inline md:inline">
                 Pacientes arquivados
               </span>
             </Link>
@@ -266,9 +266,9 @@ const CustomersPage = () => {
         </div>
       </div>
 
-      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] md:text-lg text-sm  font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] lg:text-lg text-sm  font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="  ml-auto md:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] md:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="  ml-auto lg:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] lg:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
@@ -291,7 +291,7 @@ const CustomersPage = () => {
                   className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
                   <span
-                    className="md:text-xl text-sm text-texto1"
+                    className="lg:text-xl text-sm text-texto1"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {`${customer.customer_name} ${customer.customer_second_name}`}
