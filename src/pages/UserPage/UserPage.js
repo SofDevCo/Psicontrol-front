@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CheckMessage, EditIcon, RefreshIcon } from "../../icons/icons";
 import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
+import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
 
 const UserPage = () => {
@@ -118,92 +119,89 @@ const UserPage = () => {
   };
 
   const handleChangeAccount = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
-      const data = await response.json();
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
+    const data = await response.json();
 
-      if (data.authUrl) {
-        window.location.href = data.authUrl;
-      }
-    } catch (error) {
-      console.error("Erro ao trocar de conta:", error);
+    if (data.authUrl) {
+      window.location.href = data.authUrl;
     }
   };
 
   const handleSave = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("user_cpf", userData.user_cpf || "");
-      formData.append("user_cnpj", userData.user_cnpj || "");
-      formData.append("crp_number", userData.crp_number || "");
-      formData.append("user_phone", userData.user_phone || "");
-      formData.append("user_message", userData.user_message || "");
-      formData.append("clinic_name", userData.clinic_name || "");
+    const formData = new FormData();
+    formData.append("user_cpf", userData.user_cpf || "");
+    formData.append("user_cnpj", userData.user_cnpj || "");
+    formData.append("user_email", userData.user_email || "")
+    formData.append("crp_number", userData.crp_number || "");
+    formData.append("user_phone", userData.user_phone || "");
+    formData.append("user_message", userData.user_message || "");
+    formData.append("clinic_name", userData.clinic_name || "");
 
-      if (userData.image instanceof File) {
-        formData.append("image", userData.image);
-      }
-
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/user/save-users`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Erro ao salvar os dados do usuário.");
-      }
-
-      const updatedData = await response.json();
-      setUserData((prevData) => ({
-        ...prevData,
-        ...updatedData,
-      }));
-
-      setRefreshKey((prevKey) => prevKey + 1);
-      setIsEditing(false);
-      showAlteredToast();
-    } catch (error) {
-      console.error(error);
+    if (userData.image instanceof File) {
+      formData.append("image", userData.image);
     }
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/user/save-users`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: formData,
+      }
+    );
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      if (responseData.error?.includes("E-mail inválido")) {
+        showErrorToast("E-mail inválido. Verifique e tente novamente.");
+      } else {
+        showErrorToast(
+          responseData.error || "Erro ao salvar os dados do usuário."
+        );
+      }
+      return; 
+    }
+
+    setUserData((prevData) => ({
+      ...prevData,
+      ...responseData,
+    }));
+
+    setRefreshKey((prevKey) => prevKey + 1);
+    setIsEditing(false);
+    showAlteredToast();
   };
 
   const saveMessage = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("user_message", userData.user_message || "");
+    const formData = new FormData();
+    formData.append("user_message", userData.user_message || "");
 
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/user/save-users`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Erro ao salvar a mensagem.");
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/user/save-users`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: formData,
       }
+    );
 
-      const updatedData = await response.json();
-      setUserData((prevData) => ({
-        ...prevData,
-        ...updatedData,
-      }));
-
-      setIsEditingMessage(false);
-    } catch (error) {
-      console.error("Erro ao salvar a mensagem:", error);
-      alert("Erro ao salvar a mensagem. Tente novamente.");
+    if (!response.ok) {
+      showErrorToast("Erro ao salvar a mensagem.");
+      return;
     }
+
+    const updatedData = await response.json();
+    setUserData((prevData) => ({
+      ...prevData,
+      ...updatedData,
+    }));
+
+    setIsEditingMessage(false);
   };
 
   const openModalToChangeAccount = () => {
