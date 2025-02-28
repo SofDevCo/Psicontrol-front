@@ -131,7 +131,7 @@ const UserPage = () => {
     const formData = new FormData();
     formData.append("user_cpf", userData.user_cpf || "");
     formData.append("user_cnpj", userData.user_cnpj || "");
-    formData.append("user_email", userData.user_email || "")
+    formData.append("user_email", userData.user_email || "");
     formData.append("crp_number", userData.crp_number || "");
     formData.append("user_phone", userData.user_phone || "");
     formData.append("user_message", userData.user_message || "");
@@ -162,7 +162,7 @@ const UserPage = () => {
           responseData.error || "Erro ao salvar os dados do usuário."
         );
       }
-      return; 
+      return;
     }
 
     setUserData((prevData) => ({
@@ -223,6 +223,26 @@ const UserPage = () => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleCRPChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: formatCRP(value),
+    }));
+  };
+
+  const formatCRP = (input) => {
+    let cleaned = input.replace(/\D/g, "");
+    if (cleaned.length <= 2) {
+      return cleaned;
+    } else if (cleaned.length <= 7) {
+      return `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`;
+    } else {
+      return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 7)}`;
+    }
   };
 
   const handleFileChange = (e) => {
@@ -629,7 +649,7 @@ const UserPage = () => {
                       type="text"
                       name="crp_number"
                       value={userData.crp_number || ""}
-                      onChange={handleChange}
+                      onChange={handleCRPChange}
                       placeholder="XX/XXXXX"
                       className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                     />
