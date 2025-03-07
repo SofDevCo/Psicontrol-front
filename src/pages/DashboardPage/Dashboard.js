@@ -772,124 +772,131 @@ const DashBoard = () => {
                 </thead>
                 <tbody>
                   {filteredPatients.length > 0 ? (
-                    filteredPatients.map((patient, index) => (
-                      <tr key={index} className="relative">
-                        <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
-                          <div className="flex flex-col justify-center leading-tight ">
-                            <span>
-                              {patient.Customer?.customer_name?.split(" ")[0] ||
-                                "-"}
-                            </span>
-                            <span>
-                              {patient.Customer?.customer_name
-                                ?.split(" ")
-                                .slice(1)
-                                .join(" ") || ""}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                          R${" "}
-                          {parseFloat(patient.consultation_fee)
-                            .toFixed(2)
-                            .replace(".", ",")}
-                        </td>
-                        <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                          {patient.consultation_days
-                            ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
-                            : "-"}
-                        </td>
-                        <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-                          <span>{patient.num_consultations || "-"}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
-                            Dias:{" "}
+                    [...filteredPatients]
+                      .sort((a, b) =>
+                        a.Customer?.customer_name.localeCompare(
+                          b.Customer?.customer_name
+                        )
+                      )
+                      .map((patient, index) => (
+                        <tr key={index} className="relative">
+                          <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
+                            <div className="flex flex-col justify-center leading-tight ">
+                              <span>
+                                {patient.Customer?.customer_name?.split(
+                                  " "
+                                )[0] || "-"}
+                              </span>
+                              <span>
+                                {patient.Customer?.customer_name
+                                  ?.split(" ")
+                                  .slice(1)
+                                  .join(" ") || ""}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                            R${" "}
+                            {parseFloat(patient.consultation_fee)
+                              .toFixed(2)
+                              .replace(".", ",")}
+                          </td>
+                          <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                             {patient.consultation_days
                               ? patient.consultation_days
                                   .split(", ")
                                   .map(Number)
                                   .sort((a, b) => a - b)
                                   .join(", ")
-                              : "Sem dias"}
-                          </div>
-                        </td>
-                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                          R$ {patient.total_consultation_fee || "0,00"}
-                        </td>
-                        <td>
-                          <div className="flex items-center justify-center text-center h-full">
-                            {patient.sending_invoice ? (
-                              <VerifyGreenIcon />
-                            ) : (
-                              <CrossIcon />
-                            )}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="flex items-center justify-center text-center h-full">
-                            {" "}
-                            {patient.payment_status === "pago" ? (
-                              <VerifyGreenIcon />
-                            ) : patient.payment_status === "parcial" ? (
-                              <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
-                                R${" "}
-                                {parseFloat(patient.payment_amount || 0)
-                                  .toFixed(2)
-                                  .replace(".", ",")}
-                              </span>
-                            ) : (
-                              <CrossIcon />
-                            )}{" "}
-                          </div>
-                        </td>
-
-                        <td>
-                          <div className="flex items-center justify-center text-center h-full">
-                            {patient.bill_of_sale ? (
-                              <VerifyGreenIcon />
-                            ) : (
-                              <CrossIcon />
-                            )}
-                          </div>
-                        </td>
-
-                        <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
-                          <button
-                            className="cursor-pointer"
-                            onClick={() =>
-                              toggleDropdownPatients(index, patient)
-                            }
-                          >
-                            <HamburguerIcon />
-                          </button>
-
-                          {isDropdownOpenPatients === index && (
-                            <div className="absolute right-0 shadow-lg rounded p-2 z-20">
-                              <DropDownDashActions
-                                onOpenModal={() =>
-                                  handleSendWhatsApp(patient, true)
-                                }
-                                onPartialPayment={() =>
-                                  handleOpenPartialPayment(patient)
-                                }
-                                onConfirmedPayment={() =>
-                                  handleConfirmPayment(patient)
-                                }
-                                onConfirmedBillOfSale={() =>
-                                  handleConfirmBillOfSale(patient)
-                                }
-                                onEditConsultationFee={() =>
-                                  handleEditConsultation(patient)
-                                }
-                              />
+                              : "-"}
+                          </td>
+                          <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
+                            <span>{patient.num_consultations || "-"}</span>
+                            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                              Dias:{" "}
+                              {patient.consultation_days
+                                ? patient.consultation_days
+                                    .split(", ")
+                                    .map(Number)
+                                    .sort((a, b) => a - b)
+                                    .join(", ")
+                                : "Sem dias"}
                             </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                            R$ {patient.total_consultation_fee || "0,00"}
+                          </td>
+                          <td>
+                            <div className="flex items-center justify-center text-center h-full">
+                              {patient.sending_invoice ? (
+                                <VerifyGreenIcon />
+                              ) : (
+                                <CrossIcon />
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            <div className="flex items-center justify-center text-center h-full">
+                              {" "}
+                              {patient.payment_status === "pago" ? (
+                                <VerifyGreenIcon />
+                              ) : patient.payment_status === "parcial" ? (
+                                <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                                  R${" "}
+                                  {parseFloat(patient.payment_amount || 0)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                                </span>
+                              ) : (
+                                <CrossIcon />
+                              )}{" "}
+                            </div>
+                          </td>
+
+                          <td>
+                            <div className="flex items-center justify-center text-center h-full">
+                              {patient.bill_of_sale ? (
+                                <VerifyGreenIcon />
+                              ) : (
+                                <CrossIcon />
+                              )}
+                            </div>
+                          </td>
+
+                          <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
+                            <button
+                              className="cursor-pointer"
+                              onClick={() =>
+                                toggleDropdownPatients(index, patient)
+                              }
+                            >
+                              <HamburguerIcon />
+                            </button>
+
+                            {isDropdownOpenPatients === index && (
+                              <div className="absolute right-0 shadow-lg rounded p-2 z-20">
+                                <DropDownDashActions
+                                  onOpenModal={() =>
+                                    handleSendWhatsApp(patient, true)
+                                  }
+                                  onPartialPayment={() =>
+                                    handleOpenPartialPayment(patient)
+                                  }
+                                  onConfirmedPayment={() =>
+                                    handleConfirmPayment(patient)
+                                  }
+                                  onConfirmedBillOfSale={() =>
+                                    handleConfirmBillOfSale(patient)
+                                  }
+                                  onEditConsultationFee={() =>
+                                    handleEditConsultation(patient)
+                                  }
+                                />
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))
                   ) : (
                     <tr>
                       <td
