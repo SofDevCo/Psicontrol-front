@@ -49,34 +49,29 @@ const IncomePage = () => {
         name: name,
         value: value || "0,00",
       };
+      const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-      try {
-        const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
-
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/income/expense`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: newExpense.name,
-              value: parseCurrency(newExpense.value) / 100,
-              date: formattedDate,
-            }),
-          }
-        );
-
-        const responseData = await response.json();
-        if (!response.ok) {
-          console.error("Erro ao adicionar despesa:", responseData);
-        } else {
-          setExpenses((prevExpenses) => [...prevExpenses, responseData]);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/income/expense`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newExpense.name,
+            value: parseCurrency(newExpense.value) / 100,
+            date: formattedDate,
+          }),
         }
-      } catch (error) {
-        console.error("Erro ao adicionar despesa:", error);
+      );
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        console.error("Erro ao adicionar despesa:", responseData);
+      } else {
+        setExpenses((prevExpenses) => [...prevExpenses, responseData]);
       }
     }
   };
@@ -87,42 +82,10 @@ const IncomePage = () => {
         name: name,
         value: value,
       };
+      const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
 
-      try {
-        const formattedDate = `01/${String(selectedMonth).padStart(2, "0")}/${selectedYear}`;
-
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/income/revenue`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: newRevenue.name,
-              value: parseCurrency(newRevenue.value) / 100,
-              date: formattedDate,
-            }),
-          }
-        );
-
-        const responseData = await response.json();
-        if (!response.ok) {
-          console.error("Erro ao adicionar receita:", responseData);
-        } else {
-          setRevenues((prevRevenues) => [...prevRevenues, responseData]);
-        }
-      } catch (error) {
-        console.error("Erro ao adicionar receita:", error);
-      }
-    }
-  };
-
-  const repeatLastMonthEntries = async () => {
-    try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/income/entries/repeat-last-month`,
+        `${process.env.REACT_APP_API_URL}/income/revenue`,
         {
           method: "POST",
           headers: {
@@ -130,71 +93,83 @@ const IncomePage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            selectedMonth: String(selectedMonth),
-            selectedYear: String(selectedYear),
+            name: newRevenue.name,
+            value: parseCurrency(newRevenue.value) / 100,
+            date: formattedDate,
           }),
         }
       );
 
-      if (response.ok) {
-        const result = await response.json();
-        setRevenues((prevRevenues) => [...prevRevenues, ...result.newRevenues]);
-        setExpenses((prevExpenses) => [...prevExpenses, ...result.newExpenses]);
-      } else if (response.status === 400) {
-        // Exibe a notificação de erro com Toastify quando o mês já tem lançamentos
-        showLastMonthToast(); // Exibe a notificação de sucesso
+      const responseData = await response.json();
+      if (!response.ok) {
+        console.error("Erro ao adicionar receita:", responseData);
       } else {
-        console.error("Erro ao duplicar entradas:", response.statusText);
+        setRevenues((prevRevenues) => [...prevRevenues, responseData]);
       }
-    } catch (error) {
-      console.error("Erro ao duplicar entradas:", error);
+    }
+  };
+
+  const repeatLastMonthEntries = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/income/entries/repeat-last-month`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          selectedMonth: String(selectedMonth),
+          selectedYear: String(selectedYear),
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const result = await response.json();
+      setRevenues((prevRevenues) => [...prevRevenues, ...result.newRevenues]);
+      setExpenses((prevExpenses) => [...prevExpenses, ...result.newExpenses]);
+    } else if (response.status === 400) {
+      showLastMonthToast();
+    } else {
+      console.error("Erro ao duplicar entradas:", response.statusText);
     }
   };
 
   async function deleteRevenue(id) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/income/revenue/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
-            )}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        setRevenues(revenues.filter((revenue) => revenue.id !== id));
-        const data = await response.json();
-      } else {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/income/revenue/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {}
+    );
+
+    if (response.ok) {
+      setRevenues(revenues.filter((revenue) => revenue.id !== id));
+      await response.json();
+    }
   }
 
   async function deleteExpense(id) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/income/expense/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "authentication_token"
-            )}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        setExpenses(expenses.filter((expense) => expense.id !== id));
-        const data = await response.json();
-      } else {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/income/expense/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {}
+    );
+
+    if (response.ok) {
+      setExpenses(expenses.filter((expense) => expense.id !== id));
+      await response.json();
+    }
   }
 
   const handleDelete = (id, type) => {
@@ -247,7 +222,6 @@ const IncomePage = () => {
     }
   };
 
-  // Função para salvar receita ao pressionar Enter no valor
   const handleEnterPressRevenueValue = async (e) => {
     if (e.key === "Enter") {
       const revenuePromises = isAddingRevenue.map(async (revenue) => {
@@ -259,21 +233,18 @@ const IncomePage = () => {
       await Promise.all(revenuePromises);
       setIsAddingRevenue([{ name: "", value: "" }]);
 
-      // Focar no próximo input de nome da receita
       if (revenueNameInputRef.current) {
         revenueNameInputRef.current.focus();
       }
     }
   };
 
-  // Função para focar no valor da despesa ao pressionar Enter no nome
   const handleEnterPressExpenseName = (e) => {
     if (e.key === "Enter" && expenseValueInputRef.current) {
       expenseValueInputRef.current.focus();
     }
   };
 
-  // Função para salvar despesa ao pressionar Enter no valor
   const handleEnterPressExpenseValue = async (e) => {
     if (e.key === "Enter") {
       const expensePromises = isAddingExpense.map(async (expense) => {
@@ -285,7 +256,6 @@ const IncomePage = () => {
       await Promise.all(expensePromises);
       setIsAddingExpense([{ name: "", value: "" }]);
 
-      // Focar no próximo input de nome da despesa
       if (expenseNameInputRef.current) {
         expenseNameInputRef.current.focus();
       }
@@ -294,53 +264,41 @@ const IncomePage = () => {
 
   const loadExpenses = async (month, year) => {
     const monthYear = `${month}/${year.slice(-2)}`;
-    console.log(`Chamando API: /income/expense?monthYear=${monthYear}`);
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/income/expense?monthYear=${monthYear}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        const expenseData = await response.json();
-        setExpenses(expenseData);
-        console.log("Despesas carregadas:", expenseData);
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/income/expense?monthYear=${monthYear}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {
-      console.error("Erro ao carregar despesas:", error);
+    );
+
+    if (response.ok) {
+      const expenseData = await response.json();
+      setExpenses(expenseData);
     }
   };
 
   const loadRevenues = async (month, year) => {
     const monthYear = `${month}/${year.slice(-2)}`;
-    console.log(`Chamando API: /income/revenue?monthYear=${monthYear}`);
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/income/revenue?monthYear=${monthYear}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        const revenueData = await response.json();
-        setRevenues(revenueData);
-        console.log("Receitas carregadas:", revenueData);
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/income/revenue?monthYear=${monthYear}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {
-      console.error("Erro ao carregar receitas:", error);
+    );
+
+    if (response.ok) {
+      const revenueData = await response.json();
+      setRevenues(revenueData);
     }
   };
 
@@ -358,13 +316,11 @@ const IncomePage = () => {
 
   const handleMonthChange = (month) => {
     const formattedMonth = String(month).padStart(2, "0");
-    console.log("Mês selecionado:", formattedMonth);
     setSelectedMonth(formattedMonth);
   };
 
   const handleYearChange = (year) => {
     const formattedYear = String(year);
-    console.log("Ano selecionado:", formattedYear);
     setSelectedYear(formattedYear);
   };
 
@@ -463,16 +419,21 @@ const IncomePage = () => {
               MÊS ANTERIOR
             </span>
             <span className="inline w-auto lg:hidden text-center text-[9px] leading-tight">
-              REPETIR LANÇAMENTO <br />ANTERIOR
+              REPETIR LANÇAMENTO <br />
+              ANTERIOR
             </span>
           </button>
         </div>
 
-
-        <div className="flex flex-wrap gap-6 z-10" style={{ maxWidth: "100%", alignItems: "flex-start" }}>
+        <div
+          className="flex flex-wrap gap-6 z-10"
+          style={{ maxWidth: "100%", alignItems: "flex-start" }}
+        >
           {/* Contêiner de Receitas */}
           <div className="flex-1 min-w-[300px]">
-            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">Receitas</h2>
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">
+              Receitas
+            </h2>
             {revenues.map((revenue, index) => (
               <div
                 key={index}
@@ -487,7 +448,6 @@ const IncomePage = () => {
                     maxWidth: "200px",
                   }}
                 >
-               
                   {revenue.name}
                 </div>
                 <div className="w-[140px] p-2 bg-neutral-100 text-gray-700 border-[2px] border-cinza6 rounded-[15px] cursor-default flex items-center justify-center">
@@ -538,13 +498,14 @@ const IncomePage = () => {
 
           {/* Contêiner de Despesas */}
           <div className="flex-1 min-w-[300px]">
-            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">Despesas</h2>
+            <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">
+              Despesas
+            </h2>
             {expenses.map((expense, index) => (
               <div
-              key={index}
-              className="flex items-center mt-2 gap-4 w-full max-w-[390px] lg:max-w-[300px]"
-            >
-            
+                key={index}
+                className="flex items-center mt-2 gap-4 w-full max-w-[390px] lg:max-w-[300px]"
+              >
                 <div
                   className="flex-1 text-gray-700 pl-4 cursor-default overflow-hidden"
                   style={{
@@ -603,7 +564,6 @@ const IncomePage = () => {
             </button>
           </div>
         </div>
-
 
         <div className="flex lg:mr-[38px] mr-[10px] justify-end mt-4">
           <button

@@ -95,19 +95,15 @@ const ArchivedPage = () => {
   };
 
   const handleDeleteCustomer = async () => {
-    try {
-      const response = await deleteCustomer(customerToDelete);
-
-      if (response.ok) {
-        fetchArchivedCustomers();
-        setIsConfirmModalOpen(false);
-        setCustomerToDelete(null);
-        showDeleteToast();
-      } else {
-        showErrorToast("Erro ao excluir cliente!");
-      }
-    } catch (error) {
-      showErrorToast(error.message);
+    const response = await deleteCustomer(customerToDelete);
+  
+    if (response.ok) {
+      fetchArchivedCustomers();
+      setIsConfirmModalOpen(false);
+      setCustomerToDelete(null);
+      showDeleteToast();
+    } else {
+      showErrorToast("Erro ao excluir cliente!");
     }
   };
 
