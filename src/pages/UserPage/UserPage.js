@@ -215,10 +215,6 @@ const UserPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "user_message") {
-      console.log(`Mensagem atualizada: ${value}`);
-    }
-
     setUserData((prevData) => ({
       ...prevData,
       [name]: value,

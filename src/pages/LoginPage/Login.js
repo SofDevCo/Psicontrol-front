@@ -1,17 +1,11 @@
 import React from "react";
 import { GoogleIcon } from "./components/LoginIcons";
-import BoxWhite from "./images/BoxWhite.png";
-import EnterGoogle from "./images/EnterGoogle.png";
-import TextBox from "./images/TextBox.png";
 import PsiText from "./images/PsiText.png";
-import LetsGo from "./images/LetsGo.png";
-import LoginText from "./images/LoginText.png";
 import BoxBlue from "./images/BoxBlue.png";
 import BoxBlueCourt from "./images/BoxBlueCourt.png";
 
 const Login = () => {
   const handleLogin = async () => {
-    console.log(process.env.REACT_APP_API_URL);
     const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
     const data = await response.json();
 

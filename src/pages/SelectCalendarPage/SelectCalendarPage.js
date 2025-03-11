@@ -114,7 +114,6 @@ const SelectCalendarPage = () => {
     const ids = Array.from(selectedCalendarIds);
 
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
-    console.log("Calendários selecionados salvos no localStorage:", ids);
 
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
