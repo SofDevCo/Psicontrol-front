@@ -35,14 +35,18 @@ const EditConsultationModal = ({
 
   if (!isOpen || !patient) return null;
 
-  const handleAddDayLocal = (event) => {
+  const handleAddDayLocal = () => {
+    const dayTrimmed = newDay.trim();
+    if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
+      setTempDays((prev) => [...prev, dayTrimmed]);
+      setNewDay("");
+      setIsAdding(false);
+    }
+  };
+
+  const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      const dayTrimmed = newDay.trim();
-      if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
-        setTempDays((prev) => [...prev, dayTrimmed]);
-        setNewDay("");
-        setIsAdding(false);
-      }
+      handleAddDayLocal();
     }
   };
 
@@ -126,41 +130,40 @@ const EditConsultationModal = ({
                 ))}
               </div>
             )}
-          </div>
-          {isEditing && (
-            <div className="flex items-center mt-4">
-              {isAdding && (
-                <input
-                  type="text"
-                  value={newDay}
-                  onChange={(e) => setNewDay(e.target.value)}
-                  onKeyDown={handleAddDayLocal}
-                  className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-11 appearance-none mr-2 bg-bg1"
-                />
-              )}
-              <div
-                className="flex items-center justify-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
-                onClick={() => setIsAdding(true)}
-              >
-                <AddConsultationIcon />
+            {isEditing && (
+              <div className="flex items-center mt-4">
+                {isAdding && (
+                  <input
+                    type="text"
+                    value={newDay}
+                    onChange={(e) => setNewDay(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-11 appearance-none mr-2 bg-bg1"
+                  />
+                )}
+                <div
+                  className="flex items-center justify-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
+                  onClick={() => {
+                    if (isAdding && newDay.trim()) {
+                      handleAddDayLocal();
+                    } else {
+                      setIsAdding(true);
+                    }
+                  }}
+                >
+                  <AddConsultationIcon />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-        <button
-          onClick={() => {
-            setIsEditing(!isEditing);
-            if (!isEditing) setIsAdding(false);
-          }}
-          className="mt-4"
-        >
+        <button onClick={() => setIsEditing(!isEditing)} className="mt-4">
           {!isEditing && <EditIcon />}
         </button>
-
         <div className="flex justify-end">
           <button
             onClick={handleSaveChanges}
-            className="px-4 py-2  bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
+            className="px-4 py-2 bg-primaria lg:text-sm text-F10 text-texto4 font-semibold font-openSans rounded-[100px] tracking-tight"
           >
             Salvar
           </button>
