@@ -48,6 +48,12 @@ const SelectCalendarPage = () => {
   const checkCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
+    const calendarsSelected = localStorage.getItem("calendarsSelected");
+    if (calendarsSelected) {
+      navigate("/create-event-form");
+      return;
+    }
+
     if (!authenticationToken) {
       setError("Token de autenticação não encontrado.");
       return setLoading(false);
@@ -114,6 +120,7 @@ const SelectCalendarPage = () => {
     const ids = Array.from(selectedCalendarIds);
 
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
+    localStorage.setItem("calendarsSelected", "true");
 
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
