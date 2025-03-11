@@ -1,36 +1,29 @@
 import React from "react";
 import { GoogleIcon } from "./components/LoginIcons";
-import BoxWhite from "./images/BoxWhite.png";
-import EnterGoogle from "./images/EnterGoogle.png";
-import TextBox from "./images/TextBox.png";
 import PsiText from "./images/PsiText.png";
-import LetsGo from "./images/LetsGo.png";
-import LoginText from "./images/LoginText.png";
 import BoxBlue from "./images/BoxBlue.png";
 import BoxBlueCourt from "./images/BoxBlueCourt.png";
 
-
 const Login = () => {
   const handleLogin = async () => {
-    try {
-      console.log(process.env.REACT_APP_API_URL);
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
-      const data = await response.json();
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
+    const data = await response.json();
 
-      if (data.authUrl) {
-        window.location.href = data.authUrl;
-      }
-    } catch (error) { }
+    if (data.authUrl) {
+      window.location.href = data.authUrl;
+    }
   };
 
   return (
     <div className="flex lg:w-full w-screen h-scree">
       {/* Lado esquerdo - Azul */}
       <div className="w-1/2 fixed h-screen bg-primaria">
-        <img src={PsiText} alt="Text" className="w-[137px] h-[16px] lg:mt-[40px] lg:ml-[40px] mt-[48px] ml-[15px]" />
+        <img
+          src={PsiText}
+          alt="Text"
+          className="w-[137px] h-[16px] lg:mt-[40px] lg:ml-[40px] mt-[48px] ml-[15px]"
+        />
       </div>
-
-
 
       {/* Lado direito (box branca) */}
       <div className="flex flex-col my-[-90px] justify-center items-center h-screen w-screen bg-white">
@@ -61,24 +54,30 @@ const Login = () => {
             Faça o login com seu e-mail profissional.
           </div>
         </div>
-
       </div>
-
-
 
       <div className="absolute lg:bottom-[200px] bottom-[400px] opacity-50 right-0">
-        <img src={BoxBlueCourt} alt="logo" className="lg:w-[520px] lg:h-[566px] w-[210px] h-[210px]" />
+        <img
+          src={BoxBlueCourt}
+          alt="logo"
+          className="lg:w-[520px] lg:h-[566px] w-[210px] h-[210px]"
+        />
       </div>
       <div className="absolute lg:bottom-[700px] bottom-[320px] opacity-50 lg:right-[470px] right-[5px]">
-        <img src={BoxBlue} alt="logo" className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]" />
+        <img
+          src={BoxBlue}
+          alt="logo"
+          className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]"
+        />
       </div>
       <div className="absolute lg:bottom-[100px] bottom-[576px] opacity-50 lg:right-[150px] right-[100px]">
-        <img src={BoxBlue} alt="logo" className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]" />
+        <img
+          src={BoxBlue}
+          alt="logo"
+          className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]"
+        />
       </div>
-
-
     </div>
-
   );
 };
 

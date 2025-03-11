@@ -53,34 +53,24 @@ const SelectCalendarPage = () => {
       return setLoading(false);
     }
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/events/check-calendars`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${authenticationToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        setError("Erro ao verificar calendários.");
-        return setLoading(false);
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/events/check-calendars`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authenticationToken}`,
+          "Content-Type": "application/json",
+        },
       }
+    );
 
-      const data = await response.json();
-      // if (data.redirect) {
-      //   console.log("Redirecionando para:", data.redirect);
-      //   navigate(data.redirect);
-      // }
-    } catch (error) {
-      setError("Erro ao conectar com o servidor.");
-      console.error("Erro ao conectar com o servidor:", error);
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      setError("Erro ao verificar calendários.");
+      return setLoading(false);
     }
+
+    const data = await response.json();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -124,7 +114,6 @@ const SelectCalendarPage = () => {
     const ids = Array.from(selectedCalendarIds);
 
     localStorage.setItem("selectedCalendars", JSON.stringify(ids));
-    console.log("Calendários selecionados salvos no localStorage:", ids);
 
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };

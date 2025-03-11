@@ -108,19 +108,15 @@ const ProfileCustomerPage = () => {
   };
 
   const handleDeleteCustomer = async () => {
-    try {
-      const response = await deleteCustomer(customerToDelete);
+    const response = await deleteCustomer(customerToDelete);
 
-      if (response.ok) {
-        setCustomer(null);
-        setIsConfirmModalOpen(false);
-        setCustomerToDelete(null);
-        showDeleteProfileToast();
-      } else {
-        showErrorToast("Erro ao excluir cliente!");
-      }
-    } catch (error) {
-      showErrorToast(error.message);
+    if (response.ok) {
+      setCustomer(null);
+      setIsConfirmModalOpen(false);
+      setCustomerToDelete(null);
+      showDeleteProfileToast();
+    } else {
+      showErrorToast("Erro ao excluir cliente!");
     }
   };
 

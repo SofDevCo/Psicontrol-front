@@ -126,7 +126,6 @@ const PaymentControlCard = ({
       whatsappResponse?.user_message ||
       whatsappResponse?.message ||
       "Nenhuma mensagem recebida.";
-    console.log("Mensagem recebida da API (Ajustada):", mensagemRecebida);
     setBillingMessage(mensagemRecebida);
     setSelectedPatient({
       ...billingRecord,
