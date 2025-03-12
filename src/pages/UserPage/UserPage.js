@@ -507,8 +507,8 @@ const UserPage = () => {
           </div>
 
           <div className="lg:relative lg:my-0 my-[10px]">
-            <div className="lg:w-[520px] w-auto  h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-              <div className="flex  justify-between items-center mb-4">
+            <div className="lg:w-[520px] w-auto h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+              <div className="flex justify-between items-center mb-4">
                 <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                   Mensagem de cobrança
                 </h3>
@@ -558,13 +558,13 @@ const UserPage = () => {
                   placeholder="Escreva sua mensagem de cobrança aqui..."
                 />
               ) : (
-                <div className="border border-gray-300 p-4 rounded-md text-[#232323] text-[15px]  h-[250px] bg-white">
+                <p className="text-[#232323] text-[15px]">
                   {userData.user_message || (
                     <span className="text-gray-400">
                       Escreva sua mensagem de cobrança aqui...
                     </span>
                   )}
-                </div>
+                </p>
               )}
             </div>
           </div>
