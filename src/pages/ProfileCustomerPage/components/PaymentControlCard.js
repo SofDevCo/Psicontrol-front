@@ -323,7 +323,7 @@ const PaymentControlCard = ({
               <FilterIcon />
             </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto ">
+          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
             <thead>
               <tr>
                 <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
