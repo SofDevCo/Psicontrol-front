@@ -5,6 +5,7 @@ import {
   PartialIcon,
   BillOfSaleIcon,
   EditConsultationModalIcon,
+  ReturnIcon,
 } from "./IconsDashBoard";
 
 const DropDownDashActions = ({
@@ -13,52 +14,91 @@ const DropDownDashActions = ({
   onConfirmedPayment,
   onConfirmedBillOfSale,
   onEditConsultationFee,
+  isSendingInvoice = false,
+  isPaymentConfirmed = false,
+  isBillOfSaleIssued = false,
+  onRevertSendingInvoice = () => { },
+  onRevertPaymentConfirmed = () => { },
+  onRevertBillOfSale = () => { },
+  openReturnModal,
 }) => {
   return (
     <nav className="absolute right-0 w-[151px] h-[131px] lg:w-[234px] lg:h-auto lg:mt-3 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default rounded-md">
       <ul className="w-[210px] h-auto mx-auto lg:mt-8">
-        <li>
+        <li className="flex items-center">
           <button
             onClick={onOpenModal}
-            className="group w-full flex text-center m gap-2  py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className={`group flex items-center gap-2 py-2 text-texto2 lg:text-[15px] text-[9px] font-normal tracking-tight underline ${isSendingInvoice ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={isSendingInvoice}
           >
             <SendIcon />
             Enviar Cobrança
           </button>
+
+          {isSendingInvoice && (
+            <button
+              onClick={() => openReturnModal(onRevertSendingInvoice)}
+              className="pr-1 scale-75"
+            >
+              <ReturnIcon />
+            </button>
+          )}
         </li>
-        <li>
+
+        <li className="flex items-center">
           <button
             onClick={onPartialPayment}
-            className="group w-full flex text-center mt-1 mr-12 gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
           >
             <PartialIcon />
             Pagamento Parcial
           </button>
         </li>
 
-        <li>
+        <li className="flex items-center">
           <button
             onClick={onConfirmedPayment}
-            className="group w-full flex text-center mt-1 lg:gap-1 gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline"
+            className={`group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ${isPaymentConfirmed ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={isPaymentConfirmed}
           >
             <ConfirmPaymentIcon />
-            Pagamento Confirmado
+            {isPaymentConfirmed ? "Pgto. Confirmado" : "Pagamento Confirmado"}
           </button>
+
+          {isPaymentConfirmed && (
+            <button
+              onClick={() => openReturnModal(onRevertPaymentConfirmed)}
+              className="pr-1 scale-75"
+            >
+              <ReturnIcon />
+            </button>
+          )}
         </li>
 
-        <li>
+        <li className="flex items-center">
           <button
-            onClick={onConfirmedBillOfSale}
-            className="group w-full flex text-center mt-1 lg:gap-1 gap-1 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2"
+            onClick={isBillOfSaleIssued ? () => openReturnModal(onRevertBillOfSale) : onConfirmedBillOfSale}
+            className={`group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2 ${isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={isBillOfSaleIssued}
           >
             <BillOfSaleIcon />
             Recibo Emitido
           </button>
+
+          {isBillOfSaleIssued && (
+            <button
+              onClick={() => openReturnModal(onRevertBillOfSale)}
+              className="pr-1 scale-75"
+            >
+              <ReturnIcon />
+            </button>
+          )}
         </li>
-        <li>
+
+        <li className="flex items-center">
           <button
             onClick={onEditConsultationFee}
-            className="group w-full flex text-center mt-1 lg:gap-3 gap-1 py-2  text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2"
+            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2"
           >
             <EditConsultationModalIcon />
             Editar Consultas
