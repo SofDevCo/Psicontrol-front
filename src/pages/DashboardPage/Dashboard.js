@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
+import ReturnPatientModal from "./components/ReturnPatientModal";
 import {
   fetchCustomers,
   sendWhatsAppMessage,
@@ -77,6 +78,13 @@ const DashBoard = () => {
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
     [calendarIdsParam]
   );
+
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [returnAction, setReturnAction] = useState(null);
+  const openReturnModal = (action) => {
+    setReturnAction(() => action);
+    setIsReturnModalOpen(true);
+  };
 
   const dropdownRef = useRef();
 
@@ -483,10 +491,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-                ...patient,
-                payment_amount: parseFloat(paymentAmount),
-                payment_status: "parcial",
-              }
+              ...patient,
+              payment_amount: parseFloat(paymentAmount),
+              payment_status: "parcial",
+            }
             : patient
         )
       );
@@ -576,12 +584,12 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  .split(",")
-                  .filter((d) => !daysToRemove.includes(d))
-                  .join(","),
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                .split(",")
+                .filter((d) => !daysToRemove.includes(d))
+                .join(","),
+            }
             : p
         )
       );
@@ -608,11 +616,11 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  ? `${p.consultation_days}, ${day}`
-                  : day,
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                ? `${p.consultation_days}, ${day}`
+                : day,
+            }
             : p
         )
       );
@@ -691,6 +699,14 @@ const DashBoard = () => {
                   </div>
                 </div>
               </div>
+              <ReturnPatientModal
+  isOpen={isReturnModalOpen}
+  onClose={() => setIsReturnModalOpen(false)}
+  onConfirm={() => {
+    if (returnAction) returnAction();
+    setIsReturnModalOpen(false);
+  }}
+/>
 
               <div className="hidden lg:flex justify-center gap-2">
                 <Months
@@ -733,205 +749,224 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-x-auto border-solid border-cinza6 bg-bg1 z-10 ${
-              isTableExpanded ? "h-auto" : "min-h-screen"
-            }`}
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
+              }`}
           >
-            <div className="overflow-x-auto  ">
-              <table className="table-fixed w-full bg-bg1 mt-5 text-left">
-                <thead>
-                  <tr>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      Paciente
-                    </th>
-                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      Valor Consulta
-                    </th>
-                    <th className="text-center align-middle hidden lg:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      Dias
-                    </th>
-                    <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      Nº de consultas
-                    </th>
-                    <th className=" text-center lg:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
-                      Total
-                    </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
-                      Cobrança
-                    </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
-                      Pagamento
-                    </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
-                      NF
-                    </th>
-                    <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      Ações
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredPatients.length > 0 ? (
-                    [...filteredPatients]
-                      .sort((a, b) =>
-                        a.Customer?.customer_name.localeCompare(
-                          b.Customer?.customer_name
-                        )
+            <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
+              <thead>
+                <tr>
+                  <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    Paciente
+                  </th>
+                  <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    Valor Consulta
+                  </th>
+                  <th className="text-center align-middle hidden lg:table-cell min-w-[75px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    Dias
+                  </th>
+                  <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    Nº de consultas
+                  </th>
+                  <th className=" text-center lg:align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
+                    Total
+                  </th>
+                  <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
+                    Cobrança
+                  </th>
+                  <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
+                    Pagamento
+                  </th>
+                  <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
+                    NF
+                  </th>
+                  <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPatients.length > 0 ? (
+                  [...filteredPatients]
+                    .sort((a, b) =>
+                      a.Customer?.customer_name.localeCompare(
+                        b.Customer?.customer_name
                       )
-                      .map((patient, index) => (
-                        <tr key={index} className="relative">
-                          <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
-                            <div className="flex flex-col justify-center leading-tight ">
-                              <span>
-                                {patient.Customer?.customer_name?.split(
-                                  " "
-                                )[0] || "-"}
-                              </span>
-                              <span>
-                                {patient.Customer?.customer_name
-                                  ?.split(" ")
-                                  .slice(1)
-                                  .join(" ") || ""}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                            R${" "}
-                            {parseFloat(patient.consultation_fee)
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </td>
-                          <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                    )
+                    .map((patient, index) => (
+                      <tr key={index} className="relative">
+                        <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
+                          <div className="flex flex-col justify-center leading-tight ">
+                            <span>
+                              {patient.Customer?.customer_name?.split(
+                                " "
+                              )[0] || "-"}
+                            </span>
+                            <span>
+                              {patient.Customer?.customer_name
+                                ?.split(" ")
+                                .slice(1)
+                                .join(" ") || ""}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                          R${" "}
+                          {parseFloat(patient.consultation_fee)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                        </td>
+                        <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                          {patient.consultation_days
+                            ? patient.consultation_days
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
+                            : "-"}
+                        </td>
+                        <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
+                          <span>{patient.num_consultations || "-"}</span>
+                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                            Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                  .split(", ")
-                                  .map(Number)
-                                  .sort((a, b) => a - b)
-                                  .join(", ")
-                              : "-"}
-                          </td>
-                          <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-                            <span>{patient.num_consultations || "-"}</span>
-                            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
-                              Dias:{" "}
-                              {patient.consultation_days
-                                ? patient.consultation_days
-                                    .split(", ")
-                                    .map(Number)
-                                    .sort((a, b) => a - b)
-                                    .join(", ")
-                                : "Sem dias"}
-                            </div>
-                          </td>
-                          <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                            R$ {patient.total_consultation_fee || "0,00"}
-                          </td>
-                          <td>
-                            <div className="flex items-center justify-center text-center h-full">
-                              {patient.sending_invoice ? (
-                                <VerifyGreenIcon />
-                              ) : (
-                                <CrossIcon />
-                              )}
-                            </div>
-                          </td>
-                          <td>
-                            <div className="flex items-center justify-center text-center h-full">
-                              {" "}
-                              {patient.payment_status === "pago" ? (
-                                <VerifyGreenIcon />
-                              ) : patient.payment_status === "parcial" ? (
-                                <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
-                                  R${" "}
-                                  {parseFloat(patient.payment_amount || 0)
-                                    .toFixed(2)
-                                    .replace(".", ",")}
-                                </span>
-                              ) : (
-                                <CrossIcon />
-                              )}{" "}
-                            </div>
-                          </td>
-
-                          <td>
-                            <div className="flex items-center justify-center text-center h-full">
-                              {patient.bill_of_sale ? (
-                                <VerifyGreenIcon />
-                              ) : (
-                                <CrossIcon />
-                              )}
-                            </div>
-                          </td>
-
-                          <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
-                            <button
-                              className="cursor-pointer"
-                              onClick={() =>
-                                toggleDropdownPatients(index, patient)
-                              }
-                            >
-                              <HamburguerIcon />
-                            </button>
-
-                            {isDropdownOpenPatients === index && (
-                              <div className="absolute right-0 shadow-lg rounded p-2 z-20">
-                                <DropDownDashActions
-                                  onOpenModal={() =>
-                                    handleSendWhatsApp(patient, true)
-                                  }
-                                  onPartialPayment={() =>
-                                    handleOpenPartialPayment(patient)
-                                  }
-                                  onConfirmedPayment={() =>
-                                    handleConfirmPayment(patient)
-                                  }
-                                  onConfirmedBillOfSale={() =>
-                                    handleConfirmBillOfSale(patient)
-                                  }
-                                  onEditConsultationFee={() =>
-                                    handleEditConsultation(patient)
-                                  }
-                                />
-                              </div>
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
+                              : "Sem dias"}
+                          </div>
+                        </td>
+                        <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                          R$ {patient.total_consultation_fee || "0,00"}
+                        </td>
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            {patient.sending_invoice ? (
+                              <VerifyGreenIcon />
+                            ) : (
+                              <CrossIcon />
                             )}
-                          </td>
-                        </tr>
-                      ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="8"
-                        className="lg:text-base text-[8px] text-center px-2 lg:px-4 py-1 lg:py-2"
-                      >
-                        Nenhum registro encontrado para este mês e ano.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            {" "}
+                            {patient.payment_status === "pago" ? (
+                              <VerifyGreenIcon />
+                            ) : patient.payment_status === "parcial" ? (
+                              <span className="text-texto2 lg:text-F15 text-F8 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                                R${" "}
+                                {parseFloat(patient.payment_amount || 0)
+                                  .toFixed(2)
+                                  .replace(".", ",")}
+                              </span>
+                            ) : (
+                              <CrossIcon />
+                            )}{" "}
+                          </div>
+                        </td>
 
-                <tfoot>
+                        <td>
+                          <div className="flex items-center justify-center text-center h-full">
+                            {patient.bill_of_sale ? (
+                              <VerifyGreenIcon />
+                            ) : (
+                              <CrossIcon />
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
+                          <button
+                            className="cursor-pointer"
+                            onClick={() =>
+                              toggleDropdownPatients(index, patient)
+                            }
+                          >
+                            <HamburguerIcon />
+                          </button>
+
+                          {isDropdownOpenPatients === index && (
+                            <div className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20">
+                              <DropDownDashActions
+                                onOpenModal={() => handleSendWhatsApp(patient)}
+                                onPartialPayment={() => handleOpenPartialPayment(patient)}
+                                onConfirmedPayment={() => handleConfirmPayment(patient)}
+                                onConfirmedBillOfSale={() => handleConfirmBillOfSale(patient)}
+                                onEditConsultationFee={() => handleEditConsultation(patient)}
+                                // Estados atuais:
+                                isSendingInvoice={patient.sending_invoice}
+                                isPaymentConfirmed={patient.payment_status === "pago"}
+                                isBillOfSaleIssued={patient.bill_of_sale}
+                                openReturnModal={openReturnModal}
+                                // Funções para reverter:
+                                onRevertSendingInvoice={() => {
+                                  setPatients((prevPatients) =>
+                                    prevPatients.map((p) =>
+                                      p.customer_id === patient.customer_id
+                                        ? { ...p, sending_invoice: false }
+                                        : p
+                                    )
+                                  );
+                                }}
+                                onRevertPaymentConfirmed={() => {
+                                  setPatients((prevPatients) =>
+                                    prevPatients.map((p) =>
+                                      p.customer_id === patient.customer_id
+                                        ? { ...p, payment_status: "" }
+                                        : p
+                                    )
+                                  );
+                                }}
+                                onRevertBillOfSale={() => {
+                                  setPatients((prevPatients) =>
+                                    prevPatients.map((p) =>
+                                      p.customer_id === patient.customer_id
+                                        ? { ...p, bill_of_sale: false }
+                                        : p
+                                    )
+                                  );
+                                }}
+                              />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                ) : (
                   <tr>
-                    <td colSpan="8" className="relative py-3">
-                      <div
-                        className={`flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
-                      >
-                        <button
-                          onClick={toggleTableSize}
-                          className={`absolute transform  cursor-pointer transition-transform duration-300 ${
-                            isTableExpanded
-                              ? "rotate-0 bottom-0"
-                              : "rotate-180 bottom-5"
-                          }`}
-                        >
-                          <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
-                          <ArrowDownIcon />
-                        </button>
-                      </div>
+                    <td
+                      colSpan="8"
+                      className="lg:text-base text-[8px] text-center px-2 lg:px-4 py-1 lg:py-2"
+                    >
+                      Nenhum registro encontrado para este mês e ano.
                     </td>
                   </tr>
-                </tfoot>
-              </table>
-            </div>
+                )}
+              </tbody>
+
+              <tfoot>
+                <tr>
+                  <td colSpan="8" className="relative py-3">
+                    <div
+                      className={`flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4 ${isTableExpanded ? "h-auto" : "h-screen"}`}
+                    >
+                      <button
+                        onClick={toggleTableSize}
+                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
+                            ? "rotate-0 bottom-0"
+                            : "rotate-180 bottom-5"
+                          }`}
+                      >
+                        <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
+                        <ArrowDownIcon />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
 
           {showUnmatchedPatients && (
