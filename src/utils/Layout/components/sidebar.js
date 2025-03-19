@@ -123,6 +123,41 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 </button>
               </li>
 
+               {/* Pacientes */}
+               <li
+                className={`side-menu -mx-8 mb-[27px] ${
+                  location.pathname === "/customers" ? "text-[#0082ba]" : ""
+                }`}
+              >
+                <Link
+                  to="/customers"
+                  onClick={onToggle}
+                  className={`group flex items-center w-full ${
+                    location.pathname === "/customers"
+                      ? ""
+                      : "hover:text-[#0082ba]"
+                  }`}
+                >
+                  <BorderIcon isSelected={location.pathname === "/customers"} />
+                  <UserIcon
+                    className={
+                      location.pathname === "/customers"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }
+                  />
+                  <div
+                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                      location.pathname === "/customers"
+                        ? "text-[#0082ba]"
+                        : "text-texto2 group-hover:text-[#0082ba]"
+                    }`}
+                  >
+                    Pacientes
+                  </div>
+                </Link>
+              </li>
+
               {/* Receitas e Despesas */}
               <li
                 className={`side-menu -mx-8 mb-[27px] ${
@@ -155,41 +190,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
                   >
                     <span className="flex">Receitas e</span>
                     <span className="flex">Despesas</span>
-                  </div>
-                </Link>
-              </li>
-
-              {/* Pacientes */}
-              <li
-                className={`side-menu -mx-8 mb-[27px] ${
-                  location.pathname === "/customers" ? "text-[#0082ba]" : ""
-                }`}
-              >
-                <Link
-                  to="/customers"
-                  onClick={onToggle}
-                  className={`group flex items-center w-full ${
-                    location.pathname === "/customers"
-                      ? ""
-                      : "hover:text-[#0082ba]"
-                  }`}
-                >
-                  <BorderIcon isSelected={location.pathname === "/customers"} />
-                  <UserIcon
-                    className={
-                      location.pathname === "/customers"
-                        ? "text-[#0082ba]"
-                        : "text-texto2 group-hover:text-[#0082ba]"
-                    }
-                  />
-                  <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
-                      location.pathname === "/customers"
-                        ? "text-[#0082ba]"
-                        : "text-texto2 group-hover:text-[#0082ba]"
-                    }`}
-                  >
-                    Pacientes
                   </div>
                 </Link>
               </li>
