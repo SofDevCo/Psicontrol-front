@@ -181,7 +181,7 @@ export const showDeleteToast = () => {
       },
 
       position: "top-center",
-      autoClose: 3000,
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -297,7 +297,7 @@ export const showConfirmPaymentToast = () => {
       },
 
       position: "top-center",
-      autoClose: 3000,
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
