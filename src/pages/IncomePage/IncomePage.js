@@ -432,7 +432,7 @@ const IncomePage = () => {
           {/* Contêiner de Receitas */}
           <div className="flex-1 min-w-[300px]">
             <h2 className="text-lg text-texto1 ml-4 font-semibold mb-2">
-              Receitas
+             Outras Receitas
             </h2>
             {revenues.map((revenue, index) => (
               <div

@@ -52,20 +52,20 @@ const DropDonw = ({
         </li>
         <li>
           <button
-            className="group lg:mt-5 mt-1 flex items-center lg:gap-3 gap-2 lg:ml-8 ml-7 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
-            onClick={() => onDelete(customerId)}
-          >
-            <TrashIcon />
-            Excluir paciente
-          </button>
-        </li>
-        <li>
-          <button
             className="group lg:mt-6 mt-1 flex items-center lg:gap-2 gap-2 lg:ml-8 ml-7 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onArchive(customerId)}
           >
             <ArchiveIcon />
             Arquivar Paciente
+          </button>
+        </li>
+        <li>
+          <button
+            className="group lg:mt-5 mt-1 flex items-center lg:gap-3 gap-2 lg:ml-8 ml-7 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
+            onClick={() => onDelete(customerId)}
+          >
+            <TrashIcon />
+            Excluir paciente
           </button>
         </li>
       </ul>

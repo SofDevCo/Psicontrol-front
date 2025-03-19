@@ -93,7 +93,7 @@ export const showDeleteProfileToast = () => {
         },
 
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -182,7 +182,7 @@ export const showDeleteProfileToast = () => {
           marginTop:"120px",
         },
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

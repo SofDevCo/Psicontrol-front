@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 export const showErrorToast = (message) => {
     toast.error(message, {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
