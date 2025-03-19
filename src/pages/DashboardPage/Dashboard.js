@@ -86,7 +86,20 @@ const DashBoard = () => {
     setIsReturnModalOpen(true);
   };
 
-  const dropdownRef = useRef();
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpenPatients(null); // Fecha o dropdown
+      }
+    }
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchCalendars = async () => {
@@ -888,19 +901,17 @@ const DashBoard = () => {
                           </button>
 
                           {isDropdownOpenPatients === index && (
-                            <div className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20">
+                            <div ref={dropdownRef} className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20">
                               <DropDownDashActions
                                 onOpenModal={() => handleSendWhatsApp(patient)}
                                 onPartialPayment={() => handleOpenPartialPayment(patient)}
                                 onConfirmedPayment={() => handleConfirmPayment(patient)}
                                 onConfirmedBillOfSale={() => handleConfirmBillOfSale(patient)}
                                 onEditConsultationFee={() => handleEditConsultation(patient)}
-                                // Estados atuais:
                                 isSendingInvoice={patient.sending_invoice}
                                 isPaymentConfirmed={patient.payment_status === "pago"}
                                 isBillOfSaleIssued={patient.bill_of_sale}
                                 openReturnModal={openReturnModal}
-                                // Funções para reverter:
                                 onRevertSendingInvoice={() => {
                                   setPatients((prevPatients) =>
                                     prevPatients.map((p) =>
