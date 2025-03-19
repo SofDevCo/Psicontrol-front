@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json .
 RUN npm install
 COPY . .
-ENV REACT_APP_API_URL=https://psicontrol-back-staging.fly.dev
+ENV REACT_APP_API_URL=https://psicontrol-back.fly.dev
 RUN npm run build
 
 FROM nginx:1.19
