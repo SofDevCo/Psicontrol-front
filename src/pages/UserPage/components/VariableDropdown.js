@@ -6,6 +6,7 @@ const VariableDropdown = ({ onSelectVariable }) => {
     { label: "Mês", value: "{{mes}}" },
     { label: "Dias", value: "{{dias}}" },
     { label: "Valor", value: "{{valor_total}}" },
+    { label: "Numero total de consultas", value: "{{numero_de_consultas}}" },
   ];
 
   return (
