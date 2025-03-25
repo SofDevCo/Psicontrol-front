@@ -12,6 +12,9 @@ import {
   savePartialPayment,
   AddDay,
   RemoveDay,
+  revertSendingInvoice,
+  revertPaymentConfirmation,
+  revertBillOfSale,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
@@ -86,6 +89,99 @@ const DashBoard = () => {
     setIsReturnModalOpen(true);
   };
 
+  const handleRevertSendingInvoice = async (customer) => {
+    if (!customer || !customer.customer_id) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+
+    const response = await revertSendingInvoice(
+      customer.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    if (response && response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, sending_invoice: false }
+            : p
+        )
+      );
+
+      setFilteredPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, sending_invoice: false }
+            : p
+        )
+      );
+    }
+  };
+
+  const handleRevertPaymentConfirmation = async (customer) => {
+    if (!customer || !customer.customer_id) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+
+    const response = await revertPaymentConfirmation(
+      customer.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    if (response && response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, payment_status: "", payment_amount: null }
+            : p
+        )
+      );
+
+      setFilteredPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, payment_status: "", payment_amount: null }
+            : p
+        )
+      );
+    }
+  };
+
+  const handleRevertBillOfSale = async (customer) => {
+    if (!customer || !customer.customer_id) {
+      alert("Paciente não encontrado.");
+      return;
+    }
+
+    const response = await revertBillOfSale(
+      customer.customer_id,
+      selectedYear,
+      selectedMonth
+    );
+
+    if (response && response.ok) {
+      setPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, bill_of_sale: false }
+            : p
+        )
+      );
+
+      setFilteredPatients((prevPatients) =>
+        prevPatients.map((p) =>
+          p.customer_id === customer.customer_id
+            ? { ...p, bill_of_sale: false }
+            : p
+        )
+      );
+    }
+  };
+
   const dropdownRef = useRef(null);
   useEffect(() => {
     function handleClickOutside(event) {
@@ -93,9 +189,9 @@ const DashBoard = () => {
         setIsDropdownOpenPatients(null); // Fecha o dropdown
       }
     }
-  
+
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -713,13 +809,13 @@ const DashBoard = () => {
                 </div>
               </div>
               <ReturnPatientModal
-  isOpen={isReturnModalOpen}
-  onClose={() => setIsReturnModalOpen(false)}
-  onConfirm={() => {
-    if (returnAction) returnAction();
-    setIsReturnModalOpen(false);
-  }}
-/>
+                isOpen={isReturnModalOpen}
+                onClose={() => setIsReturnModalOpen(false)}
+                onConfirm={() => {
+                  if (returnAction) returnAction();
+                  setIsReturnModalOpen(false);
+                }}
+              />
 
               <div className="hidden lg:flex justify-center gap-2">
                 <Months
@@ -913,31 +1009,13 @@ const DashBoard = () => {
                                 isBillOfSaleIssued={patient.bill_of_sale}
                                 openReturnModal={openReturnModal}
                                 onRevertSendingInvoice={() => {
-                                  setPatients((prevPatients) =>
-                                    prevPatients.map((p) =>
-                                      p.customer_id === patient.customer_id
-                                        ? { ...p, sending_invoice: false }
-                                        : p
-                                    )
-                                  );
+                                  openReturnModal(() => handleRevertSendingInvoice(patient));
                                 }}
                                 onRevertPaymentConfirmed={() => {
-                                  setPatients((prevPatients) =>
-                                    prevPatients.map((p) =>
-                                      p.customer_id === patient.customer_id
-                                        ? { ...p, payment_status: "" }
-                                        : p
-                                    )
-                                  );
+                                  openReturnModal(() => handleRevertPaymentConfirmation(patient));
                                 }}
                                 onRevertBillOfSale={() => {
-                                  setPatients((prevPatients) =>
-                                    prevPatients.map((p) =>
-                                      p.customer_id === patient.customer_id
-                                        ? { ...p, bill_of_sale: false }
-                                        : p
-                                    )
-                                  );
+                                  openReturnModal(() => handleRevertBillOfSale(patient));
                                 }}
                               />
                             </div>
@@ -966,8 +1044,8 @@ const DashBoard = () => {
                       <button
                         onClick={toggleTableSize}
                         className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
-                            ? "rotate-0 bottom-0"
-                            : "rotate-180 bottom-5"
+                          ? "rotate-0 bottom-0"
+                          : "rotate-180 bottom-5"
                           }`}
                       >
                         <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
