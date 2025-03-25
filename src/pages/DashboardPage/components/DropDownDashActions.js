@@ -17,9 +17,9 @@ const DropDownDashActions = ({
   isSendingInvoice = false,
   isPaymentConfirmed = false,
   isBillOfSaleIssued = false,
-  onRevertSendingInvoice = () => { },
-  onRevertPaymentConfirmed = () => { },
-  onRevertBillOfSale = () => { },
+  onRevertSendingInvoice,
+  onRevertPaymentConfirmed,
+  onRevertBillOfSale,
   openReturnModal,
 }) => {
   return (
@@ -37,7 +37,7 @@ const DropDownDashActions = ({
 
           {isSendingInvoice && (
             <button
-              onClick={() => openReturnModal(onRevertSendingInvoice)}
+              onClick={onRevertSendingInvoice}
               className="pr-1 scale-75"
             >
               <ReturnIcon />
@@ -67,7 +67,7 @@ const DropDownDashActions = ({
 
           {isPaymentConfirmed && (
             <button
-              onClick={() => openReturnModal(onRevertPaymentConfirmed)}
+              onClick={onRevertPaymentConfirmed}
               className="pr-1 scale-75"
             >
               <ReturnIcon />
@@ -77,7 +77,7 @@ const DropDownDashActions = ({
 
         <li className="flex items-center">
           <button
-            onClick={isBillOfSaleIssued ? () => openReturnModal(onRevertBillOfSale) : onConfirmedBillOfSale}
+            onClick={onConfirmedBillOfSale}
             className={`group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-[15px] text-[9px] font-normal font-['Open Sans'] tracking-tight underline ml-2 ${isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={isBillOfSaleIssued}
           >
@@ -87,7 +87,7 @@ const DropDownDashActions = ({
 
           {isBillOfSaleIssued && (
             <button
-              onClick={() => openReturnModal(onRevertBillOfSale)}
+              onClick={onRevertBillOfSale}
               className="pr-1 scale-75"
             >
               <ReturnIcon />

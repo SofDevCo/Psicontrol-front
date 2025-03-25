@@ -14,6 +14,96 @@ export const deleteCustomer = async (customerId) => {
   return response;
 };
 
+export const revertSendingInvoice = async (customerId, year, month) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/revert-sending-invoice`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          month_and_year: `${year}-${month}`,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      return response;
+    } else {
+      const errorData = await response.json();
+      console.error("Erro ao reverter cobrança:", errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao realizar requisição:", error);
+    return null;
+  }
+};
+
+export const revertPaymentConfirmation = async (customerId, year, month) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/revert-payment-confirmation`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          month_and_year: `${year}-${month}`,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      return response;
+    } else {
+      const errorData = await response.json();
+      console.error("Erro ao reverter confirmação de pagamento:", errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao realizar requisição:", error);
+    return null;
+  }
+};
+
+export const revertBillOfSale = async (customerId, year, month) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/revert-bill-of-sale`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          month_and_year: `${year}-${month}`,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      return response;
+    } else {
+      const errorData = await response.json();
+      console.error("Erro ao reverter recibo:", errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao realizar requisição:", error);
+    return null;
+  }
+};
+
 export const ArchiveCustomer = async (customerId) => {
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/events/customers/${customerId}/archive`,
