@@ -280,7 +280,7 @@ const CreateCustomerForm = ({
 
               <div>
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Sobronome
+                  Sobrenome
                 </label>
                 <input
                   type="text"

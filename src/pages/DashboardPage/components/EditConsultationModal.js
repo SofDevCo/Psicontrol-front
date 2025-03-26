@@ -80,9 +80,10 @@ const EditConsultationModal = ({
       );
     }
 
-    onUpdatePatient(patient.customer_id, tempDays);
+    await onUpdatePatient(patient.customer_id, tempDays);
     setIsEditing(false);
     onClose();
+    window.location.reload();
   };
 
   return (
