@@ -164,6 +164,21 @@ const CreateCustomerForm = ({
     });
   };
 
+  useEffect(() => {
+    const handleEnterKeyPress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit(e);
+      }
+    };
+
+    document.addEventListener("keydown", handleEnterKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleEnterKeyPress);
+    };
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
