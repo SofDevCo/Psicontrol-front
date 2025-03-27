@@ -164,21 +164,6 @@ const CreateCustomerForm = ({
     });
   };
 
-  useEffect(() => {
-    const handleEnterKeyPress = (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleSubmit(e);
-      }
-    };
-
-    document.addEventListener("keydown", handleEnterKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleEnterKeyPress);
-    };
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -256,6 +241,26 @@ const CreateCustomerForm = ({
 
     setStartDate(null);
   };
+
+  useEffect(() => {
+    const handleEnterKey = (e) => {
+      if (e.key === "Enter") {
+        const tag = e.target.tagName.toLowerCase();
+        const isInputOrTextarea = tag === "input" || tag === "textarea";
+
+        if (isInputOrTextarea) {
+          e.preventDefault();
+          const submitBtn = document.getElementById("submit-customer-form");
+          if (submitBtn) submitBtn.click();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleEnterKey);
+    return () => {
+      document.removeEventListener("keydown", handleEnterKey);
+    };
+  }, []);
 
   return (
     <div className=" space-y-2 p-6">
@@ -580,6 +585,7 @@ const CreateCustomerForm = ({
               </button>
               <button
                 type="submit"
+                id="submit-customer-form"
                 className="lg:h-[39px] px-6 py-2.5 bg-primaria rounded-[100px] text-white text-sm font-semibold"
               >
                 Salvar
