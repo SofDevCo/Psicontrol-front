@@ -17,6 +17,7 @@ import {
   revertBillOfSale,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
+import { showErrorToast } from "../../utils/notification/toastify";
 import SearchBarDashBoard from "./components/SearchBarDashBoard";
 import EditConsultationModal from "./components/EditConsultationModal";
 import { HamburguerIcon } from "../../icons/icons";
@@ -514,7 +515,7 @@ const DashBoard = () => {
       setBillingMessage(data.message);
       setIsBillingModalOpen(true);
     } else {
-      alert(`Email e Telefone não cadastrados.`);
+      showErrorToast(`Email e Telefone não cadastrados.`);
     }
   };
 
@@ -538,7 +539,7 @@ const DashBoard = () => {
     setLoading(false);
 
     if (!response || response.message === "E-mail não cadastrado.") {
-      alert("Erro: E-mail não cadastrado.");
+      showErrorToast("Erro: E-mail não cadastrado.");
       return;
     }
 
@@ -1074,6 +1075,7 @@ const DashBoard = () => {
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
                       >
+
                         <td className="px-4 py-2 flex items-center justify-between  lg:text-F15 text-F8">
                           <span>{event.event_name}</span>
                           <button
@@ -1133,14 +1135,14 @@ const DashBoard = () => {
             if (selectedPatient?.whatsappLink) {
               window.open(selectedPatient.whatsappLink, "_blank");
             } else {
-              alert("Erro: Telefone não cadastrado.");
+              showErrorToast("Erro: Telefone não cadastrado.");
             }
           }}
           onSendEmail={() => {
             if (selectedPatient?.customer_id) {
               handleSendEmail(selectedPatient);
             } else {
-              alert("Paciente não encontrado ou sem ID.");
+              showErrorToast("Paciente não encontrado ou sem ID.");
             }
           }}
           message={billingMessage}

@@ -16,7 +16,7 @@ export const Months = ({
 
   const getYearsRange = () => {
     const years = [];
-    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+    for (let i = 2025; i <= currentYear + 5; i++) {
       years.push(i);
     }
     return years;
@@ -54,12 +54,12 @@ export const Months = ({
 
   const handleMonthClick = (index) => {
     onMonthChange(index + 1);
-    closeModal(); // Fecha o modal após selecionar o mês
+    closeModal();
   };
 
   const handleYearClick = (year) => {
     onYearChange(year);
-    setShowingMonths(true); // Mostra os meses após selecionar o ano
+    setShowingMonths(true);
   };
 
   const toggleModal = () => {
