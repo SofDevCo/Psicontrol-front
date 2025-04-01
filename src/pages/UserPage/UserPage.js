@@ -558,13 +558,13 @@ const UserPage = () => {
                   placeholder="Escreva sua mensagem de cobrança aqui..."
                 />
               ) : (
-                <p className="text-[#232323] text-[15px]">
+                <div className="text-[#232323] text-[15px] whitespace-pre-line">
                   {userData.user_message || (
                     <span className="text-gray-400">
                       Escreva sua mensagem de cobrança aqui...
                     </span>
                   )}
-                </p>
+                </div>
               )}
             </div>
           </div>
