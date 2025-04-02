@@ -23,8 +23,8 @@ const rollbarConfig = {
 
 const App = () => {
   return (
-    <Provider config={rollbarConfig}>
-      <ErrorBoundary>
+    // <Provider config={rollbarConfig}>
+    //   <ErrorBoundary>
         <Router>
           <ToastContainer />
           <Routes>
@@ -45,8 +45,8 @@ const App = () => {
             </Route>
           </Routes>
         </Router>
-      </ErrorBoundary>
-    </Provider>
+    //   </ErrorBoundary>
+    // </Provider>
   );
 };
 
