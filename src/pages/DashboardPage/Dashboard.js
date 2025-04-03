@@ -15,6 +15,7 @@ import {
   revertSendingInvoice,
   revertPaymentConfirmation,
   revertBillOfSale,
+  fetchUnmatchedPatients,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import { showErrorToast } from "../../utils/notification/toastify";
@@ -258,26 +259,18 @@ const DashBoard = () => {
     fetchEvents();
   }, [selectedCalendarId]);
 
-  const fetchUnmatchedPatients = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/events/unmatched-patients`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-      }
-    );
+  const handleFetchUnmatchedPatients = async () => {
+    const response = await fetchUnmatchedPatients();
 
-    if (response.ok) {
-      const data = await response.json();
-      setUnmatchedPatients(data);
+    if (response) {
+      setUnmatchedPatients(response);
     } else {
       return null;
     }
   };
 
   useEffect(() => {
-    fetchUnmatchedPatients();
+    handleFetchUnmatchedPatients();
   }, []);
 
   const fetchPatientData = async () => {
@@ -324,7 +317,7 @@ const DashBoard = () => {
     );
 
     if (response.ok) {
-      fetchUnmatchedPatients();
+      handleFetchUnmatchedPatients();
       setIsSearchBarOpen(false);
       setIsConfirmModalOpen(false);
       setSelectedPatient(null);
@@ -564,7 +557,7 @@ const DashBoard = () => {
 
     if (response.ok) {
       showDeleteToast();
-      fetchUnmatchedPatients();
+      handleFetchUnmatchedPatients();
     } else {
       const errorData = await response.json();
       alert(`Erro: ${errorData.error}`);
@@ -601,10 +594,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-              ...patient,
-              payment_amount: parseFloat(paymentAmount),
-              payment_status: "parcial",
-            }
+                ...patient,
+                payment_amount: parseFloat(paymentAmount),
+                payment_status: "parcial",
+              }
             : patient
         )
       );
@@ -694,12 +687,12 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-              ...p,
-              consultation_days: p.consultation_days
-                .split(",")
-                .filter((d) => !daysToRemove.includes(d))
-                .join(","),
-            }
+                ...p,
+                consultation_days: p.consultation_days
+                  .split(",")
+                  .filter((d) => !daysToRemove.includes(d))
+                  .join(","),
+              }
             : p
         )
       );
@@ -726,11 +719,11 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-              ...p,
-              consultation_days: p.consultation_days
-                ? `${p.consultation_days}, ${day}`
-                : day,
-            }
+                ...p,
+                consultation_days: p.consultation_days
+                  ? `${p.consultation_days}, ${day}`
+                  : day,
+              }
             : p
         )
       );
@@ -859,8 +852,9 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
-              }`}
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${
+              isTableExpanded ? "h-auto" : "min-h-screen"
+            }`}
           >
             <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
               <thead>
@@ -907,9 +901,8 @@ const DashBoard = () => {
                         <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
                           <div className="flex flex-col justify-center leading-tight ">
                             <span>
-                              {patient.Customer?.customer_name?.split(
-                                " "
-                              )[0] || "-"}
+                              {patient.Customer?.customer_name?.split(" ")[0] ||
+                                "-"}
                             </span>
                             <span>
                               {patient.Customer?.customer_name
@@ -928,10 +921,10 @@ const DashBoard = () => {
                         <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                              .split(", ")
-                              .map(Number)
-                              .sort((a, b) => a - b)
-                              .join(", ")
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
                             : "-"}
                         </td>
                         <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
@@ -940,10 +933,10 @@ const DashBoard = () => {
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
+                                  .split(", ")
+                                  .map(Number)
+                                  .sort((a, b) => a - b)
+                                  .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
@@ -998,25 +991,44 @@ const DashBoard = () => {
                           </button>
 
                           {isDropdownOpenPatients === index && (
-                            <div ref={dropdownRef} className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20">
+                            <div
+                              ref={dropdownRef}
+                              className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20"
+                            >
                               <DropDownDashActions
                                 onOpenModal={() => handleSendWhatsApp(patient)}
-                                onPartialPayment={() => handleOpenPartialPayment(patient)}
-                                onConfirmedPayment={() => handleConfirmPayment(patient)}
-                                onConfirmedBillOfSale={() => handleConfirmBillOfSale(patient)}
-                                onEditConsultationFee={() => handleEditConsultation(patient)}
+                                onPartialPayment={() =>
+                                  handleOpenPartialPayment(patient)
+                                }
+                                onConfirmedPayment={() =>
+                                  handleConfirmPayment(patient)
+                                }
+                                onConfirmedBillOfSale={() =>
+                                  handleConfirmBillOfSale(patient)
+                                }
+                                onEditConsultationFee={() =>
+                                  handleEditConsultation(patient)
+                                }
                                 isSendingInvoice={patient.sending_invoice}
-                                isPaymentConfirmed={patient.payment_status === "pago"}
+                                isPaymentConfirmed={
+                                  patient.payment_status === "pago"
+                                }
                                 isBillOfSaleIssued={patient.bill_of_sale}
                                 openReturnModal={openReturnModal}
                                 onRevertSendingInvoice={() => {
-                                  openReturnModal(() => handleRevertSendingInvoice(patient));
+                                  openReturnModal(() =>
+                                    handleRevertSendingInvoice(patient)
+                                  );
                                 }}
                                 onRevertPaymentConfirmed={() => {
-                                  openReturnModal(() => handleRevertPaymentConfirmation(patient));
+                                  openReturnModal(() =>
+                                    handleRevertPaymentConfirmation(patient)
+                                  );
                                 }}
                                 onRevertBillOfSale={() => {
-                                  openReturnModal(() => handleRevertBillOfSale(patient));
+                                  openReturnModal(() =>
+                                    handleRevertBillOfSale(patient)
+                                  );
                                 }}
                               />
                             </div>
@@ -1044,10 +1056,11 @@ const DashBoard = () => {
                     >
                       <button
                         onClick={toggleTableSize}
-                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
-                          ? "rotate-0 bottom-0"
-                          : "rotate-180 bottom-5"
-                          }`}
+                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${
+                          isTableExpanded
+                            ? "rotate-0 bottom-0"
+                            : "rotate-180 bottom-5"
+                        }`}
                       >
                         <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                         <ArrowDownIcon />
@@ -1075,7 +1088,6 @@ const DashBoard = () => {
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
                       >
-
                         <td className="px-4 py-2 flex items-center justify-between  lg:text-F15 text-F8">
                           <span>{event.event_name}</span>
                           <button
