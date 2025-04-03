@@ -359,3 +359,16 @@ export const RemoveDay = async (customerId, days, month, year) => {
 
   return response;
 };
+
+export const fetchUnmatchedPatients = async () => {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/events/unmatched-patients`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+    }
+  );
+
+  return response.ok ? response.json() : null;
+};
