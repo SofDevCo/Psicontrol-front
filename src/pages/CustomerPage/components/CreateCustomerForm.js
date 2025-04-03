@@ -363,7 +363,7 @@ const CreateCustomerForm = ({
                     autoComplete="off"
                     required
                     placeholder="Google Agenda"
-                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm  placeholder:text-sm lg:placeholder:text-base z-10"
+                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10"
                   />
                   {filteredPatients.length > 0 && (
                     <ul className="absolute lg:w-[243px] lg:-mt-3 border-2 border-cinza6 rounded-b-[15px] bg-bg1 z-0 lg:max-h-[200px] overflow-y-auto">
