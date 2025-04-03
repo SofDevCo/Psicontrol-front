@@ -13,7 +13,10 @@ import { showErrorToast } from "../../../utils/notification/toastify";
 import { showEditToast } from "../components/notiificationCustomerPage";
 import "react-toastify/dist/ReactToastify.css";
 import EditConsultationFeeModal from "./EditConsultationFeeModal";
-import { createOrUpdateCustomer } from "../../../service/pagesService/pagesService";
+import {
+  createOrUpdateCustomer,
+  fetchUnmatchedPatients,
+} from "../../../service/pagesService/pagesService";
 import { showSuccessToast } from "../components/notiificationCustomerPage";
 
 registerLocale(ptBR);
@@ -30,6 +33,9 @@ const CreateCustomerForm = ({
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [originalConsultationFee, setOriginalConsultationFee] = useState("");
   const [startDate, setStartDate] = useState(null);
+  const [unmatchedPatients, setUnmatchedPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     if (isEditing && selectedPatient && selectedPatient.customer_dob) {
@@ -48,6 +54,37 @@ const CreateCustomerForm = ({
       setOriginalConsultationFee(selectedPatient.consultation_fee || "");
     }
   }, [isEditing, selectedPatient]);
+
+  useEffect(() => {
+    const handleFetchUnmatchedPatients = async () => {
+      const response = await fetchUnmatchedPatients();
+
+      if (response) {
+        setUnmatchedPatients(response);
+      }
+    };
+
+    handleFetchUnmatchedPatients();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (value) {
+      const filtered = unmatchedPatients.filter((patient) =>
+        patient.event_name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredPatients(filtered);
+    } else {
+      setFilteredPatients([]);
+    }
+
+    setCustomer((prev) => ({
+      ...prev,
+      customer_calendar_name: value,
+    }));
+  };
 
   const isConsultationFeeChanged = () => {
     const formattedOriginal = parseFloat(
@@ -319,12 +356,24 @@ const CreateCustomerForm = ({
                   <input
                     type="text"
                     name="customer_calendar_name"
-                    value={customer.customer_calendar_name || ""}
-                    onChange={handleChange}
+                    value={inputValue}
+                    onChange={handleInputChange}
                     required
                     placeholder="Google Agenda"
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base"
                   />
+                  {filteredPatients.length > 0 && (
+                    <ul className="mt-2 border-2 border-cinza6 rounded-lg bg-white">
+                      {filteredPatients.map((patient) => (
+                        <li
+                          key={patient.id}
+                          className="p-2 hover:bg-cinza6 cursor-pointer"
+                        >
+                          {patient.event_name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <div className="flex-1">
                   <label className="mb-1 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
