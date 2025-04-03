@@ -360,6 +360,7 @@ const CreateCustomerForm = ({
                     name="customer_calendar_name"
                     value={inputValue}
                     onChange={handleInputChange}
+                    autoComplete="off"
                     required
                     placeholder="Google Agenda"
                     className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base z-50"
