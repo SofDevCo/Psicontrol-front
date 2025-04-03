@@ -80,10 +80,12 @@ const CreateCustomerForm = ({
       setFilteredPatients([]);
     }
 
-    setCustomer((prev) => ({
-      ...prev,
-      customer_calendar_name: value,
-    }));
+    if (customer.customer_calendar_name !== value) {
+      setCustomer((prev) => ({
+        ...prev,
+        customer_calendar_name: value,
+      }));
+    }
   };
 
   const isConsultationFeeChanged = () => {
@@ -350,7 +352,7 @@ const CreateCustomerForm = ({
               </div>
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1">
-                  <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
+                  <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap ">
                     ID Paciente - Google Agenda
                   </label>
                   <input
@@ -360,14 +362,22 @@ const CreateCustomerForm = ({
                     onChange={handleInputChange}
                     required
                     placeholder="Google Agenda"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base z-50"
                   />
                   {filteredPatients.length > 0 && (
-                    <ul className="mt-2 border-2 border-cinza6 rounded-lg bg-white">
+                    <ul className="absolute top-15 w-[243px] -mt-3 border-2 border-cinza6 rounded-b-lg bg-white z-10">
                       {filteredPatients.map((patient) => (
                         <li
                           key={patient.id}
-                          className="p-2 hover:bg-cinza6 cursor-pointer"
+                          onClick={() => {
+                            setInputValue(patient.event_name);
+                            setFilteredPatients([]);
+                            setCustomer((prev) => ({
+                              ...prev,
+                              customer_calendar_name: patient.event_name,
+                            }));
+                          }}
+                          className="p-2 hover:bg-bgM cursor-pointer"
                         >
                           {patient.event_name}
                         </li>
