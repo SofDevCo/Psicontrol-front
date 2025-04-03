@@ -351,7 +351,7 @@ const CreateCustomerForm = ({
                 />
               </div>
               <div className="flex flex-wrap gap-4">
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap ">
                     ID Paciente - Google Agenda
                   </label>
@@ -363,10 +363,10 @@ const CreateCustomerForm = ({
                     autoComplete="off"
                     required
                     placeholder="Google Agenda"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base z-50"
+                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm  placeholder:text-sm lg:placeholder:text-base z-10"
                   />
                   {filteredPatients.length > 0 && (
-                    <ul className="absolute top-15 w-[243px] -mt-3 border-2 border-cinza6 rounded-b-lg bg-white z-10">
+                    <ul className="absolute lg:w-[243px] lg:-mt-3 border-2 border-cinza6 rounded-b-[15px] bg-bg1 z-0 lg:max-h-[200px] overflow-y-auto">
                       {filteredPatients.map((patient) => (
                         <li
                           key={patient.id}
@@ -378,7 +378,7 @@ const CreateCustomerForm = ({
                               customer_calendar_name: patient.event_name,
                             }));
                           }}
-                          className="p-2 hover:bg-bgM cursor-pointer"
+                          className="p-2 hover:bg-bgM cursor-pointer border border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
                         >
                           {patient.event_name}
                         </li>
