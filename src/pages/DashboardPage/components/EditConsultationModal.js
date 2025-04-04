@@ -5,6 +5,7 @@ import {
   AddConsultationIcon,
   CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
+import { showErrorToast } from "../../../utils/notification/toastify";
 
 const EditConsultationModal = ({
   isOpen,
@@ -35,8 +36,24 @@ const EditConsultationModal = ({
 
   if (!isOpen || !patient) return null;
 
+  const isValidDayForMonth = (day, month, year) => {
+    const dayInt = parseInt(day, 10);
+    if (isNaN(dayInt) || dayInt <= 0) return false;
+
+    const lastDay = new Date(year, month, 0).getDate();
+    return dayInt <= lastDay;
+  };
+
   const handleAddDayLocal = () => {
     const dayTrimmed = newDay.trim();
+
+    if (!isValidDayForMonth(dayTrimmed, selectedMonth, selectedYear)) {
+      showErrorToast(
+        `Dia inválido para o mês ${selectedMonth}/${selectedYear}`
+      );
+      return;
+    }
+
     if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
       setTempDays((prev) => [...prev, dayTrimmed]);
       setNewDay("");
