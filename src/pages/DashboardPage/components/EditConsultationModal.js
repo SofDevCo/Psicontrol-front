@@ -50,8 +50,12 @@ const EditConsultationModal = ({
     }
   };
 
-  const handleRemoveDayLocal = (dayToRemove) => {
-    setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
+  const handleRemoveDayLocal = (indexToRemove) => {
+    setTempDays((prev) => {
+      const newDays = [...prev];
+      newDays.splice(indexToRemove, 1);
+      return newDays;
+    });
   };
 
   const handleSaveChanges = async () => {
@@ -121,7 +125,7 @@ const EditConsultationModal = ({
                     <span className="mb-1">{day}</span>
                     {isEditing && (
                       <button
-                        onClick={() => handleRemoveDayLocal(day)}
+                        onClick={() => handleRemoveDayLocal(index)}
                         className="absolute -bottom-5"
                       >
                         <CloseMiniIcon />
