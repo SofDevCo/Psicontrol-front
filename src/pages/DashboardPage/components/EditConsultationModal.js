@@ -22,6 +22,7 @@ const EditConsultationModal = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [tempDays, setTempDays] = useState([]);
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
     if (patient && patient.consultation_days) {
@@ -55,7 +56,10 @@ const EditConsultationModal = ({
     }
 
     if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
-      setTempDays((prev) => [...prev, dayTrimmed]);
+      setTempDays((prev) => {
+        const updatedDays = [...prev, dayTrimmed].sort((a, b) => a - b);
+        return updatedDays;
+      });
       setNewDay("");
       setIsAdding(false);
     }
@@ -82,6 +86,7 @@ const EditConsultationModal = ({
     }
 
     setDays(tempDays);
+
     const daysToRemove = days.filter((day) => !tempDays.includes(day));
     const daysToAdd = tempDays.filter((day) => !days.includes(day));
 
@@ -93,18 +98,31 @@ const EditConsultationModal = ({
         selectedYear
       );
     }
+
     if (daysToAdd.length > 0) {
-      await Promise.all(
-        daysToAdd.map((day) =>
-          onAddDay(patient.customer_id, day, selectedMonth, selectedYear)
-        )
+      await onAddDay(
+        patient.customer_id,
+        daysToAdd,
+        selectedMonth,
+        selectedYear
       );
     }
 
     await onUpdatePatient(patient.customer_id, tempDays);
+
+    setPatients((prevPatients) =>
+      prevPatients.map((p) =>
+        p.customer_id === patient.customer_id
+          ? {
+              ...p,
+              consultation_days: tempDays.join(", "),
+            }
+          : p
+      )
+    );
+
     setIsEditing(false);
     onClose();
-    window.location.reload();
   };
 
   return (

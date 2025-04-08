@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Await, useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
 import ReturnPatientModal from "./components/ReturnPatientModal";
@@ -16,6 +16,7 @@ import {
   revertPaymentConfirmation,
   revertBillOfSale,
   fetchUnmatchedPatients,
+  HandleFetchBillingRecords,
 } from "../../service/pagesService/pagesService";
 import DropDownDashBoard from "./components/DropDownDashBoard";
 import { showErrorToast } from "../../utils/notification/toastify";
@@ -380,14 +381,7 @@ const DashBoard = () => {
   const fetchBillingRecords = async (month, year) => {
     setLoading(true);
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${month}&year=${year}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-        },
-      }
-    );
+    const response = await HandleFetchBillingRecords(month, year);
 
     if (response.ok) {
       const data = await response.json();
@@ -696,10 +690,11 @@ const DashBoard = () => {
             : p
         )
       );
+      await fetchBillingRecords(selectedMonth, selectedYear);
     }
   };
 
-  const handleAddDay = async (customerId, day) => {
+  const handleAddDay = async (customerId, days) => {
     if (!selectedPatientForEdit || !selectedPatientForEdit.month_and_year) {
       alert("Erro: Paciente ou mês não disponível.");
       return;
@@ -710,10 +705,11 @@ const DashBoard = () => {
 
     const response = await AddDay(
       customerId,
-      day,
+      days,
       monthFromPatient,
       yearFromPatient
     );
+
     if (response.ok) {
       setPatients((prevPatients) =>
         prevPatients.map((p) =>
@@ -721,12 +717,14 @@ const DashBoard = () => {
             ? {
                 ...p,
                 consultation_days: p.consultation_days
-                  ? `${p.consultation_days}, ${day}`
-                  : day,
+                  ? `${p.consultation_days}, ${days}`
+                  : days,
               }
             : p
         )
       );
+
+      await fetchBillingRecords(selectedMonth, selectedYear);
     } else {
       const data = await response.json();
       alert(data.error || "Erro ao adicionar dia.");
