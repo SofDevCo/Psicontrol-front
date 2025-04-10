@@ -61,24 +61,25 @@ const Dropdown = ({
     };
 
     updatePosition();
+    const handleScroll = () => {
+      onClose();
+    };
     
-    window.addEventListener('scroll', updatePosition);
-    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', handleScroll, true);
     
     return () => {
-      window.removeEventListener('scroll', updatePosition);
-      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', handleScroll, true);
     };
-  }, [isOpen, position, triggerRef]);
+  }, [isOpen, triggerRef, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
     
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current && 
+        dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
-        triggerRef.current && 
+        triggerRef.current &&
         !triggerRef.current.contains(event.target)
       ) {
         onClose();
@@ -86,13 +87,13 @@ const Dropdown = ({
     };
     
     document.addEventListener('mousedown', handleClickOutside);
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen, onClose, triggerRef]);
 
   if (!isOpen) return null;
-
   return (
     <div
       ref={dropdownRef}
