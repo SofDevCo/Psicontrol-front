@@ -26,6 +26,7 @@ import {
   ShowVinculateToast,
   showDeleteToast,
   showConfirmPaymentToast,
+  showNoContactToast,
 } from "./components/ToastDashBoard";
 import {
   CrossIcon,
@@ -39,6 +40,7 @@ import BillingDashBoard from "./components/BillingDashBoard";
 import ModalPaymentDash from "./components/ModalPaymentDash";
 import FilterStatusDashBoard from "./components/FilterStatusDashBoard";
 import { Months } from "../../utils/Months/months";
+import Dropdown from "../../components/Dropdown";
 
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
@@ -90,6 +92,8 @@ const DashBoard = () => {
     setReturnAction(() => action);
     setIsReturnModalOpen(true);
   };
+  const patientDropdownRefs = useRef({});
+  const unmatchedDropdownRefs = useRef({});
 
   const handleRevertSendingInvoice = async (customer) => {
     if (!customer || !customer.customer_id) {
@@ -184,20 +188,7 @@ const DashBoard = () => {
     }
   };
 
-  const dropdownRef = useRef(null);
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpenPatients(null); // Fecha o dropdown
-      }
-    }
 
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchCalendars = async () => {
@@ -508,7 +499,7 @@ const DashBoard = () => {
       setBillingMessage(data.message);
       setIsBillingModalOpen(true);
     } else {
-      showErrorToast(`Email e Telefone não cadastrados.`);
+      showNoContactToast();
     }
   };
 
@@ -594,10 +585,10 @@ const DashBoard = () => {
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-                ...patient,
-                payment_amount: parseFloat(paymentAmount),
-                payment_status: "parcial",
-              }
+              ...patient,
+              payment_amount: parseFloat(paymentAmount),
+              payment_status: "parcial",
+            }
             : patient
         )
       );
@@ -687,12 +678,12 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  .split(",")
-                  .filter((d) => !daysToRemove.includes(d))
-                  .join(","),
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                .split(",")
+                .filter((d) => !daysToRemove.includes(d))
+                .join(","),
+            }
             : p
         )
       );
@@ -719,11 +710,11 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  ? `${p.consultation_days}, ${day}`
-                  : day,
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                ? `${p.consultation_days}, ${day}`
+                : day,
+            }
             : p
         )
       );
@@ -852,9 +843,8 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${
-              isTableExpanded ? "h-auto" : "min-h-screen"
-            }`}
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
+              }`}
           >
             <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
               <thead>
@@ -921,10 +911,10 @@ const DashBoard = () => {
                         <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
                             : "-"}
                         </td>
                         <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
@@ -933,10 +923,10 @@ const DashBoard = () => {
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                  .split(", ")
-                                  .map(Number)
-                                  .sort((a, b) => a - b)
-                                  .join(", ")
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
@@ -983,56 +973,39 @@ const DashBoard = () => {
                         <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
                           <button
                             className="cursor-pointer"
-                            onClick={() =>
-                              toggleDropdownPatients(index, patient)
-                            }
+                            onClick={() => toggleDropdownPatients(index, patient)}
+                            ref={(el) => (patientDropdownRefs.current[index] = el)}
                           >
                             <HamburguerIcon />
                           </button>
 
-                          {isDropdownOpenPatients === index && (
-                            <div
-                              ref={dropdownRef}
-                              className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20"
-                            >
-                              <DropDownDashActions
-                                onOpenModal={() => handleSendWhatsApp(patient)}
-                                onPartialPayment={() =>
-                                  handleOpenPartialPayment(patient)
-                                }
-                                onConfirmedPayment={() =>
-                                  handleConfirmPayment(patient)
-                                }
-                                onConfirmedBillOfSale={() =>
-                                  handleConfirmBillOfSale(patient)
-                                }
-                                onEditConsultationFee={() =>
-                                  handleEditConsultation(patient)
-                                }
-                                isSendingInvoice={patient.sending_invoice}
-                                isPaymentConfirmed={
-                                  patient.payment_status === "pago"
-                                }
-                                isBillOfSaleIssued={patient.bill_of_sale}
-                                openReturnModal={openReturnModal}
-                                onRevertSendingInvoice={() => {
-                                  openReturnModal(() =>
-                                    handleRevertSendingInvoice(patient)
-                                  );
-                                }}
-                                onRevertPaymentConfirmed={() => {
-                                  openReturnModal(() =>
-                                    handleRevertPaymentConfirmation(patient)
-                                  );
-                                }}
-                                onRevertBillOfSale={() => {
-                                  openReturnModal(() =>
-                                    handleRevertBillOfSale(patient)
-                                  );
-                                }}
-                              />
-                            </div>
-                          )}
+                          <Dropdown
+                            isOpen={isDropdownOpenPatients === index}
+                            onClose={() => setIsDropdownOpenPatients(null)}
+                            triggerRef={{ current: patientDropdownRefs.current[index] }}
+                            position="bottom-right"
+                            width="234px"
+                          >
+                            <DropDownDashActions
+                              onOpenModal={() => handleSendWhatsApp(patient)}
+                              onPartialPayment={() => handleOpenPartialPayment(patient)}
+                              onConfirmedPayment={() => handleConfirmPayment(patient)}
+                              onConfirmedBillOfSale={() => handleConfirmBillOfSale(patient)}
+                              onEditConsultationFee={() => handleEditConsultation(patient)}
+                              isSendingInvoice={patient.sending_invoice}
+                              isPaymentConfirmed={patient.payment_status === "pago"}
+                              isBillOfSaleIssued={patient.bill_of_sale}
+                              onRevertSendingInvoice={() => {
+                                openReturnModal(() => handleRevertSendingInvoice(patient));
+                              }}
+                              onRevertPaymentConfirmed={() => {
+                                openReturnModal(() => handleRevertPaymentConfirmation(patient));
+                              }}
+                              onRevertBillOfSale={() => {
+                                openReturnModal(() => handleRevertBillOfSale(patient));
+                              }}
+                            />
+                          </Dropdown>
                         </td>
                       </tr>
                     ))
@@ -1056,11 +1029,10 @@ const DashBoard = () => {
                     >
                       <button
                         onClick={toggleTableSize}
-                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${
-                          isTableExpanded
-                            ? "rotate-0 bottom-0"
-                            : "rotate-180 bottom-5"
-                        }`}
+                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
+                          ? "rotate-0 bottom-0"
+                          : "rotate-180 bottom-5"
+                          }`}
                       >
                         <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                         <ArrowDownIcon />
@@ -1088,28 +1060,35 @@ const DashBoard = () => {
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
                       >
-                        <td className="px-4 py-2 flex items-center justify-between  lg:text-F15 text-F8">
+                        <td className="px-4 py-2 flex items-center justify-between lg:text-F15 text-F8">
                           <span>{event.event_name}</span>
                           <button
                             className="cursor-pointer"
                             onClick={() => toggleDropdown(index)}
+                            ref={(el) => (unmatchedDropdownRefs.current[index] = el)}
                           >
                             <HamburguerIcon />
                           </button>
-                          {isDropdownOpen && selectedEvent === index && (
-                            <div className="absolute right-0 shadow-lg rounded p-2 z-20">
-                              <DropDownDashBoard
-                                onVincular={() => handleVinculatePatient(event)}
-                                onExcluir={() => {
-                                  if (event.events.length > 0) {
-                                    openDeleteModal(
-                                      event.events[0].google_event_id
-                                    );
-                                  }
-                                }}
-                              />
-                            </div>
-                          )}
+
+                          <Dropdown
+                            isOpen={isDropdownOpen && selectedEvent === index}
+                            onClose={() => {
+                              setIsDropdownOpen(false);
+                              setSelectedEvent(null);
+                            }}
+                            triggerRef={{ current: unmatchedDropdownRefs.current[index] }}
+                            position="bottom-right"
+                            width="210px"
+                          >
+                            <DropDownDashBoard
+                              onVincular={() => handleVinculatePatient(event)}
+                              onExcluir={() => {
+                                if (event.events.length > 0) {
+                                  openDeleteModal(event.events[0].google_event_id);
+                                }
+                              }}
+                            />
+                          </Dropdown>
                         </td>
                       </tr>
                     ))
