@@ -26,6 +26,7 @@ import {
   ShowVinculateToast,
   showDeleteToast,
   showConfirmPaymentToast,
+  showNoContactToast,
 } from "./components/ToastDashBoard";
 import {
   CrossIcon,
@@ -498,7 +499,7 @@ const DashBoard = () => {
       setBillingMessage(data.message);
       setIsBillingModalOpen(true);
     } else {
-      showErrorToast(`Email e Telefone não cadastrados.`);
+      showNoContactToast();
     }
   };
 

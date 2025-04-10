@@ -308,3 +308,103 @@ export const showConfirmPaymentToast = () => {
     }
   );
 };
+
+export const showNoContactToast = () => {
+  const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
+  overlay.style.zIndex = isMobile ? "100" : "30";
+  overlay.style.backdropFilter = "blur(6px)";
+  document.body.appendChild(overlay);
+
+  toast.error(
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        fontFamily: "Ubuntu",
+      }}
+    >
+      <div style={{ marginBottom: "8px" }}>
+        <span
+          style={{
+            color: "#4F4F4F",
+            fontSize: isMobile ? "16px" : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          Paciente{" "}
+        </span>
+        <span
+          style={{
+            color: "#0082BA",
+            fontSize: isMobile ? "16px" : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          sem email ou
+        </span>
+      </div>
+      <div>
+        <span
+          style={{
+            color: "#0082BA",
+            fontSize: isMobile ? "16px" : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          telefone{" "}
+        </span>
+        <span
+          style={{
+            color: "#4F4F4F",
+            fontSize: isMobile ? "16px" : "21px",
+            fontWeight: "500",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          cadastrados!
+        </span>
+      </div>
+    </div>,
+    {
+      style: {
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
+        backgroundColor: "#F5F5F5",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "8px",
+        border: "1px solid #81A0AE",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        marginLeft: isMobile ? "9vh" : "96px",
+        marginTop: isMobile ? "20vh" : "230px",
+      },
+      position: "top-center",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      icon: false,
+      onClose: () => document.body.removeChild(overlay),
+    }
+  );
+};
+
