@@ -79,10 +79,10 @@ const CustomersPage = () => {
       setFilteredCustomers(
         Array.isArray(customers)
           ? customers.filter((customer) =>
-              customer.customer_name
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())
-            )
+            customer.customer_name
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          )
           : []
       );
     }
@@ -272,6 +272,8 @@ const CustomersPage = () => {
         {error && <p className="mb-[20px] text-center text-red-500">{error}</p>}
         {isLoading ? (
           <p>Carregando clientes...</p>
+        ) : customers.length === 0 ? (
+          <p className="text-center text-gray-500">Nenhum paciente cadastrado</p>
         ) : (
           <ul className="list-none">
             {customers
@@ -283,7 +285,7 @@ const CustomersPage = () => {
               .map((customer) => (
                 <li
                   key={`customer-${customer.customer_id}`}
-                  className="flex items-center justify-between  border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
+                  className="flex items-center justify-between border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
                 >
                   <span
                     className="lg:text-xl text-sm text-texto1"
