@@ -3,7 +3,7 @@ import React from "react";
 const VariableDropdown = ({ onSelectVariable }) => {
   const variables = [
     { label: "Nome do paciente", value: "{{nome}}" },
-    { label: "Mês", value: "{{mes}}" },
+    { label: "Mês", value: "{{mês}}" },
     { label: "Dias", value: "{{dias}}" },
     { label: "Valor", value: "{{valor_total}}" },
     { label: "Numero total de consultas", value: "{{numero_de_consultas}}" },

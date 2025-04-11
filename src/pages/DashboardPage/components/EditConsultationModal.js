@@ -5,6 +5,7 @@ import {
   AddConsultationIcon,
   CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
+import { showErrorToast } from "../../../utils/notification/toastify";
 
 const EditConsultationModal = ({
   isOpen,
@@ -21,12 +22,17 @@ const EditConsultationModal = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [tempDays, setTempDays] = useState([]);
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
     if (patient && patient.consultation_days) {
       const daysArray = patient.consultation_days.split(", ");
-      setDays(daysArray);
-      setTempDays(daysArray);
+      const sortedDays = daysArray
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(String);
+      setDays(sortedDays);
+      setTempDays(sortedDays);
     } else {
       setDays([]);
       setTempDays([]);
@@ -35,10 +41,32 @@ const EditConsultationModal = ({
 
   if (!isOpen || !patient) return null;
 
+  const isValidDayForMonth = (day, month, year) => {
+    const dayInt = parseInt(day, 10);
+    if (isNaN(dayInt) || dayInt <= 0) return false;
+
+    const lastDay = new Date(year, month, 0).getDate();
+    return dayInt <= lastDay;
+  };
+
   const handleAddDayLocal = () => {
     const dayTrimmed = newDay.trim();
-    if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
-      setTempDays((prev) => [...prev, dayTrimmed]);
+
+    if (!isValidDayForMonth(dayTrimmed, selectedMonth, selectedYear)) {
+      showErrorToast(
+        `Dia inválido para o mês ${selectedMonth}/${selectedYear}`
+      );
+      return;
+    }
+
+    if (dayTrimmed) {
+      setTempDays((prev) => {
+        const updatedDays = [...prev, dayTrimmed]
+          .map(Number)
+          .sort((a, b) => a - b)
+          .map(String);
+        return updatedDays;
+      });
       setNewDay("");
       setIsAdding(false);
     }
@@ -50,8 +78,12 @@ const EditConsultationModal = ({
     }
   };
 
-  const handleRemoveDayLocal = (dayToRemove) => {
-    setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
+  const handleRemoveDayLocal = (indexToRemove) => {
+    setTempDays((prev) => {
+      const newDays = [...prev];
+      newDays.splice(indexToRemove, 1);
+      return newDays;
+    });
   };
 
   const handleSaveChanges = async () => {
@@ -61,8 +93,49 @@ const EditConsultationModal = ({
     }
 
     setDays(tempDays);
-    const daysToRemove = days.filter((day) => !tempDays.includes(day));
-    const daysToAdd = tempDays.filter((day) => !days.includes(day));
+
+    const originalDays = [...days];
+    const editedDays = [...tempDays];
+
+    const countDays = (array) => {
+      return array.reduce((acc, day) => {
+        acc[day] = (acc[day] || 0) + 1;
+        return acc;
+      }, {});
+    };
+
+    const originalCount = countDays(originalDays);
+    const editedCount = countDays(editedDays);
+
+    const daysToRemove = [];
+
+    for (const day in originalCount) {
+      const qtdOriginal = originalCount[day];
+      const qtdEdited = editedCount[day] || 0;
+
+      const qtdToRemove = qtdOriginal - qtdEdited;
+
+      if (qtdToRemove > 0) {
+        for (let i = 0; i < qtdToRemove; i++) {
+          daysToRemove.push(day);
+        }
+      }
+    }
+
+    const daysToAdd = [];
+
+    for (const day in editedCount) {
+      const qtdEdited = editedCount[day];
+      const qtdOriginal = originalCount[day] || 0;
+
+      const qtdToAdd = qtdEdited - qtdOriginal;
+
+      if (qtdToAdd > 0) {
+        for (let i = 0; i < qtdToAdd; i++) {
+          daysToAdd.push(day);
+        }
+      }
+    }
 
     if (daysToRemove.length > 0) {
       await onRemoveDay(
@@ -72,18 +145,20 @@ const EditConsultationModal = ({
         selectedYear
       );
     }
+
     if (daysToAdd.length > 0) {
-      await Promise.all(
-        daysToAdd.map((day) =>
-          onAddDay(patient.customer_id, day, selectedMonth, selectedYear)
-        )
+      await onAddDay(
+        patient.customer_id,
+        daysToAdd,
+        selectedMonth,
+        selectedYear
       );
     }
 
     await onUpdatePatient(patient.customer_id, tempDays);
+
     setIsEditing(false);
     onClose();
-    window.location.reload();
   };
 
   return (
@@ -121,7 +196,7 @@ const EditConsultationModal = ({
                     <span className="mb-1">{day}</span>
                     {isEditing && (
                       <button
-                        onClick={() => handleRemoveDayLocal(day)}
+                        onClick={() => handleRemoveDayLocal(index)}
                         className="absolute -bottom-5"
                       >
                         <CloseMiniIcon />
