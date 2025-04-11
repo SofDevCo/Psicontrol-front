@@ -87,14 +87,48 @@ const EditConsultationModal = ({
 
     setDays(tempDays);
 
-    const daysToRemove = days.filter((day) => !tempDays.includes(day));
-    const daysToAdd = tempDays.filter((day, index) => {
-      const existingCount = days.filter((d) => d === day).length;
-      const newCount = tempDays
-        .slice(0, index + 1)
-        .filter((d) => d === day).length;
-      return newCount > existingCount;
-    });
+    const originalDays = [...days];
+    const editedDays = [...tempDays];
+
+    const countDays = (array) => {
+      return array.reduce((acc, day) => {
+        acc[day] = (acc[day] || 0) + 1;
+        return acc;
+      }, {});
+    };
+
+    const originalCount = countDays(originalDays);
+    const editedCount = countDays(editedDays);
+
+    const daysToRemove = [];
+
+    for (const day in originalCount) {
+      const qtdOriginal = originalCount[day];
+      const qtdEdited = editedCount[day] || 0;
+
+      const qtdToRemove = qtdOriginal - qtdEdited;
+
+      if (qtdToRemove > 0) {
+        for (let i = 0; i < qtdToRemove; i++) {
+          daysToRemove.push(day);
+        }
+      }
+    }
+
+    const daysToAdd = [];
+
+    for (const day in editedCount) {
+      const qtdEdited = editedCount[day];
+      const qtdOriginal = originalCount[day] || 0;
+
+      const qtdToAdd = qtdEdited - qtdOriginal;
+
+      if (qtdToAdd > 0) {
+        for (let i = 0; i < qtdToAdd; i++) {
+          daysToAdd.push(day);
+        }
+      }
+    }
 
     if (daysToRemove.length > 0) {
       await onRemoveDay(
@@ -115,14 +149,6 @@ const EditConsultationModal = ({
     }
 
     await onUpdatePatient(patient.customer_id, tempDays);
-
-    setPatients((prevPatients) =>
-      prevPatients.map((p) =>
-        p.customer_id === patient.customer_id
-          ? { ...p, consultation_days: tempDays.join(", ") }
-          : p
-      )
-    );
 
     setIsEditing(false);
     onClose();
