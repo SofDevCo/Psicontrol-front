@@ -27,8 +27,12 @@ const EditConsultationModal = ({
   useEffect(() => {
     if (patient && patient.consultation_days) {
       const daysArray = patient.consultation_days.split(", ");
-      setDays(daysArray);
-      setTempDays(daysArray);
+      const sortedDays = daysArray
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(String);
+      setDays(sortedDays);
+      setTempDays(sortedDays);
     } else {
       setDays([]);
       setTempDays([]);
@@ -57,7 +61,10 @@ const EditConsultationModal = ({
 
     if (dayTrimmed) {
       setTempDays((prev) => {
-        const updatedDays = [...prev, dayTrimmed].sort((a, b) => a - b);
+        const updatedDays = [...prev, dayTrimmed]
+          .map(Number)
+          .sort((a, b) => a - b)
+          .map(String);
         return updatedDays;
       });
       setNewDay("");
