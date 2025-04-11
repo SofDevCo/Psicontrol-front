@@ -10,7 +10,7 @@ const VariableDropdown = ({ onSelectVariable }) => {
   ];
 
   return (
-    <div className="absolute lg:top-14 lg:right-0 right-6  bg-clara4 border shadow-lg rounded-md lg:w-[243px] w-[186px] h-auto">
+    <div className="absolute right-0 mt-2 lg:mt-1 bg-clara4 border shadow-lg rounded-md lg:w-[243px] w-[186px] h-auto">
       <ul>
         <h1 className="text-primaria lg:text-[15px] text-sm font-semibold tracking-tight ml-2 p-2 border border-b-cinza6/50">
           <span>{`{ }`}</span> Selecionar variável

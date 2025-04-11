@@ -36,6 +36,7 @@ const CreateCustomerForm = ({
   const [unmatchedPatients, setUnmatchedPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     if (isEditing && selectedPatient && selectedPatient.customer_dob) {
@@ -206,6 +207,19 @@ const CreateCustomerForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const errors = {};
+
+    if (!customer.customer_name) errors.customer_name = true;
+    if (!customer.customer_calendar_name) errors.customer_calendar_name = true;
+    if (!customer.customer_phone) errors.customer_phone = true;
+    if (!customer.consultation_fee) errors.consultation_fee = true;
+
+    setValidationErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      showErrorToast("Preencha os campos obrigatórios!");
+      return;
+    }
     if (
       startDate &&
       (isNaN(new Date(startDate)) ||
@@ -313,18 +327,21 @@ const CreateCustomerForm = ({
               <h2 className="text-sm lg:text-[25px] font-medium font-ubuntu text-primaria">
                 {isEditing ? "Editar Paciente" : "Adicionar Paciente"}
               </h2>
-              <button
-                onClick={onClose}
-                className="block lg:hidden text-primaria"
-              >
+              <button onClick={onClose} className="block lg:hidden text-primaria">
                 <CloseIconRegisterModal />
               </button>
             </div>
 
+            {Object.keys(validationErrors).length > 0 && (
+              <span className="block text-red-500 text-sm lg:text-base ml-1 mt-1">
+                *Campos obrigatórios
+              </span>
+            )}
+
             <div className="flex flex-col gap-4">
               <div>
-                <label className="mb-1 lg:ml-3 ml-2 block  text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Nome
+                <label className="mb-1 lg:ml-3 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
+                  Nome {validationErrors.customer_name && <span className="text-red-500 font-bold">*</span>}
                 </label>
                 <input
                   type="text"
@@ -332,7 +349,6 @@ const CreateCustomerForm = ({
                   value={customer.customer_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do paciente"
-                  required
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
@@ -352,16 +368,15 @@ const CreateCustomerForm = ({
               </div>
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1 relative">
-                  <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap ">
-                    ID Paciente - Google Agenda
+                  <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
+                    ID Paciente - Google Agenda {validationErrors.customer_calendar_name && <span className="text-red-500 font-bold">*</span>}
                   </label>
                   <input
                     type="text"
                     name="customer_calendar_name"
                     value={inputValue}
                     onChange={handleInputChange}
-                    autoComplete="off"
-                    required
+                    autoComplete="off"            
                     placeholder="Google Agenda"
                     className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10"
                   />
@@ -432,7 +447,7 @@ const CreateCustomerForm = ({
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 lg:w-[213px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Telefone
+                  Telefone {validationErrors.customer_phone && <span className="text-red-500 font-bold">*</span>}
                 </label>
                 <input
                   type="text"
@@ -445,7 +460,7 @@ const CreateCustomerForm = ({
               </div>
               <div className="w-full lg:w-[181px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Valor
+                  Valor {validationErrors.consultation_fee && <span className="text-red-500 font-bold">*</span>}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-texto2/50">
