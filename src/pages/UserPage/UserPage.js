@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CheckMessage, EditIcon, RefreshIcon } from "../../icons/icons";
 import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
@@ -27,6 +27,7 @@ const UserPage = () => {
   const [activeCalendarId, setActiveCalendarId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -54,6 +55,24 @@ const UserPage = () => {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     const fetchCalendars = async () => {
@@ -274,351 +293,408 @@ const UserPage = () => {
   };
 
   return (
-    <div className="flex flex-col p-6 overflow-y-auto overflow-x-hidden ">
+    <div className="flex flex-col items-center w-full p-6 overflow-y-auto overflow-x-hidden">
       <>
-        <div className="relative lg:w-[1076px] w-full mx-auto h-auto bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
-              Meus dados
-            </h2>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
-            >
-              <div className="mr-1 mt-[-6px] relative">Editar dados</div>
-              <EditIcon />
-            </button>
-          </div>
+        <div className="w-full max-w-[1300px] mx-auto flex flex-col items-center">
+          <div className="relative w-full bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
+                Meus dados
+              </h2>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+              >
+                <div className="mr-1 mt-[-6px] relative">Editar dados</div>
+                <EditIcon />
+              </button>
+            </div>
 
-          <div className="flex flex-col lg:flex-row justify-between">
-            <div className="flex lg:w-[360px] w-full mb-6 lg:mb-0">
-              <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
-                {userData.photoUrl ? (
-                  <img
-                    src={userData.photoUrl}
-                    alt="Foto de perfil"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <span className="text-white font-bold text-xl">
-                    {userData.user_name.charAt(0)}
-                  </span>
-                )}
+            <div className="flex flex-col lg:flex-row justify-between">
+              <div className="flex w-full lg:max-w-[360px] mb-6 lg:mb-0">
+                <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
+                  {userData.photoUrl ? (
+                    <img
+                      src={userData.photoUrl}
+                      alt="Foto de perfil"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span className="text-white font-bold text-xl">
+                      {userData.user_name.charAt(0)}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
+                    {userData.user_name}
+                  </div>
+                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight">
+                    <span>CPF/CNPJ: </span>
+                    <span className="text-[#5c5c5c]">
+                      {userData.user_cpf || userData.user_cnpj}
+                    </span>
+                  </div>
+                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
+                    <span>CRP: </span>
+                    <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+                  </div>
+                  <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
+                    <span className="mr-1 whitespace-nowrap self-start">
+                      E-mail:
+                    </span>
+                    <span className="text-[#5c5c5c] break-all">
+                      {userData.user_email}
+                    </span>
+                  </div>
+
+                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
+                    <span>Telefone: </span>
+                    <span className="text-[#5c5c5c]">{userData.user_phone}</span>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
-                  {userData.user_name}
+              <div className="w-full lg:max-w-[316px] lg:mx-[44px]">
+                <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
+                  Dados para recibo
                 </div>
-                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight">
+                <div className="text-[#232323] text-[17px] font-normal tracking-tight">
+                  <span>Nome/Clínica: </span>
+                  <span className="text-[#5c5c5c]">{userData.clinic_name}</span>
+                </div>
+                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                   <span>CPF/CNPJ: </span>
                   <span className="text-[#5c5c5c]">
                     {userData.user_cpf || userData.user_cnpj}
                   </span>
                 </div>
-                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
+                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                   <span>CRP: </span>
                   <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                 </div>
-                <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
-                  <span className="mr-1 whitespace-nowrap self-start">
-                    E-mail:
-                  </span>
-                  <span className="text-[#5c5c5c] break-all">
-                    {userData.user_email}
-                  </span>
-                </div>
-
-                <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
-                  <span>Telefone: </span>
-                  <span className="text-[#5c5c5c]">{userData.user_phone}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:w-[316px] w-full mx-[44px]">
-              <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
-                Dados para recibo
-              </div>
-              <div className="text-[#232323] text-[17px] font-normal tracking-tight">
-                <span>Nome/Clínica: </span>
-                <span className="text-[#5c5c5c]">{userData.clinic_name}</span>
-              </div>
-              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                <span>CPF/CNPJ: </span>
-                <span className="text-[#5c5c5c]">
-                  {userData.user_cpf || userData.user_cnpj}
-                </span>
-              </div>
-              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                <span>CRP: </span>
-                <span className="text-[#5c5c5c]">{userData.crp_number}</span>
-              </div>
-              <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                <span>Logo: </span>
-                <span className="text-[#5c5c5c]">
-                  {userData.image
-                    ? userData.image instanceof File
-                      ? userData.image.name
-                      : typeof userData.image === "string" &&
+                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                  <span>Logo: </span>
+                  <span className="text-[#5c5c5c]">
+                    {userData.image
+                      ? userData.image instanceof File
+                        ? userData.image.name
+                        : typeof userData.image === "string" &&
                           userData.image.includes("/")
-                        ? userData.image.split("/").pop()
-                        : userData.image
-                    : "(Imagem não carregada)"}
-                </span>
+                          ? userData.image.split("/").pop()
+                          : userData.image
+                      : "(Imagem não carregada)"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="lg:flex flex-1 lg:mx-auto w-auto lg:space-x-4 items-start">
-          <div className="lg:w-[540px] w-auto lg:h-[370px] h-[385px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-            <div className="flex justify-between">
-              <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
-                Minhas agendas
-              </h3>
-              <button
-                onClick={openModalToChangeAccount}
-                className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
-              >
-                <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
-                  Trocar de conta
-                </span>
-                <span className="lg:ml-1 ml-2">
-                  <RefreshIcon />
-                </span>
-              </button>
-            </div>
+          <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4">
+            <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+              <div className="flex justify-between">
+                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
+                  Minhas agendas
+                </h3>
+                <button
+                  onClick={openModalToChangeAccount}
+                  className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
+                >
+                  <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
+                    Trocar de conta
+                  </span>
+                  <span className="lg:ml-1 ml-2">
+                    <RefreshIcon />
+                  </span>
+                </button>
+              </div>
 
-            <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
-            <p className="text-[#8d8d8d] ml-10">
-              <span className="text-[#5c5c5c]">E-mail:</span>{" "}
-              {userData.user_email}
-            </p>
+              <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
+              <p className="text-[#8d8d8d] ml-10">
+                <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+                {userData.user_email}
+              </p>
 
-            <div className="mt-6 ml-10">
-              <h4 className="text-[#232323] text-lg font-medium">
-                Agendas sincronizadas
-              </h4>
+              <div className="mt-6 ml-10">
+                <h4 className="text-[#232323] text-lg font-medium">
+                  Agendas sincronizadas
+                </h4>
 
-              <div className="mt-3 space-y-4 max-h-[120px] overflow-y-auto">
-                {calendars.map((calendar) => (
-                  <div
-                    key={calendar.calendar_id}
-                    className="flex items-center space-x-3"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedCalendars.has(calendar.calendar_id)}
-                      onChange={() =>
-                        openConfirmationModal(calendar.calendar_id)
-                      }
-                      className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
-                        selectedCalendars.has(calendar.calendar_id)
+                <div className="mt-3 space-y-4 max-h-[120px] overflow-y-auto">
+                  {calendars.map((calendar) => (
+                    <div
+                      key={calendar.calendar_id}
+                      className="flex items-center space-x-3"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCalendars.has(calendar.calendar_id)}
+                        onChange={() =>
+                          openConfirmationModal(calendar.calendar_id)
+                        }
+                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
                           ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
                           : "bg-white border-gray-300 opacity-50"
-                      }`}
-                      style={{
-                        boxShadow: selectedCalendars.has(calendar.calendar_id)
-                          ? "inset 0 0 0 3px white"
-                          : "none",
-                      }}
-                    />
-                    <span
-                      className={`font-medium ${
-                        selectedCalendars.has(calendar.calendar_id)
+                          }`}
+                        style={{
+                          boxShadow: selectedCalendars.has(calendar.calendar_id)
+                            ? "inset 0 0 0 3px white"
+                            : "none",
+                        }}
+                      />
+                      <span
+                        className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
                           ? "text-[#5c5c5c]"
                           : "text-gray-500 opacity-50"
-                      }`}
-                    >
-                      {calendar.calendar_name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {isModalOpen && (
-              <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
-                <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
-                  <div className="w-full text-center mx-auto mb-12">
-                    <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-                      Você tem certeza que <br />
-                      deseja
-                      <span className="text-[#0082ba]"> trocar de conta? </span>
-                    </span>
-                  </div>
-
-                  <div className="flex justify-around">
-                    <button
-                      onClick={closeModal}
-                      className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
-                    >
-                      Não
-                    </button>
-                    <button
-                      onClick={() => {
-                        closeModal();
-                        handleChangeAccount();
-                      }}
-                      className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
-                    >
-                      Sim
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {isConfirmationModalOpen && (
-              <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
-                <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
-                  <div className="w-full text-center mx-auto mb-12">
-                    <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
-                      Você tem certeza que deseja
-                      <br />
-                      {selectedCalendars.has(activeCalendarId) ? (
-                        <span className="text-[#0082ba]">
-                          desativar a agenda?
-                        </span>
-                      ) : (
-                        <span className="text-[#0082ba]">ativar a agenda?</span>
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-around">
-                    <button
-                      onClick={closeConfirmationModal}
-                      className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
-                    >
-                      Não
-                    </button>
-                    <button
-                      onClick={() => handleToggleCalendar(activeCalendarId)}
-                      className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
-                    >
-                      Sim
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="lg:relative lg:my-0 my-[10px]">
-            <div className="lg:w-[520px] w-auto h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
-                  Mensagem de cobrança
-                </h3>
-                <div className="flex items-center">
-                  <button
-                    onClick={() =>
-                      isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
-                    }
-                    disabled={!isEditingMessage}
-                    className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
-                  >
-                    <VariableIcon />
-                  </button>
-                  {isEditingMessage && isDropdownOpen && (
-                    <VariableDropdown onSelectVariable={handleSelectVariable} />
-                  )}
-
-                  {isEditingMessage ? (
-                    <button
-                      onClick={saveMessage}
-                      className="text-[#0082ba] text-sm flex items-center "
-                    >
-                      <CheckMessage />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsEditingMessage(true)}
-                      className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
-                    >
-                      <EditIcon />
-                    </button>
-                  )}
+                          }`}
+                      >
+                        {calendar.calendar_name}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {isEditingMessage ? (
-                <textarea
-                  name="user_message"
-                  value={userData.user_message || ""}
-                  onChange={(e) =>
-                    setUserData((prevData) => ({
-                      ...prevData,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
-                  placeholder="Escreva sua mensagem de cobrança aqui..."
-                />
-              ) : (
-                <div className="text-[#232323] text-[15px] whitespace-pre-line">
-                  {userData.user_message || (
-                    <span className="text-gray-400">
-                      Escreva sua mensagem de cobrança aqui...
-                    </span>
-                  )}
+              {isModalOpen && (
+                <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
+                  <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg">
+                    <div className="w-full text-center mx-auto mb-12">
+                      <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                        Você tem certeza que <br />
+                        deseja
+                        <span className="text-[#0082ba]"> trocar de conta? </span>
+                      </span>
+                    </div>
+
+                    <div className="flex justify-around">
+                      <button
+                        onClick={closeModal}
+                        className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
+                      >
+                        Não
+                      </button>
+                      <button
+                        onClick={() => {
+                          closeModal();
+                          handleChangeAccount();
+                        }}
+                        className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
+                      >
+                        Sim
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {isConfirmationModalOpen && (
+                <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
+                  <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
+                    <div className="w-full text-center mx-auto mb-12">
+                      <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
+                        Você tem certeza que deseja
+                        <br />
+                        {selectedCalendars.has(activeCalendarId) ? (
+                          <span className="text-[#0082ba]">
+                            desativar a agenda?
+                          </span>
+                        ) : (
+                          <span className="text-[#0082ba]">ativar a agenda?</span>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-around">
+                      <button
+                        onClick={closeConfirmationModal}
+                        className="h-10 w-[100px] bg-white border border-[#0082ba] text-[#0082ba] rounded-full text-center font-semibold hover:bg-[#e6f4f8]"
+                      >
+                        Não
+                      </button>
+                      <button
+                        onClick={() => handleToggleCalendar(activeCalendarId)}
+                        className="h-10 w-[100px] bg-[#0082ba] text-white rounded-full text-center font-semibold hover:bg-[#007bb8]"
+                      >
+                        Sim
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
+
+            <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4">
+              <div className="w-full lg:max-w-[520px] h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
+                    Mensagem de cobrança
+                  </h3>
+                  <div className="flex items-center relative">
+                    <button
+                      onClick={() =>
+                        isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
+                      }
+                      disabled={!isEditingMessage}
+                      className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                    >
+                      <VariableIcon />
+                    </button>
+
+                    {isEditingMessage && isDropdownOpen && (
+                      <div ref={dropdownRef} className="absolute top-full mt-1 lg:mt-0 right-0 z-10">
+                        <VariableDropdown onSelectVariable={handleSelectVariable} />
+                      </div>
+                    )}
+
+
+                    {isEditingMessage ? (
+                      <button
+                        onClick={saveMessage}
+                        className="text-[#0082ba] text-sm flex items-center "
+                      >
+                        <CheckMessage />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setIsEditingMessage(true)}
+                        className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                      >
+                        <EditIcon />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {isEditingMessage ? (
+                  <textarea
+                    name="user_message"
+                    value={userData.user_message || ""}
+                    onChange={(e) =>
+                      setUserData((prevData) => ({
+                        ...prevData,
+                        [e.target.name]: e.target.value,
+                      }))
+                    }
+                    className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
+                    placeholder="Escreva sua mensagem de cobrança aqui..."
+                  />
+                ) : (
+                  <div className="text-[#232323] text-[15px] whitespace-pre-line">
+                    {userData.user_message || (
+                      <span className="text-gray-400">
+                        Escreva sua mensagem de cobrança aqui...
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
 
-        {isEditing && (
-          <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
-            <div className="w-[90%] lg:mt-0 mt-28 lg:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto">
-              <div className="flex flex-col lg:flex-row gap-6 lg:ml-9">
-                <div className="space-y-6 mr-0 lg:mr-20">
-                  <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
-                    Editar meus dados
-                  </h2>
+          {isEditing && (
+            <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
+              <div className="w-[90%] lg:mt-0 mt-28 lg:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto">
+                <div className="flex flex-col lg:flex-row gap-6 lg:ml-9">
+                  <div className="space-y-6 mr-0 lg:mr-20">
+                    <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                      Editar meus dados
+                    </h2>
 
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      Nome
-                    </label>
-                    <input
-                      type="text"
-                      name="user_name"
-                      value={userData.user_name || ""}
-                      onChange={handleChange}
-                      placeholder="Nome do psicólogo"
-                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      E-mail
-                    </label>
-                    <input
-                      type="email"
-                      name="user_email"
-                      value={userData.user_email || ""}
-                      onChange={handleChange}
-                      placeholder="e-mail.psicologo@gmail.com"
-                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  <div className="flex flex-col lg:flex-row gap-4">
                     <div>
                       <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                        Telefone
+                        Nome
                       </label>
                       <input
                         type="text"
-                        name="user_phone"
-                        value={userData.user_phone || ""}
+                        name="user_name"
+                        value={userData.user_name || ""}
                         onChange={handleChange}
-                        placeholder="(00) 0 0000-0000"
+                        placeholder="Nome do psicólogo"
+                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        E-mail
+                      </label>
+                      <input
+                        type="email"
+                        name="user_email"
+                        value={userData.user_email || ""}
+                        onChange={handleChange}
+                        placeholder="e-mail.psicologo@gmail.com"
+                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      />
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-4">
+                      <div>
+                        <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                          Telefone
+                        </label>
+                        <input
+                          type="text"
+                          name="user_phone"
+                          value={userData.user_phone || ""}
+                          onChange={handleChange}
+                          placeholder="(00) 0 0000-0000"
+                          className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                          CPF/CNPJ
+                        </label>
+                        <input
+                          type="text"
+                          name="user_cpf"
+                          value={userData.user_cpf || ""}
+                          onChange={handleChange}
+                          placeholder="XX.XXX.XXX/0001-XX"
+                          className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        CRP
+                      </label>
+                      <input
+                        type="text"
+                        name="crp_number"
+                        value={userData.crp_number || ""}
+                        onChange={handleCRPChange}
+                        placeholder="XX/XXXXX"
                         className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
+                      Dados para recibo
+                    </h2>
+
+                    <div>
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        Nome/Clínica
+                      </label>
+                      <input
+                        type="text"
+                        id="clinic_name"
+                        value={userData.clinic_name || ""}
+                        onChange={(e) =>
+                          setUserData({
+                            ...userData,
+                            clinic_name: e.target.value,
+                          })
+                        }
+                        placeholder="Nome/Clínica"
+                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
@@ -628,123 +704,70 @@ const UserPage = () => {
                       </label>
                       <input
                         type="text"
-                        name="user_cpf"
-                        value={userData.user_cpf || ""}
+                        name="clinic_cpf_cnpj"
+                        value={userData.clinic_cpf_cnpj || ""}
                         onChange={handleChange}
                         placeholder="XX.XXX.XXX/0001-XX"
                         className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      CRP
-                    </label>
-                    <input
-                      type="text"
-                      name="crp_number"
-                      value={userData.crp_number || ""}
-                      onChange={handleCRPChange}
-                      placeholder="XX/XXXXX"
-                      className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
-                    Dados para recibo
-                  </h2>
-
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      Nome/Clínica
-                    </label>
-                    <input
-                      type="text"
-                      id="clinic_name"
-                      value={userData.clinic_name || ""}
-                      onChange={(e) =>
-                        setUserData({
-                          ...userData,
-                          clinic_name: e.target.value,
-                        })
-                      }
-                      placeholder="Nome/Clínica"
-                      className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      CPF/CNPJ
-                    </label>
-                    <input
-                      type="text"
-                      name="clinic_cpf_cnpj"
-                      value={userData.clinic_cpf_cnpj || ""}
-                      onChange={handleChange}
-                      placeholder="XX.XXX.XXX/0001-XX"
-                      className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
-                      Importar logotipo
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <div className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
-                        <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
-                          {fileName}
-                        </span>
-                      </div>
-                      <label className="flex items-center gap-1 text-[#0082ba] cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          className="w-5 h-5"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4-4m0 0l-4 4m4-4v12"
-                          />
-                        </svg>
-                        <span className="underline">Importar arquivo</span>
-                        <input
-                          type="file"
-                          name="image"
-                          onChange={handleFileChange}
-                          className="hidden"
-                        />
+                    <div>
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        Importar logotipo
                       </label>
+                      <div className="flex items-center gap-2">
+                        <div className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
+                          <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
+                            {fileName}
+                          </span>
+                        </div>
+                        <label className="flex items-center gap-1 text-[#0082ba] cursor-pointer">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4-4m0 0l-4 4m4-4v12"
+                            />
+                          </svg>
+                          <span className="underline">Importar arquivo</span>
+                          <input
+                            type="file"
+                            name="image"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex justify-end gap-2 mt-6">
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 border w-[108px] h-[39px] border-primaria text-primaria rounded-[100px]"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 w-[90px] h-[40px] bg-primaria text-white rounded-[100px]"
-                >
-                  Salvar
-                </button>
+                <div className="flex justify-end gap-2 mt-6">
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 border w-[108px] h-[39px] border-primaria text-primaria rounded-[100px]"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className="px-4 py-2 w-[90px] h-[40px] bg-primaria text-white rounded-[100px]"
+                  >
+                    Salvar
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </>
     </div>
   );
