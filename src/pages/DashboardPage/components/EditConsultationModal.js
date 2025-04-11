@@ -55,7 +55,7 @@ const EditConsultationModal = ({
       return;
     }
 
-    if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
+    if (dayTrimmed) {
       setTempDays((prev) => {
         const updatedDays = [...prev, dayTrimmed].sort((a, b) => a - b);
         return updatedDays;
@@ -88,7 +88,13 @@ const EditConsultationModal = ({
     setDays(tempDays);
 
     const daysToRemove = days.filter((day) => !tempDays.includes(day));
-    const daysToAdd = tempDays.filter((day) => !days.includes(day));
+    const daysToAdd = tempDays.filter((day, index) => {
+      const existingCount = days.filter((d) => d === day).length;
+      const newCount = tempDays
+        .slice(0, index + 1)
+        .filter((d) => d === day).length;
+      return newCount > existingCount;
+    });
 
     if (daysToRemove.length > 0) {
       await onRemoveDay(
@@ -113,10 +119,7 @@ const EditConsultationModal = ({
     setPatients((prevPatients) =>
       prevPatients.map((p) =>
         p.customer_id === patient.customer_id
-          ? {
-              ...p,
-              consultation_days: tempDays.join(", "),
-            }
+          ? { ...p, consultation_days: tempDays.join(", ") }
           : p
       )
     );
