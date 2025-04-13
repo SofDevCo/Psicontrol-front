@@ -290,7 +290,7 @@ const CustomersPage = () => {
                   className="flex items-center justify-between border-b-[1px] border-cinza6 py-3 pl-8"
                 >
                   <span
-                    className="lg:text-xl text-sm text-texto1"
+                    className="lg:text-xl text-sm text-texto1 cursor-pointer"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {`${customer.customer_name} ${customer.customer_second_name}`}
