@@ -13,7 +13,7 @@ const TopBar = ({ onMenuClick }) => {
         margin: "",
       };
     }
-    
+
     switch (location.pathname) {
       case "/create-event-form":
         return { title: "Página Inicial", margin: "" };
@@ -70,7 +70,7 @@ const TopBar = ({ onMenuClick }) => {
   const pageInfo = getPageTitle();
 
   return (
-    <div className="fixed flex justify-between items-center w-full  p-4 max-lg:pt-12 bg-bg1 items-center lg:rounded-b-[0px] rounded-b-[35px] lg:z-40 z-40">
+    <div className="fixed flex justify-between w-full  p-4 max-lg:pt-12 bg-bg1 items-center lg:rounded-b-[0px] rounded-b-[35px] lg:z-40 z-40">
       {/* Botão hambúrguer visível apenas em telas menores */}
 
       <button
@@ -103,7 +103,7 @@ const TopBar = ({ onMenuClick }) => {
       </div>
       {/* Nome da página */}
       <h2
-        className={`lg:text-[28px] text-[15px] text-primaria font-semibold ${pageInfo.margin}`}
+        className={`lg:text-[28px] text-[15px] text-primaria font-ubuntu font-medium ${pageInfo.margin}`}
       >
         {pageInfo.title}
       </h2>
