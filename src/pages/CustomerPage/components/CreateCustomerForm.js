@@ -37,6 +37,7 @@ const CreateCustomerForm = ({
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
+  const [activeField, setActiveField] = useState(null);
 
   useEffect(() => {
     if (isEditing && selectedPatient && selectedPatient.customer_dob) {
@@ -75,6 +76,14 @@ const CreateCustomerForm = ({
       ...prev,
       customer_calendar_name: value,
     }));
+    
+    if (validationErrors.customer_calendar_name && value) {
+      setValidationErrors(prev => {
+        const updated = {...prev};
+        delete updated.customer_calendar_name;
+        return updated;
+      });
+    }
 
     if (value) {
       const filtered = unmatchedPatients.filter((patient) =>
@@ -179,6 +188,14 @@ const CreateCustomerForm = ({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    if (validationErrors[name] && value) {
+      setValidationErrors(prev => {
+        const updated = {...prev};
+        delete updated[name];
+        return updated;
+      });
+    }
 
     setCustomer((prevState) => {
       if (name === "consultation_fee") {
@@ -208,8 +225,6 @@ const CreateCustomerForm = ({
 
     if (!customer.customer_name) errors.customer_name = true;
     if (!customer.customer_calendar_name) errors.customer_calendar_name = true;
-    if (!customer.customer_phone) errors.customer_phone = true;
-    if (!customer.consultation_fee) errors.consultation_fee = true;
 
     setValidationErrors(errors);
 
@@ -293,6 +308,24 @@ const CreateCustomerForm = ({
   };
 
   useEffect(() => {
+    if (customer.customer_name && validationErrors.customer_name) {
+      setValidationErrors(prev => {
+        const updated = {...prev};
+        delete updated.customer_name;
+        return updated;
+      });
+    }
+    
+    if (customer.customer_calendar_name && validationErrors.customer_calendar_name) {
+      setValidationErrors(prev => {
+        const updated = {...prev};
+        delete updated.customer_calendar_name;
+        return updated;
+      });
+    }
+  }, [customer.customer_name, customer.customer_calendar_name, validationErrors]);
+  
+  useEffect(() => {
     const handleEnterKey = (e) => {
       if (e.key === "Enter") {
         const tag = e.target.tagName.toLowerCase();
@@ -332,19 +365,15 @@ const CreateCustomerForm = ({
               </button>
             </div>
 
-            {Object.keys(validationErrors).length > 0 && (
-              <span className="block text-red-500 text-sm lg:text-base ml-1 mt-1">
-                *Campos obrigatórios
-              </span>
-            )}
+            <span className="block text-sm lg:text-base ml-1 mt-1">
+              <span className="text-red-500 font-bold">*</span> Campos obrigatórios
+            </span>
 
             <div className="flex flex-col gap-4">
               <div>
                 <label className="mb-1 lg:ml-3 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome{" "}
-                  {validationErrors.customer_name && (
-                    <span className="text-red-500 font-bold">*</span>
-                  )}
+                  <span className="text-red-500 font-bold">*</span>
                 </label>
                 <input
                   type="text"
@@ -352,7 +381,9 @@ const CreateCustomerForm = ({
                   value={customer.customer_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do paciente"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
+                    validationErrors.customer_name ? "border-red-500" : "border-cinza6"
+                  } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
                 />
               </div>
 
@@ -373,18 +404,31 @@ const CreateCustomerForm = ({
                 <div className="flex-1 relative">
                   <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
                     Nome do Evento (Google Agenda){" "}
-                    {validationErrors.customer_calendar_name && (
-                      <span className="text-red-500 font-bold">*</span>
-                    )}
+                    <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="text"
                     name="customer_calendar_name"
                     value={customer.customer_calendar_name || ""}
                     onChange={handleInputChange}
+                    onFocus={() => {
+                      setActiveField("customer_calendar_name");
+                      if (validationErrors.customer_calendar_name) {
+                        setValidationErrors(prev => {
+                          const updated = {...prev};
+                          delete updated.customer_calendar_name;
+                          return updated;
+                        });
+                      }
+                    }}
+                    onBlur={() => setActiveField(null)}
                     autoComplete="off"
                     placeholder="Nome do evento"
-                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10"
+                    className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
+                      validationErrors.customer_calendar_name && !customer.customer_calendar_name
+                        ? "border-red-500" 
+                        : "border-cinza6"
+                    } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
                   />
                   {filteredPatients.length > 0 && (
                     <ul className="absolute lg:w-[243px] lg:-mt-3 border-2 border-cinza6 rounded-b-[15px] bg-bg1 z-0 lg:max-h-[200px] overflow-y-auto">
@@ -453,10 +497,7 @@ const CreateCustomerForm = ({
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 lg:w-[213px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Telefone{" "}
-                  {validationErrors.customer_phone && (
-                    <span className="text-red-500 font-bold">*</span>
-                  )}
+                  Telefone
                 </label>
                 <input
                   type="text"
@@ -469,10 +510,7 @@ const CreateCustomerForm = ({
               </div>
               <div className="w-full lg:w-[181px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Valor{" "}
-                  {validationErrors.consultation_fee && (
-                    <span className="text-red-500 font-bold">*</span>
-                  )}
+                  Valor
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-texto2/50">
