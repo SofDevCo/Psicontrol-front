@@ -71,7 +71,11 @@ const CreateCustomerForm = ({
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setInputValue(value);
+
+    setCustomer((prev) => ({
+      ...prev,
+      customer_calendar_name: value,
+    }));
     
     if (validationErrors.customer_calendar_name && value) {
       setValidationErrors(prev => {
@@ -88,13 +92,6 @@ const CreateCustomerForm = ({
       setFilteredPatients(filtered);
     } else {
       setFilteredPatients([]);
-    }
-
-    if (customer.customer_calendar_name !== value) {
-      setCustomer((prev) => ({
-        ...prev,
-        customer_calendar_name: value,
-      }));
     }
   };
 
@@ -412,7 +409,7 @@ const CreateCustomerForm = ({
                   <input
                     type="text"
                     name="customer_calendar_name"
-                    value={inputValue}
+                    value={customer.customer_calendar_name || ""}
                     onChange={handleInputChange}
                     onFocus={() => {
                       setActiveField("customer_calendar_name");
