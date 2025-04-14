@@ -295,7 +295,7 @@ const UserPage = () => {
   return (
     <div className="flex flex-col items-center w-full p-6 overflow-y-auto overflow-x-hidden">
       <>
-        <div className="w-full max-w-[1300px] mx-auto flex flex-col items-center">
+        <div className="w-full max-w-[1100px] mx-auto flex flex-col items-center">
           <div className="relative w-full bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
@@ -310,7 +310,7 @@ const UserPage = () => {
               </button>
             </div>
 
-            <div className="flex flex-col lg:flex-row justify-between">
+            <div className="flex flex-col lg:flex-row justify-start gap-x-[182px]">
               <div className="flex w-full lg:max-w-[360px] mb-6 lg:mb-0">
                 <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
                   {userData.photoUrl ? (
@@ -356,7 +356,7 @@ const UserPage = () => {
                 </div>
               </div>
 
-              <div className="w-full lg:max-w-[316px] lg:mx-[44px]">
+              <div className="w-full lg:max-w-[520px] lg:ml-[30px]">
                 <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
                   Dados para recibo
                 </div>
@@ -391,7 +391,7 @@ const UserPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4">
+          <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4 justify-between">
             <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex justify-between">
                 <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
@@ -532,13 +532,11 @@ const UserPage = () => {
                   </h3>
                   <div className="flex items-center relative">
                     <button
-                      onClick={() =>
-                        isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
-                      }
+                      onClick={() => isEditingMessage && setIsDropdownOpen(!isDropdownOpen)}
                       disabled={!isEditingMessage}
-                      className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                      className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer text-[#0082ba] font-bold" : "cursor-not-allowed opacity-50"}`}
                     >
-                      <VariableIcon />
+                      {isEditingMessage ? '{ Variáveis }' : <VariableIcon />}
                     </button>
 
                     {isEditingMessage && isDropdownOpen && (
