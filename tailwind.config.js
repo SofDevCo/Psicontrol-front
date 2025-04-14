@@ -50,7 +50,7 @@ module.exports = {
         F25: "25px",
       },
       fontFamily: {
-        ubuntu: ["ubuntu-regular", "helvetica"],
+        ubuntu: ["Ubuntu", "sans-serif"],
         openSans: ["Open_sans-regular", "helvetica"],
       },
       borderRadius: {

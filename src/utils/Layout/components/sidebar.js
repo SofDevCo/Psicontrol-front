@@ -47,8 +47,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
   return (
     <>
       <aside
-        className={`max-lg:fixed top-0  z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:flex-shrink-0`}
+        className={`max-lg:fixed top-0 z-50 left-0 h-full w-[265px] bg-bg1 p-5 text-gray-800 transform transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 lg:flex-shrink-0`}
       >
         <div>
           {/* Botão Hambúrguer para Fechar */}
@@ -82,7 +83,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             <ul className="lg:mt-[70px] mt-[53px] ml-[11px]">
               {/* Página Inicial */}
               <li
-                className={`mb-[27px] -mx-8 ${
+                className={`mb-[16px] -mx-8 ${
                   location.pathname.startsWith("/create-event-form")
                     ? "text-[#0082ba]"
                     : ""
@@ -112,7 +113,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }
                   />
                   <span
-                    className={`py-1 text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                    className={`py-1 text-lg font-medium font-ubuntu tracking-tight ${
                       location.pathname.startsWith("/create-event-form")
                         ? "text-[#0082ba]"
                         : "text-texto2 group-hover:text-[#0082ba]"
@@ -123,9 +124,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 </button>
               </li>
 
-               {/* Pacientes */}
-               <li
-                className={`side-menu -mx-8 mb-[27px] ${
+              {/* Pacientes */}
+              <li
+                className={`side-menu -mx-8 mb-[20px] ${
                   location.pathname === "/customers" ? "text-[#0082ba]" : ""
                 }`}
               >
@@ -147,7 +148,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                    className={`text-lg font-medium font-ubuntu tracking-tight ${
                       location.pathname === "/customers"
                         ? "text-[#0082ba]"
                         : "text-texto2 group-hover:text-[#0082ba]"
@@ -182,7 +183,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }`}
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                    className={`text-lg font-medium font-ubuntu tracking-tight ${
                       location.pathname === "/income"
                         ? "text-[#0082ba]"
                         : "text-texto2 group-hover:text-[#0082ba]"
@@ -216,7 +217,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     }`}
                   />
                   <div
-                    className={`text-lg font-medium font-['Ubuntu'] tracking-tight ${
+                    className={`text-lg font-medium font-ubuntu tracking-tight ${
                       location.pathname === "/user"
                         ? "text-[#0082ba]"
                         : "text-texto2 group-hover:text-[#0082ba]"
@@ -238,7 +239,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     href="https://calendar.google.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium font-['Ubuntu'] ml-3 tracking-tight drop-shadow-addShadow text-[#0082ba] underline"
+                    className="font-medium font-ubuntu ml-3 tracking-tight drop-shadow-none text-[#0082ba] underline"
                   >
                     Ir para Google Agenda
                   </a>
@@ -247,7 +248,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             </ul>
             <button
               onClick={handleLogout}
-              className="text-primaria font-medium font-['Ubuntu'] underline justify-between flex items-center absolute bottom-4 left-4"
+              className="text-primaria font-medium font-ubuntu underline justify-between flex items-center absolute bottom-4 left-4"
             >
               Sair
             </button>

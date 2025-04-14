@@ -327,7 +327,10 @@ const CreateCustomerForm = ({
               <h2 className="text-sm lg:text-[25px] font-medium font-ubuntu text-primaria">
                 {isEditing ? "Editar Paciente" : "Adicionar Paciente"}
               </h2>
-              <button onClick={onClose} className="block lg:hidden text-primaria">
+              <button
+                onClick={onClose}
+                className="block lg:hidden text-primaria"
+              >
                 <CloseIconRegisterModal />
               </button>
             </div>
@@ -341,7 +344,10 @@ const CreateCustomerForm = ({
             <div className="flex flex-col gap-4">
               <div>
                 <label className="mb-1 lg:ml-3 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Nome {validationErrors.customer_name && <span className="text-red-500 font-bold">*</span>}
+                  Nome{" "}
+                  {validationErrors.customer_name && (
+                    <span className="text-red-500 font-bold">*</span>
+                  )}
                 </label>
                 <input
                   type="text"
@@ -349,7 +355,7 @@ const CreateCustomerForm = ({
                   value={customer.customer_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do paciente"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
 
@@ -363,22 +369,25 @@ const CreateCustomerForm = ({
                   value={customer.customer_second_name || ""}
                   onChange={handleChange}
                   placeholder="Sobrenome do paciente"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1 relative">
                   <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
-                    ID Paciente - Google Agenda {validationErrors.customer_calendar_name && <span className="text-red-500 font-bold">*</span>}
+                    Nome do Evento (Google Agenda){" "}
+                    {validationErrors.customer_calendar_name && (
+                      <span className="text-red-500 font-bold">*</span>
+                    )}
                   </label>
                   <input
                     type="text"
                     name="customer_calendar_name"
                     value={inputValue}
                     onChange={handleInputChange}
-                    autoComplete="off"            
-                    placeholder="Google Agenda"
-                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10"
+                    autoComplete="off"
+                    placeholder="Nome do evento"
+                    className="relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10"
                   />
                   {filteredPatients.length > 0 && (
                     <ul className="absolute lg:w-[243px] lg:-mt-3 border-2 border-cinza6 rounded-b-[15px] bg-bg1 z-0 lg:max-h-[200px] overflow-y-auto">
@@ -410,7 +419,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_dob || ""}
                     onChange={(e) => handleManualDateChange(e.target.value)}
                     placeholder="DD/MM/AAAA"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base "
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring placeholder:text-sm lg:placeholder:text-base "
                   />
                 </div>
               </div>
@@ -426,7 +435,7 @@ const CreateCustomerForm = ({
                 value={customer.customer_cpf_cnpj || ""}
                 onChange={handleChange}
                 placeholder="XX.XXX.XXX/0001-XX"
-                className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
               />
             </div>
 
@@ -440,14 +449,17 @@ const CreateCustomerForm = ({
                 value={customer.customer_email || ""}
                 onChange={handleChange}
                 placeholder="e-mail.paciente@gmail.com"
-                className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                className="h-[50px] w-full bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium focus:border-cinza6/50 focus:outline-none focus:ring"
               />
             </div>
 
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 lg:w-[213px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Telefone {validationErrors.customer_phone && <span className="text-red-500 font-bold">*</span>}
+                  Telefone{" "}
+                  {validationErrors.customer_phone && (
+                    <span className="text-red-500 font-bold">*</span>
+                  )}
                 </label>
                 <input
                   type="text"
@@ -455,12 +467,15 @@ const CreateCustomerForm = ({
                   value={customer.customer_phone || ""}
                   onChange={handleChange}
                   placeholder="(00) 0 0000-0000"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div className="w-full lg:w-[181px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Valor {validationErrors.consultation_fee && <span className="text-red-500 font-bold">*</span>}
+                  Valor{" "}
+                  {validationErrors.consultation_fee && (
+                    <span className="text-red-500 font-bold">*</span>
+                  )}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-texto2/50">
@@ -473,7 +488,7 @@ const CreateCustomerForm = ({
                     value={customer.consultation_fee || ""}
                     onChange={handleChange}
                     placeholder="0.00"
-                    className="pl-10 w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="pl-10 w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
               </div>
@@ -493,7 +508,7 @@ const CreateCustomerForm = ({
                   value={customer.customer_emergency_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do contato"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
               <div className="flex flex-1 sm:flex-row sm:gap-4 sm:items-start gap-2">
@@ -507,7 +522,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_emergency_relationship || ""}
                     onChange={handleChange}
                     placeholder="Vinculo"
-                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
                 <div className="flex-1">
@@ -520,7 +535,7 @@ const CreateCustomerForm = ({
                     value={customer.customer_emergency_contact || ""}
                     onChange={handleChange}
                     placeholder="(00) 0 0000-0000"
-                    className="w-full  h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                    className="w-full  h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   />
                 </div>
               </div>
@@ -553,8 +568,8 @@ const CreateCustomerForm = ({
                   name="alternative_name"
                   value={customer.alternative_name || ""}
                   onChange={handleChange}
-                  placeholder="Nome do Paciente"
-                  className="h-[50px] w-full max-w-[414px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  placeholder="Nome"
+                  className="h-[50px] w-full max-w-[414px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                   disabled={customer.patient_status}
                 />
               </div>
@@ -571,7 +586,7 @@ const CreateCustomerForm = ({
                   value={customer.alternative_cpf_cnpj || ""}
                   onChange={handleChange}
                   placeholder="XX.XXX.XXX/0001-XX."
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 text-texto2/50 shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2  placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
 
                 <button
