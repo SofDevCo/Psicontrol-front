@@ -79,10 +79,10 @@ const CustomersPage = () => {
       setFilteredCustomers(
         Array.isArray(customers)
           ? customers.filter((customer) =>
-            customer.customer_name
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
-          )
+              customer.customer_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
           : []
       );
     }
@@ -273,7 +273,9 @@ const CustomersPage = () => {
         {isLoading ? (
           <p>Carregando clientes...</p>
         ) : customers.length === 0 ? (
-          <p className="text-center text-gray-500">Nenhum paciente cadastrado</p>
+          <p className="text-center text-gray-500">
+            Nenhum paciente cadastrado
+          </p>
         ) : (
           <ul className="list-none">
             {customers
@@ -285,10 +287,10 @@ const CustomersPage = () => {
               .map((customer) => (
                 <li
                   key={`customer-${customer.customer_id}`}
-                  className="flex items-center justify-between border-b-[1px] border-cinza6 pb-2 pl-8 pt-5"
+                  className="flex items-center justify-between border-b-[1px] border-cinza6 py-3 pl-8"
                 >
                   <span
-                    className="lg:text-xl text-sm text-texto1"
+                    className="lg:text-xl text-sm text-texto1 cursor-pointer"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {`${customer.customer_name} ${customer.customer_second_name}`}
