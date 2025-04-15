@@ -17,10 +17,10 @@ const DropDonw = ({
 }) => {
   return (
     <nav
-      className="absolute lg:right-0 right-3 mt-32 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default"
+      className="absolute right-8 top-full mt-1 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default z-20"
       ref={dropdownRef}
     >
-      <ul className="lg:w-[210px] w-[151px]  lg:h-[189px] h-[131.08px] lg:ml-0">
+      <ul className="lg:w-[210px] w-[151px] lg:h-[189px] h-[131.08px] lg:ml-0">
         <li>
           <button
             className="group mt-5 flex items-center gap-2 lg:ml-7 ml-6 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
