@@ -7,7 +7,7 @@ import {
 } from "../../../utils/DateOfBirth/dateOfBirth";
 import { ptBR } from "date-fns/locale";
 import { Trash } from "../../../icons/icons";
-import { AddIcon, CloseIconRegisterModal } from "./IconsRegisterCard";
+import { AddIcon, CloseIconRegisterModal, ArrowIcon } from "./IconsRegisterCard";
 import "../../../index.css";
 import { showErrorToast } from "../../../utils/notification/toastify";
 import { showEditToast } from "../components/notiificationCustomerPage";
@@ -91,7 +91,7 @@ const CreateCustomerForm = ({
       );
       setFilteredPatients(filtered);
     } else {
-      setFilteredPatients([]);
+      setFilteredPatients(unmatchedPatients);
     }
   };
 
@@ -406,48 +406,63 @@ const CreateCustomerForm = ({
                     Nome do Evento (Google Agenda){" "}
                     <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input
-                    type="text"
-                    name="customer_calendar_name"
-                    value={customer.customer_calendar_name || ""}
-                    onChange={handleInputChange}
-                    onFocus={() => {
-                      setActiveField("customer_calendar_name");
-                      if (validationErrors.customer_calendar_name) {
-                        setValidationErrors(prev => {
-                          const updated = {...prev};
-                          delete updated.customer_calendar_name;
-                          return updated;
-                        });
-                      }
-                    }}
-                    onBlur={() => setActiveField(null)}
-                    autoComplete="off"
-                    placeholder="Nome do evento"
-                    className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
-                      validationErrors.customer_calendar_name && !customer.customer_calendar_name
-                        ? "border-red-500" 
-                        : "border-cinza6"
-                    } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
-                  />
-                  {filteredPatients.length > 0 && (
-                    <ul className="absolute lg:w-[243px] lg:-mt-3 border-2 border-cinza6 rounded-b-[15px] bg-bg1 z-0 lg:max-h-[200px] overflow-y-auto">
-                      {filteredPatients.map((patient) => (
-                        <li
-                          key={patient.id}
-                          onClick={() => {
-                            setInputValue(patient.event_name);
-                            setFilteredPatients([]);
-                            setCustomer((prev) => ({
-                              ...prev,
-                              customer_calendar_name: patient.event_name,
-                            }));
-                          }}
-                          className="p-2 hover:bg-bgM cursor-pointer border border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
-                        >
-                          {patient.event_name}
-                        </li>
-                      ))}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="customer_calendar_name"
+                      value={customer.customer_calendar_name || ""}
+                      onChange={handleInputChange}
+                      onFocus={() => {
+                        setActiveField("customer_calendar_name");
+                        if (validationErrors.customer_calendar_name) {
+                          setValidationErrors(prev => {
+                            const updated = {...prev};
+                            delete updated.customer_calendar_name;
+                            return updated;
+                          });
+                        }
+                      }}
+                      onBlur={() => setTimeout(() => setActiveField(null), 200)}
+                      autoComplete="off"
+                      placeholder="Nome do evento"
+                      className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
+                        validationErrors.customer_calendar_name && !customer.customer_calendar_name
+                          ? "border-red-500" 
+                          : "border-cinza6"
+                      } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
+                    />
+                    <div 
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-20"
+                      onClick={() => {
+                        setActiveField(activeField === "customer_calendar_name" ? null : "customer_calendar_name");
+                      }}
+                    >
+                      <div className={`transform transition-transform duration-300 ${activeField === "customer_calendar_name" ? "rotate-180" : ""}`}>
+                        <ArrowIcon />
+                      </div>
+                    </div>
+                  </div>
+                  {activeField === "customer_calendar_name" && filteredPatients.length > 0 && (
+                    <ul className="absolute w-full mt-1 border-2 border-cinza6 rounded-[15px] bg-bg1 z-30 max-h-[200px] overflow-y-auto shadow-md">
+                      {filteredPatients
+                        .sort((a, b) => a.event_name.localeCompare(b.event_name))
+                        .map((patient) => (
+                          <li
+                            key={patient.id}
+                            onClick={() => {
+                              setInputValue(patient.event_name);
+                              setFilteredPatients([]);
+                              setCustomer((prev) => ({
+                                ...prev,
+                                customer_calendar_name: patient.event_name,
+                              }));
+                              setActiveField(null);
+                            }}
+                            className="p-3 hover:bg-bgM cursor-pointer border-b border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
+                          >
+                            {patient.event_name}
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>

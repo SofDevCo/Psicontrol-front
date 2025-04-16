@@ -43,12 +43,31 @@ const CustomersPage = () => {
     customer_cpf_cnpj: "",
   });
 
-  const dropdownRef = useRef();
+  const dropdownRefs = useRef({});
   const searchDropRef = useRef();
   const navigate = useNavigate();
 
   useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
-  useOutsideClick(dropdownRef, () => setActiveDropdown(null));
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      let clickedInside = false;
+      Object.values(dropdownRefs.current).forEach((ref) => {
+        if (ref && ref.contains(event.target)) {
+          clickedInside = true;
+        }
+      });
+      if (!clickedInside) {
+        setTimeout(() => {
+          setActiveDropdown(null);
+        }, 100);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const HandlefetchCustomers = async () => {
     setIsLoading(true);
@@ -99,7 +118,6 @@ const CustomersPage = () => {
 
   const handleDeleteCustomer = async () => {
     const response = await deleteCustomer(customerToDelete);
-
     if (response.ok) {
       HandlefetchCustomers();
       setIsConfirmModalOpen(false);
@@ -112,7 +130,6 @@ const CustomersPage = () => {
 
   const handleArchiveCustomer = async (customerId) => {
     const response = await ArchiveCustomer(customerId);
-
     if (response.ok) {
       HandlefetchCustomers();
       showArchiveToast();
@@ -194,7 +211,6 @@ const CustomersPage = () => {
                 <SearchIcon />
               )}
             </div>
-
             {searchTerm.length > 0 && (
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <div
@@ -208,18 +224,15 @@ const CustomersPage = () => {
                 </div>
               </div>
             )}
-            {searchTerm &&
-              filteredCustomers.length === 0 &&
-              isDropdownVisible && (
-                <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
-                  Paciente não encontrado
-                </p>
-              )}
-
+            {searchTerm && filteredCustomers.length === 0 && isDropdownVisible && (
+              <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+                Paciente não encontrado
+              </p>
+            )}
             {searchTerm && filteredCustomers.length > 0 && (
               <ul
                 ref={searchDropRef}
-                className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px]  z-10 border border-t-texto2 overflow-auto"
+                className="absolute top-full left-0 w-full bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] z-10 border border-t-texto2 overflow-auto"
               >
                 {filteredCustomers.map((customer) => (
                   <li
@@ -239,18 +252,17 @@ const CustomersPage = () => {
           </div>
           <button
             onClick={handleAddPatient}
-            className="flex lg:h-[41px] md:h-[41px] w-auto lg:w-[200px] md:w-[100px] md:ml-3 items-center justify-center lg:rounded-[10px] md:rounded-[10px] lg:border-2 md:border-2 lg:border-solid md:border-solid lg:border-primaria md:border-primaria lg:bg-bg1 md:bg-bg1  text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria lg:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
+            className="flex lg:h-[41px] md:h-[41px] w-auto lg:w-[200px] md:w-[100px] md:ml-3 items-center justify-center lg:rounded-[10px] md:rounded-[10px] lg:border-2 md:border-2 lg:border-solid md:border-solid lg:border-primaria md:border-primaria lg:bg-bg1 md:bg-bg1 text-center font-['Ubuntu'] text-sm font-semibold leading-[20px] tracking-[0.15px] text-primaria lg:shadow-md active:shadow-innerShadow hover:bg-bg1 hover:text-primaria space-x-2 px-4"
           >
             <AddIcon />
-            <span className="hidden sm:hidden lg:inline md:inline ">
+            <span className="hidden sm:hidden lg:inline md:inline">
               Adicionar paciente
             </span>
           </button>
-
           <button className="group md:ml-3 whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
             <Link
               to="/archived"
-              className="group flex items-center gap-2  w-auto md:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
+              className="group flex items-center gap-2 w-auto md:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
             >
               <ArchiveIcon />
               <span className="hidden lg:inline md:inline">
@@ -260,34 +272,28 @@ const CustomersPage = () => {
           </button>
         </div>
       </div>
-
-      <div className="top-[275px] flex h-[21px] w-full  border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] lg:text-lg text-sm  font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+      <div className="top-[275px] flex h-[21px] w-full border-b-[1px] border-cinza6 pb-8 pl-8 pt-6 font-['Ubuntu'] lg:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
         Paciente
-        <div className="  ml-auto lg:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] lg:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
+        <div className="ml-auto lg:mr-4 mr-2 flex h-[21px] w-[52px] font-['Ubuntu'] lg:text-lg text-sm font-medium not-italic leading-[21px] tracking-[0.09px] text-primaria">
           Ações
         </div>
       </div>
-
       <div className="mx-auto w-full font-sans">
         {error && <p className="mb-[20px] text-center text-red-500">{error}</p>}
         {isLoading ? (
           <p>Carregando clientes...</p>
         ) : customers.length === 0 ? (
-          <p className="text-center text-gray-500">
-            Nenhum paciente cadastrado
-          </p>
+          <p className="text-center text-gray-500">Nenhum paciente cadastrado</p>
         ) : (
           <ul className="list-none">
             {customers
               .filter((customer) =>
-                customer.customer_name
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase())
+                customer.customer_name.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((customer) => (
                 <li
                   key={`customer-${customer.customer_id}`}
-                  className="flex items-center justify-between border-b-[1px] border-cinza6 py-3 pl-8"
+                  className="relative flex items-center justify-between border-b-[1px] border-cinza6 py-3 pl-8"
                 >
                   <span
                     className="lg:text-xl text-sm text-texto1 cursor-pointer"
@@ -295,35 +301,39 @@ const CustomersPage = () => {
                   >
                     {`${customer.customer_name} ${customer.customer_second_name}`}
                   </span>
-                  <button
-                    onClick={() => toggleDropdown(customer.customer_id)}
-                    className="flex items-center justify-end bg-bg1 pr-8 hover:bg-bg1"
+                  <div
+                    className="relative"
+                    ref={(el) => (dropdownRefs.current[customer.customer_id] = el)}
                   >
-                    <HamburguerIcon />
-                  </button>
-                  {activeDropdown === customer.customer_id && (
-                    <DropDonw
-                      dropdownRef={dropdownRef}
-                      customerId={customer.customer_id}
-                      onDelete={handleDeleteConfirmation}
-                      setSelectedPatient={setSelectedPatient}
-                      openModal={() => handleEditPatient(customer)}
-                      customers={customers}
-                      onArchive={handleArchiveCustomer}
-                    />
-                  )}
+                    <button
+                      onClick={() => toggleDropdown(customer.customer_id)}
+                      className="flex items-center justify-end bg-bg1 pr-8 hover:bg-bg1"
+                    >
+                      <HamburguerIcon />
+                    </button>
+                    {activeDropdown === customer.customer_id && (
+                      <DropDonw
+                        dropdownRef={(el) => (dropdownRefs.current[customer.customer_id] = el)}
+                        customerId={customer.customer_id}
+                        onDelete={handleDeleteConfirmation}
+                        setSelectedPatient={setSelectedPatient}
+                        openModal={() => handleEditPatient(customer)}
+                        customers={customers}
+                        onArchive={handleArchiveCustomer}
+                      />
+                    )}
+                  </div>
                 </li>
               ))}
           </ul>
         )}
       </div>
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30 ">
+        <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-52 translate-x-32">
             <p className="text-lg font-semibold mb-4 text-texto2">
               Você tem certeza que <br /> deseja
-              <span className="text-primaria"> excluir </span>
-              este <br /> paciente de forma <br /> permanente?
+              <span className="text-primaria"> excluir </span> este <br /> paciente de forma <br /> permanente?
             </p>
             <div className="flex justify-around">
               <button
