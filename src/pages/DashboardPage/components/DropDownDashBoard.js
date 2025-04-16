@@ -3,23 +3,27 @@ import { TrashIconDash, VinculateIcon } from './IconsDashBoard';
 
 const DropDownDashBoard = ({ onVincular, onExcluir }) => {
   return (
-    <div className="w-full p-2 md:p-4">
+    <div className="w-52 max-w-xs p-2">
       <ul className="w-full">
-        <li className="w-full">
+        <li className="w-full mb-1">
           <button
             onClick={onVincular}
-            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
           >
-            <VinculateIcon />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <VinculateIcon />
+            </div>
             <span>Vincular paciente</span>
           </button>
         </li>
         <li className="w-full">
           <button
             onClick={onExcluir}
-            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
           >
-            <TrashIconDash />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <TrashIconDash />
+            </div>
             <span>Excluir paciente</span>
           </button>
         </li>
