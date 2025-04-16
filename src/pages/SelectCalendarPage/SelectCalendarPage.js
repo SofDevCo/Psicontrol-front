@@ -48,15 +48,10 @@ const SelectCalendarPage = () => {
   const checkCalendars = async () => {
     const authenticationToken = localStorage.getItem("authentication_token");
 
-    const calendarsSelected = localStorage.getItem("calendarsSelected");
-    if (calendarsSelected) {
-      navigate("/create-event-form");
-      return;
-    }
-
     if (!authenticationToken) {
       setError("Token de autenticação não encontrado.");
-      return setLoading(false);
+      setLoading(false);
+      return true;
     }
 
     const response = await fetch(
@@ -72,17 +67,27 @@ const SelectCalendarPage = () => {
 
     if (!response.ok) {
       setError("Erro ao verificar calendários.");
-      return setLoading(false);
+      setLoading(false);
+      return true;
     }
 
     const data = await response.json();
-    setLoading(false);
+
+    if (data.hasCalendars) {
+      navigate(data.redirect);
+      return true;
+    }
+
+    return false;
   };
 
   useEffect(() => {
     const fetchInitialData = async () => {
-      await checkCalendars();
-      await fetchCalendars();
+      const redirected = await checkCalendars();
+      if (!redirected) {
+        await fetchCalendars();
+      }
+      setLoading(false);
     };
 
     fetchInitialData();
@@ -118,9 +123,6 @@ const SelectCalendarPage = () => {
 
   const handleProceed = () => {
     const ids = Array.from(selectedCalendarIds);
-
-    localStorage.setItem("selectedCalendars", JSON.stringify(ids));
-    localStorage.setItem("calendarsSelected", "true");
 
     navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
   };
