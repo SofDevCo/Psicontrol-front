@@ -22,17 +22,19 @@ const DropDownDashActions = ({
   onRevertBillOfSale,
 }) => {
   return (
-    <div className="w-full p-2 md:p-4">
+    <div className="w-52 max-w-xs p-2">
       <ul className="w-full">
-        <li className="flex items-center justify-between w-full">
+        <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onOpenModal}
-            className={`group flex items-center gap-2 py-2 text-texto2 lg:text-F15 text-F9 font-normal tracking-tight underline w-full ${
+            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${
               isSendingInvoice ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSendingInvoice}
           >
-            <SendIcon />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <SendIcon />
+            </div>
             <span>Enviar Cobrança</span>
           </button>
 
@@ -46,26 +48,32 @@ const DropDownDashActions = ({
           )}
         </li>
 
-        <li className="flex items-center w-full">
+        <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onPartialPayment}
-            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
           >
-            <PartialIcon />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <PartialIcon />
+            </div>
             <span>Pagamento Parcial</span>
           </button>
         </li>
 
-        <li className="flex items-center justify-between w-full">
+        <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onConfirmedPayment}
-            className={`group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full ${
+            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
               isPaymentConfirmed ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isPaymentConfirmed}
           >
-            <ConfirmPaymentIcon />
-            <span>{isPaymentConfirmed ? "Pgto. Confirmado" : "Pagamento Confirmado"}</span>
+            <div className="flex items-center justify-center w-8 h-8 min-w-8 flex-shrink-0">
+              <ConfirmPaymentIcon />
+            </div>
+            <span className="whitespace-nowrap">
+              {isPaymentConfirmed ? "Pgto. Confirmado" : "Pagamento Confirmado"}
+            </span>
           </button>
 
           {isPaymentConfirmed && (
@@ -78,15 +86,17 @@ const DropDownDashActions = ({
           )}
         </li>
 
-        <li className="flex items-center justify-between w-full">
+        <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onConfirmedBillOfSale}
-            className={`group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full ${
+            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
               isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isBillOfSaleIssued}
           >
-            <BillOfSaleIcon />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <BillOfSaleIcon />
+            </div>
             <span>Recibo Emitido</span>
           </button>
 
@@ -100,12 +110,14 @@ const DropDownDashActions = ({
           )}
         </li>
 
-        <li className="flex items-center w-full">
+        <li className="flex items-center justify-between w-full">
           <button
             onClick={onEditConsultationFee}
-            className="group flex items-center gap-2 py-2 text-texto2 active:text-texto2/50 lg:text-F15 text-F9 font-normal tracking-tight underline w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
           >
-            <EditConsultationModalIcon />
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
+              <EditConsultationModalIcon />
+            </div>
             <span>Editar Consultas</span>
           </button>
         </li>
