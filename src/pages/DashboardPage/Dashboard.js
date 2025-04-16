@@ -987,7 +987,7 @@ const DashBoard = () => {
                               current: patientDropdownRefs.current[index],
                             }}
                             position="bottom-right"
-                            width="234px"
+                            width="auto"
                           >
                             <DropDownDashActions
                               onOpenModal={() => handleSendWhatsApp(patient)}
