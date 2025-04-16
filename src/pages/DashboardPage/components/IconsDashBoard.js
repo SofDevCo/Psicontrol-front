@@ -113,10 +113,10 @@ const FilterIcon = () => {
   );
 };
 
-const SendIcon = () => {
+const SendIcon = ({ className }) => {
   return (
     <svg
-      className="w-[13px] h-[13px] lg:w-[20px] lg:h-[20px] lg:mr-[6px] ml-1"
+      className={className || "w-5 h-5"}
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -133,10 +133,10 @@ const SendIcon = () => {
   );
 };
 
-const PartialIcon = () => {
+const PartialIcon = ({ className }) => {
   return (
     <svg
-      className="w-[13px] h-[13px] lg:w-[21px] lg:h-[20px] lg:mr-[6px] lg:ml-[3px] ml-1"
+      className={className || "w-5 h-5"}
       viewBox="0 0 21 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -149,10 +149,10 @@ const PartialIcon = () => {
   );
 };
 
-const ConfirmPaymentIcon = () => {
+const ConfirmPaymentIcon = ({ className }) => {
   return (
     <svg
-      className="w-[14px] h-[14px] lg:w-[24px] lg:h-[24px] lg:mr-[10px] ml-1"
+      className={className || "w-5 h-5"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -167,10 +167,10 @@ const ConfirmPaymentIcon = () => {
   );
 };
 
-const VinculateIcon = () => {
+const VinculateIcon = ({ className }) => {
   return (
     <svg
-      className="w-[10px] lg:w-[23px] h-[10px] lg:h-[23px] lg:mr-[10px] ml-1 "
+      className={className || "w-5 h-5"}
       viewBox="0 0 23 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -191,10 +191,10 @@ const VinculateIcon = () => {
   );
 };
 
-const TrashIconDash = () => {
+const TrashIconDash = ({ className }) => {
   return (
     <svg
-      className="w-[9px] lg:w-[15px] h-[11px] lg:h-[20px] lg:mr-[2px] -mr-0"
+      className={className || "w-5 h-5"}
       viewBox="0 0 15 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -376,13 +376,13 @@ const ArrowDownIcon = () => {
     </svg>
   );
 };
-const BillOfSaleIcon = () => {
+const BillOfSaleIcon = ({ className }) => {
   return (
     <svg
+      className={className || "w-5 h-5"}
       viewBox="0 0 24 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="lg:w-[24px] lg:h-[23px] w-[15.42px] h-[14.78px] lg:mr-2  "
     >
       <path
         d="M21.5 16L16.5 21L13 17.5L14.5 16L16.5 18L20 14.5L21.5 16ZM11.09 19H4V3H11V8H16V12.09C16.33 12.04 16.66 12 17 12C17.34 12 17.67 12.04 18 12.09V7L12 1H4C3.46957 1 2.96086 1.21071 2.58579 1.58579C2.21071 1.96086 2 2.46957 2 3V19C2 20.11 2.89 21 4 21H11.81C11.46 20.39 11.21 19.72 11.09 19Z"
@@ -392,15 +392,13 @@ const BillOfSaleIcon = () => {
   );
 };
 
-const EditConsultationModalIcon = () => {
+const EditConsultationModalIcon = ({ className }) => {
   return (
     <svg
-      width="26"
-      height="26"
+      className={className || "w-5 h-5"}
       viewBox="0 0 26 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-[26px] h-[26px]"
     >
       <g filter="url(#filter0_d_4655_11176)">
         <path
