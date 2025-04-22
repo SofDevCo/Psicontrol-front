@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Await, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
 import ReturnPatientModal from "./components/ReturnPatientModal";
@@ -48,6 +48,7 @@ const DashBoard = () => {
   const [events, setEvents] = useState([]);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
+  const [loadingUnmatched, setLoadingUnmatched] = useState(true);
   const [patients, setPatients] = useState([]);
   const [totalConsultations, setTotalConsultations] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -257,6 +258,8 @@ const DashBoard = () => {
     } else {
       return null;
     }
+
+    setLoadingUnmatched(false);
   };
 
   useEffect(() => {
@@ -1072,10 +1075,14 @@ const DashBoard = () => {
               <h2 className="mt-6 text-primaria lg:text-F25 text-sm font-normal font-ubuntu px-4">
                 Eventos não vinculados
               </h2>
-              <table className="min-w-full bg-bg1 mt-2">
-                <tbody>
-                  {unmatchedPatients.length > 0 ? (
-                    unmatchedPatients.map((event, index) => (
+              {loadingUnmatched ? (
+                <p className="text-center text-texto2 italic mt-4">
+                  Carregando pacientes não vinculados...
+                </p>
+              ) : unmatchedPatients.length > 0 ? (
+                <table className="min-w-full bg-bg1 mt-2">
+                  <tbody>
+                    {unmatchedPatients.map((event, index) => (
                       <tr
                         key={event.id}
                         className="border-b border-b-cinza6 relative"
@@ -1117,16 +1124,15 @@ const DashBoard = () => {
                           </Dropdown>
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center px-4 py-2">
-                        Nenhum paciente não encontrado
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    ))}
+                  </tbody>
+                </table>
+              ) : !loadingUnmatched ? (
+                <p colSpan="4" className="text-center px-4 py-2">
+                  Nenhum paciente não encontrado
+                </p>
+              ) : null}
+
               <DeletePatientModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
