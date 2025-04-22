@@ -188,64 +188,53 @@ const ProfileCustomerPage = () => {
           </h2>
           <div>
             <div className="lg:ml-5">
-              <div className="flex items-center max-w-auto">
-                <div className="bg-primaria text-white lg:h-10 h-6 lg:w-10 w-6 lg:text-F20 text-xs rounded-full flex items-center justify-center transform translate-y-4">
-                  {customer && customer.customer_name
-                    ? customer.customer_name.charAt(0)
-                    : ""}
+              <div className="flex items-start gap-4">
+                <div className="bg-primaria text-white h-10 w-10 text-F20 rounded-full flex items-center justify-center">
+                  {customer?.customer_name?.charAt(0)}
                 </div>
-                <h3 className="ml-6 lg:text-F20 text-xs font-medium tracking-normal">
-                  {customer.customer_name}
-                  {customer.customer_second_name}
+                <h3 className="text-texto1 text-F17 font-bold leading-tight mt-1">
+                  {customer.customer_name} {customer.customer_second_name}
                 </h3>
               </div>
-              <p className="mt-4 text-texto1 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal lg:ml-16 ml-12">
-                <strong>CPF/CNPJ:</strong>
-                <label className="text-texto2 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking- ">
-                  {" "}
-                  {customer.customer_cpf_cnpj || "Não informado"}
-                </label>
-              </p>
-              <p className="mt-2 text-texto1 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal lg:ml-16 ml-12">
-                <strong>Idade:</strong>{" "}
-                <label className="text-texto2 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
-                  {customer.customer_dob && customer.age
-                    ? `${customer.age} anos`
-                    : "Não informado"}
-                </label>
-              </p>
-              <p className="mt-2 text-texto1 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal lg:ml-16 ml-12">
-                <strong>E-mail:</strong>{" "}
-                <label className="text-texto2 lg:text-F17 text-sm font-normal font-['Open Sans'] tracking-normal">
-                  {customer.customer_email || "Não informado"}{" "}
-                </label>
-              </p>
-              <p className="mt-2 text-texto1 lg:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal lg:ml-16 ml-12">
-                <strong className="texto">Telefone:</strong>{" "}
-                <label className="text-texto2 lg:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
-                  {" "}
-                  {customer.customer_phone || "Não informado"}{" "}
-                </label>
-              </p>
-            </div>
-            <div className="lg:mt- mt-10 lg:ml-20 ml-12">
-              <h3 className="lg:text-F20 text-xs font-bold">
-                Dados para recibo
-              </h3>
-              <p className="lg:mt-4 mt-2 text-texto1 lg:text-F17 text-sm">
-                <strong>Nome:</strong>{" "}
-                <label className="text-texto2 lg:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
-                  {" "}
-                  {customer.alternative_name || "Não informado"}{" "}
-                </label>
-              </p>
-              <p className="mt-2 text-texto1 lg:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
-                <strong>CPF/CNPJ:</strong>{" "}
-                <label className="text-texto2 lg:text-F17 text-sm  font-normal font-['Open Sans'] tracking-normal">
-                  {" "}
-                  {customer.alternative_cpf_cnpj || "Não informado"}{" "}
-                </label>
-              </p>
+
+              <div className="mt-3 lg:ml-14 ml-2">
+                <p className="mt-1 text-texto1 text-F15">
+                  <strong>CPF/CNPJ:</strong>{" "}
+                  <span className="text-texto2">{customer.customer_cpf_cnpj || "Não informado"}</span>
+                </p>
+                <p className="mt-1 text-texto1 text-F15">
+                  <strong>Idade:</strong>{" "}
+                  <span className="text-texto2">
+                    {customer.customer_dob && customer.age
+                      ? `${customer.age} anos`
+                      : "Não informado"}
+                  </span>
+                </p>
+                <p className="mt-1 text-texto1 text-F15">
+                  <strong>E-mail:</strong>{" "}
+                  <span className="text-texto2">{customer.customer_email || "Não informado"}</span>
+                </p>
+                <p className="mt-1 text-texto1 text-F15">
+                  <strong>Telefone:</strong>{" "}
+                  <span className="text-texto2">{customer.customer_phone || "Não informado"}</span>
+                </p>
+              </div>
+
+              <div className="mt-6 lg:ml-14 ml-2">
+                <h3 className="text-F17 font-bold">Dados para recibo</h3>
+                <p className="mt-3 text-texto1 text-F15">
+                  <strong>Nome:</strong>{" "}
+                  <span className="text-texto2">
+                    {customer.alternative_name || "Não informado"}
+                  </span>
+                </p>
+                <p className="mt-1 text-texto1 text-F15">
+                  <strong>CPF/CNPJ:</strong>{" "}
+                  <span className="text-texto2">
+                    {customer.alternative_cpf_cnpj || "Não informado"}
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
