@@ -308,8 +308,8 @@ const PaymentControlCard = ({
 
   return (
     <>
-      <div className="flex lg:mt-10 mt-5 ml-2 md:ml-9 lg:auto lg:mx-auto justify-between box-border lg:w-full w-[calc(90vw-40px)] md:w-[89.9%] h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border  border-solid border-cinza6 bg-bg1 z-10 ">
-        <div>
+     <div className="flex lg:mt-10 mt-5 ml-4 md:ml-9 lg:mx-auto justify-between box-border w-[calc(100%-32px)] md:w-[89.9%] lg:w-full h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10">
+        <div className="w-full">
           <div className="flex justify-between items-center p-6">
             <p className="lg:text-F25 text-sm text-primaria font-medium font-ubuntu">
               Controle de pagamento
@@ -323,7 +323,7 @@ const PaymentControlCard = ({
               <FilterIcon />
             </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
+          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left">
             <thead>
               <tr>
                 <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
@@ -332,25 +332,25 @@ const PaymentControlCard = ({
                 <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                   Valor Consulta
                 </th>
-                <th className="text-center align-middle hidden lg:table-cell min-w-[75px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle hidden lg:table-cell min-w-[75px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                   Dias
                 </th>
-                <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle lg:whitespace-nowrap min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                   Nº de consultas
                 </th>
-                <th className=" text-center lg:align-middle min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
+                <th className="text-center lg:align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                   Total
                 </th>
-                <th className="text-center align-middle min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                   Cobrança
                 </th>
-                <th className="text-center align-middle min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-3 lg:px-4 py-1 lg:py-2">
                   Pagamento
                 </th>
-                <th className="text-center align-middle min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-5 lg:px-4 py-1 lg:py-2">
                   NF
                 </th>
-                <th className="text-center align-middle min-w-[100px]  text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                   Ações
                 </th>
               </tr>
@@ -371,160 +371,160 @@ const PaymentControlCard = ({
                         : "-"}
                     </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      R${" "}
-                      {parseFloat(item.consultation_fee)
-                        .toFixed(2)
-                        .replace(".", ",")}
-                    </td>
-                    <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      {item.consultation_days
-                        ? item.consultation_days
-                            .split(", ")
-                            .map(Number)
-                            .sort((a, b) => a - b)
-                            .join(", ")
-                        : "-"}
-                    </td>
-                    <td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-                      <span>{item.num_consultations}</span>
-                      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
-                        Dias:{" "}
-                        {item.consultation_days
-                          ? item.consultation_days
-                              .split(", ")
-                              .map(Number)
-                              .sort((a, b) => a - b)
-                              .join(", ")
-                          : "Sem dias"}
-                      </div>
-                    </td>
-                    <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      R$ {item.total_consultation_fee || "0,00"}
-                    </td>
-                    <td>
-                      <div className="flex items-center justify-center text-center h-full">
-                        {item.sending_invoice ? (
-                          <VerifyGreenIcon />
-                        ) : (
-                          <CrossIcon />
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex items-center justify-center text-center h-full">
-                        {" "}
-                        {item.payment_status === "pago" ? (
-                          <VerifyGreenIcon />
-                        ) : item.payment_status === "parcial" ? (
-                          <span className="text-texto2 lg:text-F15 text-F10 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
-                            R${" "}
-                            {parseFloat(item.payment_amount || 0)
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </span>
-                        ) : (
-                          <CrossIcon />
-                        )}{" "}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex items-center justify-center text-center h-full">
-                        {item.bill_of_sale ? (
-                          <VerifyGreenIcon />
-                        ) : (
-                          <CrossIcon />
-                        )}
-                      </div>
-                    </td>
+  R${" "}
+  {parseFloat(item.consultation_fee)
+    .toFixed(2)
+    .replace(".", ",")}
+</td>
+<td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+  {item.consultation_days
+    ? item.consultation_days
+        .split(", ")
+        .map(Number)
+        .sort((a, b) => a - b)
+        .join(", ")
+    : "-"}
+</td>
+<td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
+  <span>{item.num_consultations}</span>
+  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+    Dias:{" "}
+    {item.consultation_days
+      ? item.consultation_days
+          .split(", ")
+          .map(Number)
+          .sort((a, b) => a - b)
+          .join(", ")
+      : "Sem dias"}
+  </div>
+</td>
+<td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+  R$ {item.total_consultation_fee || "0,00"}
+</td>
+<td>
+  <div className="flex items-center justify-center text-center h-full">
+    {item.sending_invoice ? (
+      <VerifyGreenIcon />
+    ) : (
+      <CrossIcon />
+    )}
+  </div>
+</td>
+<td>
+  <div className="flex items-center justify-center text-center h-full">
+    {" "}
+    {item.payment_status === "pago" ? (
+      <VerifyGreenIcon />
+    ) : item.payment_status === "parcial" ? (
+      <span className="text-texto2 lg:text-F15 text-F10 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+        R${" "}
+        {parseFloat(item.payment_amount || 0)
+          .toFixed(2)
+          .replace(".", ",")}
+      </span>
+    ) : (
+      <CrossIcon />
+    )}{" "}
+  </div>
+</td>
+<td>
+  <div className="flex items-center justify-center text-center h-full">
+    {item.bill_of_sale ? (
+      <VerifyGreenIcon />
+    ) : (
+      <CrossIcon />
+    )}
+  </div>
+</td>
 
-                    <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
-                      <button
-                        className="cursor-pointer"
-                        onClick={() => toggleDropdownPatients(index)}
-                      >
-                        <HamburguerIcon />
-                      </button>
+<td className="text-center px-2 lg:px-4 py-1 lg:py-2">
+  <button
+    className="cursor-pointer"
+    onClick={() => toggleDropdownPatients(index)}
+  >
+    <HamburguerIcon />
+  </button>
 
-                      {isDropdownOpenPatients === index && (
-                        <div
-                          ref={outSideClickRef}
-                          className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20"
-                        >
-                          <DropDownDashActions
-                            onOpenModal={() => handleOpenModalForBilling(item)}
-                            onPartialPayment={() =>
-                              handleOpenPartialPayment(item)
-                            }
-                            onConfirmedPayment={() =>
-                              handleConfirmPayment(item)
-                            }
-                            onConfirmedBillOfSale={() =>
-                              handleConfirmBillOfSale(item)
-                            }
-                            onEditConsultationFee={() =>
-                              handleEditConsultation(item)
-                            }
-                          />
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="8 lg:9" className="relative py-3">
-                  <div className="flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4">
-                    <button
-                      onClick={toggleTableSize}
-                      className={`absolute transform cursor-pointer transition-transform duration-300 ${
-                        isTableExpanded ? "rotate-180" : "rotate-0"
-                      }`}
-                    >
-                      <div className="lg:w-[452px] w-[263px] h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3"></div>
-                      <ArrowDownIcon />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        {isBillingModalOpen && selectedPatient && (
-          <BillingDashBoard
-            onClose={closeBillingModal}
-            onSendWhatsApp={() => handleSendWhatsApp(selectedPatient)}
-            onSendEmail={() => handleSendEmail(selectedPatient)}
-            message={billingMessage}
-          />
-        )}
-        {isEditModalOpen &&
-          selectedMonthForEdit &&
-          selectedYearForEdit &&
-          selectedCustomerForEdit && (
-            <EditConsultationModalPaymentControl
-              isOpen={isEditModalOpen}
-              onClose={() => setIsEditModalOpen(false)}
-              selectedMonth={selectedMonthForEdit}
-              selectedYear={selectedYearForEdit}
-              customerId={selectedCustomerForEdit}
-              updateBillingRecords={updateBillingRecords}
-            />
-          )}
-        <>
-          {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
-            <ModalPaymentDash
-              onClose={() => setIsPartialPaymentModalOpen(false)}
-              onSave={handleSavePartialPayment}
-              totalAmount={
-                selectedPatientForPartialPayment.total_consultation_fee
-              }
-            />
-          )}
-        </>
+  {isDropdownOpenPatients === index && (
+    <div
+      ref={outSideClickRef}
+      className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20"
+    >
+      <DropDownDashActions
+        onOpenModal={() => handleOpenModalForBilling(item)}
+        onPartialPayment={() =>
+          handleOpenPartialPayment(item)
+        }
+        onConfirmedPayment={() =>
+          handleConfirmPayment(item)
+        }
+        onConfirmedBillOfSale={() =>
+          handleConfirmBillOfSale(item)
+        }
+        onEditConsultationFee={() =>
+          handleEditConsultation(item)
+        }
+      />
+    </div>
+  )}
+</td>
+</tr>
+))}
+</tbody>
+<tfoot>
+  <tr>
+    <td colSpan="8 lg:9" className="relative py-3">
+      <div className="flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4">
+        <button
+          onClick={toggleTableSize}
+          className={`absolute transform cursor-pointer transition-transform duration-300 ${
+            isTableExpanded ? "rotate-180" : "rotate-0"
+          }`}
+        >
+          <div className="lg:w-[452px] w-[263px] h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3"></div>
+          <ArrowDownIcon />
+        </button>
       </div>
-    </>
-  );
+    </td>
+  </tr>
+</tfoot>
+</table>
+</div>
+{isBillingModalOpen && selectedPatient && (
+  <BillingDashBoard
+    onClose={closeBillingModal}
+    onSendWhatsApp={() => handleSendWhatsApp(selectedPatient)}
+    onSendEmail={() => handleSendEmail(selectedPatient)}
+    message={billingMessage}
+  />
+)}
+{isEditModalOpen &&
+  selectedMonthForEdit &&
+  selectedYearForEdit &&
+  selectedCustomerForEdit && (
+    <EditConsultationModalPaymentControl
+      isOpen={isEditModalOpen}
+      onClose={() => setIsEditModalOpen(false)}
+      selectedMonth={selectedMonthForEdit}
+      selectedYear={selectedYearForEdit}
+      customerId={selectedCustomerForEdit}
+      updateBillingRecords={updateBillingRecords}
+    />
+  )}
+<>
+  {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
+    <ModalPaymentDash
+      onClose={() => setIsPartialPaymentModalOpen(false)}
+      onSave={handleSavePartialPayment}
+      totalAmount={
+        selectedPatientForPartialPayment.total_consultation_fee
+      }
+    />
+  )}
+</>
+</div>
+</>
+);
 };
 
 export default PaymentControlCard;
