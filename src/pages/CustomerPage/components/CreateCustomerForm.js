@@ -435,7 +435,7 @@ const CreateCustomerForm = ({
                         } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
                     />
                     <div
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-20"
+                      className="absolute right-4 top-1/2 transform -translate-y-[30%] cursor-pointer z-20"
                       onClick={(e) => {
                         e.preventDefault();
                         setClickedOnArrow(true);
