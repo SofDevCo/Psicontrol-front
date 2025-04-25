@@ -93,12 +93,25 @@ const Dropdown = ({
     };
   }, [isOpen, onClose, triggerRef]);
 
+  const handleClickInside = (event) => {
+    const isActionElement = 
+      event.target.tagName.toLowerCase() === 'button' || 
+      event.target.closest('button') || 
+      event.target.onclick ||
+      event.target.closest('[onClick]');
+      
+    if (isActionElement) {
+      onClose();
+    }
+  };
+
   if (!isOpen) return null;
   return (
     <div
       ref={dropdownRef}
       className="fixed z-50"
       style={{ width, maxHeight }}
+      onClick={handleClickInside}
     >
       <div className="bg-bg2 border border-cinza6 rounded-md shadow-default overflow-auto">
         {children}

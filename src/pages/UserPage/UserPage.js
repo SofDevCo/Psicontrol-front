@@ -591,8 +591,8 @@ const UserPage = () => {
           </div>
 
           {isEditing && (
-            <div className="fixed inset-0 backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30 overflow-y-auto py-10 flex justify-center items-center z-30">
-              <div className="w-[90%] lg:mt-0 mt-28 lg:max-w-[1076px] max-h-[90%] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto">
+            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-[#33B8D14D] backdrop-blur-[6px]">
+              <div className="w-[90%] lg:max-w-[1076px] max-h-[90vh] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto m-auto">
                 <div className="flex flex-col lg:flex-row gap-6 lg:ml-9">
                   <div className="space-y-6 mr-0 lg:mr-20">
                     <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
@@ -609,7 +609,7 @@ const UserPage = () => {
                         value={userData.user_name || ""}
                         onChange={handleChange}
                         placeholder="Nome do psicólogo"
-                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
@@ -623,7 +623,7 @@ const UserPage = () => {
                         value={userData.user_email || ""}
                         onChange={handleChange}
                         placeholder="e-mail.psicologo@gmail.com"
-                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
@@ -638,7 +638,7 @@ const UserPage = () => {
                           value={userData.user_phone || ""}
                           onChange={handleChange}
                           placeholder="(00) 0 0000-0000"
-                          className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                          className="w-full lg:w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                         />
                       </div>
 
@@ -652,7 +652,7 @@ const UserPage = () => {
                           value={userData.user_cpf || ""}
                           onChange={handleChange}
                           placeholder="XX.XXX.XXX/0001-XX"
-                          className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                          className="w-full lg:w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                         />
                       </div>
                     </div>
@@ -667,7 +667,7 @@ const UserPage = () => {
                         value={userData.crp_number || ""}
                         onChange={handleCRPChange}
                         placeholder="XX/XXXXX"
-                        className="w-full lg:w-[181px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[181px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
                   </div>
@@ -692,7 +692,7 @@ const UserPage = () => {
                           })
                         }
                         placeholder="Nome/Clínica"
-                        className="w-full lg:w-[418px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[418px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
@@ -706,7 +706,7 @@ const UserPage = () => {
                         value={userData.clinic_cpf_cnpj || ""}
                         onChange={handleChange}
                         placeholder="XX.XXX.XXX/0001-XX"
-                        className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
+                        className="w-full lg:w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                       />
                     </div>
 
@@ -715,8 +715,8 @@ const UserPage = () => {
                         Importar logotipo
                       </label>
                       <div className="flex items-center gap-2">
-                        <div className="w-full lg:w-[212px] h-[50px] bg-neutral-100 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
-                          <span className="text-[#5c5c5c]/50 text-sm font-normal font-['Open Sans']">
+                        <div className="w-full lg:w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] flex items-center">
+                          <span className="text-[#5c5c5c] text-sm font-normal font-['Open Sans']">
                             {fileName}
                           </span>
                         </div>

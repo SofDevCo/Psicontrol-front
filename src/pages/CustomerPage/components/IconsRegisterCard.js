@@ -314,7 +314,7 @@ const AddConsultationIcon = () => {
 
 const ArrowIcon = () => {
   return (
-  <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="18" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g filter="url(#filter0_d_5522_12262)">
     <path d="M8.5 7L13 0H4L8.5 7Z" fill="#0082BA" />
   </g>

@@ -38,6 +38,7 @@ const CreateCustomerForm = ({
   const [inputValue, setInputValue] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const [activeField, setActiveField] = useState(null);
+  const [clickedOnArrow, setClickedOnArrow] = useState(false);
 
   useEffect(() => {
     if (isEditing && selectedPatient && selectedPatient.customer_dob) {
@@ -76,7 +77,7 @@ const CreateCustomerForm = ({
       ...prev,
       customer_calendar_name: value,
     }));
-    
+
     if (validationErrors.customer_calendar_name && value) {
       setValidationErrors(prev => {
         const updated = {...prev};
@@ -188,7 +189,7 @@ const CreateCustomerForm = ({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     if (validationErrors[name] && value) {
       setValidationErrors(prev => {
         const updated = {...prev};
@@ -315,7 +316,7 @@ const CreateCustomerForm = ({
         return updated;
       });
     }
-    
+
     if (customer.customer_calendar_name && validationErrors.customer_calendar_name) {
       setValidationErrors(prev => {
         const updated = {...prev};
@@ -324,7 +325,7 @@ const CreateCustomerForm = ({
       });
     }
   }, [customer.customer_name, customer.customer_calendar_name, validationErrors]);
-  
+
   useEffect(() => {
     const handleEnterKey = (e) => {
       if (e.key === "Enter") {
@@ -381,9 +382,8 @@ const CreateCustomerForm = ({
                   value={customer.customer_name || ""}
                   onChange={handleChange}
                   placeholder="Nome do paciente"
-                  className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
-                    validationErrors.customer_name ? "border-red-500" : "border-cinza6"
-                  } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
+                  className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_name ? "border-red-500" : "border-cinza6"
+                    } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
                 />
               </div>
 
@@ -422,19 +422,40 @@ const CreateCustomerForm = ({
                           });
                         }
                       }}
-                      onBlur={() => setTimeout(() => setActiveField(null), 200)}
+                      onBlur={() => {
+                           if (!clickedOnArrow) {
+                          setTimeout(() => setActiveField(null), 200);
+                        }
+                      }}
                       autoComplete="off"
                       placeholder="Nome do evento"
-                      className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${
-                        validationErrors.customer_calendar_name && !customer.customer_calendar_name
-                          ? "border-red-500" 
+                      className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_calendar_name && !customer.customer_calendar_name
+                          ? "border-red-500"
                           : "border-cinza6"
-                      } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
+                        } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
                     />
-                    <div 
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-20"
-                      onClick={() => {
-                        setActiveField(activeField === "customer_calendar_name" ? null : "customer_calendar_name");
+                    <div
+                      className="absolute right-4 top-1/2 transform -translate-y-[30%] cursor-pointer z-20"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setClickedOnArrow(true);
+                        setTimeout(() => {
+                          setClickedOnArrow(false);
+                        }, 300);
+
+                        if (activeField === "customer_calendar_name") {
+                          setActiveField(null);
+                        } else {
+                          setActiveField("customer_calendar_name");
+                          if (filteredPatients.length === 0 && customer.customer_calendar_name) {
+                            const filtered = unmatchedPatients.filter((patient) =>
+                              patient.event_name.toLowerCase().includes(customer.customer_calendar_name.toLowerCase())
+                            );
+                            setFilteredPatients(filtered);
+                          } else if (filteredPatients.length === 0) {
+                            setFilteredPatients(unmatchedPatients);
+                          }
+                        }
                       }}
                     >
                       <div className={`transform transition-transform duration-300 ${activeField === "customer_calendar_name" ? "rotate-180" : ""}`}>
@@ -442,27 +463,33 @@ const CreateCustomerForm = ({
                       </div>
                     </div>
                   </div>
-                  {activeField === "customer_calendar_name" && filteredPatients.length > 0 && (
+                  {activeField === "customer_calendar_name" && (
                     <ul className="absolute w-full mt-1 border-2 border-cinza6 rounded-[15px] bg-bg1 z-30 max-h-[200px] overflow-y-auto shadow-md">
-                      {filteredPatients
-                        .sort((a, b) => a.event_name.localeCompare(b.event_name))
-                        .map((patient) => (
-                          <li
-                            key={patient.id}
-                            onClick={() => {
-                              setInputValue(patient.event_name);
-                              setFilteredPatients([]);
-                              setCustomer((prev) => ({
-                                ...prev,
-                                customer_calendar_name: patient.event_name,
-                              }));
-                              setActiveField(null);
-                            }}
-                            className="p-3 hover:bg-bgM cursor-pointer border-b border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
-                          >
-                            {patient.event_name}
-                          </li>
-                        ))}
+                      {filteredPatients.length > 0 ? (
+                        filteredPatients
+                          .sort((a, b) => a.event_name.localeCompare(b.event_name))
+                          .map((patient) => (
+                            <li
+                              key={patient.id}
+                              onClick={() => {
+                                setInputValue(patient.event_name);
+                                setFilteredPatients([]);
+                                setCustomer((prev) => ({
+                                  ...prev,
+                                  customer_calendar_name: patient.event_name,
+                                }));
+                                setActiveField(null);
+                              }}
+                              className="p-3 hover:bg-bgM cursor-pointer border-b border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
+                            >
+                              {patient.event_name}
+                            </li>
+                          ))
+                      ) : (
+                        <li className="p-3 text-center text-texto2 text-sm">
+                          Nenhum paciente encontrado
+                        </li>
+                      )}
                     </ul>
                   )}
                 </div>
