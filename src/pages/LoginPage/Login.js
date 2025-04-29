@@ -6,7 +6,7 @@ import BoxBlueCourt from "./images/BoxBlueCourt.png";
 
 const Login = () => {
   const handleLogin = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/google`);
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/google`);
     const data = await response.json();
 
     if (data.authUrl) {
@@ -15,9 +15,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex lg:w-full w-screen h-scree">
+    <div className="flex w-screen lg:w-full h-scree">
       {/* Lado esquerdo - Azul */}
-      <div className="w-1/2 fixed h-screen bg-primaria">
+      <div className="fixed w-1/2 h-screen bg-primaria">
         <img
           src={PsiText}
           alt="Text"
