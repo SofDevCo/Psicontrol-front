@@ -93,41 +93,48 @@ const SelectCalendarPage = () => {
     fetchInitialData();
   }, []);
 
-  const handleCheckboxChange = (calendar) => {
+  const handleCheckboxChange = async (calendar) => {
     const newSelectedCalendarIds = new Set(selectedCalendarIds);
     const isSelected = newSelectedCalendarIds.has(calendar.calendar_id);
-  
+
     if (isSelected) {
       newSelectedCalendarIds.delete(calendar.calendar_id);
     } else {
       newSelectedCalendarIds.add(calendar.calendar_id);
     }
+
     setSelectedCalendarIds(newSelectedCalendarIds);
-  };
 
-  const handleProceed = async () => {
-    const ids = Array.from(selectedCalendarIds);
-
-    if (ids.length > 0) {
-      const authenticationToken = localStorage.getItem("authentication_token");
-  
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/calendars/selection`, {
+    const authenticationToken = localStorage.getItem("authentication_token");
+    await fetch(
+      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.calendar_id}`,
+      {
         method: "POST",
         headers: {
           Authorization: `Bearer ${authenticationToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ calendar_ids: ids }),
-      });
-  
-      if (response.ok) {
-        navigate(`/create-event-form?calendarIds=${ids.join(",")}`);
-      } else {
-        setError("Erro ao selecionar as agendas.");
+        body: JSON.stringify({
+          enabled: !isSelected,
+          calendar_name: calendar.calendar_name,
+        }),
       }
-    }
+    );
   };
 
+  const handleProceed = async () => {
+    const ids = Array.from(selectedCalendarIds);
+
+    const redirected = await checkCalendars();
+    if (redirected) return;
+
+    localStorage.setItem("selectedCalendars", JSON.stringify(ids));
+    localStorage.setItem("calendarsSelected", "true");
+
+    const redirectUrl = `/create-event-form?calendarIds=${ids.join(",")}`;
+
+    navigate(redirectUrl);
+  };
   return (
     <div className="flex flex-col items-center justify-center h-screen p-8 mx-auto font-sans text-center bg-bg1">
       <img
