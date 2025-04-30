@@ -347,10 +347,10 @@ const CreateCustomerForm = ({
   }, []);
 
   return (
-    <div className=" space-y-2 p-6">
+    <div className="p-4 lg:p-6 space-y-2 w-full max-w-[1200px] mx-auto">
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2 w-full"
+        className="grid w-full grid-cols-1 gap-6 lg:grid-cols-2"
       >
         <div>
           <div className="space-y-4">
@@ -366,15 +366,15 @@ const CreateCustomerForm = ({
               </button>
             </div>
 
-            <span className="block text-sm lg:text-base ml-1 mt-1">
-              <span className="text-red-500 font-bold">*</span> Campos obrigatórios
+            <span className="block mt-1 ml-1 text-sm lg:text-base">
+              <span className="font-bold text-red-500">*</span> Campos obrigatórios
             </span>
 
             <div className="flex flex-col gap-4">
               <div>
                 <label className="mb-1 lg:ml-3 ml-2 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome{" "}
-                  <span className="text-red-500 font-bold">*</span>
+                  <span className="font-bold text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -401,10 +401,10 @@ const CreateCustomerForm = ({
                 />
               </div>
               <div className="flex flex-wrap gap-4">
-                <div className="flex-1 relative">
+                <div className="relative flex-1">
                   <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1 whitespace-nowrap">
                     Nome do Evento (Google Agenda){" "}
-                    <span className="text-red-500 font-bold">*</span>
+                    <span className="font-bold text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -480,13 +480,13 @@ const CreateCustomerForm = ({
                                 }));
                                 setActiveField(null);
                               }}
-                              className="p-3 hover:bg-bgM cursor-pointer border-b border-b-cinza6 text-sm font-bold tracking-tight text-texto2"
+                              className="p-3 text-sm font-bold tracking-tight border-b cursor-pointer hover:bg-bgM border-b-cinza6 text-texto2"
                             >
                               {patient.event_name}
                             </li>
                           ))
                       ) : (
-                        <li className="p-3 text-center text-texto2 text-sm">
+                        <li className="p-3 text-sm text-center text-texto2">
                           Nenhum paciente encontrado
                         </li>
                       )}
@@ -555,7 +555,7 @@ const CreateCustomerForm = ({
                   Valor
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-texto2/50">
+                  <span className="absolute transform -translate-y-1/2 left-4 top-1/2 text-texto2/50">
                     R$
                   </span>
                   <input
@@ -571,10 +571,10 @@ const CreateCustomerForm = ({
               </div>
             </div>
 
-            <h2 className="text-primaria  lg:text-2xl text-sm font-medium font-ubuntu">
+            <h2 className="text-sm font-medium text-primaria lg:text-2xl font-ubuntu">
               Contato de Emergência
             </h2>
-            <div className="flex flex-col sm:gap-4 gap-3">
+            <div className="flex flex-col gap-3 sm:gap-4">
               <div className="flex-1">
                 <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
@@ -588,7 +588,7 @@ const CreateCustomerForm = ({
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
               </div>
-              <div className="flex flex-1 sm:flex-row sm:gap-4 sm:items-start gap-2">
+              <div className="flex flex-1 gap-2 sm:flex-row sm:gap-4 sm:items-start">
                 <div className="flex-1">
                   <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                     Vinculo
@@ -620,7 +620,7 @@ const CreateCustomerForm = ({
           </div>
         </div>
 
-        <div className="lg:-space-y-1 space-y-4 lg:-mt-5 h-full">
+        <div className="h-full space-y-4 lg:-space-y-1 lg:-mt-5">
           <div className="flex  items-center  max-w-[600px] 2xl:gap-4">
             <h3 className="text-primaria text-sm lg:text-[25px] lg:mt-0 mt-4 font-medium font-ubuntu ">
               Dados para Recibo
@@ -635,7 +635,7 @@ const CreateCustomerForm = ({
           </div>
 
           <div className="space-y-4">
-            <div className="flex gap-4 items-start">
+            <div className="flex items-start gap-4">
               <div className="w-full lg:w-[418px]">
                 <label className="mb-1 ml-3 block text-sm lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
                   Nome
@@ -669,7 +669,7 @@ const CreateCustomerForm = ({
                 <button
                   type="button"
                   onClick={handleDeleteAlternativeCPF}
-                  className="ml-2 flex items-center justify-center bg-bg1 p-1 hover:bg-bg1"
+                  className="flex items-center justify-center p-1 ml-2 bg-bg1 hover:bg-bg1"
                 ></button>
               </div>
               {additionalAlternatives.length < 1 && (
@@ -686,7 +686,7 @@ const CreateCustomerForm = ({
 
             {additionalAlternatives.map((alternative, index) => (
               <div key={index}>
-                <div className="flex gap-4 items-start w-full">
+                <div className="flex items-start w-full gap-4">
                   <div className="w-full">
                     <label className="mb-1.5 mt-1.5 ml-3 flex font-normal font-['Open Sans'] tracking-wide text-texto1">
                       Nome Alternativo {index + 1}
@@ -732,7 +732,7 @@ const CreateCustomerForm = ({
                     <button
                       type="button"
                       onClick={() => handleDeleteAlternativeCPF(index)}
-                      className="absolute ml-2 p-1 items-center justify-center  bg-bg1 hover:bg-bg1"
+                      className="absolute items-center justify-center p-1 ml-2 bg-bg1 hover:bg-bg1"
                     >
                       <Trash />
                     </button>
@@ -741,7 +741,7 @@ const CreateCustomerForm = ({
               </div>
             ))}
           </div>
-          <div className="flex flex-col items-end 2xl:items-start 2xl:ml-40  mt-6">
+          <div className="flex flex-col items-end mt-6 2xl:items-start 2xl:ml-40">
             <div className="flex gap-4 lg:mt-[600px] mt-6">
               <button
                 type="button"
