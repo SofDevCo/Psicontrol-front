@@ -77,8 +77,18 @@ const CustomersPage = () => {
     });
 
     if (data && Array.isArray(data)) {
+      data.sort((a, b) =>
+        a.customer_name.localeCompare(b.customer_name, "pt-BR", {
+          sensitivity: "base",
+        })
+      );
       setCustomers(data);
     } else if (data && data.customers) {
+      data.customers.sort((a, b) =>
+        a.customer_name.localeCompare(b.customer_name, "pt-BR", {
+          sensitivity: "base",
+        })
+      );
       setCustomers(data.customers);
     } else {
       setCustomers([]);
@@ -186,8 +196,8 @@ const CustomersPage = () => {
           </div>
         </div>
       )}
-      <div className="relative w-full items-center pl-7 pt-6">
-        <div className="relative flex items-center lg:gap-4 gap-1 w-full lg:w-auto md:w-auto">
+      <div className="relative items-center w-full pt-6 pl-7">
+        <div className="relative flex items-center w-full gap-1 lg:gap-4 lg:w-auto md:w-auto">
           <div className="relative">
             <input
               type="text"
@@ -196,7 +206,7 @@ const CustomersPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className={`h-[35px] lg:h-[56px] lg:w-[360px] md:w-[calc(95vw-300px)] sm:w-[calc(95vw-260px)] w-[calc(125vw-260px)] lg:rounded-[15px] rounded-lg ${searchTerm ? "rounded-b-none" : ""} placeholder:text-xs lg:placeholder:text-base bg-clara3 lg:pl-11 pl-7 text-texto3 focus:outline-none focus:ring-0 caret-primaria`}
             />
-            <div className="absolute left-1 top-1/2 -translate-y-1/2 transform">
+            <div className="absolute transform -translate-y-1/2 left-1 top-1/2">
               {searchTerm.length > 0 ? (
                 <div
                   onClick={() => {
@@ -212,7 +222,7 @@ const CustomersPage = () => {
               )}
             </div>
             {searchTerm.length > 0 && (
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <div className="absolute transform -translate-y-1/2 right-4 top-1/2">
                 <div
                   onClick={() => {
                     setSearchTerm("");
@@ -224,11 +234,13 @@ const CustomersPage = () => {
                 </div>
               </div>
             )}
-            {searchTerm && filteredCustomers.length === 0 && isDropdownVisible && (
-              <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
-                Paciente não encontrado
-              </p>
-            )}
+            {searchTerm &&
+              filteredCustomers.length === 0 &&
+              isDropdownVisible && (
+                <p className="absolute top-full left-0 w-full px-4 py-2 bg-[#c7e0f7] rounded-b-[15px] shadow-md max-h-[200px] overflow-y-auto z-10 border border-t-texto2 text-center text-texto2">
+                  Paciente não encontrado
+                </p>
+              )}
             {searchTerm && filteredCustomers.length > 0 && (
               <ul
                 ref={searchDropRef}
@@ -237,7 +249,7 @@ const CustomersPage = () => {
                 {filteredCustomers.map((customer) => (
                   <li
                     key={customer.customer_id}
-                    className="px-4 py-2 hover:bg-d_medio3 cursor-pointer"
+                    className="px-4 py-2 cursor-pointer hover:bg-d_medio3"
                     onClick={() => {
                       setSearchTerm(customer.customer_name);
                       setFilteredCustomers([]);
@@ -259,7 +271,7 @@ const CustomersPage = () => {
               Adicionar paciente
             </span>
           </button>
-          <button className="group md:ml-3 whitespace-no-wrap flex gap-2 items-center bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:bg-bg1 active:text-primaria/50">
+          <button className="flex items-center gap-2 text-sm not-italic font-medium leading-4 tracking-wider underline whitespace-no-wrap group md:ml-3 bg-bg1 text-primaria hover:bg-bg1 active:text-primaria/50">
             <Link
               to="/archived"
               className="group flex items-center gap-2 w-auto md:w-[100px] bg-bg1 text-sm font-medium not-italic leading-4 tracking-wider text-primaria underline hover:text-primaria active:text-primaria/50"
@@ -278,17 +290,21 @@ const CustomersPage = () => {
           Ações
         </div>
       </div>
-      <div className="mx-auto w-full font-sans">
+      <div className="w-full mx-auto font-sans">
         {error && <p className="mb-[20px] text-center text-red-500">{error}</p>}
         {isLoading ? (
           <p>Carregando clientes...</p>
         ) : customers.length === 0 ? (
-          <p className="text-center text-gray-500">Nenhum paciente cadastrado</p>
+          <p className="text-center text-gray-500">
+            Nenhum paciente cadastrado
+          </p>
         ) : (
           <ul className="list-none">
             {customers
               .filter((customer) =>
-                customer.customer_name.toLowerCase().includes(searchTerm.toLowerCase())
+                customer.customer_name
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())
               )
               .map((customer) => (
                 <li
@@ -296,24 +312,28 @@ const CustomersPage = () => {
                   className="relative flex items-center justify-between border-b-[1px] border-cinza6 py-3 pl-8"
                 >
                   <span
-                    className="lg:text-xl text-sm text-texto1 cursor-pointer"
+                    className="text-sm cursor-pointer lg:text-xl text-texto1"
                     onClick={() => handleNavigateClick(customer.customer_id)}
                   >
                     {`${customer.customer_name} ${customer.customer_second_name}`}
                   </span>
                   <div
                     className="relative"
-                    ref={(el) => (dropdownRefs.current[customer.customer_id] = el)}
+                    ref={(el) =>
+                      (dropdownRefs.current[customer.customer_id] = el)
+                    }
                   >
                     <button
                       onClick={() => toggleDropdown(customer.customer_id)}
-                      className="flex items-center justify-end bg-bg1 pr-8 hover:bg-bg1"
+                      className="flex items-center justify-end pr-8 bg-bg1 hover:bg-bg1"
                     >
                       <HamburguerIcon />
                     </button>
                     {activeDropdown === customer.customer_id && (
                       <DropDonw
-                        dropdownRef={(el) => (dropdownRefs.current[customer.customer_id] = el)}
+                        dropdownRef={(el) =>
+                          (dropdownRefs.current[customer.customer_id] = el)
+                        }
                         customerId={customer.customer_id}
                         onDelete={handleDeleteConfirmation}
                         setSelectedPatient={setSelectedPatient}
@@ -331,9 +351,10 @@ const CustomersPage = () => {
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-destaque bg-opacity-30 backdrop-blur-[6px] z-30">
           <div className="bg-bg1 p-6 rounded-lg w-[335px] h-[228px] border border-cinza6 text-center transform -translate-y-52 translate-x-32">
-            <p className="text-lg font-semibold mb-4 text-texto2">
+            <p className="mb-4 text-lg font-semibold text-texto2">
               Você tem certeza que <br /> deseja
-              <span className="text-primaria"> excluir </span> este <br /> paciente de forma <br /> permanente?
+              <span className="text-primaria"> excluir </span> este <br />{" "}
+              paciente de forma <br /> permanente?
             </p>
             <div className="flex justify-around">
               <button
