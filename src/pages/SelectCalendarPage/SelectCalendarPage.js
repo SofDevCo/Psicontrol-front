@@ -104,26 +104,32 @@ const SelectCalendarPage = () => {
     }
 
     setSelectedCalendarIds(newSelectedCalendarIds);
-
-    const authenticationToken = localStorage.getItem("authentication_token");
-    await fetch(
-      `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendar.calendar_id}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${authenticationToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          enabled: !isSelected,
-          calendar_name: calendar.calendar_name,
-        }),
-      }
-    );
   };
 
   const handleProceed = async () => {
     const ids = Array.from(selectedCalendarIds);
+
+    const authenticationToken = localStorage.getItem("authentication_token");
+
+    const promises = ids.map(async (calendarId) => {
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/events/calendars/selection/${calendarId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${authenticationToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            enabled: true,
+            calendar_name: calendars.find((c) => c.calendar_id === calendarId)
+              .calendar_name,
+          }),
+        }
+      );
+    });
+
+    await Promise.all(promises);
 
     const redirected = await checkCalendars();
     if (redirected) return;
@@ -135,6 +141,7 @@ const SelectCalendarPage = () => {
 
     navigate(redirectUrl);
   };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen p-8 mx-auto font-sans text-center bg-bg1">
       <img
