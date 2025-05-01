@@ -80,7 +80,7 @@ const CreateCustomerForm = ({
 
     if (validationErrors.customer_calendar_name && value) {
       setValidationErrors(prev => {
-        const updated = {...prev};
+        const updated = { ...prev };
         delete updated.customer_calendar_name;
         return updated;
       });
@@ -192,7 +192,7 @@ const CreateCustomerForm = ({
 
     if (validationErrors[name] && value) {
       setValidationErrors(prev => {
-        const updated = {...prev};
+        const updated = { ...prev };
         delete updated[name];
         return updated;
       });
@@ -311,7 +311,7 @@ const CreateCustomerForm = ({
   useEffect(() => {
     if (customer.customer_name && validationErrors.customer_name) {
       setValidationErrors(prev => {
-        const updated = {...prev};
+        const updated = { ...prev };
         delete updated.customer_name;
         return updated;
       });
@@ -319,7 +319,7 @@ const CreateCustomerForm = ({
 
     if (customer.customer_calendar_name && validationErrors.customer_calendar_name) {
       setValidationErrors(prev => {
-        const updated = {...prev};
+        const updated = { ...prev };
         delete updated.customer_calendar_name;
         return updated;
       });
@@ -416,22 +416,22 @@ const CreateCustomerForm = ({
                         setActiveField("customer_calendar_name");
                         if (validationErrors.customer_calendar_name) {
                           setValidationErrors(prev => {
-                            const updated = {...prev};
+                            const updated = { ...prev };
                             delete updated.customer_calendar_name;
                             return updated;
                           });
                         }
                       }}
                       onBlur={() => {
-                           if (!clickedOnArrow) {
+                        if (!clickedOnArrow) {
                           setTimeout(() => setActiveField(null), 200);
                         }
                       }}
                       autoComplete="off"
                       placeholder="Nome do evento"
                       className={`relative w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_calendar_name && !customer.customer_calendar_name
-                          ? "border-red-500"
-                          : "border-cinza6"
+                        ? "border-red-500"
+                        : "border-cinza6"
                         } px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:outline-none focus:border-cinza6 placeholder:text-sm lg:placeholder:text-base z-10`}
                     />
                     <div
@@ -517,8 +517,11 @@ const CreateCustomerForm = ({
                 name="customer_cpf_cnpj"
                 value={customer.customer_cpf_cnpj || ""}
                 onChange={handleChange}
-                placeholder="XX.XXX.XXX/0001-XX"
-                className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                placeholder="XXX.XXX.XXX-XX"
+                pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}"
+                title="Insira um CPF válido com 11 dígitos. Exemplo: 123.456.789-00"
+                required
+                className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_cpf_cnpj ? "border-red-500" : "border-cinza6"} px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
               />
             </div>
 
@@ -542,13 +545,17 @@ const CreateCustomerForm = ({
                   Telefone
                 </label>
                 <input
-                  type="text"
+                  type="tel"
                   name="customer_phone"
                   value={customer.customer_phone || ""}
                   onChange={handleChange}
-                  placeholder="(00) 0 0000-0000"
-                  className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
+                  placeholder="(11) 91234-5678"
+                  pattern="\(?\d{2}\)?\s?\d{5}-?\d{4}"
+                  title="Insira um telefone válido com DDD. Exemplo: (11) 91234-5678"
+                  required
+                  className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_phone ? "border-red-500" : "border-cinza6"} px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
                 />
+
               </div>
               <div className="w-full lg:w-[181px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
