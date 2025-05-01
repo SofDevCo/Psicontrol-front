@@ -17,25 +17,22 @@ const DropDonw = ({
 }) => {
   return (
     <nav
-      className="absolute right-8 top-full mt-1 box-border border-[1px] border-solid border-cinza6 bg-bg2 shadow-default z-20"
+      className="box-border absolute z-20 max-w-xs p-2 mt-1 border rounded-md right-8 top-full border-cinza6 bg-bg2 shadow-default w-52"
       ref={dropdownRef}
     >
-      <ul className="lg:w-[210px] w-[151px] lg:h-[189px] h-[131.08px] lg:ml-0">
-        <li>
-          <button
-            className="group mt-5 flex items-center gap-2 lg:ml-7 ml-6 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
-            onClick={() => <label> "Conta do paciente clicada"</label>}
+      <ul className="w-full">
+        <li className="flex items-center gap-2 mb-1">
+          <UserIconBorder />
+          <Link
+            to={`/customers/${customerId}/profile`}
+            className="text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
           >
-            <UserIconBorder />
-            <Link to={`/customers/${customerId}/profile`}>
-              {" "}
-              Conta do paciente{" "}
-            </Link>
-          </button>
+            Conta do paciente
+          </Link>
         </li>
-        <li>
+
+        <li className="flex items-center gap-2 mb-1">
           <button
-            className="group lg:mt-5 mt-1 flex items-center gap-2 lg:ml-6 ml-6 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => {
               const patient = customers.find(
                 (c) => c.customer_id === customerId
@@ -45,24 +42,27 @@ const DropDonw = ({
               }
               openModal();
             }}
+            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
           >
             <EditIcon />
             Editar paciente
           </button>
         </li>
-        <li>
+
+        <li className="flex items-center gap-2 mb-1">
           <button
-            className="group lg:mt-6 mt-1 flex items-center lg:gap-2 gap-2 lg:ml-8 ml-7 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onArchive(customerId)}
+            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
           >
             <ArchiveIcon />
             Arquivar Paciente
           </button>
         </li>
-        <li>
+
+        <li className="flex items-center gap-2">
           <button
-            className="group lg:mt-5 mt-1 flex items-center lg:gap-3 gap-2 lg:ml-8 ml-7 font-['Open Sans'] bg-bg2 lg:text-[15px] text-[9px]  font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onDelete(customerId)}
+            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
           >
             <TrashIcon />
             Excluir paciente
