@@ -292,7 +292,7 @@ const PaymentControlCard = ({
 
   if (!billingRecords || billingRecords.length === 0) {
     return (
-      <p className="text-center text-texto2 italic py-4">
+      <p className="py-4 italic text-center text-texto2">
         Nenhum dado disponível
       </p>
     );
@@ -310,12 +310,12 @@ const PaymentControlCard = ({
     <>
      <div className="flex lg:mt-10 mt-5 ml-4 md:ml-9 lg:mx-auto justify-between box-border w-[calc(100%-32px)] md:w-[89.9%] lg:w-full h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10">
         <div className="w-full">
-          <div className="flex justify-between items-center p-6">
-            <p className="lg:text-F25 text-sm text-primaria font-medium font-ubuntu">
+          <div className="flex items-center justify-between p-6">
+            <p className="text-sm font-medium lg:text-F25 text-primaria font-ubuntu">
               Controle de pagamento
             </p>
 
-            <div className="group relative flex items-center gap-2">
+            <div className="relative flex items-center gap-2 group">
               <FilterStatusProfilePage
                 selectedStatus={selectedStatus}
                 onChangeStatus={setSelectedStatus}
@@ -323,7 +323,7 @@ const PaymentControlCard = ({
               <FilterIcon />
             </div>
           </div>
-          <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left">
+          <table className="w-full mt-1 text-left table-fixed bg-bg1 rounded-B15">
             <thead>
               <tr>
                 <th className="text-center align-middle min-w-[100px] text-texto1 lg:text-lg text-F10 font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
@@ -387,7 +387,7 @@ const PaymentControlCard = ({
 </td>
 <td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
   <span>{item.num_consultations}</span>
-  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+  <div className="absolute hidden px-2 py-1 mb-2 text-xs font-normal transform -translate-x-1/2 rounded shadow-md left-1/2 bottom-full group-hover:block bg-bg2 text-text2 whitespace-nowrap lg:hidden">
     Dias:{" "}
     {item.consultation_days
       ? item.consultation_days
@@ -402,7 +402,7 @@ const PaymentControlCard = ({
   R$ {item.total_consultation_fee || "0,00"}
 </td>
 <td>
-  <div className="flex items-center justify-center text-center h-full">
+  <div className="flex items-center justify-center h-full text-center">
     {item.sending_invoice ? (
       <VerifyGreenIcon />
     ) : (
@@ -411,7 +411,7 @@ const PaymentControlCard = ({
   </div>
 </td>
 <td>
-  <div className="flex items-center justify-center text-center h-full">
+  <div className="flex items-center justify-center h-full text-center">
     {" "}
     {item.payment_status === "pago" ? (
       <VerifyGreenIcon />
@@ -428,7 +428,7 @@ const PaymentControlCard = ({
   </div>
 </td>
 <td>
-  <div className="flex items-center justify-center text-center h-full">
+  <div className="flex items-center justify-center h-full text-center">
     {item.bill_of_sale ? (
       <VerifyGreenIcon />
     ) : (
@@ -437,7 +437,7 @@ const PaymentControlCard = ({
   </div>
 </td>
 
-<td className="text-center px-2 lg:px-4 py-1 lg:py-2">
+<td className="px-2 py-1 text-center lg:px-4 lg:py-2">
   <button
     className="cursor-pointer"
     onClick={() => toggleDropdownPatients(index)}
@@ -446,27 +446,19 @@ const PaymentControlCard = ({
   </button>
 
   {isDropdownOpenPatients === index && (
-    <div
-      ref={outSideClickRef}
-      className="absolute -mt-23 ml-10 md:ml-16 shadow-lg rounded z-20"
-    >
-      <DropDownDashActions
-        onOpenModal={() => handleOpenModalForBilling(item)}
-        onPartialPayment={() =>
-          handleOpenPartialPayment(item)
-        }
-        onConfirmedPayment={() =>
-          handleConfirmPayment(item)
-        }
-        onConfirmedBillOfSale={() =>
-          handleConfirmBillOfSale(item)
-        }
-        onEditConsultationFee={() =>
-          handleEditConsultation(item)
-        }
-      />
-    </div>
-  )}
+  <div
+    ref={outSideClickRef}
+    className="box-border absolute z-20 mt-1 border right-8 top-full border-cinza6 bg-bg2 shadow-default"
+  >
+    <DropDownDashActions
+      onOpenModal={() => handleOpenModalForBilling(item)}
+      onPartialPayment={() => handleOpenPartialPayment(item)}
+      onConfirmedPayment={() => handleConfirmPayment(item)}
+      onConfirmedBillOfSale={() => handleConfirmBillOfSale(item)}
+      onEditConsultationFee={() => handleEditConsultation(item)}
+    />
+  </div>
+)}
 </td>
 </tr>
 ))}
@@ -474,7 +466,7 @@ const PaymentControlCard = ({
 <tfoot>
   <tr>
     <td colSpan="8 lg:9" className="relative py-3">
-      <div className="flex justify-center items-center relative w-full transition-all duration-300 lg:mt-4">
+      <div className="relative flex items-center justify-center w-full transition-all duration-300 lg:mt-4">
         <button
           onClick={toggleTableSize}
           className={`absolute transform cursor-pointer transition-transform duration-300 ${
