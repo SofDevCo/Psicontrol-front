@@ -17,7 +17,7 @@ import {
   createOrUpdateCustomer,
   fetchUnmatchedPatients,
 } from "../../../service/pagesService/pagesService";
-import { showSuccessToast } from "../components/notiificationCustomerPage";
+import { showSuccessToast, showLoadingToast } from "../components/notiificationCustomerPage";
 
 registerLocale(ptBR);
 
@@ -70,6 +70,15 @@ const CreateCustomerForm = ({
     handleFetchUnmatchedPatients();
   }, []);
 
+  // Adicione este useEffect ao seu componente
+  useEffect(() => {
+    // Se o campo calendar_name estiver vazio, fechamos o dropdown e limpamos a lista
+    if (!customer.customer_calendar_name) {
+      setActiveField(null);
+      setFilteredPatients([]);
+    }
+  }, [customer.customer_calendar_name]);
+
   const handleInputChange = (e) => {
     const value = e.target.value;
 
@@ -85,6 +94,8 @@ const CreateCustomerForm = ({
         return updated;
       });
     }
+
+    setActiveField("customer_calendar_name");
 
     if (value) {
       const filtered = unmatchedPatients.filter((patient) =>
@@ -233,6 +244,7 @@ const CreateCustomerForm = ({
       showErrorToast("Preencha os campos obrigatórios!");
       return;
     }
+
     if (
       startDate &&
       (isNaN(new Date(startDate)) ||
@@ -248,64 +260,164 @@ const CreateCustomerForm = ({
       return;
     }
 
-    await handleConfirmSubmit("current_month");
+    // Mostrar toast de carregamento
+    const loading = showLoadingToast();
+
+    try {
+      // Enviar os dados para o banco de dados imediatamente
+      const response = await createOrUpdateCustomer(
+        {
+          ...customer,
+          consultation_fee: customer.consultation_fee,
+          update_from: "current_month",
+          additionalAlternatives,
+        },
+        [],
+        customer.customer_id
+      );
+
+      const data = await response.json();
+
+      // Limpar os campos do formulário imediatamente após o envio
+      setCustomer({
+        customer_name: "",
+        customer_second_name: "",
+        customer_calendar_name: "",
+        customer_cpf_cnpj: "",
+        customer_phone: "",
+        customer_email: "",
+        consultation_fee: "",
+        patient_status: true,
+        alternative_name: "",
+        alternative_cpf_cnpj: "",
+        customer_dob: "",
+        customer_emergency_contact: "",
+        customer_emergency_name: "",
+        customer_emergency_relationship: "",
+        customer_personal_message: "",
+      });
+
+      // Limpar as listas e estados adicionais
+      setAdditionalAlternatives([]);
+      setStartDate(null);
+      setFilteredPatients([]); // Limpar a lista de pacientes filtrados
+      setActiveField(null); // Desativar qualquer campo ativo
+      setInputValue(""); // Limpar o valor do input
+      setClickedOnArrow(false); // Resetar o estado do clique no ArrowIcon
+
+      // Verificar se houve erro na resposta
+      if (data.error || !response.ok) {
+        // Fechar o toast de carregamento
+        loading.closeToast();
+        showErrorToast(data.message || "Erro ao processar a solicitação!");
+        return;
+      }
+      const updatedUnmatchedPatients = unmatchedPatients.filter(
+        (patient) => patient.event_name.toLowerCase() !== customer.customer_calendar_name.toLowerCase()
+      );
+      setUnmatchedPatients(updatedUnmatchedPatients);
+      // Aguardar 3 segundos antes de fechar o toast de carregamento e mostrar o toast de sucesso
+      setTimeout(() => {
+        // Fechar o toast de carregamento
+        loading.closeToast();
+
+        // Chamar apenas a função de callback onSubmit, NÃO chamar onClose
+        onSubmit();
+
+        // Mostrar o toast de sucesso adequado
+        if (customer.customer_id) {
+          showEditToast();
+        } else {
+          showSuccessToast();
+        }
+      }, 3000);
+    } catch (error) {
+      // Fechar o toast de carregamento em caso de erro
+      loading.closeToast();
+      showErrorToast("Erro ao processar a solicitação!");
+    }
+
   };
 
   const handleConfirmSubmit = async (updateOption) => {
     setIsConfirmModalOpen(false);
 
-    const response = await createOrUpdateCustomer(
-      {
-        ...customer,
-        consultation_fee: customer.consultation_fee,
-        update_from: updateOption,
-        additionalAlternatives,
-      },
-      [],
-      customer.customer_id
-    );
+    // Mostrar toast de carregamento
+    const loading = showLoadingToast();
 
-    const data = await response.json();
+    try {
+      const response = await createOrUpdateCustomer(
+        {
+          ...customer,
+          consultation_fee: customer.consultation_fee,
+          update_from: updateOption,
+          additionalAlternatives,
+        },
+        [],
+        customer.customer_id
+      );
 
-    if (data.error) {
-      showErrorToast(data.message || "Erro ao atualizar consulta.");
-      return;
+      const data = await response.json();
+
+      // Limpar os campos do formulário imediatamente após o envio
+      setCustomer({
+        customer_name: "",
+        customer_second_name: "",
+        customer_calendar_name: "",
+        customer_cpf_cnpj: "",
+        customer_phone: "",
+        customer_email: "",
+        consultation_fee: "",
+        patient_status: true,
+        alternative_name: "",
+        alternative_cpf_cnpj: "",
+        customer_dob: "",
+        customer_emergency_contact: "",
+        customer_emergency_name: "",
+        customer_emergency_relationship: "",
+        customer_personal_message: "",
+      });
+
+      // Limpar as listas e estados adicionais
+      setAdditionalAlternatives([]);
+      setStartDate(null);
+      setFilteredPatients([]); // Limpar a lista de pacientes filtrados
+      setActiveField(null); // Desativar qualquer campo ativo
+      setInputValue(""); // Limpar o valor do input
+      setClickedOnArrow(false); // Resetar o estado do clique no ArrowIcon
+
+      // Verificar se houve erro na resposta
+      if (data.error || !response.ok) {
+        // Fechar o toast de carregamento
+        loading.closeToast();
+        showErrorToast(data.message || "Erro ao processar a solicitação!");
+        return;
+      }
+
+      const updatedUnmatchedPatients = unmatchedPatients.filter(
+        (patient) => patient.event_name.toLowerCase() !== customer.customer_calendar_name.toLowerCase()
+      );
+      setUnmatchedPatients(updatedUnmatchedPatients);
+      // Aguardar 3 segundos antes de fechar o toast de carregamento e mostrar o toast de sucesso
+      setTimeout(() => {
+        // Fechar o toast de carregamento
+        loading.closeToast();
+
+        // Chamar apenas a função de callback onSubmit, NÃO chamar onClose
+        onSubmit();
+
+        // Mostrar o toast de sucesso adequado
+        if (customer.customer_id) {
+          showEditToast();
+        } else {
+          showSuccessToast();
+        }
+      }, 3000);
+    } catch (error) {
+      // Fechar o toast de carregamento em caso de erro
+      loading.closeToast();
+      showErrorToast("Erro ao processar a solicitação!");
     }
-
-    if (!response.ok) {
-      showErrorToast(data.message || "Erro ao processar a solicitação!");
-      return;
-    }
-
-    setCustomer({
-      customer_name: "",
-      customer_second_name: "",
-      customer_calendar_name: "",
-      customer_cpf_cnpj: "",
-      customer_phone: "",
-      customer_email: "",
-      consultation_fee: "",
-      patient_status: true,
-      alternative_name: "",
-      alternative_cpf_cnpj: "",
-      customer_dob: "",
-      customer_emergency_contact: "",
-      customer_emergency_name: "",
-      customer_emergency_relationship: "",
-      customer_personal_message: "",
-    });
-
-    setAdditionalAlternatives([]);
-    onSubmit();
-    onClose();
-
-    if (customer.customer_id) {
-      showEditToast();
-    } else {
-      showSuccessToast();
-    }
-
-    setStartDate(null);
   };
 
   useEffect(() => {
@@ -413,7 +525,6 @@ const CreateCustomerForm = ({
                       value={customer.customer_calendar_name || ""}
                       onChange={handleInputChange}
                       onFocus={() => {
-                        setActiveField("customer_calendar_name");
                         if (validationErrors.customer_calendar_name) {
                           setValidationErrors(prev => {
                             const updated = { ...prev };
@@ -424,7 +535,7 @@ const CreateCustomerForm = ({
                       }}
                       onBlur={() => {
                         if (!clickedOnArrow) {
-                          setTimeout(() => setActiveField(null), 200);
+                          setTimeout(() => setActiveField(null));
                         }
                       }}
                       autoComplete="off"
@@ -436,26 +547,39 @@ const CreateCustomerForm = ({
                     />
                     <div
                       className="absolute right-4 top-1/2 transform -translate-y-[30%] cursor-pointer z-20"
-                      onClick={(e) => {
-                        e.preventDefault();
+                      onMouseDown={(e) => {
+                        // Usamos onMouseDown em vez de onClick para capturar o evento antes do onBlur
+                        e.preventDefault(); // Previne o comportamento padrão
                         setClickedOnArrow(true);
-                        setTimeout(() => {
-                          setClickedOnArrow(false);
-                        }, 300);
 
+                        // Toggle do estado activeField
                         if (activeField === "customer_calendar_name") {
                           setActiveField(null);
+                          setFilteredPatients([]);
                         } else {
                           setActiveField("customer_calendar_name");
-                          if (filteredPatients.length === 0 && customer.customer_calendar_name) {
-                            const filtered = unmatchedPatients.filter((patient) =>
-                              patient.event_name.toLowerCase().includes(customer.customer_calendar_name.toLowerCase())
-                            );
-                            setFilteredPatients(filtered);
-                          } else if (filteredPatients.length === 0) {
-                            setFilteredPatients(unmatchedPatients);
-                          }
+
+                          // Recarregar a lista de pacientes não associados
+                          fetchUnmatchedPatients().then(response => {
+                            if (response) {
+                              setUnmatchedPatients(response);
+
+                              if (customer.customer_calendar_name) {
+                                const filtered = response.filter((patient) =>
+                                  patient.event_name.toLowerCase().includes(customer.customer_calendar_name.toLowerCase())
+                                );
+                                setFilteredPatients(filtered);
+                              } else {
+                                setFilteredPatients(response);
+                              }
+                            }
+                          });
                         }
+
+                        // Definir um timeout maior para resetar clickedOnArrow
+                        setTimeout(() => {
+                          setClickedOnArrow(false);
+                        }, 500);
                       }}
                     >
                       <div className={`transform transition-transform duration-300 ${activeField === "customer_calendar_name" ? "rotate-180" : ""}`}>
@@ -471,14 +595,25 @@ const CreateCustomerForm = ({
                           .map((patient) => (
                             <li
                               key={patient.id}
-                              onClick={() => {
-                                setInputValue(patient.event_name);
-                                setFilteredPatients([]);
+                              onMouseDown={(e) => {
+                                e.preventDefault(); // Previne o comportamento padrão
+                                setClickedOnArrow(true);
+
+                                // Define o valor no campo
                                 setCustomer((prev) => ({
                                   ...prev,
                                   customer_calendar_name: patient.event_name,
                                 }));
+
+                                // Limpa o estado
+                                setInputValue(patient.event_name);
                                 setActiveField(null);
+                                setFilteredPatients([]);
+
+                                // Reseta o estado após um tempo
+                                setTimeout(() => {
+                                  setClickedOnArrow(false);
+                                }, 300);
                               }}
                               className="p-3 text-sm font-bold tracking-tight border-b cursor-pointer hover:bg-bgM border-b-cinza6 text-texto2"
                             >
@@ -520,7 +655,6 @@ const CreateCustomerForm = ({
                 placeholder="XXX.XXX.XXX-XX"
                 pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}"
                 title="Insira um CPF válido com 11 dígitos. Exemplo: 123.456.789-00"
-                required
                 className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_cpf_cnpj ? "border-red-500" : "border-cinza6"} px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
               />
             </div>
@@ -552,7 +686,6 @@ const CreateCustomerForm = ({
                   placeholder="(11) 91234-5678"
                   pattern="\(?\d{2}\)?\s?\d{5}-?\d{4}"
                   title="Insira um telefone válido com DDD. Exemplo: (11) 91234-5678"
-                  required
                   className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_phone ? "border-red-500" : "border-cinza6"} px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
                 />
 

@@ -91,6 +91,81 @@ export const showEditToast = () => {
   );
 };
 
+export const showLoadingToast = () => {
+  const overlay = document.createElement("div");
+  const isMobile = window.innerWidth <= 768;
+
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(51, 184, 209, 0.3)";
+  overlay.style.zIndex = "9999";
+  overlay.style.backdropFilter = "blur(6px)";
+  document.body.appendChild(overlay);
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .Toastify__toast-container {
+      z-index: 10000 !important; /* Mais alto que o overlay */
+    }
+  `;
+  document.head.appendChild(style);
+
+  const toastId = toast(
+    <div className="flex flex-col items-center justify-center">
+      <div className="mb-4">
+        <div className="w-10 h-10 border-4 rounded-full border-primaria border-t-transparent animate-spin"></div>
+      </div>
+      <div className="text-center font-ubuntu">
+        <div className="text-[#4F4F4F] text-base lg:text-xl font-medium tracking-tight">
+          Cadastro sendo finalizado,
+        </div>
+        <div className="text-[#4F4F4F] text-base lg:text-xl font-medium tracking-tight">
+          aguarde um momento.
+        </div>
+      </div>
+    </div>,
+    {
+      style: {
+        height: isMobile ? "135px" : "207px",
+        width: isMobile ? "268px" : "360px",
+        backgroundColor: "#F5F5F5",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "8px",
+        border: "1px solid #81A0AE",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        marginLeft: "96px",
+        marginTop: "150px",
+      },
+      position: "top-center",
+      autoClose: false,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      icon: false,
+      closeButton: false,
+    }
+  );
+
+  return {
+    toastId,
+    overlay,
+    closeToast: () => {
+      toast.dismiss(toastId);
+      document.body.removeChild(overlay);
+      document.head.removeChild(style);
+    }
+  };
+};
+
 export const showArchiveToast = () => {
   const overlay = document.createElement("div");
   const isMobile = window.innerWidth <= 768;

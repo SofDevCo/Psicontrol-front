@@ -293,11 +293,11 @@ const UserPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full p-6 overflow-y-auto overflow-x-hidden">
+    <div className="flex flex-col items-center w-full p-6 overflow-x-hidden overflow-y-auto">
       <>
         <div className="w-full max-w-[1100px] mx-auto flex flex-col items-center">
           <div className="relative w-full bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
                 Meus dados
               </h2>
@@ -312,21 +312,22 @@ const UserPage = () => {
 
             <div className="flex flex-col lg:flex-row justify-start gap-x-[182px]">
               <div className="flex w-full lg:max-w-[360px] mb-6 lg:mb-0">
-                <div className="lg:w-10 lg:h-10 w-7 h-7 lg:aspect-square aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
+                {/* For screens >= 1100px (lg) - Original Layout */}
+                <div className="hidden lg:flex lg:w-10 lg:h-10 aspect-square bg-[#33b8d1] rounded-full justify-center items-center">
                   {userData.photoUrl ? (
                     <img
                       src={userData.photoUrl}
                       alt="Foto de perfil"
-                      className="w-full h-full object-cover rounded-full"
+                      className="object-cover w-full h-full rounded-full"
                     />
                   ) : (
-                    <span className="text-white font-bold text-xl">
+                    <span className="flex items-center justify-center text-xl font-bold text-white">
                       {userData.user_name.charAt(0)}
                     </span>
                   )}
                 </div>
 
-                <div>
+                <div className="hidden lg:block">
                   <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
                     {userData.user_name}
                   </div>
@@ -341,7 +342,7 @@ const UserPage = () => {
                     <span className="text-[#5c5c5c]">{userData.crp_number}</span>
                   </div>
                   <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
-                    <span className="mr-1 whitespace-nowrap self-start">
+                    <span className="self-start mr-1 whitespace-nowrap">
                       E-mail:
                     </span>
                     <span className="text-[#5c5c5c] break-all">
@@ -354,10 +355,60 @@ const UserPage = () => {
                     <span className="text-[#5c5c5c]">{userData.user_phone}</span>
                   </div>
                 </div>
+
+                {/* For screens < 1100px - New Aligned Layout */}
+                <div className="flex flex-col w-full lg:hidden">
+                  <div className="flex mb-4">
+                    <div className="w-7 h-7 aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
+                      {userData.photoUrl ? (
+                        <img
+                          src={userData.photoUrl}
+                          alt="Foto de perfil"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      ) : (
+                        <span className="text-xl font-bold text-white">
+                          {userData.user_name.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
+                      {userData.user_name}
+                    </div>
+                  </div>
+
+                  {/* Aligned fields section for mobile */}
+                  <div className="ml-0">
+                    <div className="text-[#232323] text-[17px] font-normal tracking-tight">
+                      <span>CPF/CNPJ: </span>
+                      <span className="text-[#5c5c5c]">
+                        {userData.user_cpf || userData.user_cnpj}
+                      </span>
+                    </div>
+                    <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                      <span>CRP: </span>
+                      <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+                    </div>
+                    <div className="flex text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
+                      <span className="self-start mr-1 whitespace-nowrap">
+                        E-mail:
+                      </span>
+                      <span className="text-[#5c5c5c] break-all">
+                        {userData.user_email}
+                      </span>
+                    </div>
+
+                    <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
+                      <span>Telefone: </span>
+                      <span className="text-[#5c5c5c]">{userData.user_phone}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="w-full lg:max-w-[520px] lg:ml-[30px]">
-                <div className="text-black text-xl  font-medium font-['Ubuntu'] mb-2">
+                <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2">
                   Dados para recibo
                 </div>
                 <div className="text-[#232323] text-[17px] font-normal tracking-tight">
@@ -391,7 +442,7 @@ const UserPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4 justify-between">
+          <div className="flex flex-wrap items-start justify-between w-full gap-4 lg:flex-nowrap lg:space-x-4">
             <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex justify-between">
                 <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
@@ -404,7 +455,7 @@ const UserPage = () => {
                   <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
                     Trocar de conta
                   </span>
-                  <span className="lg:ml-1 ml-2">
+                  <span className="ml-2 lg:ml-1">
                     <RefreshIcon />
                   </span>
                 </button>
@@ -459,7 +510,7 @@ const UserPage = () => {
               {isModalOpen && (
                 <div className="fixed inset-0 z-30 flex items-center backdrop-blur-[6px] justify-center bg-[#33B8D14D] bg-opacity-30">
                   <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg">
-                    <div className="w-full text-center mx-auto mb-12">
+                    <div className="w-full mx-auto mb-12 text-center">
                       <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                         Você tem certeza que <br />
                         deseja
@@ -491,7 +542,7 @@ const UserPage = () => {
               {isConfirmationModalOpen && (
                 <div className="fixed inset-0 z-30 flex items-center justify-center backdrop-blur-[6px] bg-[#33B8D14D] bg-opacity-30">
                   <div className="w-[335px] h-[202px] bg-white rounded-lg border-2 border-[#81a0ae] p-6 shadow-lg transform translate-x-[117px] translate-y-[-169px]">
-                    <div className="w-full text-center mx-auto mb-12">
+                    <div className="w-full mx-auto mb-12 text-center">
                       <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                         Você tem certeza que deseja
                         <br />
@@ -524,13 +575,13 @@ const UserPage = () => {
               )}
             </div>
 
-            <div className="flex flex-wrap lg:flex-nowrap w-full lg:space-x-4 items-start gap-4">
+            <div className="flex flex-wrap items-start w-full gap-4 lg:flex-nowrap lg:space-x-4">
               <div className="w-full lg:max-w-[520px] h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                     Mensagem de cobrança
                   </h3>
-                  <div className="flex items-center relative">
+                  <div className="relative flex items-center">
                     <button
                       onClick={() => isEditingMessage && setIsDropdownOpen(!isDropdownOpen)}
                       disabled={!isEditingMessage}
@@ -540,7 +591,7 @@ const UserPage = () => {
                     </button>
 
                     {isEditingMessage && isDropdownOpen && (
-                      <div ref={dropdownRef} className="absolute top-full mt-1 lg:mt-0 right-0 z-10">
+                      <div ref={dropdownRef} className="absolute right-0 z-10 mt-1 top-full lg:mt-0">
                         <VariableDropdown onSelectVariable={handleSelectVariable} />
                       </div>
                     )}
@@ -593,8 +644,8 @@ const UserPage = () => {
           {isEditing && (
             <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-[#33B8D14D] backdrop-blur-[6px]">
               <div className="w-[90%] lg:max-w-[1076px] max-h-[90vh] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] shadow-lg p-6 lg:p-8 overflow-y-auto m-auto">
-                <div className="flex flex-col lg:flex-row gap-6 lg:ml-9">
-                  <div className="space-y-6 mr-0 lg:mr-20">
+                <div className="flex flex-col gap-6 lg:flex-row lg:ml-9">
+                  <div className="mr-0 space-y-6 lg:mr-20">
                     <h2 className="text-lg lg:text-[25px] font-medium text-[#0082ba] font-['Ubuntu']">
                       Editar meus dados
                     </h2>
@@ -627,7 +678,7 @@ const UserPage = () => {
                       />
                     </div>
 
-                    <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="flex flex-col gap-4 lg:flex-row">
                       <div>
                         <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
                           Telefone
