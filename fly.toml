@@ -22,6 +22,9 @@ strategy = "rolling"
 [[services]]
   http_checks = []
   internal_port = 80
+  auto_stop_machines = "off"
+  auto_start_machines = false
+  min_machines_running = 1
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
