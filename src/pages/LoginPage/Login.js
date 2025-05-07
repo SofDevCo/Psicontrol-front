@@ -5,13 +5,10 @@ import BoxBlue from "./images/BoxBlue.png";
 import BoxBlueCourt from "./images/BoxBlueCourt.png";
 
 const Login = () => {
-  const handleLogin = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/google`);
-    const data = await response.json();
-
-    if (data.authUrl) {
-      window.location.href = data.authUrl;
-    }
+  const handleLogin = () => {
+    const stateObj = { action: "login" };
+    const state = encodeURIComponent(JSON.stringify(stateObj));
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google?state=${state}`;
   };
 
   return (

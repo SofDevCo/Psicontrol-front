@@ -240,6 +240,40 @@ const UserPage = () => {
     }));
   };
 
+  const maskCpf = (v) =>
+    v
+      .replace(/\D/g, "")
+      .slice(0, 11)
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/\.(\d{3})(\d)/, ".$1-$2");
+
+  const maskCnpj = (v) =>
+    v
+      .replace(/\D/g, "")
+      .slice(0, 14)
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/\.(\d{3})(\d)/, ".$1/$2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+
+  const handleDocumentChange = (e) => {
+    const raw = e.target.value.replace(/\D/g, "");
+    if (raw.length <= 11) {
+      setUserData((prev) => ({
+        ...prev,
+        user_cpf: maskCpf(raw),
+        user_cnpj: "",
+      }));
+    } else {
+      setUserData((prev) => ({
+        ...prev,
+        user_cpf: "",
+        user_cnpj: maskCnpj(raw),
+      }));
+    }
+  };
+
   const handleCRPChange = (e) => {
     const { name, value } = e.target;
 
@@ -339,7 +373,9 @@ const UserPage = () => {
                   </div>
                   <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                     <span>CRP: </span>
-                    <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+                    <span className="text-[#5c5c5c]">
+                      {userData.crp_number}
+                    </span>
                   </div>
                   <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
                     <span className="self-start mr-1 whitespace-nowrap">
@@ -352,7 +388,9 @@ const UserPage = () => {
 
                   <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
                     <span>Telefone: </span>
-                    <span className="text-[#5c5c5c]">{userData.user_phone}</span>
+                    <span className="text-[#5c5c5c]">
+                      {userData.user_phone}
+                    </span>
                   </div>
                 </div>
 
@@ -388,7 +426,9 @@ const UserPage = () => {
                     </div>
                     <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                       <span>CRP: </span>
-                      <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+                      <span className="text-[#5c5c5c]">
+                        {userData.crp_number}
+                      </span>
                     </div>
                     <div className="flex text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
                       <span className="self-start mr-1 whitespace-nowrap">
@@ -401,7 +441,9 @@ const UserPage = () => {
 
                     <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
                       <span>Telefone: </span>
-                      <span className="text-[#5c5c5c]">{userData.user_phone}</span>
+                      <span className="text-[#5c5c5c]">
+                        {userData.user_phone}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -432,7 +474,7 @@ const UserPage = () => {
                       ? userData.image instanceof File
                         ? userData.image.name
                         : typeof userData.image === "string" &&
-                          userData.image.includes("/")
+                            userData.image.includes("/")
                           ? userData.image.split("/").pop()
                           : userData.image
                       : "(Imagem não carregada)"}
@@ -484,10 +526,11 @@ const UserPage = () => {
                         onChange={() =>
                           openConfirmationModal(calendar.calendar_id)
                         }
-                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
-                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                          : "bg-white border-gray-300 opacity-50"
-                          }`}
+                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
+                          selectedCalendars.has(calendar.calendar_id)
+                            ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                            : "bg-white border-gray-300 opacity-50"
+                        }`}
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
                             ? "inset 0 0 0 3px white"
@@ -495,10 +538,11 @@ const UserPage = () => {
                         }}
                       />
                       <span
-                        className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
-                          ? "text-[#5c5c5c]"
-                          : "text-gray-500 opacity-50"
-                          }`}
+                        className={`font-medium ${
+                          selectedCalendars.has(calendar.calendar_id)
+                            ? "text-[#5c5c5c]"
+                            : "text-gray-500 opacity-50"
+                        }`}
                       >
                         {calendar.calendar_name}
                       </span>
@@ -514,7 +558,10 @@ const UserPage = () => {
                       <span className="text-[#5c5c5c] text-[21px] font-medium font-['Ubuntu'] tracking-tight">
                         Você tem certeza que <br />
                         deseja
-                        <span className="text-[#0082ba]"> trocar de conta? </span>
+                        <span className="text-[#0082ba]">
+                          {" "}
+                          trocar de conta?{" "}
+                        </span>
                       </span>
                     </div>
 
@@ -551,7 +598,9 @@ const UserPage = () => {
                             desativar a agenda?
                           </span>
                         ) : (
-                          <span className="text-[#0082ba]">ativar a agenda?</span>
+                          <span className="text-[#0082ba]">
+                            ativar a agenda?
+                          </span>
                         )}
                       </span>
                     </div>
@@ -583,19 +632,25 @@ const UserPage = () => {
                   </h3>
                   <div className="relative flex items-center">
                     <button
-                      onClick={() => isEditingMessage && setIsDropdownOpen(!isDropdownOpen)}
+                      onClick={() =>
+                        isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
+                      }
                       disabled={!isEditingMessage}
                       className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer text-[#0082ba] font-bold" : "cursor-not-allowed opacity-50"}`}
                     >
-                      {isEditingMessage ? '{ Variáveis }' : <VariableIcon />}
+                      {isEditingMessage ? "{ Variáveis }" : <VariableIcon />}
                     </button>
 
                     {isEditingMessage && isDropdownOpen && (
-                      <div ref={dropdownRef} className="absolute right-0 z-10 mt-1 top-full lg:mt-0">
-                        <VariableDropdown onSelectVariable={handleSelectVariable} />
+                      <div
+                        ref={dropdownRef}
+                        className="absolute right-0 z-10 mt-1 top-full lg:mt-0"
+                      >
+                        <VariableDropdown
+                          onSelectVariable={handleSelectVariable}
+                        />
                       </div>
                     )}
-
 
                     {isEditingMessage ? (
                       <button
@@ -699,9 +754,8 @@ const UserPage = () => {
                         </label>
                         <input
                           type="text"
-                          name="user_cpf"
-                          value={userData.user_cpf || ""}
-                          onChange={handleChange}
+                          value={userData.user_cpf || userData.user_cnpj || ""}
+                          onChange={handleDocumentChange}
                           placeholder="XX.XXX.XXX/0001-XX"
                           className="w-full lg:w-[212px] h-[50px] bg-bg1 rounded-[15px] border-2 border-[#81a0ae] px-[16px] text-[#5c5c5c] text-sm font-normal font-['Open Sans'] focus:outline-none focus:ring"
                         />
