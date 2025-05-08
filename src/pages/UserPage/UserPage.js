@@ -4,7 +4,7 @@ import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
 import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
-import { showLoadingToast } from "../CustomerPage/components/notiificationCustomerPage";
+import { showLoadingToast, showSuccessToast, showSuccessCalendarToast, showLoadingCalendarToast } from "../CustomerPage/components/notiificationCustomerPage";
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -330,9 +330,17 @@ const UserPage = () => {
     setActiveCalendarId(null);
   };
 
-  const handleToggleCalendar = (calendarId) => {
-    toggleCalendar(calendarId);
+  const handleToggleCalendar = async (calendarId) => {
     closeConfirmationModal();
+  
+    const loadingToast = showLoadingCalendarToast();
+  
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  
+    loadingToast.closeToast();
+    await toggleCalendar(calendarId);
+  
+    showSuccessCalendarToast();
   };
 
   const handleSelectVariable = (variable) => {
