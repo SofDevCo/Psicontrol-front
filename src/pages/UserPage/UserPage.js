@@ -4,6 +4,7 @@ import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
 import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
+import { showLoadingToast } from "../CustomerPage/components/notiificationCustomerPage";
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -147,6 +148,10 @@ const UserPage = () => {
   };
 
   const handleSave = async () => {
+    const loadingToast = showLoadingToast();
+  
+    const startTime = Date.now();
+  
     const formData = new FormData();
     formData.append("user_cpf", userData.user_cpf || "");
     formData.append("user_cnpj", userData.user_cnpj || "");
@@ -155,11 +160,11 @@ const UserPage = () => {
     formData.append("user_phone", userData.user_phone || "");
     formData.append("user_message", userData.user_message || "");
     formData.append("clinic_name", userData.clinic_name || "");
-
+  
     if (userData.image instanceof File) {
       formData.append("image", userData.image);
     }
-
+  
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/user/save-users`,
       {
@@ -170,9 +175,19 @@ const UserPage = () => {
         body: formData,
       }
     );
-
+  
     const responseData = await response.json();
-
+  
+   
+    const elapsed = Date.now() - startTime;
+    const minDuration = 2000; 
+    if (elapsed < minDuration) {
+      await new Promise(resolve => setTimeout(resolve, minDuration - elapsed));
+    }
+  
+    
+    loadingToast.closeToast();
+  
     if (!response.ok) {
       if (responseData.error?.includes("E-mail inválido")) {
         showErrorToast("E-mail inválido. Verifique e tente novamente.");
@@ -183,14 +198,16 @@ const UserPage = () => {
       }
       return;
     }
-
+  
     setUserData((prevData) => ({
       ...prevData,
       ...responseData,
     }));
-
+  
     setRefreshKey((prevKey) => prevKey + 1);
     setIsEditing(false);
+  
+    
     showAlteredToast();
   };
 

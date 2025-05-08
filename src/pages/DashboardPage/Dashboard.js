@@ -430,6 +430,7 @@ const DashBoard = () => {
 
   useEffect(() => {
     const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 1);
     const initialMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
     const initialYear = String(currentDate.getFullYear());
 
@@ -748,8 +749,8 @@ const DashBoard = () => {
         <>
           <div className="flex justify-center gap-1 mt-16 lg:mt-32">
             <div className="w-full">
-              <div className="lg:hidden flex flex-col w-full">
-                <div className="w-full flex justify-center mb-8">
+              <div className="flex flex-col w-full lg:hidden">
+                <div className="flex justify-center w-full mb-8">
                   <Months
                     onMonthChange={handleMonthChange}
                     onYearChange={handleYearChange}
@@ -782,8 +783,8 @@ const DashBoard = () => {
                   />
                 </div>
 
-                <div className="flex justify-end pr-0 pl-4 mb-1">
-                  <div className="group z-10">
+                <div className="flex justify-end pl-4 pr-0 mb-1">
+                  <div className="z-10 group">
                     <FilterStatusDashBoard
                       selectedStatus={selectedStatus}
                       onChangeStatus={setSelectedStatus}
@@ -801,7 +802,7 @@ const DashBoard = () => {
                 }}
               />
 
-              <div className="hidden lg:flex justify-center gap-2">
+              <div className="justify-center hidden gap-2 lg:flex">
                 <Months
                   onMonthChange={handleMonthChange}
                   onYearChange={handleYearChange}
@@ -830,7 +831,7 @@ const DashBoard = () => {
                   isCurrency={true}
                 />
 
-                <div className="group lg:mt-20 lg:mb-2 z-10">
+                <div className="z-10 group lg:mt-20 lg:mb-2">
                   <FilterStatusDashBoard
                     selectedStatus={selectedStatus}
                     onChangeStatus={setSelectedStatus}
@@ -846,7 +847,7 @@ const DashBoard = () => {
               isTableExpanded ? "h-auto" : "min-h-screen"
             }`}
           >
-            <table className="table-fixed w-full bg-bg1 mt-1 rounded-B15 text-left overflow-x-auto">
+            <table className="w-full mt-1 overflow-x-auto text-left table-fixed bg-bg1 rounded-B15">
               <thead>
                 <tr>
                   <th className="text-center align-middle min-w-[100px] border-b border-b-cinza6 text-primaria lg:text-lg text-F8 font-ubuntu font-medium tracking-tight px-2 lg:px-4 py-1 lg:py-2">
@@ -919,7 +920,7 @@ const DashBoard = () => {
                         </td>
                         <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
                           <span>{patient.num_consultations || "-"}</span>
-                          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-bg2 text-text2 text-xs font-normal py-1 px-2 rounded shadow-md whitespace-nowrap lg:hidden">
+                          <div className="absolute hidden px-2 py-1 mb-2 text-xs font-normal transform -translate-x-1/2 rounded shadow-md left-1/2 bottom-full group-hover:block bg-bg2 text-text2 whitespace-nowrap lg:hidden">
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
@@ -934,7 +935,7 @@ const DashBoard = () => {
                           R$ {patient.total_consultation_fee || "0,00"}
                         </td>
                         <td>
-                          <div className="flex items-center justify-center text-center h-full">
+                          <div className="flex items-center justify-center h-full text-center">
                             {patient.sending_invoice ? (
                               <VerifyGreenIcon />
                             ) : (
@@ -943,7 +944,7 @@ const DashBoard = () => {
                           </div>
                         </td>
                         <td>
-                          <div className="flex items-center justify-center text-center h-full">
+                          <div className="flex items-center justify-center h-full text-center">
                             {" "}
                             {patient.payment_status === "pago" ? (
                               <VerifyGreenIcon />
@@ -961,7 +962,7 @@ const DashBoard = () => {
                         </td>
 
                         <td>
-                          <div className="flex items-center justify-center text-center h-full">
+                          <div className="flex items-center justify-center h-full text-center">
                             {patient.bill_of_sale ? (
                               <VerifyGreenIcon />
                             ) : (
@@ -970,7 +971,7 @@ const DashBoard = () => {
                           </div>
                         </td>
 
-                        <td className="text-center px-2 lg:px-4 py-1 lg:py-2">
+                        <td className="px-2 py-1 text-center lg:px-4 lg:py-2">
                           <button
                             className="cursor-pointer"
                             onClick={() =>
@@ -1070,24 +1071,24 @@ const DashBoard = () => {
           {showUnmatchedPatients && (
             <div className="relative mx-auto mt-[30px] box-border w-full  h-[122px] lg:h-[263px] lg:rounded-B15 rounded-B10 lg:border-[3px] border overflow-y-auto border-solid border-cinza6 bg-bg1 ">
               {isSearchBarOpen && (
-                <div className="absolute inset-0 bg-bg1 bg-opacity-30 backdrop-blur-sm h-auto z-10 "></div>
+                <div className="absolute inset-0 z-10 h-auto bg-bg1 bg-opacity-30 backdrop-blur-sm "></div>
               )}
-              <h2 className="mt-6 text-primaria lg:text-F25 text-sm font-normal font-ubuntu px-4">
+              <h2 className="px-4 mt-6 text-sm font-normal text-primaria lg:text-F25 font-ubuntu">
                 Eventos não vinculados
               </h2>
               {loadingUnmatched ? (
-                <p className="text-center text-texto2 italic mt-4">
+                <p className="mt-4 italic text-center text-texto2">
                   Carregando pacientes não vinculados...
                 </p>
               ) : unmatchedPatients.length > 0 ? (
-                <table className="min-w-full bg-bg1 mt-2">
+                <table className="min-w-full mt-2 bg-bg1">
                   <tbody>
                     {unmatchedPatients.map((event, index) => (
                       <tr
                         key={event.id}
-                        className="border-b border-b-cinza6 relative"
+                        className="relative border-b border-b-cinza6"
                       >
-                        <td className="px-4 py-2 flex items-center justify-between lg:text-F15 text-F8">
+                        <td className="flex items-center justify-between px-4 py-2 lg:text-F15 text-F8">
                           <span>{event.event_name}</span>
                           <button
                             className="cursor-pointer"
@@ -1128,7 +1129,7 @@ const DashBoard = () => {
                   </tbody>
                 </table>
               ) : !loadingUnmatched ? (
-                <p colSpan="4" className="text-center px-4 py-2">
+                <p colSpan="4" className="px-4 py-2 text-center">
                   Nenhum paciente não encontrado
                 </p>
               ) : null}
