@@ -102,7 +102,7 @@ const DashBoard = () => {
       alert("Paciente não encontrado.");
       return;
     }
-
+    
     const response = await revertSendingInvoice(
       customer.customer_id,
       selectedYear,
@@ -281,19 +281,12 @@ const DashBoard = () => {
     fetchPatientData();
   }, []);
 
+  const [linkEventId, setLinkEventId] = useState(null);
+  
   const handleLinkPatient = async (customer_id) => {
-    if (selectedEvent === null || selectedEvent === undefined) {
+    if (!linkEventId || !customer_id) {
       return null;
     }
-
-    const group = unmatchedPatients[selectedEvent];
-
-    if (!customer_id || !group) {
-      return null;
-    }
-
-    const eventIdToLink = group.events[0].google_event_id;
-
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/events/linkCustomerToEvent`,
       {
@@ -303,12 +296,11 @@ const DashBoard = () => {
           Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
         },
         body: JSON.stringify({
-          eventId: eventIdToLink,
+          eventId: linkEventId,
           customer_id: customer_id,
         }),
       }
     );
-
     if (response.ok) {
       handleFetchUnmatchedPatients();
       setIsSearchBarOpen(false);
@@ -350,6 +342,7 @@ const DashBoard = () => {
     const groupIndex = unmatchedPatients.indexOf(group);
     if (groupIndex !== -1) {
       setSelectedEvent(groupIndex);
+      setLinkEventId(group.events[0].google_event_id);
       if (!patients || patients.length === 0) {
         await fetchPatientData();
       }
@@ -1224,6 +1217,7 @@ const DashBoard = () => {
                 Não
               </button>
               <button
+                type="button" 
                 onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
                 className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm bg-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
               >

@@ -6,23 +6,20 @@ export const showSaveToast = () => {
 
   const isMobile = window.innerWidth <= 768;
 
-  // Cria o elemento overlay
+
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
   overlay.style.left = "0";
   overlay.style.width = "100%";
   overlay.style.height = "100%";
-  overlay.style.backgroundColor = "#33B8D14D"; // Fundo semi-transparente
-  overlay.style.zIndex = "30"; // Coloca o overlay acima de outros elementos
+  overlay.style.backgroundColor = "#33B8D14D";
+  overlay.style.zIndex = "30";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
-
-  // Função para remover o overlay
   const removeOverlay = () => document.body.removeChild(overlay);
 
-  // Exibe o toast com o overlay
   toast.success(
     <div
       style={{
@@ -61,9 +58,9 @@ export const showSaveToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Alinha ao centro horizontalmente no mobile
-        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Alinha ao centro verticalmente no mobile
-        zIndex: "1000", // Coloca o toast acima do overlay
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px",
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px",
+        zIndex: "1000",
       },
       position: "top-center",
       autoClose: 1500,
@@ -73,7 +70,7 @@ export const showSaveToast = () => {
       draggable: true,
       progress: undefined,
       icon: false,
-      onClose: removeOverlay, // Remove o overlay ao fechar o toast
+      onClose: removeOverlay,
     }
   );
   
@@ -84,26 +81,22 @@ export const showDeleteToast = () => {
 
   const isMobile = window.innerWidth <= 768;
 
-  // Cria o overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
   overlay.style.left = "0";
   overlay.style.width = "100%";
   overlay.style.height = "100%";
-  overlay.style.backgroundColor = "#33B8D14D"; // Fundo semi-transparente
-  overlay.style.zIndex = "30"; // Coloca o overlay acima do conteúdo
+  overlay.style.backgroundColor = "#33B8D14D";
+  overlay.style.zIndex = "30";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
 
-  // Remove o overlay quando a notificação fecha
   const removeOverlay = () => document.body.removeChild(overlay);
 
-  // Adiciona o overlay ao body
   document.body.appendChild(overlay);
 
-  // Exibe o toast
   toast.success(
     <div
       style={{
@@ -174,9 +167,9 @@ export const showDeleteToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Centraliza horizontalmente no mobile
-        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Centraliza verticalmente no mobile
-        zIndex: "1000", // Coloca o toast acima do overlay
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px",
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px",
+        zIndex: "1000",
       },
       position: "top-center",
       autoClose: 1500,
@@ -186,7 +179,7 @@ export const showDeleteToast = () => {
       draggable: true,
       progress: undefined,
       icon: false,
-      onClose: removeOverlay, // Remove o overlay ao fechar o toast
+      onClose: removeOverlay,
     }
   );
   
@@ -197,22 +190,19 @@ export const showLastMonthToast = () => {
 
   const isMobile = window.innerWidth <= 768;
 
-  // Cria o elemento overlay
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
   overlay.style.left = "0";
   overlay.style.width = "100%";
   overlay.style.height = "100%";
-  overlay.style.backgroundColor = "#33B8D14D"; // Fundo semi-transparente
-  overlay.style.zIndex = "30"; // Coloca o overlay acima de outros elementos
+  overlay.style.backgroundColor = "#33B8D14D";
+  overlay.style.zIndex = "30";
   overlay.style.backdropFilter = "blur(6px)";
   document.body.appendChild(overlay);
 
-  // Função para remover o overlay
   const removeOverlay = () => document.body.removeChild(overlay);
 
-  // Exibe o toast com o overlay
   toast.success(
     <div
       style={{
@@ -283,9 +273,9 @@ export const showLastMonthToast = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px", // Centraliza horizontalmente no mobile
-        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px", // Centraliza verticalmente no mobile
-        zIndex: "1000", // Coloca o toast acima do overlay
+        marginLeft: isMobile ? "calc(50vw - 134px)" : "95px",
+        marginTop: isMobile ? "calc(50vh - 192.5px)" : "104px",
+        zIndex: "1000",
       },
       position: "top-center",
       autoClose: 1500,
@@ -295,7 +285,7 @@ export const showLastMonthToast = () => {
       draggable: true,
       progress: undefined,
       icon: false,
-      onClose: removeOverlay, // Remove o overlay ao fechar o toast
+      onClose: removeOverlay,
     }
   );
 };

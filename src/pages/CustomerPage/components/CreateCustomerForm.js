@@ -70,9 +70,9 @@ const CreateCustomerForm = ({
     handleFetchUnmatchedPatients();
   }, []);
 
-  // Adicione este useEffect ao seu componente
+  
   useEffect(() => {
-    // Se o campo calendar_name estiver vazio, fechamos o dropdown e limpamos a lista
+    
     if (!customer.customer_calendar_name) {
       setActiveField(null);
       setFilteredPatients([]);
@@ -260,11 +260,11 @@ const CreateCustomerForm = ({
       return;
     }
 
-    // Mostrar toast de carregamento
+
     const loading = showLoadingToast();
 
     try {
-      // Enviar os dados para o banco de dados imediatamente
+
       const response = await createOrUpdateCustomer(
         {
           ...customer,
@@ -278,7 +278,7 @@ const CreateCustomerForm = ({
 
       const data = await response.json();
 
-      // Limpar os campos do formulário imediatamente após o envio
+
       setCustomer({
         customer_name: "",
         customer_second_name: "",
@@ -297,17 +297,16 @@ const CreateCustomerForm = ({
         customer_personal_message: "",
       });
 
-      // Limpar as listas e estados adicionais
       setAdditionalAlternatives([]);
       setStartDate(null);
-      setFilteredPatients([]); // Limpar a lista de pacientes filtrados
-      setActiveField(null); // Desativar qualquer campo ativo
-      setInputValue(""); // Limpar o valor do input
-      setClickedOnArrow(false); // Resetar o estado do clique no ArrowIcon
+      setFilteredPatients([]);
+      setActiveField(null);
+      setInputValue("");
+      setClickedOnArrow(false);
 
-      // Verificar se houve erro na resposta
+
       if (data.error || !response.ok) {
-        // Fechar o toast de carregamento
+
         loading.closeToast();
         showErrorToast(data.message || "Erro ao processar a solicitação!");
         return;
@@ -316,15 +315,13 @@ const CreateCustomerForm = ({
         (patient) => patient.event_name.toLowerCase() !== customer.customer_calendar_name.toLowerCase()
       );
       setUnmatchedPatients(updatedUnmatchedPatients);
-      // Aguardar 3 segundos antes de fechar o toast de carregamento e mostrar o toast de sucesso
+
       setTimeout(() => {
-        // Fechar o toast de carregamento
+
         loading.closeToast();
 
-        // Chamar apenas a função de callback onSubmit, NÃO chamar onClose
         onSubmit();
 
-        // Mostrar o toast de sucesso adequado
         if (customer.customer_id) {
           showEditToast();
         } else {
@@ -332,7 +329,7 @@ const CreateCustomerForm = ({
         }
       }, 3000);
     } catch (error) {
-      // Fechar o toast de carregamento em caso de erro
+
       loading.closeToast();
       showErrorToast("Erro ao processar a solicitação!");
     }
@@ -342,7 +339,6 @@ const CreateCustomerForm = ({
   const handleConfirmSubmit = async (updateOption) => {
     setIsConfirmModalOpen(false);
 
-    // Mostrar toast de carregamento
     const loading = showLoadingToast();
 
     try {
@@ -359,7 +355,6 @@ const CreateCustomerForm = ({
 
       const data = await response.json();
 
-      // Limpar os campos do formulário imediatamente após o envio
       setCustomer({
         customer_name: "",
         customer_second_name: "",
@@ -378,17 +373,15 @@ const CreateCustomerForm = ({
         customer_personal_message: "",
       });
 
-      // Limpar as listas e estados adicionais
       setAdditionalAlternatives([]);
       setStartDate(null);
-      setFilteredPatients([]); // Limpar a lista de pacientes filtrados
-      setActiveField(null); // Desativar qualquer campo ativo
-      setInputValue(""); // Limpar o valor do input
-      setClickedOnArrow(false); // Resetar o estado do clique no ArrowIcon
+      setFilteredPatients([]);
+      setActiveField(null);
+      setInputValue("");
+      setClickedOnArrow(false);
 
-      // Verificar se houve erro na resposta
       if (data.error || !response.ok) {
-        // Fechar o toast de carregamento
+
         loading.closeToast();
         showErrorToast(data.message || "Erro ao processar a solicitação!");
         return;
@@ -398,15 +391,13 @@ const CreateCustomerForm = ({
         (patient) => patient.event_name.toLowerCase() !== customer.customer_calendar_name.toLowerCase()
       );
       setUnmatchedPatients(updatedUnmatchedPatients);
-      // Aguardar 3 segundos antes de fechar o toast de carregamento e mostrar o toast de sucesso
+o
       setTimeout(() => {
-        // Fechar o toast de carregamento
+
         loading.closeToast();
 
-        // Chamar apenas a função de callback onSubmit, NÃO chamar onClose
         onSubmit();
 
-        // Mostrar o toast de sucesso adequado
         if (customer.customer_id) {
           showEditToast();
         } else {
@@ -414,7 +405,7 @@ const CreateCustomerForm = ({
         }
       }, 3000);
     } catch (error) {
-      // Fechar o toast de carregamento em caso de erro
+
       loading.closeToast();
       showErrorToast("Erro ao processar a solicitação!");
     }
@@ -548,18 +539,16 @@ const CreateCustomerForm = ({
                     <div
                       className="absolute right-4 top-1/2 transform -translate-y-[30%] cursor-pointer z-20"
                       onMouseDown={(e) => {
-                        // Usamos onMouseDown em vez de onClick para capturar o evento antes do onBlur
-                        e.preventDefault(); // Previne o comportamento padrão
+
+                        e.preventDefault();
                         setClickedOnArrow(true);
 
-                        // Toggle do estado activeField
                         if (activeField === "customer_calendar_name") {
                           setActiveField(null);
                           setFilteredPatients([]);
                         } else {
                           setActiveField("customer_calendar_name");
 
-                          // Recarregar a lista de pacientes não associados
                           fetchUnmatchedPatients().then(response => {
                             if (response) {
                               setUnmatchedPatients(response);
@@ -576,7 +565,6 @@ const CreateCustomerForm = ({
                           });
                         }
 
-                        // Definir um timeout maior para resetar clickedOnArrow
                         setTimeout(() => {
                           setClickedOnArrow(false);
                         }, 500);
@@ -596,21 +584,18 @@ const CreateCustomerForm = ({
                             <li
                               key={patient.id}
                               onMouseDown={(e) => {
-                                e.preventDefault(); // Previne o comportamento padrão
+                                e.preventDefault();
                                 setClickedOnArrow(true);
 
-                                // Define o valor no campo
                                 setCustomer((prev) => ({
                                   ...prev,
                                   customer_calendar_name: patient.event_name,
                                 }));
 
-                                // Limpa o estado
                                 setInputValue(patient.event_name);
                                 setActiveField(null);
                                 setFilteredPatients([]);
 
-                                // Reseta o estado após um tempo
                                 setTimeout(() => {
                                   setClickedOnArrow(false);
                                 }, 300);
