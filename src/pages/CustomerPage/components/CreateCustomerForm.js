@@ -391,7 +391,6 @@ const CreateCustomerForm = ({
         (patient) => patient.event_name.toLowerCase() !== customer.customer_calendar_name.toLowerCase()
       );
       setUnmatchedPatients(updatedUnmatchedPatients);
-o
       setTimeout(() => {
 
         loading.closeToast();
