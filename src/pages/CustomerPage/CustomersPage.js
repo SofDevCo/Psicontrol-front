@@ -199,7 +199,7 @@ const CustomersPage = () => {
         </div>
         </div>
       )}
-      <div className="relative items-center w-full pt-6 pl-7">
+      <div className="relative items-center w-full pt-6 pl-7 mb-10">
         <div className="relative flex items-center w-full gap-1 lg:gap-4 lg:w-auto md:w-auto">
           <div className="relative">
             <input
