@@ -1,9 +1,9 @@
-import { UserIconBorder } from "../../../icons/icons";
 import {
-  EditIcon,
-  TrashIcon,
-  ArchiveIcon,
-} from "../components/CustomersPageIcons";
+  UserIconBorder,
+  ActionModalEditIcon,
+  ActionModalTrashIcon,
+  ActionModalArchiveIcon,
+} from "../../../icons/icons";
 import { Link } from "react-router-dom";
 
 const DropDonw = ({
@@ -17,15 +17,15 @@ const DropDonw = ({
 }) => {
   return (
     <nav
-      className="box-border absolute z-20 max-w-xs p-2 mt-1 border rounded-md right-8 top-full border-cinza6 bg-bg2 shadow-default w-52"
+      className="box-border absolute z-20 max-w-xs pt-8 pl-4 mt-1 border rounded-l-md right-0 top-full border-cinza6 bg-bg2 shadow-default w-[210px] h-[189px]"
       ref={dropdownRef}
     >
-      <ul className="w-full">
+      <ul className="flex flex-col justify-between sw-full h-[140px]">
         <li className="flex items-center gap-2 mb-1">
           <UserIconBorder />
           <Link
             to={`/customers/${customerId}/profile`}
-            className="text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
+            className="text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
             Conta do paciente
           </Link>
@@ -42,9 +42,9 @@ const DropDonw = ({
               }
               openModal();
             }}
-            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
+            className="flex items-center gap-2 text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
-            <EditIcon />
+            <ActionModalEditIcon />
             Editar paciente
           </button>
         </li>
@@ -52,9 +52,9 @@ const DropDonw = ({
         <li className="flex items-center gap-2 mb-1">
           <button
             onClick={() => onArchive(customerId)}
-            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
+            className="flex items-center gap-2 text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
-            <ArchiveIcon />
+            <ActionModalArchiveIcon />
             Arquivar Paciente
           </button>
         </li>
@@ -62,9 +62,9 @@ const DropDonw = ({
         <li className="flex items-center gap-2">
           <button
             onClick={() => onDelete(customerId)}
-            className="flex items-center gap-2 text-texto2 text-[9px] lg:text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50"
+            className="flex items-center gap-2 text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
-            <TrashIcon />
+            <ActionModalTrashIcon />
             Excluir paciente
           </button>
         </li>
