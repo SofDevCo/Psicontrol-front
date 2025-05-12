@@ -22,12 +22,12 @@ const DropDownDashActions = ({
   onRevertBillOfSale,
 }) => {
   return (
-    <div className="w-52 max-w-xs p-2">
-      <ul className="w-full">
+    <div className=" w-[240px] h-[230px] max-w-xs pt-8 pl-4">
+      <ul className="flex flex-col justify-between sw-full h-[185px]">
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onOpenModal}
-            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${
+            className={`group flex items-center text-texto2 text-F15 font-normal underline underline-offset-[3px] w-full ${
               isSendingInvoice ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSendingInvoice}
@@ -51,7 +51,7 @@ const DropDownDashActions = ({
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onPartialPayment}
-            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 text-F15 font-normal underline underline-offset-[3px] w-full"
           >
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
               <PartialIcon />
@@ -63,7 +63,7 @@ const DropDownDashActions = ({
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onConfirmedPayment}
-            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
+            className={`group flex items-center text-texto2 active:text-texto2/50 text-F15 font-normal underline underline-offset-[3px] w-full ${
               isPaymentConfirmed ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isPaymentConfirmed}
@@ -89,7 +89,7 @@ const DropDownDashActions = ({
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onConfirmedBillOfSale}
-            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
+            className={`group flex items-center text-texto2 active:text-texto2/50 text-F15 font-normal underline underline-offset-[3px] w-full ${
               isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isBillOfSaleIssued}
@@ -113,7 +113,7 @@ const DropDownDashActions = ({
         <li className="flex items-center justify-between w-full">
           <button
             onClick={onEditConsultationFee}
-            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
+            className="group flex items-center text-texto2 active:text-texto2/50 text-F15 font-normal underline underline-offset-[3px] w-full"
           >
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
               <EditConsultationModalIcon />

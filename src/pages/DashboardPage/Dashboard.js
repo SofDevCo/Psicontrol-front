@@ -102,7 +102,7 @@ const DashBoard = () => {
       alert("Paciente não encontrado.");
       return;
     }
-    
+
     const response = await revertSendingInvoice(
       customer.customer_id,
       selectedYear,
@@ -282,7 +282,7 @@ const DashBoard = () => {
   }, []);
 
   const [linkEventId, setLinkEventId] = useState(null);
-  
+
   const handleLinkPatient = async (customer_id) => {
     if (!linkEventId || !customer_id) {
       return null;
@@ -1217,7 +1217,7 @@ const DashBoard = () => {
                 Não
               </button>
               <button
-                type="button" 
+                type="button"
                 onClick={() => handleLinkPatient(selectedPatient?.customer_id)}
                 className="w-[50px] lg:w-[74px] lg:h-[40px] lg:text-sm bg-primaria lg:rounded-[100px] rounded-[50px] shadow flex justify-center items-center text-texto4"
               >
