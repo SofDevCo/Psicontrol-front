@@ -308,7 +308,7 @@ const PaymentControlCard = ({
 
   return (
     <>
-     <div className="flex lg:mt-10 mt-5 ml-4 md:ml-9 lg:mx-auto justify-between box-border w-[calc(100%-32px)] md:w-[89.9%] lg:w-full h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10">
+      <div className="flex lg:mt-10 mt-5 ml-4 md:ml-9 lg:mx-auto justify-between box-border w-[calc(100%-32px)] md:w-[89.9%] lg:w-full h-auto mb-8 lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10">
         <div className="w-full">
           <div className="flex items-center justify-between p-6">
             <p className="text-sm font-medium lg:text-F25 text-primaria font-ubuntu">
@@ -371,152 +371,160 @@ const PaymentControlCard = ({
                         : "-"}
                     </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-  R${" "}
-  {parseFloat(item.consultation_fee)
-    .toFixed(2)
-    .replace(".", ",")}
-</td>
-<td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-  {item.consultation_days
-    ? item.consultation_days
-        .split(", ")
-        .map(Number)
-        .sort((a, b) => a - b)
-        .join(", ")
-    : "-"}
-</td>
-<td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
-  <span>{item.num_consultations}</span>
-  <div className="absolute hidden px-2 py-1 mb-2 text-xs font-normal transform -translate-x-1/2 rounded shadow-md left-1/2 bottom-full group-hover:block bg-bg2 text-text2 whitespace-nowrap lg:hidden">
-    Dias:{" "}
-    {item.consultation_days
-      ? item.consultation_days
-          .split(", ")
-          .map(Number)
-          .sort((a, b) => a - b)
-          .join(", ")
-      : "Sem dias"}
-  </div>
-</td>
-<td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-  R$ {item.total_consultation_fee || "0,00"}
-</td>
-<td>
-  <div className="flex items-center justify-center h-full text-center">
-    {item.sending_invoice ? (
-      <VerifyGreenIcon />
-    ) : (
-      <CrossIcon />
-    )}
-  </div>
-</td>
-<td>
-  <div className="flex items-center justify-center h-full text-center">
-    {" "}
-    {item.payment_status === "pago" ? (
-      <VerifyGreenIcon />
-    ) : item.payment_status === "parcial" ? (
-      <span className="text-texto2 lg:text-F15 text-F10 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
-        R${" "}
-        {parseFloat(item.payment_amount || 0)
-          .toFixed(2)
-          .replace(".", ",")}
-      </span>
-    ) : (
-      <CrossIcon />
-    )}{" "}
-  </div>
-</td>
-<td>
-  <div className="flex items-center justify-center h-full text-center">
-    {item.bill_of_sale ? (
-      <VerifyGreenIcon />
-    ) : (
-      <CrossIcon />
-    )}
-  </div>
-</td>
+                      R${" "}
+                      {parseFloat(item.consultation_fee)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                    </td>
+                    <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                      {item.consultation_days
+                        ? item.consultation_days
+                            .split(", ")
+                            .map(Number)
+                            .sort((a, b) => a - b)
+                            .join(", ")
+                        : "-"}
+                    </td>
+                    <td className="relative text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
+                      <span>{item.num_consultations}</span>
+                      <div className="absolute hidden px-2 py-1 mb-2 text-xs font-normal transform -translate-x-1/2 rounded shadow-md left-1/2 bottom-full group-hover:block bg-bg2 text-text2 whitespace-nowrap lg:hidden">
+                        Dias:{" "}
+                        {item.consultation_days
+                          ? item.consultation_days
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
+                          : "Sem dias"}
+                      </div>
+                    </td>
+                    <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
+                      R$ {item.total_consultation_fee || "0,00"}
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-center h-full text-center">
+                        {item.sending_invoice ? (
+                          <VerifyGreenIcon />
+                        ) : (
+                          <CrossIcon />
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-center h-full text-center">
+                        {" "}
+                        {item.payment_status === "pago" ? (
+                          <VerifyGreenIcon />
+                        ) : item.payment_status === "parcial" ? (
+                          <span className="text-texto2 lg:text-F15 text-F10 font-semibold font-['Open Sans'] tracking-tight rounded-B15 border-2 border-aviso">
+                            R${" "}
+                            {parseFloat(item.payment_amount || 0)
+                              .toFixed(2)
+                              .replace(".", ",")}
+                          </span>
+                        ) : (
+                          <CrossIcon />
+                        )}{" "}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-center h-full text-center">
+                        {item.bill_of_sale ? (
+                          <VerifyGreenIcon />
+                        ) : (
+                          <CrossIcon />
+                        )}
+                      </div>
+                    </td>
 
-<td className="px-2 py-1 text-center lg:px-4 lg:py-2">
-  <button
-    className="cursor-pointer"
-    onClick={() => toggleDropdownPatients(index)}
-  >
-    <HamburguerIcon />
-  </button>
+                    <td className="relative px-2 py-1 text-center lg:px-4 lg:py-2">
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => toggleDropdownPatients(index)}
+                      >
+                        <HamburguerIcon />
+                      </button>
 
-  {isDropdownOpenPatients === index && (
-  <div
-    ref={outSideClickRef}
-    className="box-border absolute z-20 mt-1 border right-8 top-full border-cinza6 bg-bg2 shadow-default"
-  >
-    <DropDownDashActions
-      onOpenModal={() => handleOpenModalForBilling(item)}
-      onPartialPayment={() => handleOpenPartialPayment(item)}
-      onConfirmedPayment={() => handleConfirmPayment(item)}
-      onConfirmedBillOfSale={() => handleConfirmBillOfSale(item)}
-      onEditConsultationFee={() => handleEditConsultation(item)}
-    />
-  </div>
-)}
-</td>
-</tr>
-))}
-</tbody>
-<tfoot>
-  <tr>
-    <td colSpan="8 lg:9" className="relative py-3">
-      <div className="relative flex items-center justify-center w-full transition-all duration-300 lg:mt-4">
-        <button
-          onClick={toggleTableSize}
-          className={`absolute transform cursor-pointer transition-transform duration-300 ${
-            isTableExpanded ? "rotate-180" : "rotate-0"
-          }`}
-        >
-          <div className="lg:w-[452px] w-[263px] h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3"></div>
-          <ArrowDownIcon />
-        </button>
+                      {isDropdownOpenPatients === index && (
+                        <div
+                          ref={outSideClickRef}
+                          className="box-border absolute z-20 mt-1 border right-8 top-full border-cinza6 bg-bg2 shadow-default"
+                        >
+                          <DropDownDashActions
+                            onOpenModal={() => handleOpenModalForBilling(item)}
+                            onPartialPayment={() =>
+                              handleOpenPartialPayment(item)
+                            }
+                            onConfirmedPayment={() =>
+                              handleConfirmPayment(item)
+                            }
+                            onConfirmedBillOfSale={() =>
+                              handleConfirmBillOfSale(item)
+                            }
+                            onEditConsultationFee={() =>
+                              handleEditConsultation(item)
+                            }
+                          />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="8 lg:9" className="relative py-3">
+                  <div className="relative flex items-center justify-center w-full transition-all duration-300 lg:mt-4">
+                    <button
+                      onClick={toggleTableSize}
+                      className={`absolute transform cursor-pointer transition-transform duration-300 ${
+                        isTableExpanded ? "rotate-180" : "rotate-0"
+                      }`}
+                    >
+                      <div className="lg:w-[452px] w-[263px] h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3"></div>
+                      <ArrowDownIcon />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        {isBillingModalOpen && selectedPatient && (
+          <BillingDashBoard
+            onClose={closeBillingModal}
+            onSendWhatsApp={() => handleSendWhatsApp(selectedPatient)}
+            onSendEmail={() => handleSendEmail(selectedPatient)}
+            message={billingMessage}
+          />
+        )}
+        {isEditModalOpen &&
+          selectedMonthForEdit &&
+          selectedYearForEdit &&
+          selectedCustomerForEdit && (
+            <EditConsultationModalPaymentControl
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              selectedMonth={selectedMonthForEdit}
+              selectedYear={selectedYearForEdit}
+              customerId={selectedCustomerForEdit}
+              updateBillingRecords={updateBillingRecords}
+            />
+          )}
+        <>
+          {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
+            <ModalPaymentDash
+              onClose={() => setIsPartialPaymentModalOpen(false)}
+              onSave={handleSavePartialPayment}
+              totalAmount={
+                selectedPatientForPartialPayment.total_consultation_fee
+              }
+            />
+          )}
+        </>
       </div>
-    </td>
-  </tr>
-</tfoot>
-</table>
-</div>
-{isBillingModalOpen && selectedPatient && (
-  <BillingDashBoard
-    onClose={closeBillingModal}
-    onSendWhatsApp={() => handleSendWhatsApp(selectedPatient)}
-    onSendEmail={() => handleSendEmail(selectedPatient)}
-    message={billingMessage}
-  />
-)}
-{isEditModalOpen &&
-  selectedMonthForEdit &&
-  selectedYearForEdit &&
-  selectedCustomerForEdit && (
-    <EditConsultationModalPaymentControl
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      selectedMonth={selectedMonthForEdit}
-      selectedYear={selectedYearForEdit}
-      customerId={selectedCustomerForEdit}
-      updateBillingRecords={updateBillingRecords}
-    />
-  )}
-<>
-  {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
-    <ModalPaymentDash
-      onClose={() => setIsPartialPaymentModalOpen(false)}
-      onSave={handleSavePartialPayment}
-      totalAmount={
-        selectedPatientForPartialPayment.total_consultation_fee
-      }
-    />
-  )}
-</>
-</div>
-</>
-);
+    </>
+  );
 };
 
 export default PaymentControlCard;
