@@ -519,17 +519,6 @@ const UserPage = () => {
                 <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
                   Minhas agendas
                 </h3>
-                <button
-                  onClick={openModalToChangeAccount}
-                  className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
-                >
-                  <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
-                    Trocar de conta
-                  </span>
-                  <span className="ml-2 lg:ml-1">
-                    <RefreshIcon />
-                  </span>
-                </button>
               </div>
 
               <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
