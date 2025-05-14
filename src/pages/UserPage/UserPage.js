@@ -516,18 +516,20 @@ const UserPage = () => {
           <div className="flex flex-wrap items-start justify-between w-full gap-4 lg:flex-nowrap lg:space-x-4">
             <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex justify-between">
-                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
+                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-2xl font-medium ml-2.5">
                   Minhas agendas
                 </h3>
               </div>
 
-              <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
-              <p className="text-[#8d8d8d] ml-10">
-                <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+              <p className="mt-8 ml-2.5 font-semibold">{userData.user_name}</p>
+              <p className="text-[#8d8d8d] ">
+                <span className="text-[#5c5c5c] ml-2.5 font-semibold">
+                  E-mail:
+                </span>{" "}
                 {userData.user_email}
               </p>
 
-              <div className="mt-6 ml-10">
+              <div className="mt-6 ml-2.5">
                 <h4 className="text-[#232323] text-lg font-medium">
                   Agendas sincronizadas
                 </h4>
