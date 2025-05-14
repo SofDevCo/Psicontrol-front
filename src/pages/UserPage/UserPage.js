@@ -547,7 +547,7 @@ const UserPage = () => {
                         className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
                           selectedCalendars.has(calendar.calendar_id)
                             ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                            : "bg-white border-gray-300 opacity-50"
+                            : "bg-white border-[#0082ba]"
                         }`}
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
@@ -558,8 +558,8 @@ const UserPage = () => {
                       <span
                         className={`font-medium ${
                           selectedCalendars.has(calendar.calendar_id)
-                            ? "text-[#5c5c5c]"
-                            : "text-gray-500 opacity-50"
+                            ? "text-black"
+                            : "text-black"
                         }`}
                       >
                         {calendar.calendar_name}
