@@ -659,7 +659,7 @@ const UserPage = () => {
                   <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
                     Mensagem de cobrança
                   </h3>
-                  <div className="relative flex items-center">
+                  <div className="relative flex items-center gap-4">
                     <button
                       onClick={() =>
                         isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
@@ -691,7 +691,7 @@ const UserPage = () => {
                     ) : (
                       <button
                         onClick={() => setIsEditingMessage(true)}
-                        className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                        className="flex items-center"
                       >
                         <EditIcon />
                       </button>
