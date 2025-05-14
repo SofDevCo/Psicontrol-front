@@ -437,7 +437,7 @@ const PaymentControlCard = ({
                       </div>
                     </td>
 
-                    <td className="px-2 py-1 text-center lg:px-4 lg:py-2">
+                    <td className="relative px-2 py-1 text-center lg:px-4 lg:py-2">
                       <button
                         className="cursor-pointer"
                         onClick={() => toggleDropdownPatients(index)}
