@@ -516,29 +516,20 @@ const UserPage = () => {
           <div className="flex flex-wrap items-start justify-between w-full gap-4 lg:flex-nowrap lg:space-x-4">
             <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex justify-between">
-                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
+                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-2xl font-medium ml-2.5">
                   Minhas agendas
                 </h3>
-                <button
-                  onClick={openModalToChangeAccount}
-                  className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
-                >
-                  <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
-                    Trocar de conta
-                  </span>
-                  <span className="ml-2 lg:ml-1">
-                    <RefreshIcon />
-                  </span>
-                </button>
               </div>
 
-              <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
-              <p className="text-[#8d8d8d] ml-10">
-                <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+              <p className="mt-8 ml-2.5 font-semibold">{userData.user_name}</p>
+              <p className="text-[#8d8d8d] ">
+                <span className="text-[#5c5c5c] ml-2.5 font-semibold">
+                  E-mail:
+                </span>{" "}
                 {userData.user_email}
               </p>
 
-              <div className="mt-6 ml-10">
+              <div className="mt-6 ml-2.5">
                 <h4 className="text-[#232323] text-lg font-medium">
                   Agendas sincronizadas
                 </h4>
@@ -558,7 +549,7 @@ const UserPage = () => {
                         className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
                           selectedCalendars.has(calendar.calendar_id)
                             ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                            : "bg-white border-gray-300 opacity-50"
+                            : "bg-white border-[#0082ba]"
                         }`}
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
@@ -569,8 +560,8 @@ const UserPage = () => {
                       <span
                         className={`font-medium ${
                           selectedCalendars.has(calendar.calendar_id)
-                            ? "text-[#5c5c5c]"
-                            : "text-gray-500 opacity-50"
+                            ? "text-black"
+                            : "text-black"
                         }`}
                       >
                         {calendar.calendar_name}
