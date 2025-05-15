@@ -13,10 +13,10 @@ const BillingDashBoard = ({
     <div className="fixed inset-0 bg-bgM/30 bg-opacity-50 backdrop-blur-sm flex justify-center items-start z-30">
       <div className="bg-bg1 rounded-B15 p-6 w-[90%] sm:w-[400px] lg:w-[477px] max-h-[90vh] lg:h-[521px] border border-cinza6 lg:border-[3px] mt-[18vh] flex flex-col">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-center text-primaria lg:text-[21px] text-sm font-medium font-ubuntu tracking-tight lg:ml-[74px] lg:mt-3">
+          <h2 className="text-primaria lg:text-[21px] text-base font-medium font-ubuntu tracking-tight lg:ml-[68px] lg:mt-3">
             Enviar mensagem de cobrança
           </h2>
-          <button onClick={onClose}>
+          <button className="mt-2" onClick={onClose}>
             <CloseIconMessageModal />
           </button>
         </div>
