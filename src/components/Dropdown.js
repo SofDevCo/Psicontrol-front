@@ -12,69 +12,8 @@ const Dropdown = ({
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    if (!isOpen || !dropdownRef.current || !triggerRef.current) return;
-
-    const updatePosition = () => {
-      const triggerRect = triggerRef.current.getBoundingClientRect();
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      
-      let left, top;
-      
-    
-      switch (position) {
-        case "bottom-right":
-          left = triggerRect.right - dropdownRect.width;
-          top = triggerRect.bottom + 8;
-          break;
-        case "bottom-left":
-          left = triggerRect.left;
-          top = triggerRect.bottom + 8;
-          break;
-        case "top-right":
-          left = triggerRect.right - dropdownRect.width;
-          top = triggerRect.top - dropdownRect.height - 8;
-          break;
-        case "top-left":
-          left = triggerRect.left;
-          top = triggerRect.top - dropdownRect.height - 8;
-          break;
-        default:
-          left = triggerRect.right - dropdownRect.width;
-          top = triggerRect.bottom + 8;
-      }
-      
-      if (left < 0) left = 0;
-      if (left + dropdownRect.width > viewportWidth) {
-        left = viewportWidth - dropdownRect.width;
-      }
-      
-      if (top < 0) top = 0;
-      if (top + dropdownRect.height > viewportHeight) {
-        top = viewportHeight - dropdownRect.height;
-      }
-    
-      dropdownRef.current.style.left = `${left}px`;
-      dropdownRef.current.style.top = `${top}px`;
-    };
-
-    updatePosition();
-    const handleScroll = () => {
-      onClose();
-    };
-    
-    window.addEventListener('scroll', handleScroll, true);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [isOpen, triggerRef, onClose]);
-
-  useEffect(() => {
     if (!isOpen) return;
-    
+
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
@@ -85,21 +24,21 @@ const Dropdown = ({
         onClose();
       }
     };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    
+
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, onClose, triggerRef]);
 
   const handleClickInside = (event) => {
-    const isActionElement = 
-      event.target.tagName.toLowerCase() === 'button' || 
-      event.target.closest('button') || 
+    const isActionElement =
+      event.target.tagName.toLowerCase() === "button" ||
+      event.target.closest("button") ||
       event.target.onclick ||
-      event.target.closest('[onClick]');
-      
+      event.target.closest("[onClick]");
+
     if (isActionElement) {
       onClose();
     }
@@ -109,11 +48,11 @@ const Dropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className="fixed z-50"
+      className="absolute right-0 top-full mt-1 z-50"
       style={{ width, maxHeight }}
       onClick={handleClickInside}
     >
-      <div className="bg-bg2 border border-cinza6 rounded-md shadow-default overflow-auto">
+      <div className="bg-bg2 border border-cinza6 rounded-l-md shadow-default overflow-auto">
         {children}
       </div>
     </div>

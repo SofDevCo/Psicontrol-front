@@ -4,9 +4,15 @@ import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
 import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
-import { showLoadingToast, showSuccessCalendarToast, showLoadingCalendarToast } from "../CustomerPage/components/notiificationCustomerPage";
+import { 
+  showLoadingToast,
+  showSuccessToast,
+  showSuccessCalendarToast,
+  showLoadingCalendarToast
+ } from "../CustomerPage/components/notiificationCustomerPage";
 import { PlusIcon } from "../../icons/icons";
 import ModalPaymentMethods from "./components/ModalPaymentMethods";
+
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -200,6 +206,7 @@ const UserPage = () => {
     if (userData.image instanceof File) {
       formData.append("image", userData.image);
     }
+
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/user/save-users`,
       {
@@ -213,13 +220,13 @@ const UserPage = () => {
 
     const responseData = await response.json();
 
-
     const elapsed = Date.now() - startTime;
     const minDuration = 2000;
     if (elapsed < minDuration) {
-      await new Promise(resolve => setTimeout(resolve, minDuration - elapsed));
+      await new Promise((resolve) =>
+        setTimeout(resolve, minDuration - elapsed)
+      );
     }
-
 
     loadingToast.closeToast();
 
@@ -241,8 +248,6 @@ const UserPage = () => {
 
     setRefreshKey((prevKey) => prevKey + 1);
     setIsEditing(false);
-
-
     showAlteredToast();
   };
 
@@ -391,17 +396,19 @@ const UserPage = () => {
       <>
         <div className="w-full max-w-[1100px] mx-auto flex flex-col items-center">
           <div className="relative w-full bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] lg:mt-28 mt-28 mb-3">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[#0082ba] lg:text-[25px] text-[16px] font-medium font-['Ubuntu']">
+            <div className="flex items-center justify-between mb-6 sm:ml-2.5">
+              <h2 className="text-[#0082ba] text-xl sm:text-2xl font-medium font-['Ubuntu']">
                 Meus dados
               </h2>
+
               <div className="flex flex-col items-end">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                  c className="text-[#0082ba] text-sm underline flex items-center"
                 >
-                  <div className="mr-1 mt-[-6px] relative">Editar dados</div>
+                  <div className="relative pr-1 mr-1 text-base font-medium text-sky-600">
                   <EditIcon />
+                  </div>
                 </button>
                 <button
                   onClick={() => setIsPaymentModalOpen(true)}
@@ -413,9 +420,10 @@ const UserPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row justify-start gap-x-[182px]">
+            <div className="flex flex-col lg:flex-row justify-start gap-x-[182px] sm:ml-2.5">
               <div className="flex w-full lg:max-w-[360px] mb-6 lg:mb-0">
-                <div className="hidden lg:flex lg:w-10 lg:h-10 aspect-square bg-[#33b8d1] rounded-full justify-center items-center">
+
+                <div className="hidden lg:flex lg:w-10 lg:h-10 aspect-square bg-[#33b8d1] rounded-full justify-center items-center -mt-1">
                   {userData.photoUrl ? (
                     <img
                       src={userData.photoUrl}
@@ -428,37 +436,32 @@ const UserPage = () => {
                     </span>
                   )}
                 </div>
-
-                <div className="hidden lg:block">
-                  <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-2">
+                <div className="hidden lg:block ">
+                  <div className="text-black text-xl font-medium font-['Ubuntu'] ml-4 mb-6">
                     {userData.user_name}
                   </div>
-                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight">
-                    <span>CPF/CNPJ: </span>
-                    <span className="text-[#5c5c5c]">
+                  <div className="text-texto1 -ml-10 text-[17px] font-normal tracking-tight">
+                    <span className="font-semibold">CPF/CNPJ: </span>
+                    <span className="text-texto1">
                       {userData.user_cpf || userData.user_cnpj}
                     </span>
                   </div>
-                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
-                    <span>CRP: </span>
-                    <span className="text-[#5c5c5c]">
-                      {userData.crp_number}
-                    </span>
+                  <div className="text-texto1 -ml-10 text-[17px] font-normal tracking-tight ">
+                    <span className="font-semibold">CRP: </span>
+                    <span className="text-texto1">{userData.crp_number}</span>
                   </div>
-                  <div className="flex ml-4 text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
-                    <span className="self-start mr-1 whitespace-nowrap">
+                  <div className="flex -ml-10 text-texto1 text-[17px] font-normal tracking-tight  items-start">
+                    <span className="self-start mr-1 font-semibold whitespace-nowrap">
                       E-mail:
                     </span>
-                    <span className="text-[#5c5c5c] break-all">
+                    <span className="break-all text-texto1">
                       {userData.user_email}
                     </span>
                   </div>
 
-                  <div className="text-[#232323] ml-4 text-[17px] font-normal tracking-tight mt-2">
-                    <span>Telefone: </span>
-                    <span className="text-[#5c5c5c]">
-                      {userData.user_phone}
-                    </span>
+                  <div className="text-texto1 -ml-10 text-[17px] font-normal tracking-tight">
+                    <span className="font-semibold">Telefone: </span>
+                    <span className="text-texto1">{userData.user_phone}</span>
                   </div>
                 </div>
 
@@ -484,58 +487,54 @@ const UserPage = () => {
                   </div>
 
                   <div className="ml-0">
-                    <div className="text-[#232323] text-[17px] font-normal tracking-tight">
-                      <span>CPF/CNPJ: </span>
-                      <span className="text-[#5c5c5c]">
+                    <div className="text-texto1 text-[17px] font-normal tracking-tight">
+                      <span className="font-semibold">CPF/CNPJ: </span>
+                      <span className="text-texto1">
                         {userData.user_cpf || userData.user_cnpj}
                       </span>
                     </div>
-                    <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                      <span>CRP: </span>
-                      <span className="text-[#5c5c5c]">
-                        {userData.crp_number}
-                      </span>
+                    <div className="text-texto1 text-[17px] font-normal tracking-tight mt-2">
+                      <span className="font-semibold">CRP: </span>
+                      <span className="text-texto1">{userData.crp_number}</span>
                     </div>
-                    <div className="flex text-[#232323] text-[17px] font-normal tracking-tight mt-2 items-start">
-                      <span className="self-start mr-1 whitespace-nowrap">
+                    <div className="flex text-texto1 text-[17px] font-normal tracking-tight mt-2 items-start">
+                      <span className="self-start mr-1 font-semibold whitespace-nowrap">
                         E-mail:
                       </span>
-                      <span className="text-[#5c5c5c] break-all">
+                      <span className="break-all text-texto1">
                         {userData.user_email}
                       </span>
                     </div>
 
-                    <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                      <span>Telefone: </span>
-                      <span className="text-[#5c5c5c]">
-                        {userData.user_phone}
-                      </span>
+                    <div className="text-texto1 text-[17px] font-normal tracking-tight mt-2">
+                      <span className="font-semibold">Telefone: </span>
+                      <span className="text-texto1">{userData.user_phone}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="w-full lg:max-w-[520px] lg:ml-[30px]">
-                <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2">
+                <div className="text-black text-xl font-medium font-['Ubuntu'] mb-2 lg:mb-6">
                   Dados para recibo
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight">
-                  <span>Nome/Clínica: </span>
-                  <span className="text-[#5c5c5c]">{userData.clinic_name}</span>
+                <div className="text-texto1 text-[17px] font-normal tracking-tight">
+                  <span className="font-semibold">Nome/Clínica: </span>
+                  <span className="text-texto1">{userData.clinic_name}</span>
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                  <span>CPF/CNPJ: </span>
-                  <span className="text-[#5c5c5c]">
+                <div className="text-texto1 text-[17px] font-normal tracking-tight mt-2 lg:mt-0">
+                  <span className="font-semibold">CPF/CNPJ: </span>
+                  <span className="text-texto1">
                     {userData.user_cpf || userData.user_cnpj}
                   </span>
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                  <span>CRP: </span>
-                  <span className="text-[#5c5c5c]">{userData.crp_number}</span>
+                <div className="text-texto1 text-[17px] font-normal tracking-tight mt-2 lg:mt-0">
+                  <span className="font-semibold">CRP: </span>
+                  <span className="text-texto1">{userData.crp_number}</span>
                 </div>
-                <div className="text-[#232323] text-[17px] font-normal tracking-tight mt-2">
-                  <span>Logo: </span>
-                  <span className="text-[#5c5c5c]">
+                <div className="text-texto1 text-[17px] font-normal tracking-tight mt-2 lg:mt-0">
+                  <span className="font-semibold">Logo: </span>
+                  <span className="text-texto1">
                     {userData.image
                       ? userData.image instanceof File
                         ? userData.image.name
@@ -553,30 +552,23 @@ const UserPage = () => {
           <div className="flex flex-wrap items-start justify-between w-full gap-4 lg:flex-nowrap lg:space-x-4">
             <div className="w-full lg:max-w-[540px] h-[385px] lg:h-[370px] bg-bg1 shadow p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
               <div className="flex justify-between">
-                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-[20px] font-medium">
+                <h3 className="text-[#0082ba] lg:w-[200px] w-[200px] text-xl sm:text-2xl font-medium ml-2.5">
                   Minhas agendas
                 </h3>
-                <button
-                  onClick={openModalToChangeAccount}
-                  className="text-[#0082ba] text-sm underline flex items-center lg:ml-[0px] ml-[80px]"
-                >
-                  <span className="relative lg:w-32 w-[100px] drop-shadow-editShadow -mt-1">
-                    Trocar de conta
-                  </span>
-                  <span className="ml-2 lg:ml-1">
-                    <RefreshIcon />
-                  </span>
-                </button>
               </div>
 
-              <p className="mt-8 ml-10 font-semibold">{userData.user_name}</p>
-              <p className="text-[#8d8d8d] ml-10">
-                <span className="text-[#5c5c5c]">E-mail:</span>{" "}
+              <p className="mt-8 ml-2.5 text-xl font-semibold">
+                {userData.user_name}
+              </p>
+              <p className="text-[#8d8d8d] ">
+                <span className="text-[#5c5c5c] ml-2.5 font-semibold">
+                  E-mail:
+                </span>{" "}
                 {userData.user_email}
               </p>
 
-              <div className="mt-6 ml-10">
-                <h4 className="text-[#232323] text-lg font-medium">
+              <div className="mt-6 ml-2.5">
+                <h4 className="text-lg font-medium text-texto1">
                   Agendas sincronizadas
                 </h4>
 
@@ -592,10 +584,13 @@ const UserPage = () => {
                         onChange={() =>
                           openConfirmationModal(calendar.calendar_id)
                         }
-                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
-                          ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
-                          : "bg-white border-gray-300 opacity-50"
-                          }`}
+
+                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
+                          selectedCalendars.has(calendar.calendar_id)
+                            ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
+                            : "bg-white border-[#0082ba]"
+                        }`}
+
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
                             ? "inset 0 0 0 3px white"
@@ -603,10 +598,12 @@ const UserPage = () => {
                         }}
                       />
                       <span
-                        className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
-                          ? "text-[#5c5c5c]"
-                          : "text-gray-500 opacity-50"
-                          }`}
+
+                        className={`font-medium ${
+                          selectedCalendars.has(calendar.calendar_id)
+                            ? "text-black"
+                            : "text-black"
+                        }`}
                       >
                         {calendar.calendar_name}
                       </span>
@@ -691,10 +688,10 @@ const UserPage = () => {
             <div className="flex flex-wrap items-start w-full gap-4 lg:flex-nowrap lg:space-x-4">
               <div className="w-full lg:max-w-[520px] h-[370px] bg-bg1 p-6 border-2 border-cinza6 rounded-[25px] overflow-hidden">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[#0082ba] lg:text-[20px] text-[15px] font-medium">
+                  <h3 className="text-[#0082ba] text-xl sm:text-2xl font-medium">
                     Mensagem de cobrança
                   </h3>
-                  <div className="relative flex items-center">
+                  <div className="relative flex items-center gap-4">
                     <button
                       onClick={() =>
                         isEditingMessage && setIsDropdownOpen(!isDropdownOpen)
@@ -702,7 +699,7 @@ const UserPage = () => {
                       disabled={!isEditingMessage}
                       className={`flex items-center mt-2 ${isEditingMessage ? "cursor-pointer text-[#0082ba] font-bold" : "cursor-not-allowed opacity-50"}`}
                     >
-                      {isEditingMessage ? "{ Variáveis }" : <VariableIcon />}
+                      {isEditingMessage ? "{Variáveis}" : null}
                     </button>
 
                     {isEditingMessage && isDropdownOpen && (
@@ -726,7 +723,7 @@ const UserPage = () => {
                     ) : (
                       <button
                         onClick={() => setIsEditingMessage(true)}
-                        className="text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                        className="flex items-center"
                       >
                         <EditIcon />
                       </button>
@@ -744,11 +741,11 @@ const UserPage = () => {
                         [e.target.name]: e.target.value,
                       }))
                     }
-                    className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-[#232323] text-[15px] bg-white overflow-y-auto"
+                    className="w-full h-[250px] max-h-[250px] p-4 border border-gray-300 rounded-md resize-none text-texto1 text-[15px] bg-white overflow-y-auto"
                     placeholder="Escreva sua mensagem de cobrança aqui..."
                   />
                 ) : (
-                  <div className="text-[#232323] text-[15px] whitespace-pre-line">
+                  <div className="text-texto1 text-[15px] whitespace-pre-line">
                     {userData.user_message || (
                       <span className="text-gray-400">
                         Escreva sua mensagem de cobrança aqui...
@@ -770,7 +767,7 @@ const UserPage = () => {
                     </h2>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         Nome
                       </label>
                       <input
@@ -784,7 +781,7 @@ const UserPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         E-mail
                       </label>
                       <input
@@ -799,7 +796,7 @@ const UserPage = () => {
 
                     <div className="flex flex-col gap-4 lg:flex-row">
                       <div>
-                        <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                           Telefone
                         </label>
                         <input
@@ -813,7 +810,7 @@ const UserPage = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                        <label className="block text-sm lg:text-base  font-['Open Sans'] text-texto1 tracking-wide mb-1">
                           CPF/CNPJ
                         </label>
                         <input
@@ -827,7 +824,7 @@ const UserPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         CRP
                       </label>
                       <input
@@ -847,7 +844,7 @@ const UserPage = () => {
                     </h2>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         Nome/Clínica
                       </label>
                       <input
@@ -866,7 +863,7 @@ const UserPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         CPF/CNPJ
                       </label>
                       <input
@@ -880,7 +877,7 @@ const UserPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-[#232323] tracking-wide mb-1">
+                      <label className="block text-sm lg:text-base font-normal font-['Open Sans'] text-texto1 tracking-wide mb-1">
                         Importar logotipo
                       </label>
                       <div className="flex items-center gap-2">
