@@ -3,13 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
 import ReturnPatientModal from "./components/ReturnPatientModal";
+import ModalReceiptInfo from "./components/ModalReceiptInfo";
+import ModalConfirmPayment from "./components/ModalConfirmPayment";
 import {
   fetchCustomers,
   sendWhatsAppMessage,
   sendEmailMessage,
   confirmBillOfSale,
-  confirmPayment,
-  savePartialPayment,
+  savePayment,
   AddDay,
   RemoveDay,
   revertSendingInvoice,
@@ -46,6 +47,9 @@ import Dropdown from "../../components/Dropdown";
 const DashBoard = () => {
   const [customersData, setCustomersData] = useState([]);
   const [events, setEvents] = useState([]);
+  const [isModalReceiptOpen, setIsModalReceiptOpen] = useState(false);
+  const [selectedPatientForReceipt, setSelectedPatientForReceipt] = useState(null);
+  const [receiptData, setReceiptData] = useState(null);
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendarId, setSelectedCalendarId] = useState("");
   const [loadingUnmatched, setLoadingUnmatched] = useState(true);
@@ -87,7 +91,7 @@ const DashBoard = () => {
     () => (calendarIdsParam ? calendarIdsParam.split(",") : []),
     [calendarIdsParam]
   );
-
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [returnAction, setReturnAction] = useState(null);
   const openReturnModal = (action) => {
@@ -117,15 +121,58 @@ const DashBoard = () => {
             : p
         )
       );
-
-      setFilteredPatients((prevPatients) =>
-        prevPatients.map((p) =>
-          p.customer_id === customer.customer_id
-            ? { ...p, sending_invoice: false }
-            : p
-        )
-      );
     }
+  };
+
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/users`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Erro ao buscar formas de pagamento");
+          return;
+        }
+
+        const data = await response.json();
+        let parsed = [];
+
+        try {
+          const raw = data.payment_method;
+
+          if (Array.isArray(raw)) {
+            parsed = raw;
+          } else if (typeof raw === "string") {
+            parsed = raw.startsWith("[")
+              ? JSON.parse(raw)
+              : raw.split(",").map((m) => m.trim()).filter(Boolean);
+          } else {
+            parsed = [];
+          }
+        } catch (error) {
+          console.error("Erro ao interpretar formas de pagamento:", error);
+          parsed = [];
+        }
+
+        setPaymentMethods(parsed);
+      } catch (error) {
+        console.error("Erro na requisição de formas de pagamento:", error);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
+
+  const [isModalConfirmPaymentOpen, setIsModalConfirmPaymentOpen] = useState(false);
+  const [selectedPatientForConfirmPayment, setSelectedPatientForConfirmPayment] = useState(null);
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+  const openConfirmPaymentModal = (patient) => {
+    setSelectedPatientForConfirmPayment(patient);
+    setIsModalConfirmPaymentOpen(true);
   };
 
   const handleRevertPaymentConfirmation = async (customer) => {
@@ -556,34 +603,66 @@ const DashBoard = () => {
     }
   };
 
-  const handleSavePartialPayment = async (paymentAmount) => {
+  const handleSavePartialPayment = async (paymentAmount, dataPagamento, formaPagamento) => {
     if (!selectedPatientForPartialPayment) return;
 
     const { customer_id } = selectedPatientForPartialPayment;
 
-    const response = await savePartialPayment(
+    const response = await savePayment({
       customer_id,
-      selectedYear,
-      selectedMonth,
-      paymentAmount
-    );
+      month_and_year: `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`,
+      payment_date: dataPagamento,
+      payment_method: formaPagamento,
+      payment_amount: parseFloat(paymentAmount.replace("R$", "").replace(",", ".")),
+    });
 
-    if (response) {
+    if (!response?.error) {
       showConfirmPaymentToast();
+
       setPatients((prevPatients) =>
         prevPatients.map((patient) =>
           patient.customer_id === customer_id
             ? {
-                ...patient,
-                payment_amount: parseFloat(paymentAmount),
-                payment_status: "parcial",
-              }
+              ...patient,
+              payment_amount: parseFloat(paymentAmount),
+              payment_status: "parcial",
+            }
             : patient
         )
       );
-
-      setIsPartialPaymentModalOpen(false);
     }
+
+    setIsPartialPaymentModalOpen(false);
+  };
+
+  const handleOpenReceiptModal = (patient) => {
+ 
+    const payerName = patient.Customer?.customer_name || patient.payer_name;
+    const payerCPF = patient.Customer?.cpf || patient.payer_cpf;
+    const beneficiaryName = patient.beneficiary_name || "Nome beneficiário não informado";
+    const beneficiaryCPF = patient.beneficiary_cpf || "CPF beneficiário não informado";
+    const amount = parseFloat(patient.total_consultation_fee || 0).toFixed(2).replace(".", ",");
+  
+    const paymentDate = patient.payment_date
+      ? patient.payment_date.split("T")[0].split("-").reverse().join("/")
+      : "Data não informada";
+  
+    const numConsultations = patient.num_consultations || 0;
+    const consultationDays = patient.consultation_days
+      ? patient.consultation_days.split(",").map((d) => d.trim()).join(", ")
+      : "não informados";
+  
+    setReceiptData({
+      payerName,
+      payerCPF,
+      beneficiaryName,
+      beneficiaryCPF,
+      amount,
+      paymentDate,
+      description: `Valor referente às consultas realizadas em ${selectedMonth}/${selectedYear}, total de ${numConsultations} consultas nos dias ${consultationDays}.`
+    });
+  
+    setIsModalReceiptOpen(true);
   };
 
   const handleOpenPartialPayment = (patient) => {
@@ -597,7 +676,7 @@ const DashBoard = () => {
       return;
     }
 
-    const response = await confirmPayment(
+    const response = await savePayment(
       patient.customer_id,
       selectedYear,
       selectedMonth
@@ -616,6 +695,7 @@ const DashBoard = () => {
   };
 
   const handleConfirmBillOfSale = async (patient) => {
+    console.log("Dados do paciente recebido:", patient);
     if (!patient || !patient.customer_id) {
       alert("Paciente não encontrado.");
       return;
@@ -627,7 +707,41 @@ const DashBoard = () => {
       selectedMonth
     );
 
-    if (response) {
+    if (!response || response.error) {
+      alert(response?.error || "Erro ao emitir recibo.");
+      return;
+    }
+
+    const data = response.data;
+
+    if (data) {
+      const {
+        payer_name,
+        payer_cpf,
+        beneficiary_name,
+        beneficiary_cpf,
+        total_consultation_fee,
+        payment_date,
+        num_consultations,
+        consultation_days,
+      } = data;
+
+      setReceiptData({
+        payerName: payer_name,
+        payerCPF: payer_cpf,
+        beneficiaryName: beneficiary_name,
+        beneficiaryCPF: beneficiary_cpf,
+        amount: parseFloat(total_consultation_fee || 0).toFixed(2).replace(".", ","),
+        paymentDate: payment_date
+          ? payment_date.split("T")[0].split("-").reverse().join("/")
+          : "Data não informada",
+        description: `Valor referente às consultas realizadas em ${selectedMonth}/${selectedYear}, total de ${num_consultations || 0} consultas nos dias ${
+          consultation_days
+            ? consultation_days.split(",").map((d) => d.trim()).join(", ")
+            : "não informados"
+        }.`,
+      });
+
       setFilteredPatients((prev) =>
         prev.map((p) =>
           p.customer_id === patient.customer_id
@@ -635,6 +749,8 @@ const DashBoard = () => {
             : p
         )
       );
+
+      setIsModalReceiptOpen(true);
     }
   };
 
@@ -667,12 +783,12 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  .split(",")
-                  .filter((d) => !daysToRemove.includes(d))
-                  .join(","),
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                .split(",")
+                .filter((d) => !daysToRemove.includes(d))
+                .join(","),
+            }
             : p
         )
       );
@@ -701,11 +817,11 @@ const DashBoard = () => {
         prevPatients.map((p) =>
           p.customer_id === customerId
             ? {
-                ...p,
-                consultation_days: p.consultation_days
-                  ? `${p.consultation_days}, ${days}`
-                  : days,
-              }
+              ...p,
+              consultation_days: p.consultation_days
+                ? `${p.consultation_days}, ${days}`
+                : days,
+            }
             : p
         )
       );
@@ -836,9 +952,8 @@ const DashBoard = () => {
           </div>
 
           <div
-            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${
-              isTableExpanded ? "h-auto" : "min-h-screen"
-            }`}
+            className={`flex mt-3 lg:mt-0 lg:auto lg:mx-auto justify-center box-border w-full lg:rounded-B15 rounded-B10 lg:border-[3px] border border-solid border-cinza6 bg-bg1 z-10 ${isTableExpanded ? "h-auto" : "min-h-screen"
+              }`}
           >
             <table className="w-full mt-1 overflow-x-auto text-left table-fixed bg-bg1 rounded-B15">
               <thead>
@@ -905,10 +1020,10 @@ const DashBoard = () => {
                         <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                           {patient.consultation_days
                             ? patient.consultation_days
-                                .split(", ")
-                                .map(Number)
-                                .sort((a, b) => a - b)
-                                .join(", ")
+                              .split(", ")
+                              .map(Number)
+                              .sort((a, b) => a - b)
+                              .join(", ")
                             : "-"}
                         </td>
                         <td className="relative text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 group">
@@ -917,10 +1032,10 @@ const DashBoard = () => {
                             Dias:{" "}
                             {patient.consultation_days
                               ? patient.consultation_days
-                                  .split(", ")
-                                  .map(Number)
-                                  .sort((a, b) => a - b)
-                                  .join(", ")
+                                .split(", ")
+                                .map(Number)
+                                .sort((a, b) => a - b)
+                                .join(", ")
                               : "Sem dias"}
                           </div>
                         </td>
@@ -987,12 +1102,16 @@ const DashBoard = () => {
                             width="auto"
                           >
                             <DropDownDashActions
+                              patient={patient}
+                              selectedMonth={selectedMonth}
+                              selectedYear={selectedYear}
+                              onOpenReceiptInfo={handleOpenReceiptModal}
                               onOpenModal={() => handleSendWhatsApp(patient)}
                               onPartialPayment={() =>
                                 handleOpenPartialPayment(patient)
                               }
                               onConfirmedPayment={() =>
-                                handleConfirmPayment(patient)
+                                openConfirmPaymentModal(patient)
                               }
                               onConfirmedBillOfSale={() =>
                                 handleConfirmBillOfSale(patient)
@@ -1045,11 +1164,10 @@ const DashBoard = () => {
                     >
                       <button
                         onClick={toggleTableSize}
-                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${
-                          isTableExpanded
-                            ? "rotate-0 bottom-0"
-                            : "rotate-180 bottom-5"
-                        }`}
+                        className={`absolute transform  cursor-pointer transition-transform duration-300 ${isTableExpanded
+                          ? "rotate-0 bottom-0"
+                          : "rotate-180 bottom-5"
+                          }`}
                       >
                         <div className="lg:w-[452px] w-[263px]  h-[1px] bg-cinza6 absolute top-[-20px] left-1/2 transform -translate-x-1/2 mt-3 "></div>
                         <ArrowDownIcon />
@@ -1170,10 +1288,17 @@ const DashBoard = () => {
         {isPartialPaymentModalOpen && selectedPatientForPartialPayment && (
           <ModalPaymentDash
             onClose={() => setIsPartialPaymentModalOpen(false)}
-            onSave={handleSavePartialPayment}
-            totalAmount={
-              selectedPatientForPartialPayment.total_consultation_fee
+            onSave={(paymentAmount, dataPagamento, formaPagamento) =>
+              handleSavePartialPayment(paymentAmount, dataPagamento, formaPagamento)
             }
+            totalAmount={selectedPatientForPartialPayment.total_consultation_fee}
+          />
+        )}
+        {isModalReceiptOpen && (
+          <ModalReceiptInfo
+            isOpen={isModalReceiptOpen}
+            onClose={() => setIsModalReceiptOpen(false)}
+            receiptData={receiptData}
           />
         )}
       </>
@@ -1226,6 +1351,63 @@ const DashBoard = () => {
             </div>
           </div>
         </div>
+      )}
+      {isModalConfirmPaymentOpen && selectedPatientForConfirmPayment && (
+        <ModalConfirmPayment
+          isOpen={isModalConfirmPaymentOpen}
+          onClose={() => setIsModalConfirmPaymentOpen(false)}
+          patient={selectedPatientForConfirmPayment}
+          paymentMethods={paymentMethods}
+          onConfirm={async ({ tipoPagamento, valorPago, dataPagamento, formaPagamento }) => {
+            const response = await savePayment(
+              selectedPatientForConfirmPayment.customer_id,
+              selectedYear,
+              selectedMonth,
+              tipoPagamento,
+              dataPagamento,
+              formaPagamento,
+              valorPago
+            );
+
+            if (!response?.error) {
+              showConfirmPaymentToast();
+
+              const novoStatus =
+                tipoPagamento === "total" ? "pago" : "parcial";
+
+              const novoValorPago =
+                tipoPagamento === "total"
+                  ? parseFloat(selectedPatientForConfirmPayment.total_consultation_fee)
+                  : parseFloat(valorPago.replace("R$", "").replace(",", "."));
+
+              setPatients((prev) =>
+                prev.map((p) =>
+                  p.customer_id === selectedPatientForConfirmPayment.customer_id
+                    ? {
+                      ...p,
+                      payment_status: novoStatus,
+                      payment_amount: novoValorPago,
+                    }
+                    : p
+                )
+              );
+
+              setFilteredPatients((prev) =>
+                prev.map((p) =>
+                  p.customer_id === selectedPatientForConfirmPayment.customer_id
+                    ? {
+                      ...p,
+                      payment_status: novoStatus,
+                      payment_amount: novoValorPago,
+                    }
+                    : p
+                )
+              );
+            }
+
+            setIsModalConfirmPaymentOpen(false);
+          }}
+        />
       )}
     </div>
   );

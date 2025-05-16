@@ -44,6 +44,47 @@ export const revertSendingInvoice = async (customerId, year, month) => {
   }
 };
 
+export const savePayment = async (
+  customer_id,
+  year,
+  month,
+  tipoPagamento,
+  dataPagamento,
+  formaPagamento,
+  valorPago
+) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/dashboard/save-payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+      },
+      body: JSON.stringify({
+        customer_id,
+        month_and_year: `${year}-${String(month).padStart(2, "0")}`,
+        payment_date: dataPagamento,
+        payment_method: formaPagamento,
+        payment_amount:
+          tipoPagamento === "total"
+            ? undefined
+            : parseFloat(valorPago.replace("R$", "").replace(",", ".")),
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("Erro ao salvar pagamento:", text);
+      return { error: true };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro ao salvar pagamento:", error);
+    return { error: true };
+  }
+};
+
 export const revertPaymentConfirmation = async (customerId, year, month) => {
   try {
     const response = await fetch(
@@ -267,34 +308,30 @@ export const confirmPayment = async (
   return response.json();
 };
 
-export const confirmBillOfSale = async (
-  customerId,
-  selectedYear,
-  selectedMonth
-) => {
-  const formattedMonth = `${selectedYear}-${selectedMonth.toString().padStart(2, "0")}`;
+export const confirmBillOfSale = async ({ customer_id, month_and_year }) => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+        },
+        body: JSON.stringify({ customer_id, month_and_year }),
+      }
+    );
 
-  const response = await fetch(
-    `${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-      },
-      body: JSON.stringify({
-        customer_id: customerId,
-        month_and_year: formattedMonth,
-      }),
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.error || "Erro ao emitir recibo." };
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    return { error: errorData.error || "Erro ao enviar e-mail." };
+    return response.json();
+  } catch (error) {
+    console.error("Erro ao emitir recibo:", error);
+    return { error: "Erro na conexão com o servidor." };
   }
-
-  return response.json();
 };
 
 export const savePartialPayment = async (
@@ -356,7 +393,6 @@ export const RemoveDay = async (customerId, days, month, year) => {
       body: JSON.stringify({ customerId, days, month, year }),
     }
   );
-
   return response;
 };
 

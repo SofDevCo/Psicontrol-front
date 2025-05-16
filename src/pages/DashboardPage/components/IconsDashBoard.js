@@ -474,6 +474,30 @@ const ReturnIcon = () => {
   );
 };
 
+const CopyIcon = ({ className }) => {
+  return (
+    <svg
+      className={className || "w-4 h-4 text-blue-500"}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 4C5 3.44772 5.44772 3 6 3H14C14.5523 3 15 3.44772 15 4V12C15 12.5523 14.5523 13 14 13H6C5.44772 13 5 12.5523 5 12V4Z"
+        stroke="#0082BA"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13 13V14C13 14.5304 12.7893 15.0391 12.4142 15.4142C12.0391 15.7893 11.5304 16 11 16H5C4.46957 16 3.96086 15.7893 3.58579 15.4142C3.21071 15.0391 3 14.5304 3 14V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H6"
+        stroke="#0082BA"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export {
   CrossIcon,
   VerifyGreenIcon,
@@ -489,4 +513,5 @@ export {
   BillOfSaleIcon,
   EditConsultationModalIcon,
   ReturnIcon,
+  CopyIcon,
 };

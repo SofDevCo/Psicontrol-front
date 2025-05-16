@@ -4,12 +4,15 @@ import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
 import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
-import {
+import { 
   showLoadingToast,
   showSuccessToast,
   showSuccessCalendarToast,
-  showLoadingCalendarToast,
-} from "../CustomerPage/components/notiificationCustomerPage";
+  showLoadingCalendarToast
+ } from "../CustomerPage/components/notiificationCustomerPage";
+import { PlusIcon } from "../../icons/icons";
+import ModalPaymentMethods from "./components/ModalPaymentMethods";
+
 
 const UserPage = () => {
   const [userData, setUserData] = useState({
@@ -33,6 +36,7 @@ const UserPage = () => {
   const [activeCalendarId, setActiveCalendarId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -82,28 +86,61 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchCalendars = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/events/calendars`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
-          },
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const token = localStorage.getItem("authentication_token");
+        
+        console.log("Debug - API URL:", apiUrl);
+        console.log("Debug - Token existe:", !!token);
+        
+        if (!apiUrl) {
+          console.error("URL da API não está definida em variáveis de ambiente");
+          return;
         }
-      );
+        
+        if (!token) {
+          console.error("Token de autenticação não encontrado");
+          return;
+        }
+        
+        const fullUrl = `${apiUrl}/events/calendars`;
+        console.log("Debug - URL completa:", fullUrl);
+        
+        const response = await fetch(
+          fullUrl,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (!response.ok) {
+          console.error(
+            "Erro na resposta da API:", 
+            response.status, 
+            response.statusText
+          );
+          return;
+        }
+  
+        const data = await response.json();
+        console.log("Debug - Calendários recebidos:", data.length);
+        
+        setCalendars(data);
+  
+        const selected = new Set(
+          data.filter((cal) => cal.enabled).map((cal) => cal.calendar_id)
+        );
+        setSelectedCalendars(selected);
+      } catch (error) {
+        console.error("Erro ao buscar calendários:", error.message);
 
-      if (!response.ok) {
-        return;
+        setCalendars([]);
+        setSelectedCalendars(new Set());
       }
-
-      const data = await response.json();
-      setCalendars(data);
-
-      const selected = new Set(
-        data.filter((cal) => cal.enabled).map((cal) => cal.calendar_id)
-      );
-      setSelectedCalendars(selected);
     };
-
+  
     fetchCalendars();
   }, [refreshKey]);
 
@@ -211,7 +248,6 @@ const UserPage = () => {
 
     setRefreshKey((prevKey) => prevKey + 1);
     setIsEditing(false);
-
     showAlteredToast();
   };
 
@@ -364,20 +400,29 @@ const UserPage = () => {
               <h2 className="text-[#0082ba] text-xl sm:text-2xl font-medium font-['Ubuntu']">
                 Meus dados
               </h2>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-[#0082ba] text-sm underline flex items-center"
-              >
-                <div className="mr-1 pr-1 text-sky-600 text-base font-medium relative">
-                  Editar dados
-                </div>
-                <EditIcon />
-              </button>
+
+              <div className="flex flex-col items-end">
+                <button
+                  onClick={() => setIsEditing(true)}
+                  c className="text-[#0082ba] text-sm underline flex items-center"
+                >
+                  <div className="relative pr-1 mr-1 text-base font-medium text-sky-600">
+                  <EditIcon />
+                  </div>
+                </button>
+                <button
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="mt-2 text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center"
+                >
+                  <span className="mr-1">Formas de Pagamento</span>
+                  <PlusIcon />
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col lg:flex-row justify-start gap-x-[182px] sm:ml-2.5">
               <div className="flex w-full lg:max-w-[360px] mb-6 lg:mb-0">
-                {/* For screens >= 1100px (lg) - Original Layout */}
+
                 <div className="hidden lg:flex lg:w-10 lg:h-10 aspect-square bg-[#33b8d1] rounded-full justify-center items-center -mt-1">
                   {userData.photoUrl ? (
                     <img
@@ -406,10 +451,10 @@ const UserPage = () => {
                     <span className="text-texto1">{userData.crp_number}</span>
                   </div>
                   <div className="flex -ml-10 text-texto1 text-[17px] font-normal tracking-tight  items-start">
-                    <span className="self-start mr-1 whitespace-nowrap font-semibold">
+                    <span className="self-start mr-1 font-semibold whitespace-nowrap">
                       E-mail:
                     </span>
-                    <span className="text-texto1 break-all">
+                    <span className="break-all text-texto1">
                       {userData.user_email}
                     </span>
                   </div>
@@ -420,7 +465,6 @@ const UserPage = () => {
                   </div>
                 </div>
 
-                {/* For screens < 1100px - New Aligned Layout */}
                 <div className="flex flex-col w-full lg:hidden">
                   <div className="flex mb-4">
                     <div className="w-7 h-7 aspect-square bg-[#33b8d1] rounded-full flex justify-center items-center">
@@ -442,7 +486,6 @@ const UserPage = () => {
                     </div>
                   </div>
 
-                  {/* Aligned fields section for mobile */}
                   <div className="ml-0">
                     <div className="text-texto1 text-[17px] font-normal tracking-tight">
                       <span className="font-semibold">CPF/CNPJ: </span>
@@ -455,10 +498,10 @@ const UserPage = () => {
                       <span className="text-texto1">{userData.crp_number}</span>
                     </div>
                     <div className="flex text-texto1 text-[17px] font-normal tracking-tight mt-2 items-start">
-                      <span className="self-start mr-1 whitespace-nowrap font-semibold">
+                      <span className="self-start mr-1 font-semibold whitespace-nowrap">
                         E-mail:
                       </span>
-                      <span className="text-texto1 break-all">
+                      <span className="break-all text-texto1">
                         {userData.user_email}
                       </span>
                     </div>
@@ -496,7 +539,7 @@ const UserPage = () => {
                       ? userData.image instanceof File
                         ? userData.image.name
                         : typeof userData.image === "string" &&
-                            userData.image.includes("/")
+                          userData.image.includes("/")
                           ? userData.image.split("/").pop()
                           : userData.image
                       : "(Imagem não carregada)"}
@@ -525,7 +568,7 @@ const UserPage = () => {
               </p>
 
               <div className="mt-6 ml-2.5">
-                <h4 className="text-texto1 text-lg font-medium">
+                <h4 className="text-lg font-medium text-texto1">
                   Agendas sincronizadas
                 </h4>
 
@@ -541,11 +584,13 @@ const UserPage = () => {
                         onChange={() =>
                           openConfirmationModal(calendar.calendar_id)
                         }
+
                         className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
                           selectedCalendars.has(calendar.calendar_id)
                             ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
                             : "bg-white border-[#0082ba]"
                         }`}
+
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
                             ? "inset 0 0 0 3px white"
@@ -553,6 +598,7 @@ const UserPage = () => {
                         }}
                       />
                       <span
+
                         className={`font-medium ${
                           selectedCalendars.has(calendar.calendar_id)
                             ? "text-black"
@@ -883,10 +929,16 @@ const UserPage = () => {
                   </button>
                 </div>
               </div>
+              
             </div>
+
           )}
         </div>
       </>
+      <ModalPaymentMethods 
+  isOpen={isPaymentModalOpen}
+  onClose={() => setIsPaymentModalOpen(false)} 
+/>
     </div>
   );
 };

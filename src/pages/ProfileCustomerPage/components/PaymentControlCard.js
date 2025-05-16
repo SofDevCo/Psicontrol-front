@@ -10,8 +10,7 @@ import {
   sendEmailMessage,
   sendWhatsAppMessage,
   confirmBillOfSale,
-  confirmPayment,
-  savePartialPayment,
+  savePayment,
   fetchCustomerProfile,
 } from "../../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../../icons/icons";
@@ -21,6 +20,7 @@ import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
 import FilterStatusProfilePage from "./FilterStatusProfilePage";
 import EditConsultationModalPaymentControl from "./EditConsultationModalPaymentControl";
 import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
+
 
 const PaymentControlCard = ({
   billingRecords,
@@ -173,16 +173,23 @@ const PaymentControlCard = ({
       return;
     }
     const [year, month] = billingRecord.month.split("-");
-
-    const response = await confirmPayment(
+  
+    const response = await savePayment(
       billingRecord.customer_id,
       parseInt(year),
-      parseInt(month)
+      parseInt(month),
+      null,
+      "total",
+      new Date().toISOString().split("T")[0],
+      "PIX"
     );
-
-    if (response) {
-      alert("Pagamento confirmado!");
+  
+    if (!response || response.error) {
+      alert("Erro ao confirmar pagamento.");
+      return;
     }
+  
+    alert("Pagamento confirmado!");
     await handleUpdateBillingStatus();
   };
 
@@ -208,25 +215,27 @@ const PaymentControlCard = ({
 
   const handleSavePartialPayment = async (paymentAmount) => {
     if (!selectedPatientForPartialPayment) return;
-
+  
     const { customer_id } = selectedPatientForPartialPayment;
-
     const [year, month] = selectedPatientForPartialPayment.month.split("-");
-
-    const response = await savePartialPayment(
+  
+    const response = await savePayment(
       customer_id,
       parseInt(year, 10),
       parseInt(month, 10),
-      paymentAmount
+      parseFloat(paymentAmount),
+      "parcial",
+      new Date().toISOString().split("T")[0],
+      "PIX"
     );
-
-    if (!response) {
+  
+    if (!response || response.error) {
       alert("Erro ao salvar pagamento parcial.");
       return;
     }
-
+  
     alert("Pagamento parcial salvo com sucesso!");
-
+  
     if (typeof updateBillingRecords === "function") {
       updateBillingRecords((prevRecords) =>
         prevRecords.map((record) =>
@@ -240,9 +249,8 @@ const PaymentControlCard = ({
             : record
         )
       );
-    } else {
-      console.error("Erro: updateBillingRecords não é uma função.");
     }
+  
     setIsPartialPaymentModalOpen(false);
   };
 
@@ -444,7 +452,6 @@ const PaymentControlCard = ({
                       >
                         <HamburguerIcon />
                       </button>
-
                       {isDropdownOpenPatients === index && (
                         <div
                           ref={outSideClickRef}

@@ -27,24 +27,27 @@ const SearchBarDashBoard = ({ patients, onConfirmPatient, onClose }) => {
       setFilteredPatients([]);
       setIsDropdownVisible(false);
     } else {
-      const localFiltered = patients.filter((patient) =>
-        patient?.Customer?.customer_name
+      const activePatients = patients.filter((p) => {
+        const record = p.Customer || p;
+        return record.archived === false && record.deleted === false;
+      });
+      const localFiltered = activePatients.filter((patient) =>
+        patient.Customer.customer_name
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase())
       );
-
-      const remoteFiltered = remotePatients.filter(
-        (remotePatient) =>
-          !localFiltered.some(
-            (local) => local.Customer?.customer_id === remotePatient.customer_id
-          ) &&
-          remotePatient?.customer_name
-            ?.toLowerCase()
+      const remoteFiltered = remotePatients.filter((remotePatient) => {
+        const isDuplicate = localFiltered.some(
+          (local) => local.Customer?.customer_id === remotePatient.customer_id
+        );
+        return (
+          !isDuplicate &&
+          remotePatient.customer_name
+            .toLowerCase()
             .includes(searchTerm.toLowerCase())
-      );
-
+        );
+      });
       const combinedResults = [...localFiltered, ...remoteFiltered];
-
       setFilteredPatients(combinedResults);
       setIsDropdownVisible(true);
     }
