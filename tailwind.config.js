@@ -9,7 +9,7 @@ module.exports = {
         bg1: "#F5F5F5",
         bg2: "#E6EFF5",
         bgM: "#33B8D1",
-        clara4: "#EDF5FC",
+        clara4: "#E6EFF5",
         clara3: "#C7E0F7",
         cinza6: "#81A0AE",
         cinza8: "#B6CAD3",
