@@ -2,34 +2,36 @@ import React from "react";
 import {
   ConfirmPaymentIcon,
   SendIcon,
-  PartialIcon,
   BillOfSaleIcon,
   EditConsultationModalIcon,
   ReturnIcon,
+  CopyIcon, // 👈 Novo ícone importado
 } from "./IconsDashBoard";
 
 const DropDownDashActions = ({
   onOpenModal,
-  onPartialPayment,
   onConfirmedPayment,
   onConfirmedBillOfSale,
   onEditConsultationFee,
+  onOpenReceiptInfo,
   isSendingInvoice = false,
   isPaymentConfirmed = false,
   isBillOfSaleIssued = false,
   onRevertSendingInvoice,
   onRevertPaymentConfirmed,
   onRevertBillOfSale,
+  patient,
+  selectedMonth,
+  selectedYear,
 }) => {
   return (
-    <div className="w-52 max-w-xs p-2">
+    <div className="max-w-xs p-2 w-52">
       <ul className="w-full">
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onOpenModal}
-            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${
-              isSendingInvoice ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${isSendingInvoice ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             disabled={isSendingInvoice}
           >
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
@@ -41,7 +43,7 @@ const DropDownDashActions = ({
           {isSendingInvoice && (
             <button
               onClick={onRevertSendingInvoice}
-              className="p-1 hover:bg-cinza9 rounded-full transition-colors"
+              className="p-1 transition-colors rounded-full hover:bg-cinza9"
             >
               <ReturnIcon />
             </button>
@@ -50,36 +52,23 @@ const DropDownDashActions = ({
 
         <li className="flex items-center justify-between w-full mb-1">
           <button
-            onClick={onPartialPayment}
-            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
-          >
-            <div className="flex items-center justify-center w-8 h-8 min-w-8">
-              <PartialIcon />
-            </div>
-            <span>Pagamento Parcial</span>
-          </button>
-        </li>
-
-        <li className="flex items-center justify-between w-full mb-1">
-          <button
             onClick={onConfirmedPayment}
-            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
-              isPaymentConfirmed ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${isPaymentConfirmed ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             disabled={isPaymentConfirmed}
           >
-            <div className="flex items-center justify-center w-8 h-8 min-w-8 flex-shrink-0">
+            <div className="flex items-center justify-center w-8 h-8 min-w-8">
               <ConfirmPaymentIcon />
             </div>
             <span className="whitespace-nowrap">
-              {isPaymentConfirmed ? "Pgto. Confirmado" : "Pagamento Confirmado"}
+              {isPaymentConfirmed ? "Pgto. Confirmado" : "Confirmar pagamento"}
             </span>
           </button>
 
           {isPaymentConfirmed && (
             <button
               onClick={onRevertPaymentConfirmed}
-              className="p-1 hover:bg-cinza9 rounded-full transition-colors"
+              className="p-1 transition-colors rounded-full hover:bg-cinza9"
             >
               <ReturnIcon />
             </button>
@@ -88,14 +77,40 @@ const DropDownDashActions = ({
 
         <li className="flex items-center justify-between w-full mb-1">
           <button
-            onClick={onConfirmedBillOfSale}
-            className={`group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full ${
-              isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+         onClick={async () => {
+          if (!isBillOfSaleIssued && patient) {
+            try {
+              const response = await fetch(`${process.env.REACT_APP_API_URL}/dashboard/confirmBillOfSale`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+                },
+                body: JSON.stringify({
+                  customer_id: patient.customer_id,
+                  month_and_year: `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`,
+                }),
+              });
+        
+              const result = await response.json();
+        
+              if (response.ok && result.data) {
+                onOpenReceiptInfo(result.data); // <-- chama o modal com os dados corretos
+              } else {
+                alert(result.error || "Erro ao emitir recibo.");
+              }
+            } catch (err) {
+              console.error("Erro ao emitir recibo:", err);
+              alert("Erro inesperado ao emitir recibo.");
+            }
+          }
+        }}
+            className={`group flex items-center text-texto2 lg:text-F15 text-F15 font-normal w-full ${isBillOfSaleIssued ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             disabled={isBillOfSaleIssued}
           >
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
-              <BillOfSaleIcon />
+              <CopyIcon />
             </div>
             <span>Recibo Emitido</span>
           </button>
@@ -103,17 +118,18 @@ const DropDownDashActions = ({
           {isBillOfSaleIssued && (
             <button
               onClick={onRevertBillOfSale}
-              className="p-1 hover:bg-cinza9 rounded-full transition-colors"
+              className="p-1 transition-colors rounded-full hover:bg-cinza9"
             >
               <ReturnIcon />
             </button>
           )}
         </li>
 
+
         <li className="flex items-center justify-between w-full">
           <button
             onClick={onEditConsultationFee}
-            className="group flex items-center text-texto2 active:text-texto2/50 lg:text-F15 text-F15 font-normal w-full"
+            className="flex items-center w-full font-normal group text-texto2 active:text-texto2/50 lg:text-F15 text-F15"
           >
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
               <EditConsultationModalIcon />
