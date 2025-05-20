@@ -83,50 +83,26 @@ const UserPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
-
+  
   useEffect(() => {
     const fetchCalendars = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authentication_token");
-        
-        console.log("Debug - API URL:", apiUrl);
-        console.log("Debug - Token existe:", !!token);
-        
-        if (!apiUrl) {
-          console.error("URL da API não está definida em variáveis de ambiente");
-          return;
-        }
-        
-        if (!token) {
-          console.error("Token de autenticação não encontrado");
-          return;
-        }
-        
-        const fullUrl = `${apiUrl}/events/calendars`;
-        console.log("Debug - URL completa:", fullUrl);
-        
-        const response = await fetch(
-          fullUrl,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
   
-        if (!response.ok) {
-          console.error(
-            "Erro na resposta da API:", 
-            response.status, 
-            response.statusText
-          );
-          return;
-        }
+        if (!apiUrl || !token) return;
+  
+        const fullUrl = `${apiUrl}/events/calendars`;
+  
+        const response = await fetch(fullUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) return;
   
         const data = await response.json();
-        console.log("Debug - Calendários recebidos:", data.length);
-        
         setCalendars(data);
   
         const selected = new Set(
@@ -134,8 +110,6 @@ const UserPage = () => {
         );
         setSelectedCalendars(selected);
       } catch (error) {
-        console.error("Erro ao buscar calendários:", error.message);
-
         setCalendars([]);
         setSelectedCalendars(new Set());
       }
@@ -143,6 +117,7 @@ const UserPage = () => {
   
     fetchCalendars();
   }, [refreshKey]);
+  
 
   const toggleCalendar = async (calendarId) => {
     const isEnabled = !selectedCalendars.has(calendarId);
@@ -375,10 +350,16 @@ const UserPage = () => {
 
     const loadingToast = showLoadingCalendarToast();
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const delay = new Promise((resolve) => setTimeout(resolve, 2000));
+    const calendarUpdate = toggleCalendar(calendarId);
 
-    loadingToast.closeToast();
-    await toggleCalendar(calendarId);
+    await Promise.all([delay, calendarUpdate]);
+
+    try {
+      loadingToast.closeToast();
+    } catch (e) {
+      console.warn("Erro ao fechar loading toast:", e);
+    }
 
     showSuccessCalendarToast();
   };
@@ -406,7 +387,8 @@ const UserPage = () => {
                   onClick={() => setIsEditing(true)}
                   c className="text-[#0082ba] text-sm underline flex items-center"
                 >
-                  <div className="relative pr-1 mr-1 text-base font-medium text-sky-600">
+                    <div className="mt-2 text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center">
+                    <span className="mr-1">Editar dados</span>
                   <EditIcon />
                   </div>
                 </button>
