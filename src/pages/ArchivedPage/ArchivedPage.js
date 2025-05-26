@@ -23,11 +23,30 @@ const ArchivedPage = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [isDropdownVisible] = useState(false);
 
-  const dropdownRef = useRef();
+  const dropdownRefs = useRef({});
   const searchDropRef = useRef();
 
-  useOutsideClick(dropdownRef, () => setActiveDropdown(null));
   useOutsideClick(searchDropRef, () => setFilteredCustomers([]));
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      let clickedInside = false;
+      Object.values(dropdownRefs.current).forEach((ref) => {
+        if (ref && ref.contains(event.target)) {
+          clickedInside = true;
+        }
+      });
+      if (!clickedInside) {
+        setTimeout(() => {
+          setActiveDropdown(null);
+        }, 100);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const fetchArchivedCustomers = async () => {
     setIsLoading(true);
@@ -211,26 +230,35 @@ const ArchivedPage = () => {
               {archivedCustomers.map((customer) => (
                 <li
                   key={`customer-${customer.customer_id}`}
-                  className="flex items-center justify-between border-b-[1px] border-cinza6 py-4"
+                  className="relative flex items-center justify-between border-b-[1px] border-cinza6 py-4"
                 >
                   <span className="text-base md:text-xl text-texto1">
                     {customer.customer_name}
                   </span>
-                  <button
-                    onClick={() => toggleDropdown(customer.customer_id)}
-                    className="flex items-center justify-end bg-bg1 hover:bg-bg1"
+                  <div
+                    className="relative"
+                    ref={(el) =>
+                      (dropdownRefs.current[customer.customer_id] = el)
+                    }
                   >
-                    <HamburguerIcon />
-                  </button>
-                  {activeDropdown === customer.customer_id && (
-                    <DropDown
-                      dropdownRef={dropdownRef}
-                      customerId={customer.customer_id}
-                      onDelete={handleDeleteConfirmation}
-                      customers={customers}
-                      onUnarchive={handleUnarchiveCustomer}
-                    />
-                  )}
+                    <button
+                      onClick={() => toggleDropdown(customer.customer_id)}
+                      className="flex items-center justify-end bg-bg1 hover:bg-bg1"
+                    >
+                      <HamburguerIcon />
+                    </button>
+                    {activeDropdown === customer.customer_id && (
+                      <DropDown
+                        dropdownRef={(el) =>
+                          (dropdownRefs.current[customer.customer_id] = el)
+                        }
+                        customerId={customer.customer_id}
+                        onDelete={handleDeleteConfirmation}
+                        customers={customers}
+                        onUnarchive={handleUnarchiveCustomer}
+                      />
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
