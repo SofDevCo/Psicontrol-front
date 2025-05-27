@@ -476,25 +476,10 @@ const ReturnIcon = () => {
 
 const CopyIcon = ({ className }) => {
   return (
-    <svg
-      className={className || "w-4 h-4 text-blue-500"}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M5 4C5 3.44772 5.44772 3 6 3H14C14.5523 3 15 3.44772 15 4V12C15 12.5523 14.5523 13 14 13H6C5.44772 13 5 12.5523 5 12V4Z"
-        stroke="#0082BA"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13 13V14C13 14.5304 12.7893 15.0391 12.4142 15.4142C12.0391 15.7893 11.5304 16 11 16H5C4.46957 16 3.96086 15.7893 3.58579 15.4142C3.21071 15.0391 3 14.5304 3 14V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H6"
-        stroke="#0082BA"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M21.5 16L16.5 21L13 17.5L14.5 16L16.5 18L20 14.5L21.5 16ZM11.09 19H4V3H11V8H16V12.09C16.33 12.04 16.66 12 17 12C17.34 12 17.67 12.04 18 12.09V7L12 1H4C3.46957 1 2.96086 1.21071 2.58579 1.58579C2.21071 1.96086 2 2.46957 2 3V19C2 20.11 2.89 21 4 21H11.81C11.46 20.39 11.21 19.72 11.09 19Z" fill="#0082BA"/>
+</svg>
+
   );
 };
 
