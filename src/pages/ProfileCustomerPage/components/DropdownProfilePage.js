@@ -1,9 +1,10 @@
 import { EditIcon, Trash } from "../../../icons/icons";
 import { ArchiveIcon } from "./ProfilePageIcons";
+import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
 import { Link } from "react-router-dom";
-
 const DropDownProfile = ({
   dropdownRef,
+  onClose,
   customerId,
   onDelete,
   setSelectedPatient,
@@ -11,6 +12,7 @@ const DropDownProfile = ({
   customer,
   onArchive,
 }) => {
+  useOutsideClick(dropdownRef, onClose);
   return (
     <nav
       className="absolute right-0 lg:mt-4 mt-1 box-border border-[1px] border-1 border-cinza6 bg-bg2 shadow-dropShadow rounded-l-[5px]"
@@ -51,5 +53,4 @@ const DropDownProfile = ({
     </nav>
   );
 };
-
 export default DropDownProfile;
