@@ -4,30 +4,29 @@ const DropDown = ({
   dropdownRef,
   customerId,
   onDelete,
-  setSelectedPatient,
-  openModal,
   customers,
   onUnarchive,
 }) => {
   return (
     <nav
-      className="absolute right-0 box-border border-[1px] border-1 border-cinza6 bg-bg2 shadow-dropShadow rounded-l-[5px]"
+      className="box-border absolute z-20 max-w-xs pt-8 pl-4 mt-1 border rounded-l-md right-0 top-full border-cinza6 bg-bg2 shadow-default w-[210px] h-[130px]"
       ref={dropdownRef}
     >
-      <ul className="w-[210px] h-[130px] p-1 ">
-        <li>
+      <ul className="flex flex-col justify-between w-full h-[80px]">
+        <li className="flex items-center gap-2 mb-1">
           <button
-            className="group mt-5 flex items-center gap-2 ml-6 font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onUnarchive(customerId)}
+            className="flex items-center gap-2 text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
             <UnarchiveIcon />
             Desarquivar
           </button>
         </li>
-        <li>
+        
+        <li className="flex items-center gap-2">
           <button
-            className="group mt-5 flex items-center gap-2 ml-6 font-['Open Sans'] flex bg-bg2 text-[15px] font-normal not-italic leading-5 tracking-normal text-texto2 underline hover:bg-bg2 hover:text-texto2/50"
             onClick={() => onDelete(customerId)}
+            className="flex items-center gap-2 text-texto2 text-[15px] font-normal font-['Open Sans'] hover:text-texto2/50 underline underline-offset-[3px]"
           >
             <Trash />
             Excluir do arquivo

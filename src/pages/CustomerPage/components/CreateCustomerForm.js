@@ -70,9 +70,9 @@ const CreateCustomerForm = ({
     handleFetchUnmatchedPatients();
   }, []);
 
-  
+
   useEffect(() => {
-    
+
     if (!customer.customer_calendar_name) {
       setActiveField(null);
       setFilteredPatients([]);
@@ -170,7 +170,9 @@ const CreateCustomerForm = ({
   const handleUsePatientData = () => {
     setCustomer((prev) => ({
       ...prev,
-      alternative_name: prev.customer_name,
+      alternative_name: [prev.customer_name, prev.customer_second_name]
+        .filter(Boolean)
+        .join(" "),
       alternative_cpf_cnpj: prev.customer_cpf_cnpj,
     }));
   };
@@ -237,6 +239,7 @@ const CreateCustomerForm = ({
 
     if (!customer.customer_name) errors.customer_name = true;
     if (!customer.customer_calendar_name) errors.customer_calendar_name = true;
+    if (!customer.customer_phone) errors.customer_phone = true;
 
     setValidationErrors(errors);
 
@@ -426,7 +429,15 @@ const CreateCustomerForm = ({
         return updated;
       });
     }
-  }, [customer.customer_name, customer.customer_calendar_name, validationErrors]);
+
+    if (customer.customer_phone && validationErrors.customer_phone) {
+      setValidationErrors(prev => {
+        const updated = { ...prev };
+        delete updated.customer_phone;
+        return updated;
+      });
+    }
+  }, [customer.customer_name, customer.customer_calendar_name, customer.customer_phone, validationErrors]);
 
   useEffect(() => {
     const handleEnterKey = (e) => {
@@ -636,9 +647,7 @@ const CreateCustomerForm = ({
                 name="customer_cpf_cnpj"
                 value={customer.customer_cpf_cnpj || ""}
                 onChange={handleChange}
-                placeholder="XXX.XXX.XXX-XX"
-                pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}"
-                title="Insira um CPF válido com 11 dígitos. Exemplo: 123.456.789-00"
+                placeholder="CPF ou CNPJ"
                 className={`w-full h-[50px] bg-bg1 rounded-[15px] border-2 ${validationErrors.customer_cpf_cnpj ? "border-red-500" : "border-cinza6"} px-4 py-2 placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring`}
               />
             </div>
@@ -660,7 +669,8 @@ const CreateCustomerForm = ({
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 lg:w-[213px]">
                 <label className="mb-1 ml-3 block text-xs lg:text-base font-normal font-['Open Sans'] tracking-wide text-texto1">
-                  Telefone
+                  Telefone{" "}
+                  <span className="font-bold text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -786,7 +796,7 @@ const CreateCustomerForm = ({
                   name="alternative_cpf_cnpj"
                   value={customer.alternative_cpf_cnpj || ""}
                   onChange={handleChange}
-                  placeholder="XX.XXX.XXX/0001-XX."
+                  placeholder="CPF ou CNPJ"
                   className="w-full h-[50px] bg-bg1 rounded-[15px] border-2 border-cinza6 px-4 py-2  placeholder:text-texto2/50 placeholder:font-light text-black font-medium shadow-sm focus:border-cinza6/50 focus:outline-none focus:ring"
                 />
 

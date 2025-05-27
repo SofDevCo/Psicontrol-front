@@ -160,8 +160,12 @@ export const showLoadingToast = () => {
     overlay,
     closeToast: () => {
       toast.dismiss(toastId);
-      document.body.removeChild(overlay);
-      document.head.removeChild(style);
+      if (overlay?.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+      if (style?.parentNode) {
+        style.parentNode.removeChild(style);
+      }
     }
   };
 };

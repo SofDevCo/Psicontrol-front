@@ -380,9 +380,11 @@ const PaymentControlCard = ({
                     </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       R${" "}
-                      {parseFloat(item.consultation_fee)
-                        .toFixed(2)
-                        .replace(".", ",")}
+                      {item.consultation_fee
+                        ? parseFloat(item.consultation_fee)
+                            .toFixed(2)
+                            .replace(".", ",")
+                        : "0,00"}
                     </td>
                     <td className="hidden lg:table-cell text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
                       {item.consultation_days
@@ -407,7 +409,12 @@ const PaymentControlCard = ({
                       </div>
                     </td>
                     <td className="text-center text-texto1 lg:text-F15 text-F10 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                      R$ {item.total_consultation_fee || "0,00"}
+                      R${" "}
+                      {item.total_consultation_fee
+                        ? parseFloat(item.total_consultation_fee)
+                            .toFixed(2)
+                            .replace(".", ",")
+                        : "0,00"}
                     </td>
                     <td>
                       <div className="flex items-center justify-center h-full text-center">

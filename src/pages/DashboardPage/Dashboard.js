@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "../../index.css";
 import DeletePatientModal from "./components/DeletePatientModal";
 import ReturnPatientModal from "./components/ReturnPatientModal";
@@ -100,6 +100,7 @@ const DashBoard = () => {
   };
   const patientDropdownRefs = useRef({});
   const unmatchedDropdownRefs = useRef({});
+  const navigate = useNavigate();
 
   const handleRevertSendingInvoice = async (customer) => {
     if (!customer || !customer.customer_id) {
@@ -539,6 +540,10 @@ const DashBoard = () => {
     }
   };
 
+  const handleNavigateClick = (customerId) => {
+    navigate(`/customers/${customerId}/profile`);
+  };
+
   const handleSendEmail = async (customer) => {
     const customerId = customer?.customer_id;
 
@@ -636,32 +641,32 @@ const DashBoard = () => {
   };
 
   const handleOpenReceiptModal = (patient) => {
- 
+
     const payerName = patient.Customer?.customer_name || patient.payer_name;
     const payerCPF = patient.Customer?.cpf || patient.payer_cpf;
-    const beneficiaryName = patient.beneficiary_name || "Nome beneficiário não informado";
-    const beneficiaryCPF = patient.beneficiary_cpf || "CPF beneficiário não informado";
+    const AlternativePayer = patient.alternative_payer || "Não informado";
+    const AlternativeCPF = patient.alternative_cpf || "Não informado";
     const amount = parseFloat(patient.total_consultation_fee || 0).toFixed(2).replace(".", ",");
-  
+
     const paymentDate = patient.payment_date
       ? patient.payment_date.split("T")[0].split("-").reverse().join("/")
       : "Data não informada";
-  
+
     const numConsultations = patient.num_consultations || 0;
     const consultationDays = patient.consultation_days
       ? patient.consultation_days.split(",").map((d) => d.trim()).join(", ")
       : "não informados";
-  
+
     setReceiptData({
       payerName,
       payerCPF,
-      beneficiaryName,
-      beneficiaryCPF,
+      AlternativePayer,
+      AlternativeCPF,
       amount,
       paymentDate,
       description: `Valor referente às consultas realizadas em ${selectedMonth}/${selectedYear}, total de ${numConsultations} consultas nos dias ${consultationDays}.`
     });
-  
+
     setIsModalReceiptOpen(true);
   };
 
@@ -718,8 +723,8 @@ const DashBoard = () => {
       const {
         payer_name,
         payer_cpf,
-        beneficiary_name,
-        beneficiary_cpf,
+        alternative_payer,
+        alternative_cpf,
         total_consultation_fee,
         payment_date,
         num_consultations,
@@ -729,17 +734,16 @@ const DashBoard = () => {
       setReceiptData({
         payerName: payer_name,
         payerCPF: payer_cpf,
-        beneficiaryName: beneficiary_name,
-        beneficiaryCPF: beneficiary_cpf,
+        AlternativePayer: alternative_payer,
+        AlternativeCPF: alternative_cpf,
         amount: parseFloat(total_consultation_fee || 0).toFixed(2).replace(".", ","),
         paymentDate: payment_date
           ? payment_date.split("T")[0].split("-").reverse().join("/")
           : "Data não informada",
-        description: `Valor referente às consultas realizadas em ${selectedMonth}/${selectedYear}, total de ${num_consultations || 0} consultas nos dias ${
-          consultation_days
+        description: `Valor referente às consultas realizadas em ${selectedMonth}/${selectedYear}, total de ${num_consultations || 0} consultas nos dias ${consultation_days
             ? consultation_days.split(",").map((d) => d.trim()).join(", ")
             : "não informados"
-        }.`,
+          }.`,
       });
 
       setFilteredPatients((prev) =>
@@ -999,7 +1003,14 @@ const DashBoard = () => {
                       <tr key={index} className="relative">
                         <td className=" text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2 z-10 text-center">
                           <div className="flex flex-col justify-center leading-tight ">
-                            <span>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() =>
+                                handleNavigateClick(
+                                  patient.Customer.customer_id
+                                )
+                              }
+                            >
                               {patient.Customer?.customer_name?.split(" ")[0] ||
                                 "-"}
                             </span>
@@ -1040,7 +1051,11 @@ const DashBoard = () => {
                           </div>
                         </td>
                         <td className="text-center text-texto1 lg:text-F15 text-F8 font-normal font-['Open Sans'] tracking-tight px-2 lg:px-4 py-1 lg:py-2">
-                          R$ {patient.total_consultation_fee || "0,00"}
+                          R$ {patient.total_consultation_fee
+                           ? parseFloat(patient.total_consultation_fee)
+                            .toFixed(2)
+                            .replace(".", ",")
+                            : "0,00"}
                         </td>
                         <td>
                           <div className="flex items-center justify-center h-full text-center">
