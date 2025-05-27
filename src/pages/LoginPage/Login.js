@@ -1,81 +1,61 @@
-import React from "react";
-import { GoogleIcon } from "./components/LoginIcons";
-import PsiText from "./images/PsiText.png";
-import BoxBlue from "./images/BoxBlue.png";
-import BoxBlueCourt from "./images/BoxBlueCourt.png";
+import LogoCubeUp from '../../pages/LoginPage/images/logo-cube-up.png';
+import ButtonLoginGoogle from '../../pages/LoginPage/images/button-login-google.png';
+import MokckupLogin from '../../pages/LoginPage/images/mockup-login.png';
 
 const Login = () => {
   const handleLogin = () => {
-    const stateObj = { action: "login" };
+    const stateObj = { action: 'login' };
     const state = encodeURIComponent(JSON.stringify(stateObj));
     window.location.href = `${process.env.REACT_APP_API_URL}/auth/google?state=${state}`;
   };
 
   return (
-    <div className="flex w-screen lg:w-full h-scree">
-      {/* Lado esquerdo - Azul */}
-      <div className="fixed w-1/2 h-screen bg-primaria">
-        <img
-          src={PsiText}
-          alt="Text"
-          className="w-[137px] h-[16px] lg:mt-[40px] lg:ml-[40px] mt-[48px] ml-[15px]"
-        />
+    <section>
+      <div className="relative flex h-[250px] flex-col items-center justify-center">
+        <img src={LogoCubeUp} alt="Logo" className="w-60" />
       </div>
 
-      {/* Lado direito (box branca) */}
-      <div className="flex flex-col my-[-90px] justify-center items-center h-screen w-screen bg-white">
-        <div className="w-[285px] lg:w-[392px] h-[166px] lg:h-[218px] bg-white z-50 rounded-[20px] drop-shadow-loginShadow flex flex-col lg:mb-0 mb-[290px] items-center justify-center">
-          <p className="font-semibold text-gray-700-4 text-[14px] lg:text-[20px] w-[255px] lg:w-[303px] mb-4 tracking-wide leading-normal text-center">
-            Entrar com sua conta Google
-          </p>
-
-          {/* Botão Google */}
-          <button
-            onClick={handleLogin}
-            className="flex items-center border-2 border-[#0082ba] my-2 mt-4 lg:my-4 lg:mt-7 rounded-full px-2 py-1 lg:px-4 lg:py-2 text-variable-collection-prim-ria hover:bg-gray-100 focus:outline-none shadow"
+      <div className="relative flex h-[627px] w-full flex-col items-center rounded-tl-[40px] bg-[#DBE9F9]">
+        <p className="pt-10 text-3xl font-semibold text-center w-80 font-raleway text-primaria">
+          Entre e experimente uma nova rotina
+        </p>
+        <p className="pt-2 font-light font-fustat">
+          Gestão leve e organizada com o Psicontrol
+        </p>
+        <div>
+          <button onClick={handleLogin}>
+            <img
+              src={ButtonLoginGoogle}
+              alt="Login com Google"
+              className="mt-10 bg-white rounded-lg w-80 drop-shadow-lg"
+            />
+          </button>{' '}
+        </div>
+        <p>
+          Ainda não tem cadastro?{' '}
+          <a
+            className="font-bold"
+            href="https://www.psicontrol.com.br/register"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <span className="mr-2">
-              <GoogleIcon className="w-[18px] h-[18px]" />
-            </span>
-            Entrar com o Google
-          </button>
+            clique aqui!
+          </a>
+        </p>
+        <div>
+          <img
+            src={MokckupLogin}
+            alt="Login com Google"
+            className="mt-10 rounded-lg w-80"
+          />
         </div>
-
-        <div className="w-[90%] lg:w-[95%] lg:my-[-130px] my-[-270px]">
-          <div className="[font-family:'Oswald-Bold',Helvetica] font-bold text-white text-[19px] lg:text-[26px] scale-y-125 ">
-            Vamos Começar!
-          </div>
-
-          {/* Subtítulo */}
-          <div className="[font-family:'Questrial-Regular',Helvetica] lg:w-[240px] w-[140px] font-normal text-white text-[14px] lg:text-[19px] scale-y-100 mb-4">
-            Faça o login com seu e-mail profissional.
-          </div>
-        </div>
+        <p className="text-sm text-center w-80 text-texto2">
+          Tudo isso sem complicações, sem burocracia e sem precisar instalar
+          nada.
+        </p>
       </div>
-
-      <div className="absolute lg:bottom-[200px] bottom-[400px] opacity-50 right-0">
-        <img
-          src={BoxBlueCourt}
-          alt="logo"
-          className="lg:w-[520px] lg:h-[566px] w-[210px] h-[210px]"
-        />
-      </div>
-      <div className="absolute lg:bottom-[700px] bottom-[320px] opacity-50 lg:right-[470px] right-[5px]">
-        <img
-          src={BoxBlue}
-          alt="logo"
-          className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]"
-        />
-      </div>
-      <div className="absolute lg:bottom-[100px] bottom-[576px] opacity-50 lg:right-[150px] right-[100px]">
-        <img
-          src={BoxBlue}
-          alt="logo"
-          className="lg:w-[150px] lg:h-[100px] w-[65px] h-[50px]"
-        />
-      </div>
-    </div>
+    </section>
   );
 };
 
-export { Login };
+export default Login;

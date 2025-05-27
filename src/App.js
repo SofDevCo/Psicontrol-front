@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider, ErrorBoundary } from "@rollbar/react";
-import { Login } from "./pages/LoginPage/Login";
+import  Login  from "./pages/LoginPage/Login";
 import Token from "./utils/token/token";
 import SelectCalendarPage from "./pages/SelectCalendarPage/SelectCalendarPage";
 import Dashboard from "./pages/DashboardPage/Dashboard";
