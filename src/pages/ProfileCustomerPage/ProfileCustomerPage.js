@@ -165,7 +165,6 @@ const ProfileCustomerPage = () => {
 
   return (
     <div className="relative">
-      {/* Botão de voltar - apenas desktop (1025px+) */}
       <button
         onClick={() => navigate('/customers')}
         className="fixed z-40 hidden p-0 transition-opacity lg:block top-8 right-8 hover:opacity-80"
