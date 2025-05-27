@@ -4,7 +4,9 @@ import {
   SearchIcon,
   CloseIcon,
   HamburguerIcon,
+  ArrowBackBlueIcon,
 } from "../../icons/icons";
+import { useNavigate } from "react-router-dom";
 import { useOutsideClick } from "../../utils/OutsideClick/useOutsideClick";
 import DropDown from "../ArchivedPage/components/DropDownArchive";
 import { deleteCustomer } from "../../service/pagesService/pagesService";
@@ -23,6 +25,7 @@ const ArchivedPage = () => {
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [isDropdownVisible] = useState(false);
 
+  const navigate = useNavigate();
   const dropdownRefs = useRef({});
   const searchDropRef = useRef();
 
@@ -131,7 +134,15 @@ const ArchivedPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full min-h-screen px-2 bg-bg2 sm:px-6 md:px-10">
+    <div className="relative flex items-center justify-center w-full min-h-screen px-2 bg-bg2 sm:px-6 md:px-10">
+      <button
+        onClick={() => navigate('/customers')}
+        className="absolute z-40 hidden p-0 transition-opacity lg:block top-8 right-8 hover:opacity-80"
+        aria-label="Voltar para clientes"
+      >
+        <ArrowBackBlueIcon />
+      </button>
+
       <div
         className="
             w-full
