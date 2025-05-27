@@ -50,19 +50,6 @@ const DropDownDashActions = ({
             </button>
           )}
         </li>
-
-        <li className="flex items-center justify-between w-full mb-1">
-          <button
-            onClick={onPartialPayment}
-            className="group flex items-center text-texto2 active:text-texto2/50 text-F15 font-normal underline underline-offset-[3px] w-full"
-          >
-            <div className="flex items-center justify-center w-8 h-8 min-w-8">
-              <PartialIcon />
-            </div>
-            <span>Pagamento Parcial</span>
-          </button>
-        </li>
-
         <li className="flex items-center justify-between w-full mb-1">
           <button
             onClick={onConfirmedPayment}
@@ -133,7 +120,7 @@ const DropDownDashActions = ({
             <div className="flex items-center justify-center w-8 h-8 min-w-8">
               <CopyIcon />
             </div>
-            <span>Recibo Emitido</span>
+            <span>Recibo/NF</span>
           </button>
           {isBillOfSaleIssued && (
             <button
