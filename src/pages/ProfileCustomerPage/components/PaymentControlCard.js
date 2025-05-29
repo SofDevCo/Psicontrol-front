@@ -12,15 +12,21 @@ import {
   confirmBillOfSale,
   savePayment,
   fetchCustomerProfile,
+  revertSendingInvoice,
+  revertBillOfSale,
+  revertPaymentConfirmation,
 } from "../../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../../icons/icons";
 import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
 import DropDownDashActions from "../../DashboardPage/components/DropDownDashActions";
-import ModalPaymentDash from "../..//DashboardPage/components/ModalPaymentDash";
+import ModalPaymentDash from "../../DashboardPage/components/ModalPaymentDash";
 import FilterStatusProfilePage from "./FilterStatusProfilePage";
 import EditConsultationModalPaymentControl from "./EditConsultationModalPaymentControl";
 import { useOutsideClick } from "../../../utils/OutsideClick/useOutsideClick";
-
+import Dropdown from "../../../components/Dropdown";
+import ReturnPatientModal from "../../DashboardPage/components/ReturnPatientModal";
+import ModalConfirmPayment from "../../DashboardPage/components/ModalConfirmPayment";
+import ModalReceiptInfo from "../../DashboardPage/components/ModalReceiptInfo";
 
 const PaymentControlCard = ({
   billingRecords,
@@ -42,7 +48,19 @@ const PaymentControlCard = ({
   const [selectedMonthForEdit, setSelectedMonthForEdit] = useState(null);
   const [selectedYearForEdit, setSelectedYearForEdit] = useState(null);
   const [selectedCustomerForEdit, setSelectedCustomerForEdit] = useState(null);
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [returnAction, setReturnAction] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [isModalReceiptOpen, setIsModalReceiptOpen] = useState(false);
+  const [receiptData, setReceiptData] = useState(null);
+  const [isModalConfirmPaymentOpen, setIsModalConfirmPaymentOpen] =
+    useState(false);
+  const [
+    selectedPatientForConfirmPayment,
+    setSelectedPatientForConfirmPayment,
+  ] = useState(null);
+  const [selectedYearForConfirm, setSelectedYearForConfirm] = useState(null);
+  const [selectedMonthForConfirm, setSelectedMonthForConfirm] = useState(null);
   const [filteredBillingRecords, setFilteredBillingRecords] =
     useState(billingRecords);
   const [loading, setLoading] = useState(false);
@@ -63,8 +81,89 @@ const PaymentControlCard = ({
   ];
 
   const outSideClickRef = useRef(null);
+  const patientDropdownRefs = useRef({});
 
   useOutsideClick(outSideClickRef, () => setIsDropdownOpenPatients(false));
+
+  const openReturnModal = (action) => {
+    console.log("Guardando action no estado", action);
+
+    setReturnAction(() => action);
+    setIsReturnModalOpen(true);
+  };
+
+  const handleOpenConfirmPaymentModal = (record) => {
+    const [year, month] = record.month.split("-");
+    setSelectedYearForConfirm(parseInt(year, 10));
+    setSelectedMonthForConfirm(parseInt(month, 10));
+    setSelectedPatientForConfirmPayment(record);
+    setIsModalConfirmPaymentOpen(true);
+  };
+
+  const handleOpenReceiptModal = async (record) => {
+    if (!record.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    const [yearStr, monthStr] = record.month.split("-");
+    const year = parseInt(yearStr, 10);
+    const monthAndYear = `${yearStr}-${monthStr.padStart(2, "0")}`;
+
+    const response = await confirmBillOfSale({
+      customer_id: record.customer_id,
+      month_and_year: monthAndYear,
+    });
+
+    if (!response || response.error) {
+      alert(response?.error || "Erro ao buscar dados do Recibo.");
+      return;
+    }
+
+    const {
+      payer_name,
+      payer_cpf,
+      alternative_payer,
+      alternative_cpf,
+      total_consultation_fee,
+      num_consultations,
+      consultation_days,
+    } = response.data;
+
+    setReceiptData({
+      payerName: payer_name,
+      payerCPF: payer_cpf,
+      AlternativePayer: alternative_payer,
+      AlternativeCPF: alternative_cpf,
+      amount: parseFloat(total_consultation_fee || 0)
+        .toFixed(2)
+        .replace(".", ","),
+      paymentDate: new Date().toLocaleDateString("pt-BR"),
+      description: `Valor referente às consultas realizadas em ${monthStr}/${year}, total de ${
+        num_consultations || 0
+      } consultas nos dias ${consultation_days || "não informados"}.`,
+    });
+
+    updateBillingRecords((prev) =>
+      prev.map((r) =>
+        r.customer_id === record.customer_id && r.month === record.month
+          ? { ...r, bill_of_sale: true }
+          : r
+      )
+    );
+
+    setIsModalReceiptOpen(true);
+  };
+
+  const closeReturnModal = () => {
+    setIsReturnModalOpen(false);
+    setReturnAction(null);
+  };
+
+  const handleConfirmReturn = () => {
+    if (returnAction) returnAction();
+    closeReturnModal();
+  };
 
   const toggleDropdownPatients = (index) => {
     setIsDropdownOpenPatients((prev) => (prev === index ? null : index));
@@ -173,7 +272,7 @@ const PaymentControlCard = ({
       return;
     }
     const [year, month] = billingRecord.month.split("-");
-  
+
     const response = await savePayment(
       billingRecord.customer_id,
       parseInt(year),
@@ -183,42 +282,76 @@ const PaymentControlCard = ({
       new Date().toISOString().split("T")[0],
       "PIX"
     );
-  
+
     if (!response || response.error) {
       alert("Erro ao confirmar pagamento.");
       return;
     }
-  
+
     alert("Pagamento confirmado!");
     await handleUpdateBillingStatus();
   };
 
-  const handleConfirmBillOfSale = async (billingRecord) => {
-    if (!billingRecord || !billingRecord.customer_id) {
+  const handleConfirmBillOfSale = async (record) => {
+    if (!record?.customer_id) {
       alert("ID do cliente não encontrado.");
       return;
     }
 
-    const [year, month] = billingRecord.month.split("-");
-
+    const [year, month] = record.month.split("-");
     const response = await confirmBillOfSale(
-      billingRecord.customer_id,
-      parseInt(year),
-      parseInt(month)
+      record.customer_id,
+      parseInt(year, 10),
+      parseInt(month, 10)
+    );
+    if (!response || response.error) {
+      alert(response?.error || "Erro ao emitir NF/Recibo.");
+      return;
+    }
+
+    const {
+      payer_name,
+      payer_cpf,
+      alternative_payer,
+      alternative_cpf,
+      total_consultation_fee,
+      payment_date,
+      num_consultations,
+      consultation_days,
+    } = response.data;
+
+    const newReceiptData = {
+      payerName: payer_name,
+      payerCPF: payer_cpf,
+      AlternativePayer: alternative_payer,
+      AlternativeCPF: alternative_cpf,
+      amount: parseFloat(total_consultation_fee || 0)
+        .toFixed(2)
+        .replace(".", ","),
+      paymentDate: payment_date
+        ? payment_date.split("T")[0].split("-").reverse().join("/")
+        : "Data não informada",
+      description: `Valor referente às consultas realizadas em ${month}/${year}, total de ${num_consultations || 0} consultas nos dias ${consultation_days || "não informados"}.`,
+    };
+
+    updateBillingRecords((prev) =>
+      prev.map((r) =>
+        r.customer_id === record.customer_id
+          ? { ...r, bill_of_sale: true, receiptData: newReceiptData }
+          : r
+      )
     );
 
-    if (response) {
-      alert("Nota fiscal confirmada!");
-    }
-    await handleUpdateBillingStatus();
+    setReceiptData(newReceiptData);
+    setIsModalReceiptOpen(true);
   };
 
   const handleSavePartialPayment = async (paymentAmount) => {
     if (!selectedPatientForPartialPayment) return;
-  
+
     const { customer_id } = selectedPatientForPartialPayment;
     const [year, month] = selectedPatientForPartialPayment.month.split("-");
-  
+
     const response = await savePayment(
       customer_id,
       parseInt(year, 10),
@@ -228,14 +361,14 @@ const PaymentControlCard = ({
       new Date().toISOString().split("T")[0],
       "PIX"
     );
-  
+
     if (!response || response.error) {
       alert("Erro ao salvar pagamento parcial.");
       return;
     }
-  
+
     alert("Pagamento parcial salvo com sucesso!");
-  
+
     if (typeof updateBillingRecords === "function") {
       updateBillingRecords((prevRecords) =>
         prevRecords.map((record) =>
@@ -250,7 +383,7 @@ const PaymentControlCard = ({
         )
       );
     }
-  
+
     setIsPartialPaymentModalOpen(false);
   };
 
@@ -312,6 +445,65 @@ const PaymentControlCard = ({
     setSelectedYearForEdit(year);
     setSelectedCustomerForEdit(billingRecord.customer_id);
     setIsEditModalOpen(true);
+  };
+
+  const handleRevertSendingInvoice = async (billingRecord) => {
+    if (!billingRecord?.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+
+    const [yearStr, monthRaw] = billingRecord.month.split("-");
+    const month = monthRaw.toString().padStart(2, "0");
+
+    const response = await revertSendingInvoice(
+      billingRecord.customer_id,
+      yearStr,
+      month
+    );
+
+    if (response?.ok) {
+      await handleUpdateBillingStatus();
+    } else {
+      return;
+    }
+  };
+
+  const handleRevertPaymentConfirmation = async (record) => {
+    if (!record?.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+    const [yearStr, monthRaw] = record.month.split("-");
+    const month = monthRaw.toString().padStart(2, "0");
+
+    const response = await revertPaymentConfirmation(
+      record.customer_id,
+      yearStr,
+      month
+    );
+    if (response?.ok) {
+      await handleUpdateBillingStatus();
+    } else {
+      return;
+    }
+  };
+
+  const handleRevertBillOfSale = async (record) => {
+    if (!record?.customer_id) {
+      alert("ID do cliente não encontrado.");
+      return;
+    }
+    const [yearStr, monthRaw] = record.month.split("-");
+    const month = monthRaw.toString().padStart(2, "0");
+
+    const response = await revertBillOfSale(record.customer_id, yearStr, month);
+
+    if (response?.ok) {
+      await handleUpdateBillingStatus();
+    } else {
+      return;
+    }
   };
 
   return (
@@ -464,21 +656,65 @@ const PaymentControlCard = ({
                           ref={outSideClickRef}
                           className="box-border absolute z-20 mt-1 border right-8 top-full border-cinza6 bg-bg2 shadow-default"
                         >
-                          <DropDownDashActions
-                            onOpenModal={() => handleOpenModalForBilling(item)}
-                            onPartialPayment={() =>
-                              handleOpenPartialPayment(item)
-                            }
-                            onConfirmedPayment={() =>
-                              handleConfirmPayment(item)
-                            }
-                            onConfirmedBillOfSale={() =>
-                              handleConfirmBillOfSale(item)
-                            }
-                            onEditConsultationFee={() =>
-                              handleEditConsultation(item)
-                            }
-                          />
+                          <Dropdown
+                            isOpen={isDropdownOpenPatients === index}
+                            onClose={() => setIsDropdownOpenPatients(null)}
+                            triggerRef={{
+                              current: patientDropdownRefs.current[index],
+                            }}
+                            position="bottom-right"
+                            width="auto"
+                          >
+                            <DropDownDashActions
+                              patient={item}
+                              selectedMonth={parseInt(
+                                item.month.split("-")[1],
+                                10
+                              )}
+                              selectedYear={parseInt(
+                                item.month.split("-")[0],
+                                10
+                              )}
+                              onOpenModal={() =>
+                                handleOpenModalForBilling(item)
+                              }
+                              onOpenReceiptInfo={() =>
+                                handleOpenReceiptModal(item)
+                              }
+                              onPartialPayment={() =>
+                                handleOpenPartialPayment(item)
+                              }
+                              onConfirmedPayment={() =>
+                                handleOpenConfirmPaymentModal(item)
+                              }
+                              onConfirmedBillOfSale={() =>
+                                handleConfirmBillOfSale(item)
+                              }
+                              onEditConsultationFee={() =>
+                                handleEditConsultation(item)
+                              }
+                              onRevertSendingInvoice={() =>
+                                openReturnModal(() =>
+                                  handleRevertSendingInvoice(item)
+                                )
+                              }
+                              onRevertPaymentConfirmed={() => {
+                                openReturnModal(() =>
+                                  handleRevertPaymentConfirmation(item)
+                                );
+                              }}
+                              onRevertBillOfSale={() => {
+                                openReturnModal(() =>
+                                  handleRevertBillOfSale(item)
+                                );
+                              }}
+                              isSendingInvoice={item.sending_invoice}
+                              isPaymentConfirmed={
+                                item.payment_status === "pago"
+                              }
+                              isBillOfSaleIssued={item.bill_of_sale}
+                            />
+                          </Dropdown>
                         </div>
                       )}
                     </td>
@@ -535,6 +771,54 @@ const PaymentControlCard = ({
               }
             />
           )}
+          {isModalConfirmPaymentOpen && selectedPatientForConfirmPayment && (
+            <ModalConfirmPayment
+              isOpen={isModalConfirmPaymentOpen}
+              onClose={() => setIsModalConfirmPaymentOpen(false)}
+              patient={selectedPatientForConfirmPayment}
+              onConfirm={async ({
+                tipoPagamento,
+                valorPago,
+                dataPagamento,
+                formaPagamento,
+              }) => {
+                const response = await savePayment(
+                  selectedPatientForConfirmPayment.customer_id,
+                  selectedYearForConfirm,
+                  selectedMonthForConfirm,
+                  tipoPagamento,
+                  dataPagamento,
+                  formaPagamento,
+                  tipoPagamento === "total"
+                    ? null
+                    : parseFloat(valorPago.replace("R$", "").replace(",", "."))
+                );
+
+                if (!response.error) {
+                  await handleUpdateBillingStatus();
+                } else {
+                  alert("Erro ao salvar pagamento.");
+                }
+
+                setIsModalConfirmPaymentOpen(false);
+              }}
+            />
+          )}
+          {isModalReceiptOpen && receiptData && (
+            <ModalReceiptInfo
+              isOpen={isModalReceiptOpen}
+              onClose={() => setIsModalReceiptOpen(false)}
+              receiptData={receiptData}
+            />
+          )}
+          <ReturnPatientModal
+            isOpen={isReturnModalOpen}
+            onClose={() => setIsReturnModalOpen(false)}
+            onConfirm={() => {
+              returnAction?.();
+              setIsReturnModalOpen(false);
+            }}
+          />
         </>
       </div>
     </>
