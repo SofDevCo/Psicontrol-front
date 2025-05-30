@@ -4,12 +4,12 @@ import { showAlteredToast } from "./components/toastUserPage";
 import { VariableIcon } from "./components/UserPageIcons";
 import { showErrorToast } from "../../utils/notification/toastify";
 import VariableDropdown from "./components/VariableDropdown";
-import { 
+import {
   showLoadingToast,
   showSuccessToast,
   showSuccessCalendarToast,
   showLoadingCalendarToast
- } from "../CustomerPage/components/notiificationCustomerPage";
+} from "../CustomerPage/components/notiificationCustomerPage";
 import { PlusIcon } from "../../icons/icons";
 import ModalPaymentMethods from "./components/ModalPaymentMethods";
 
@@ -38,6 +38,7 @@ const UserPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const messageRef = useRef(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -83,28 +84,28 @@ const UserPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen]);
-  
+
   useEffect(() => {
     const fetchCalendars = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authentication_token");
-  
+
         if (!apiUrl || !token) return;
-  
+
         const fullUrl = `${apiUrl}/events/calendars`;
-  
+
         const response = await fetch(fullUrl, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         if (!response.ok) return;
-  
+
         const data = await response.json();
         setCalendars(data);
-  
+
         const selected = new Set(
           data.filter((cal) => cal.enabled).map((cal) => cal.calendar_id)
         );
@@ -114,10 +115,10 @@ const UserPage = () => {
         setSelectedCalendars(new Set());
       }
     };
-  
+
     fetchCalendars();
   }, [refreshKey]);
-  
+
 
   const toggleCalendar = async (calendarId) => {
     const isEnabled = !selectedCalendars.has(calendarId);
@@ -365,10 +366,33 @@ const UserPage = () => {
   };
 
   const handleSelectVariable = (variable) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      user_message: (prevData.user_message || "") + " " + variable,
-    }));
+    if (!messageRef.current) return;
+  
+    const textarea = messageRef.current;
+
+    textarea.focus();
+  
+    requestAnimationFrame(() => {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentMessage = userData.user_message || "";
+  
+      const newMessage =
+        currentMessage.substring(0, start) +
+        variable +
+        currentMessage.substring(end);
+  
+      setUserData((prevData) => ({
+        ...prevData,
+        user_message: newMessage,
+      }));
+
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + variable.length;
+      });
+    });
+  
     setIsDropdownOpen(false);
   };
 
@@ -387,9 +411,9 @@ const UserPage = () => {
                   onClick={() => setIsEditing(true)}
                   c className="text-[#0082ba] text-sm underline flex items-center"
                 >
-                    <div className="mt-2 text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center">
+                  <div className="mt-2 text-[#0082ba] drop-shadow-editShadow text-sm underline flex items-center">
                     <span className="mr-1">Editar dados</span>
-                  <EditIcon />
+                    <EditIcon />
                   </div>
                 </button>
                 <button
@@ -567,11 +591,10 @@ const UserPage = () => {
                           openConfirmationModal(calendar.calendar_id)
                         }
 
-                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${
-                          selectedCalendars.has(calendar.calendar_id)
+                        className={`appearance-none w-5 h-5 rounded-full border-2 transition-colors cursor-pointer ${selectedCalendars.has(calendar.calendar_id)
                             ? "bg-[#0082ba] border-[#0082ba] shadow-inner"
                             : "bg-white border-[#0082ba]"
-                        }`}
+                          }`}
 
                         style={{
                           boxShadow: selectedCalendars.has(calendar.calendar_id)
@@ -581,11 +604,10 @@ const UserPage = () => {
                       />
                       <span
 
-                        className={`font-medium ${
-                          selectedCalendars.has(calendar.calendar_id)
+                        className={`font-medium ${selectedCalendars.has(calendar.calendar_id)
                             ? "text-black"
                             : "text-black"
-                        }`}
+                          }`}
                       >
                         {calendar.calendar_name}
                       </span>
@@ -715,6 +737,7 @@ const UserPage = () => {
 
                 {isEditingMessage ? (
                   <textarea
+                    ref={messageRef}
                     name="user_message"
                     value={userData.user_message || ""}
                     onChange={(e) =>
@@ -911,16 +934,16 @@ const UserPage = () => {
                   </button>
                 </div>
               </div>
-              
+
             </div>
 
           )}
         </div>
       </>
-      <ModalPaymentMethods 
-  isOpen={isPaymentModalOpen}
-  onClose={() => setIsPaymentModalOpen(false)} 
-/>
+      <ModalPaymentMethods
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+      />
     </div>
   );
 };
