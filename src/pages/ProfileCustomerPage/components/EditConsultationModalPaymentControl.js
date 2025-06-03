@@ -6,6 +6,14 @@ import {
   CloseIconEdit,
 } from "../../CustomerPage/components/IconsRegisterCard";
 import { AddDay, RemoveDay } from "../../../service/pagesService/pagesService";
+import { showErrorToast } from "../../../utils/notification/toastify";
+
+const isValidDayForMonth = (day, month, year) => {
+  const dayInt = parseInt(day, 10);
+  if (isNaN(dayInt) || dayInt <= 0) return false;
+  const lastDay = new Date(year, month, 0).getDate();
+  return dayInt <= lastDay;
+};
 
 const EditConsultationModalPaymentControl = ({
   isOpen,
@@ -13,6 +21,8 @@ const EditConsultationModalPaymentControl = ({
   selectedMonth,
   selectedYear,
   customerId,
+  onRemoveDay,
+  onAddDay,
   updateBillingRecords,
 }) => {
   const [days, setDays] = useState([]);
@@ -24,7 +34,7 @@ const EditConsultationModalPaymentControl = ({
   useEffect(() => {
     if (!selectedMonth || !selectedYear || !customerId) return;
 
-    const fetchDaysForMonth = async () => {
+    const fetchDays = async () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/dashboard/billing-records?month=${selectedMonth}&year=${selectedYear}`,
         {
@@ -37,65 +47,105 @@ const EditConsultationModalPaymentControl = ({
       if (response.ok && data.billingRecords.length > 0) {
         const daysArray = data.billingRecords
           .filter((record) => record.customer_id === customerId)
-          .flatMap((record) =>
-            record.consultation_days ? record.consultation_days.split(", ") : []
-          );
-
-        setDays(daysArray);
-        setTempDays(daysArray);
+          .flatMap((record) => record.consultation_days?.split(", ") || []);
+        const sorted = daysArray
+          .map(Number)
+          .sort((a, b) => a - b)
+          .map(String);
+        setDays(sorted);
+        setTempDays(sorted);
       } else {
         setDays([]);
         setTempDays([]);
       }
     };
 
-    fetchDaysForMonth();
+    fetchDays();
   }, [selectedMonth, selectedYear, customerId]);
 
   if (!isOpen || !customerId) return null;
 
-  const handleAddDayLocal = (event) => {
-    if (event.key === "Enter") {
-      const dayTrimmed = newDay.trim();
-      if (dayTrimmed && !tempDays.includes(dayTrimmed)) {
-        setTempDays((prev) => [...prev, dayTrimmed]);
-        setNewDay("");
-        setIsAdding(false);
-      }
+  const handleAddDayLocal = () => {
+    const d = newDay.trim();
+    if (!isValidDayForMonth(d, selectedMonth, selectedYear)) {
+      showErrorToast(
+        `Dia inválido para o mês ${selectedMonth}/${selectedYear}`
+      );
+      return;
     }
+    if (!d) return;
+
+    setTempDays((prev) =>
+      [...prev, d]
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(String)
+    );
+    setNewDay("");
+    setIsAdding(false);
   };
 
-  const handleRemoveDayLocal = (dayToRemove) => {
-    setTempDays((prev) => prev.filter((d) => d !== dayToRemove));
+  const handleAddDayKey = (e) => {
+    if (e.key === "Enter") handleAddDayLocal();
+  };
+
+  const handleRemoveDayLocal = (indexToRemove) => {
+    setTempDays((prev) => {
+      const arr = [...prev];
+      arr.splice(indexToRemove, 1);
+      return arr
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(String);
+    });
   };
 
   const handleSaveChanges = async () => {
-    setDays(tempDays);
-    const daysToRemove = days.filter((day) => !tempDays.includes(day));
-    const daysToAdd = tempDays.filter((day) => !days.includes(day));
+    if (!customerId || !selectedMonth || !selectedYear) {
+      alert("Erro: cliente, mês ou ano não disponível.");
+      return;
+    }
+
+    const countDays = (arr) =>
+      arr.reduce((acc, d) => {
+        acc[d] = (acc[d] || 0) + 1;
+        return acc;
+      }, {});
+    const originalCount = countDays(days);
+    const editedCount = countDays(tempDays);
+
+    const daysToRemove = [];
+    for (const d in originalCount) {
+      const diff = originalCount[d] - (editedCount[d] || 0);
+      for (let i = 0; i < diff; i++) daysToRemove.push(d);
+    }
+
+    const daysToAdd = [];
+    for (const d in editedCount) {
+      const diff = editedCount[d] - (originalCount[d] || 0);
+      for (let i = 0; i < diff; i++) daysToAdd.push(d);
+    }
 
     if (daysToRemove.length > 0) {
-      await RemoveDay(customerId, daysToRemove, selectedMonth, selectedYear);
+      await onRemoveDay(customerId, daysToRemove, selectedMonth, selectedYear);
+      updateBillingRecords((prev) =>
+        prev.map((rec) =>
+          rec.customer_id === customerId &&
+          rec.month === `${selectedYear}-${selectedMonth}`
+            ? {
+                ...rec,
+                consultation_days: rec.consultation_days
+                  .split(", ")
+                  .filter((d) => !daysToRemove.includes(d))
+                  .join(", "),
+              }
+            : rec
+        )
+      );
     }
+
     if (daysToAdd.length > 0) {
-      await Promise.all(
-        daysToAdd.map((day) =>
-          AddDay(customerId, day, selectedMonth, selectedYear)
-        )
-      );
-    }
-
-    setDays(tempDays);
-
-    if (updateBillingRecords) {
-      updateBillingRecords((prevRecords) =>
-        prevRecords.map((record) =>
-          record.customer_id === customerId &&
-          record.month === `${selectedYear}-${selectedMonth}`
-            ? { ...record, consultation_days: tempDays.join(", ") }
-            : record
-        )
-      );
+      await onAddDay(customerId, daysToAdd, selectedMonth, selectedYear);
     }
 
     setIsEditing(false);
@@ -103,9 +153,9 @@ const EditConsultationModalPaymentControl = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-bgM bg-opacity-50 z-30">
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-opacity-50 bg-bgM">
       <div className="bg-neutral-100 lg:w-[437px] w-[325px] p-6 rounded-lg shadow-lg border border-cinza6">
-        <div className="flex justify-end">
+        <div clas sName="flex justify-end">
           <button onClick={onClose}>
             <CloseIconEdit />
           </button>
@@ -128,19 +178,18 @@ const EditConsultationModalPaymentControl = ({
                     className="relative flex flex-col items-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6"
                   >
                     <span className="mb-1">{day}</span>
-                    {isEditing && (
-                      <button
-                        onClick={() => handleRemoveDayLocal(day)}
-                        className="absolute -bottom-5"
-                      >
-                        <CloseMiniIcon />
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleRemoveDayLocal(index)}
+                      className="absolute -bottom-5"
+                    >
+                      <CloseMiniIcon />
+                    </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
           {isEditing && (
             <div className="flex items-center mt-4">
               {isAdding && (
@@ -148,19 +197,26 @@ const EditConsultationModalPaymentControl = ({
                   type="text"
                   value={newDay}
                   onChange={(e) => setNewDay(e.target.value)}
-                  onKeyDown={handleAddDayLocal}
+                  onKeyDown={handleAddDayKey}
                   className="border-2 border-cinza6 px-3 py-1 rounded-[15px] w-[43px] h-11 appearance-none mr-2 bg-bg1"
                 />
               )}
               <div
                 className="flex items-center justify-center w-[43px] h-11 p-2 rounded-[15px] border-2 border-cinza6 cursor-pointer"
-                onClick={() => setIsAdding(true)}
+                onClick={() => {
+                  if (isAdding) {
+                    handleAddDayLocal();
+                  } else {
+                    setIsAdding(true);
+                  }
+                }}
               >
                 <AddConsultationIcon />
               </div>
             </div>
           )}
         </div>
+
         <button
           onClick={() => {
             setIsEditing(!isEditing);
