@@ -15,6 +15,8 @@ import {
   revertSendingInvoice,
   revertBillOfSale,
   revertPaymentConfirmation,
+  AddDay,
+  RemoveDay,
 } from "../../../service/pagesService/pagesService";
 import { HamburguerIcon } from "../../../icons/icons";
 import BillingDashBoard from "../../DashboardPage/components/BillingDashBoard";
@@ -346,7 +348,11 @@ const PaymentControlCard = ({
     setIsModalReceiptOpen(true);
   };
 
-  const handleSavePartialPayment = async (paymentAmount) => {
+  const handleSavePartialPayment = async (
+    paymentAmount,
+    dataPagamento,
+    formaPagamento
+  ) => {
     if (!selectedPatientForPartialPayment) return;
 
     const { customer_id } = selectedPatientForPartialPayment;
@@ -356,10 +362,10 @@ const PaymentControlCard = ({
       customer_id,
       parseInt(year, 10),
       parseInt(month, 10),
-      parseFloat(paymentAmount),
       "parcial",
-      new Date().toISOString().split("T")[0],
-      "PIX"
+      dataPagamento,
+      formaPagamento,
+      paymentAmount
     );
 
     if (!response || response.error) {
@@ -376,7 +382,9 @@ const PaymentControlCard = ({
           record.month === selectedPatientForPartialPayment.month
             ? {
                 ...record,
-                payment_amount: parseFloat(paymentAmount),
+                payment_amount: parseFloat(
+                  paymentAmount.replace("R$", "").replace(",", ".")
+                ),
                 payment_status: "parcial",
               }
             : record
@@ -441,10 +449,112 @@ const PaymentControlCard = ({
 
   const handleEditConsultation = (billingRecord) => {
     const [year, month] = billingRecord.month.split("-");
-    setSelectedMonthForEdit(month);
-    setSelectedYearForEdit(year);
+
     setSelectedCustomerForEdit(billingRecord.customer_id);
+    setSelectedYearForEdit(year);
+    setSelectedMonthForEdit(month);
+
     setIsEditModalOpen(true);
+  };
+
+  const handleRemoveDay = async (customerId, daysToRemove) => {
+    if (
+      !selectedCustomerForEdit ||
+      !selectedMonthForEdit ||
+      !selectedYearForEdit
+    ) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const month = String(selectedMonthForEdit).padStart(2, "0");
+    const year = String(selectedYearForEdit);
+
+    const response = await RemoveDay(
+      customerId,
+      daysToRemove,
+      parseInt(month, 10),
+      parseInt(year, 10)
+    );
+
+    if (response.ok) {
+      updateBillingRecords((prev) =>
+        prev.map((r) => {
+          if (r.customer_id === customerId && r.month === `${year}-${month}`) {
+            const updatedDays = (r.consultation_days || "")
+              .split(", ")
+              .filter((dayStr) => !daysToRemove.includes(dayStr))
+              .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+            const newCount = updatedDays.length;
+            const fee = parseFloat(r.consultation_fee || 0);
+
+            return {
+              ...r,
+              consultation_days: updatedDays.join(", "),
+              num_consultations: newCount,
+              total_consultation_fee: (newCount * fee).toFixed(2),
+            };
+          }
+          return r;
+        })
+      );
+
+      alert("Dias removidos com sucesso!");
+      setIsEditModalOpen(false);
+    } else {
+      alert(response.error || "Erro ao remover dias.");
+    }
+  };
+
+  const handleAddDay = async (customerId, days) => {
+    if (
+      !selectedCustomerForEdit ||
+      !selectedMonthForEdit ||
+      !selectedYearForEdit
+    ) {
+      alert("Erro: Paciente ou mês não disponível.");
+      return;
+    }
+
+    const month = String(selectedMonthForEdit).padStart(2, "0");
+    const year = String(selectedYearForEdit);
+
+    const response = await AddDay(
+      customerId,
+      days,
+      parseInt(month, 10),
+      parseInt(year, 10)
+    );
+
+    if (response.ok) {
+      updateBillingRecords((prev) =>
+        prev.map((r) =>
+          r.customer_id === customerId && r.month === `${year}-${month}`
+            ? {
+                ...r,
+                consultation_days: r.consultation_days
+                  ? `${r.consultation_days}, ${days}`
+                  : `${days}`,
+              }
+            : r
+        )
+      );
+      setIsEditModalOpen(false);
+    } else {
+      const data = await response.json();
+      alert(data.error || "Erro ao adicionar dia.");
+    }
+  };
+
+  const updatePatientDays = (customerId, newDays) => {
+    updateBillingRecords((prev) =>
+      prev.map((r) =>
+        r.customer_id === customerId
+          ? { ...r, consultation_days: newDays.join(", ") }
+          : r
+      )
+    );
   };
 
   const handleRevertSendingInvoice = async (billingRecord) => {
@@ -758,7 +868,9 @@ const PaymentControlCard = ({
               selectedMonth={selectedMonthForEdit}
               selectedYear={selectedYearForEdit}
               customerId={selectedCustomerForEdit}
-              updateBillingRecords={updateBillingRecords}
+              onRemoveDay={handleRemoveDay}
+              onAddDay={handleAddDay}
+              updateBillingRecords={updatePatientDays}
             />
           )}
         <>
@@ -789,12 +901,10 @@ const PaymentControlCard = ({
                   tipoPagamento,
                   dataPagamento,
                   formaPagamento,
-                  tipoPagamento === "total"
-                    ? null
-                    : parseFloat(valorPago.replace("R$", "").replace(",", "."))
+                  tipoPagamento === "total" ? null : valorPago // ex: "R$ 150,00"
                 );
 
-                if (!response.error) {
+                if (!response?.error) {
                   await handleUpdateBillingStatus();
                 } else {
                   alert("Erro ao salvar pagamento.");
