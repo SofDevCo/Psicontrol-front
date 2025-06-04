@@ -238,7 +238,7 @@ const CreateCustomerForm = ({
     const errors = {};
 
     if (!customer.customer_name) errors.customer_name = true;
-    if (!customer.customer_calendar_name) errors.customer_calendar_name = true;
+   //if (!customer.customer_calendar_name) errors.customer_calendar_name = true;
     if (!customer.customer_phone) errors.customer_phone = true;
 
     setValidationErrors(errors);
